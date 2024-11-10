@@ -7,7 +7,7 @@ namespace daedalusCore { namespace graphics {
 	Window::Window(const char* title, int width, int height) : m_title(title), m_width(width), m_height(height)
 	{
 		if (!glfwInit())
-			std::cout << "Error - GLFW init failed" << std::endl;
+			std::cout << "Error - GLFW initialize failed" << std::endl;
 
 		m_window = glfwCreateWindow(width, height, title, NULL, NULL);
 
@@ -19,8 +19,15 @@ namespace daedalusCore { namespace graphics {
 		}
 
 		glfwMakeContextCurrent(m_window);
-
 		glfwSetWindowSizeCallback(m_window, windowResize);
+
+		if (glewInit() != GLEW_OK)
+		{
+			std::cout << "Error - Failed to initialize GLEW" << std::endl;
+			return;
+		}
+
+		std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
 	}
 
 	Window::~Window()

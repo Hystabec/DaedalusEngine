@@ -1,7 +1,8 @@
 #pragma once
 
-#include <glfw3.h>
 #include <iostream>
+#include <GL/glew.h>
+#include <glfw3.h>
 
 namespace daedalusCore { namespace graphics {
 
