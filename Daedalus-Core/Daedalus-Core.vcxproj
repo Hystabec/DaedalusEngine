@@ -81,10 +81,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)\Dependencies\GLEW\include;$(SolutionDir)\Dependencies\GLFW\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Dependencies\GLEW\lib;$(SolutionDir)\Dependencies\GLFW\lib-vc2022;$(LibraryPath)</LibraryPath>
+    <IntDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\Intermediate\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)\Dependencies\GLEW\include;$(SolutionDir)\Dependencies\GLFW\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Dependencies\GLEW\lib;$(SolutionDir)\Dependencies\GLFW\lib-vc2022;$(LibraryPath)</LibraryPath>
+    <IntDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\Intermediate\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
