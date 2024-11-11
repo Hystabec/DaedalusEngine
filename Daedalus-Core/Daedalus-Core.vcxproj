@@ -153,11 +153,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="graphics\Window.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="maths\vec2.cpp" />
+    <ClCompile Include="maths\vec3.cpp" />
+    <ClCompile Include="maths\vec4.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="graphics\Window.h" />
+    <ClInclude Include="maths\maths.h" />
+    <ClInclude Include="maths\vec2.h" />
+    <ClInclude Include="maths\vec3.h" />
+    <ClInclude Include="maths\vec4.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

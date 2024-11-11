@@ -19,18 +19,45 @@
     <Filter Include="Source Files\graphics">
       <UniqueIdentifier>{bdb8b9f1-7ed7-4d79-96f2-cfae427e7842}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\maths">
+      <UniqueIdentifier>{b01488ba-7665-4328-9d16-cf9be1406cc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\maths">
+      <UniqueIdentifier>{9f8e0783-60ac-4e53-b173-bb33e4b19c0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Window.cpp">
+    <ClCompile Include="graphics\Window.cpp">
       <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="maths\vec2.cpp">
+      <Filter>Source Files\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="maths\vec3.cpp">
+      <Filter>Source Files\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="maths\vec4.cpp">
+      <Filter>Source Files\maths</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Window.h">
+    <ClInclude Include="graphics\Window.h">
       <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="maths\maths.h">
+      <Filter>Header Files\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="maths\vec2.h">
+      <Filter>Header Files\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="maths\vec3.h">
+      <Filter>Header Files\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="maths\vec4.h">
+      <Filter>Header Files\maths</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

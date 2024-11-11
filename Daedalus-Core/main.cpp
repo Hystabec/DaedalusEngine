@@ -1,7 +1,9 @@
-#include "Window.h";
+#include "graphics/Window.h"
+#include "maths/maths.h"
 
 using namespace daedalusCore;
 using namespace graphics;
+using namespace maths;
 
 int main()
 {
