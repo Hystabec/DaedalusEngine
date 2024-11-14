@@ -155,12 +155,14 @@
   <ItemGroup>
     <ClCompile Include="graphics\Window.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="maths\mat4.cpp" />
     <ClCompile Include="maths\vec2.cpp" />
     <ClCompile Include="maths\vec3.cpp" />
     <ClCompile Include="maths\vec4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\Window.h" />
+    <ClInclude Include="maths\mat4.h" />
     <ClInclude Include="maths\maths.h" />
     <ClInclude Include="maths\vec2.h" />
     <ClInclude Include="maths\vec3.h" />
