@@ -33,6 +33,12 @@
     <Filter Include="resources\shaders">
       <UniqueIdentifier>{f2ff6196-6a16-47dd-a57e-c9ff7ef36572}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\graphics\buffers">
+      <UniqueIdentifier>{9100aa51-c273-4385-b35b-bcfd2774c62b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics\buffers">
+      <UniqueIdentifier>{96eabd9a-9ff0-44af-b00d-14e41105a6f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -53,7 +59,16 @@
     <ClCompile Include="maths\mat4.cpp">
       <Filter>Source Files\maths</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\buffers\buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="graphics\shader.cpp">
+      <Filter>Source Files\graphics\buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\buffers\indexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\buffers\vertexArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -81,6 +96,15 @@
     </ClInclude>
     <ClInclude Include="graphics\shader.h">
       <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\buffers\buffer.h">
+      <Filter>Header Files\graphics\buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\buffers\indexBuffer.h">
+      <Filter>Header Files\graphics\buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\buffers\vertexArray.h">
+      <Filter>Header Files\graphics\buffers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

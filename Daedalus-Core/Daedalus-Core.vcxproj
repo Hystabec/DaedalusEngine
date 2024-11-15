@@ -153,6 +153,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="graphics\buffers\buffer.cpp" />
+    <ClCompile Include="graphics\buffers\indexBuffer.cpp" />
+    <ClCompile Include="graphics\buffers\vertexArray.cpp" />
     <ClCompile Include="graphics\shader.cpp" />
     <ClCompile Include="graphics\Window.cpp" />
     <ClCompile Include="main.cpp" />
@@ -162,6 +165,9 @@
     <ClCompile Include="maths\vec4.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="graphics\buffers\buffer.h" />
+    <ClInclude Include="graphics\buffers\indexBuffer.h" />
+    <ClInclude Include="graphics\buffers\vertexArray.h" />
     <ClInclude Include="graphics\shader.h" />
     <ClInclude Include="graphics\Window.h" />
     <ClInclude Include="maths\mat4.h" />

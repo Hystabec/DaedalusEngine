@@ -53,6 +53,10 @@ namespace daedalusCore { namespace graphics {
 
 	void Window::update()
 	{
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR)
+			std::cout << "openGL Error: " << error << std::endl;
+
 		glfwPollEvents();
 
 		glfwSwapBuffers(m_window);
