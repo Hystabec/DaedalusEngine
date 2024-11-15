@@ -83,7 +83,7 @@ namespace daedalusCore { namespace maths {
 			return result;
 		}
 
-		mat4 mat4::translation(const vec3& translation)
+		mat4 mat4::translate(const vec3& translation)
 		{
 			mat4 result(1.0f);
 
@@ -94,7 +94,7 @@ namespace daedalusCore { namespace maths {
 			return result;
 		}
 
-		mat4 mat4::rotation(float angle, const vec3& axis)
+		mat4 mat4::rotate(float angle, const vec3& axis)
 		{
 			mat4 result(1.0f);
 

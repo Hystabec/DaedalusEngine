@@ -22,9 +22,9 @@ namespace daedalusCore { namespace graphics {
 		glfwSetWindowUserPointer(m_window, this);
 		glfwSetWindowSizeCallback(m_window, window_Resize);
 
-		glfwSetKeyCallback(m_window, key_callback);
-		glfwSetMouseButtonCallback(m_window, mouse_button_callback);
-		glfwSetCursorPosCallback(m_window, cursor_position_callback);
+		glfwSetKeyCallback(m_window, keyCallback);
+		glfwSetMouseButtonCallback(m_window, mouseButtonCallback);
+		glfwSetCursorPosCallback(m_window, cursorPositionCallback);
 
 		if (glewInit() != GLEW_OK)
 		{
@@ -96,21 +96,21 @@ namespace daedalusCore { namespace graphics {
 		glViewport(0, 0, width, height);
 	}
 
-	void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		Window* t_window = (Window*)glfwGetWindowUserPointer(window);
 		
 		t_window->m_keys[key] = action != GLFW_RELEASE;
 	}
 
-	void Window::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+	void Window::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 	{
 		Window* t_window = (Window*)glfwGetWindowUserPointer(window);
 
 		t_window->m_MouseButtons[button] = action != GLFW_RELEASE;
 	}
 
-	void Window::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+	void Window::cursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
 	{
 		Window* t_window = (Window*)glfwGetWindowUserPointer(window);
 

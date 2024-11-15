@@ -9,10 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Header Files\graphics">
       <UniqueIdentifier>{ea1b9d9e-0dfb-4980-9967-924d318fd725}</UniqueIdentifier>
     </Filter>
@@ -24,6 +20,18 @@
     </Filter>
     <Filter Include="Source Files\maths">
       <UniqueIdentifier>{9f8e0783-60ac-4e53-b173-bb33e4b19c0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\utils">
+      <UniqueIdentifier>{4ef96f64-1297-47cc-92d5-691b504d217a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\resources">
+      <UniqueIdentifier>{ad947011-06f9-42df-9dc8-52d5503c6536}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{e279e5cf-6fa9-4638-ba29-fce45c233873}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders">
+      <UniqueIdentifier>{f2ff6196-6a16-47dd-a57e-c9ff7ef36572}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -43,6 +51,9 @@
       <Filter>Source Files\maths</Filter>
     </ClCompile>
     <ClCompile Include="maths\mat4.cpp">
+      <Filter>Source Files\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,5 +76,19 @@
     <ClInclude Include="maths\mat4.h">
       <Filter>Header Files\maths</Filter>
     </ClInclude>
+    <ClInclude Include="utils\fileUtils.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shader.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\basic.frag">
+      <Filter>resources\shaders</Filter>
+    </None>
+    <None Include="resources\shaders\basic.vert">
+      <Filter>resources\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
