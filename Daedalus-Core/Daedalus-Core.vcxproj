@@ -157,6 +157,7 @@
     <ClCompile Include="graphics\buffers\indexBuffer.cpp" />
     <ClCompile Include="graphics\buffers\vertexArray.cpp" />
     <ClCompile Include="graphics\shader.cpp" />
+    <ClCompile Include="graphics\simpleRenderer2D.cpp" />
     <ClCompile Include="graphics\Window.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="maths\mat4.cpp" />
@@ -168,7 +169,10 @@
     <ClInclude Include="graphics\buffers\buffer.h" />
     <ClInclude Include="graphics\buffers\indexBuffer.h" />
     <ClInclude Include="graphics\buffers\vertexArray.h" />
+    <ClInclude Include="graphics\renderable2D.h" />
+    <ClInclude Include="graphics\renderer2D.h" />
     <ClInclude Include="graphics\shader.h" />
+    <ClInclude Include="graphics\simpleRenderer2D.h" />
     <ClInclude Include="graphics\Window.h" />
     <ClInclude Include="maths\mat4.h" />
     <ClInclude Include="maths\maths.h" />
