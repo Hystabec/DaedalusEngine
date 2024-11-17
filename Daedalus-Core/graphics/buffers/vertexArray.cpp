@@ -11,6 +11,8 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 		{
 			for (int i = 0; i < m_buffers.size(); i++)
 				delete m_buffers[i];
+
+			glDeleteVertexArrays(1, &m_arrayID);
 		}
 
 		void VertexArray::addBuffer(Buffer* buffer, GLuint index)

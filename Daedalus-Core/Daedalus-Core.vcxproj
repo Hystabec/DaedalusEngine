@@ -143,6 +143,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -153,11 +157,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="graphics\batchRenderer2D.cpp" />
     <ClCompile Include="graphics\buffers\buffer.cpp" />
     <ClCompile Include="graphics\buffers\indexBuffer.cpp" />
     <ClCompile Include="graphics\buffers\vertexArray.cpp" />
     <ClCompile Include="graphics\shader.cpp" />
     <ClCompile Include="graphics\simpleRenderer2D.cpp" />
+    <ClCompile Include="graphics\sprite.cpp" />
+    <ClCompile Include="graphics\staticSprite.cpp" />
     <ClCompile Include="graphics\Window.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="maths\mat4.cpp" />
@@ -166,6 +173,7 @@
     <ClCompile Include="maths\vec4.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="graphics\batchRenderer2D.h" />
     <ClInclude Include="graphics\buffers\buffer.h" />
     <ClInclude Include="graphics\buffers\indexBuffer.h" />
     <ClInclude Include="graphics\buffers\vertexArray.h" />
@@ -173,6 +181,8 @@
     <ClInclude Include="graphics\renderer2D.h" />
     <ClInclude Include="graphics\shader.h" />
     <ClInclude Include="graphics\simpleRenderer2D.h" />
+    <ClInclude Include="graphics\sprite.h" />
+    <ClInclude Include="graphics\staticSprite.h" />
     <ClInclude Include="graphics\Window.h" />
     <ClInclude Include="maths\mat4.h" />
     <ClInclude Include="maths\maths.h" />
@@ -180,6 +190,7 @@
     <ClInclude Include="maths\vec3.h" />
     <ClInclude Include="maths\vec4.h" />
     <ClInclude Include="utils\fileUtils.h" />
+    <ClInclude Include="utils\timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\basic.frag" />

@@ -10,7 +10,7 @@ namespace daedalusCore { namespace graphics {
 	{
 	protected:
 		virtual void submit(const Renderable2D* renderable) = 0;
-		virtual void flush() = 0;
+		virtual void render() = 0;
 	};
 
 } }

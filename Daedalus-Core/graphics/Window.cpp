@@ -26,6 +26,8 @@ namespace daedalusCore { namespace graphics {
 		glfwSetMouseButtonCallback(m_window, mouseButtonCallback);
 		glfwSetCursorPosCallback(m_window, cursorPositionCallback);
 
+		glfwSwapInterval(0.0f);
+
 		if (glewInit() != GLEW_OK)
 		{
 			std::cout << "Error - Failed to initialize GLEW" << std::endl;

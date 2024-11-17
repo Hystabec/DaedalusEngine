@@ -2,28 +2,28 @@
 
 namespace daedalusCore { namespace graphics {
 
-		void SimpleRenderer2D::submit(const Renderable2D* renderable)
-		{
-			m_renderQueue.push_back(renderable);
-		}
+	void SimpleRenderer2D::submit(const Renderable2D* renderable)
+	{
+		m_renderQueue.push_back((StaticSprite*)renderable);
+	}
 
-		void SimpleRenderer2D::flush()
+	void SimpleRenderer2D::render()
+	{
+		while (!m_renderQueue.empty())
 		{
-			while (!m_renderQueue.empty())
-			{
-				const Renderable2D* renderalbe = m_renderQueue.front();
+			const StaticSprite* sprite = m_renderQueue.front();
 				
-				renderalbe->getVAO()->bind();
-				renderalbe->getIBO()->bind();
+			sprite->getVAO()->bind();
+			sprite->getIBO()->bind();
 
-				renderalbe->getShader().setUniformMat4("ml_matrix", maths::mat4::translate(renderalbe->getPosition()));
-				glDrawElements(GL_TRIANGLES, renderalbe->getIBO()->getCount(), GL_UNSIGNED_SHORT, 0);
+			sprite->getShader().setUniformMat4("ml_matrix", maths::mat4::translate(sprite->getPosition()));
+			glDrawElements(GL_TRIANGLES, sprite->getIBO()->getCount(), GL_UNSIGNED_SHORT, 0);
 
-				renderalbe->getIBO()->unbind();
-				renderalbe->getVAO()->unbind();
+			sprite->getIBO()->unbind();
+			sprite->getVAO()->unbind();
 
-				m_renderQueue.pop_front();
-			}
+			m_renderQueue.pop_front();
 		}
+	}
 
 } }
