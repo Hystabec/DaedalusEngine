@@ -24,9 +24,6 @@
     <Filter Include="Header Files\utils">
       <UniqueIdentifier>{4ef96f64-1297-47cc-92d5-691b504d217a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\resources">
-      <UniqueIdentifier>{ad947011-06f9-42df-9dc8-52d5503c6536}</UniqueIdentifier>
-    </Filter>
     <Filter Include="resources">
       <UniqueIdentifier>{e279e5cf-6fa9-4638-ba29-fce45c233873}</UniqueIdentifier>
     </Filter>
@@ -38,6 +35,9 @@
     </Filter>
     <Filter Include="Source Files\graphics\buffers">
       <UniqueIdentifier>{96eabd9a-9ff0-44af-b00d-14e41105a6f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\graphics\layers">
+      <UniqueIdentifier>{50a16e9e-4466-4616-b149-a943a57ab41d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -60,15 +60,33 @@
       <Filter>Source Files\maths</Filter>
     </ClCompile>
     <ClCompile Include="graphics\buffers\buffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\shader.cpp">
       <Filter>Source Files\graphics\buffers</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\shader.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
     <ClCompile Include="graphics\buffers\indexBuffer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\graphics\buffers</Filter>
     </ClCompile>
     <ClCompile Include="graphics\buffers\vertexArray.cpp">
+      <Filter>Source Files\graphics\buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\batchRenderer2D.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\simpleRenderer2D.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\sprite.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\staticSprite.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\layers\layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\layers\tileLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -105,6 +123,33 @@
     </ClInclude>
     <ClInclude Include="graphics\buffers\vertexArray.h">
       <Filter>Header Files\graphics\buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\batchRenderer2D.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderable2D.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\renderer2D.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\simpleRenderer2D.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\sprite.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\staticSprite.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\timer.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\layers\layer.h">
+      <Filter>Header Files\graphics\layers</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\layers\tileLayer.h">
+      <Filter>Header Files\graphics\layers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
