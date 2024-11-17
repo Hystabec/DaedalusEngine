@@ -13,7 +13,8 @@ namespace daedalusCore { namespace graphics {
 	struct VertexData
 	{
 		maths::vec3 vertex;
-		maths::vec4 colour;
+		//maths::vec4 colour;
+		unsigned int colour;
 	};
 
 	class Renderable2D

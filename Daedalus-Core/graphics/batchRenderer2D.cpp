@@ -13,7 +13,7 @@ namespace daedalusCore { namespace graphics {
 		glEnableVertexAttribArray(SHADER_VERTEX_INDEX);
 		glEnableVertexAttribArray(SHADER_COLOUR_INDEX);
 		glVertexAttribPointer(SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)(0));
-		glVertexAttribPointer(SHADER_COLOUR_INDEX, 4, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)(3* sizeof(GLfloat)));
+		glVertexAttribPointer(SHADER_COLOUR_INDEX, 4, GL_UNSIGNED_BYTE, GL_TRUE, RENDERER_VERTEX_SIZE, (const GLvoid*)(offsetof(VertexData, VertexData::colour)));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		GLuint* indices = new GLuint[RENDERER_INDICES_SIZE];
@@ -60,20 +60,26 @@ namespace daedalusCore { namespace graphics {
 		const maths::vec2& size = renderable->getSize();
 		const maths::vec4& colour = renderable->getColour();
 
+		int r = colour.x * 255;
+		int g = colour.y * 255;
+		int b = colour.z * 255;
+		int a = colour.w * 255;
+		unsigned int c = a << 24 | b << 16 | g << 6 | r;
+
 		m_Buffer->vertex = position;
-		m_Buffer->colour = colour;
+		m_Buffer->colour = c;
 		m_Buffer++;
 
 		m_Buffer->vertex = maths::vec3(position.x, position.y + size.y, position.z);
-		m_Buffer->colour = colour;
+		m_Buffer->colour = c;
 		m_Buffer++;
 
 		m_Buffer->vertex = maths::vec3(position.x + size.x, position.y + size.y, position.z);
-		m_Buffer->colour = colour;
+		m_Buffer->colour = c;
 		m_Buffer++;
 
 		m_Buffer->vertex = maths::vec3(position.x + size.x, position.y, position.z);
-		m_Buffer->colour = colour;
+		m_Buffer->colour = c;
 		m_Buffer++;
 
 		m_indexCount += 6;
