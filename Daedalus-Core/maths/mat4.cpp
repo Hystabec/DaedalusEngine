@@ -50,9 +50,40 @@ namespace daedalusCore { namespace maths {
 			return left.multiply(right);
 		}
 
+		vec3 operator*(const mat4& left, const vec3& right)
+		{
+			return left.multiply(right);
+		}
+
+		vec4 operator*(const mat4& left, const vec4& right)
+		{
+			return left.multiply(right);
+		}
+
 		mat4& mat4::operator*=(const mat4& other)
 		{
 			return this->multiply(other);
+		}
+
+		vec3 mat4::multiply(const vec3& other) const
+		{
+			return vec3
+			(
+				elements[0 + 0 * 4] * other.x + elements[0 + 1 * 4] * other.y + elements[0 + 2 * 4] * other.z + elements[0 + 3 * 4],
+				elements[1 + 0 * 4] * other.x + elements[1 + 1 * 4] * other.y + elements[1 + 2 * 4] * other.z + elements[1 + 3 * 4],
+				elements[2 + 0 * 4] * other.x + elements[2 + 1 * 4] * other.y + elements[2 + 2 * 4] * other.z + elements[2 + 3 * 4]
+			);
+		}
+
+		vec4 mat4::multiply(const vec4& other) const
+		{
+			return vec4
+			(
+				elements[0 + 0 * 4] * other.x + elements[0 + 1 * 4] * other.y + elements[0 + 2 * 4] * other.z + elements[0 + 3 * 4] * other.w,
+				elements[1 + 0 * 4] * other.x + elements[1 + 1 * 4] * other.y + elements[1 + 2 * 4] * other.z + elements[1 + 3 * 4] * other.w,
+				elements[2 + 0 * 4] * other.x + elements[2 + 1 * 4] * other.y + elements[2 + 2 * 4] * other.z + elements[2 + 3 * 4] * other.w,
+				elements[3 + 0 * 4] * other.x + elements[3 + 1 * 4] * other.y + elements[3 + 2 * 4] * other.z + elements[3 + 3 * 4] * other.w
+			);
 		}
 
 		mat4 mat4::orthographic(float left, float right, float botton, float top, float near, float far)

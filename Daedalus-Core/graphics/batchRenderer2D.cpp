@@ -64,21 +64,21 @@ namespace daedalusCore { namespace graphics {
 		int g = colour.y * 255;
 		int b = colour.z * 255;
 		int a = colour.w * 255;
-		unsigned int c = a << 24 | b << 16 | g << 6 | r;
+		unsigned int c = a << 24 | b << 16 | g << 8 | r;
 
-		m_Buffer->vertex = position;
+		m_Buffer->vertex = *m_transformationBack * position;
 		m_Buffer->colour = c;
 		m_Buffer++;
 
-		m_Buffer->vertex = maths::vec3(position.x, position.y + size.y, position.z);
+		m_Buffer->vertex = *m_transformationBack * maths::vec3(position.x, position.y + size.y, position.z);
 		m_Buffer->colour = c;
 		m_Buffer++;
 
-		m_Buffer->vertex = maths::vec3(position.x + size.x, position.y + size.y, position.z);
+		m_Buffer->vertex = *m_transformationBack * maths::vec3(position.x + size.x, position.y + size.y, position.z);
 		m_Buffer->colour = c;
 		m_Buffer++;
-
-		m_Buffer->vertex = maths::vec3(position.x + size.x, position.y, position.z);
+		
+		m_Buffer->vertex = *m_transformationBack * maths::vec3(position.x + size.x, position.y, position.z);
 		m_Buffer->colour = c;
 		m_Buffer++;
 

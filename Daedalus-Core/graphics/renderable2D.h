@@ -24,8 +24,6 @@ namespace daedalusCore { namespace graphics {
 		maths::vec2 m_size;
 		maths::vec4 m_colour;
 
-		
-
 	public:
 		Renderable2D(maths::vec3 position, maths::vec2 size, maths::vec4 colour) : m_position(position), m_size(size), m_colour(colour)
 		{

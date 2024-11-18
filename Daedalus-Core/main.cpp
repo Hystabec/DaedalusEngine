@@ -21,6 +21,7 @@ using namespace graphics;
 using namespace buffers;
 using namespace maths;
 
+#define TEST_50K_SPRITES 0
 
 int main()
 {
@@ -35,6 +36,7 @@ int main()
 
 	TileLayer layer(shader);
 
+#if TEST_50K_SPRITES
 	for (float y = -9.0f; y < 9.0f; y += 0.1f)
 	{
 		for (float x = -16.0f; x < 16.0f; x += 0.1f)
@@ -42,6 +44,13 @@ int main()
 			layer.add(new Sprite(x, y, 0.09f, 0.09f, maths::vec4(rand() % 1000 / 1000.0f, 0, 1, 1)));
 		}
 	}
+#else
+	Sprite* testHou = new Sprite(-15.0f, 3.0f, 8, 4, maths::vec4(1, 1, 1, 1));
+	layer.add(testHou);
+	//layer.push(maths::mat4(testHou->getPosition()));
+	layer.add(new Sprite(0.1f, 1.2f, 6, 2, maths::vec4(1, 1, 0, 1)));
+	//layer.pop();
+#endif
 
 	Shader* shader2 = new Shader("resources/shaders/basic.vert", "resources/shaders/basic.frag");
 	TileLayer layer2(shader2);
@@ -59,11 +68,11 @@ int main()
 		window.getMousePosition(x, y);
 		shader->enable();
 		shader->setUniform2f("lightPos", vec2((float)(x * 32.0f / 960.0f - 16.0f), (float)(9.0f - y * 18.0f / 540.0f)));
-		shader2->enable();
-		shader2->setUniform2f("lightPos", vec2((float)(x * 32.0f / 960.0f - 16.0f), (float)(9.0f - y * 18.0f / 540.0f)));
+		//shader2->enable();
+		//shader2->setUniform2f("lightPos", vec2((float)(x * 32.0f / 960.0f - 16.0f), (float)(9.0f - y * 18.0f / 540.0f)));
 
 		layer.render();
-		layer2.render();
+		//layer2.render();
 
 		window.update();
 		
