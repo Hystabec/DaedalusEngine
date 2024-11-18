@@ -3,6 +3,7 @@
 #include <deque>
 #include "renderer2D.h"
 #include "staticSprite.h"
+#include "renderable2D.h"
 
 namespace daedalusCore { namespace graphics {
 

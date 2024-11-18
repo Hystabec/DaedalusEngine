@@ -3,6 +3,7 @@
 #include <cstddef>
 #include "renderer2D.h"
 #include "buffers/indexBuffer.h"
+#include "renderable2D.h"
 
 namespace daedalusCore { namespace graphics {
 

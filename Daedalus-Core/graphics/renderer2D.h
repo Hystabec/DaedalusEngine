@@ -2,9 +2,11 @@
 
 #include <GL/glew.h>
 #include "../maths/maths.h"
-#include "renderable2D.h"
+#include <vector>
 
 namespace daedalusCore { namespace graphics {
+
+	class Renderable2D;
 
 	class Renderer2D
 	{

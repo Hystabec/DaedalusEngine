@@ -30,7 +30,7 @@ namespace daedalusCore { namespace graphics {
 		m_renderer->begin();
 
 		for (const Renderable2D* renerable : m_renderableObjects)
-			m_renderer->submit(renerable);
+			renerable->submit(m_renderer);
 
 		m_renderer->end();
 		m_renderer->render();

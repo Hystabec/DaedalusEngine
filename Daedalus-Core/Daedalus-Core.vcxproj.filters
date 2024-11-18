@@ -39,6 +39,9 @@
     <Filter Include="Header Files\graphics\layers">
       <UniqueIdentifier>{50a16e9e-4466-4616-b149-a943a57ab41d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\graphics\layers">
+      <UniqueIdentifier>{c5a87468-873c-401c-835a-8f7a79e309cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -83,11 +86,14 @@
     <ClCompile Include="graphics\staticSprite.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\layers\layer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\layers\tileLayer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\graphics\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\layers\layer.cpp">
+      <Filter>Source Files\graphics\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\layers\group.cpp">
+      <Filter>Source Files\graphics\layers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +155,9 @@
       <Filter>Header Files\graphics\layers</Filter>
     </ClInclude>
     <ClInclude Include="graphics\layers\tileLayer.h">
+      <Filter>Header Files\graphics\layers</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\layers\group.h">
       <Filter>Header Files\graphics\layers</Filter>
     </ClInclude>
   </ItemGroup>

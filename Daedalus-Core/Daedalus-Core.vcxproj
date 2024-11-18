@@ -162,6 +162,7 @@
     <ClCompile Include="graphics\buffers\buffer.cpp" />
     <ClCompile Include="graphics\buffers\indexBuffer.cpp" />
     <ClCompile Include="graphics\buffers\vertexArray.cpp" />
+    <ClCompile Include="graphics\layers\group.cpp" />
     <ClCompile Include="graphics\layers\layer.cpp" />
     <ClCompile Include="graphics\layers\tileLayer.cpp" />
     <ClCompile Include="graphics\shader.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="graphics\buffers\buffer.h" />
     <ClInclude Include="graphics\buffers\indexBuffer.h" />
     <ClInclude Include="graphics\buffers\vertexArray.h" />
+    <ClInclude Include="graphics\layers\group.h" />
     <ClInclude Include="graphics\layers\layer.h" />
     <ClInclude Include="graphics\layers\tileLayer.h" />
     <ClInclude Include="graphics\renderable2D.h" />

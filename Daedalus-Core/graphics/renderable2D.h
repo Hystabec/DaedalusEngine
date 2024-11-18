@@ -6,6 +6,8 @@
 #include "buffers/indexBuffer.h"
 #include "buffers/vertexArray.h"
 
+#include "renderer2D.h"
+
 #include "shader.h"
 
 namespace daedalusCore { namespace graphics {
@@ -24,6 +26,9 @@ namespace daedalusCore { namespace graphics {
 		maths::vec2 m_size;
 		maths::vec4 m_colour;
 
+	protected:
+		Renderable2D() {}
+
 	public:
 		Renderable2D(maths::vec3 position, maths::vec2 size, maths::vec4 colour) : m_position(position), m_size(size), m_colour(colour)
 		{
@@ -31,6 +36,11 @@ namespace daedalusCore { namespace graphics {
 		}
 
 		virtual ~Renderable2D() { }
+
+		virtual void submit(Renderer2D* renderer) const
+		{
+			renderer->submit(this);
+		}
 
 		inline const maths::vec3& getPosition() const { return m_position; }
 		inline const maths::vec2& getSize() const { return m_size; }
