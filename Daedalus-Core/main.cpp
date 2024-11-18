@@ -18,6 +18,8 @@
 
 #include "utils/timer.h"
 
+#include "FreeImage.h"
+
 using namespace daedalusCore;
 using namespace graphics;
 using namespace buffers;
@@ -93,3 +95,5 @@ int main()
 
 	return 0;
 }
+
+
