@@ -18,7 +18,7 @@
 
 #include "utils/timer.h"
 
-#include "FreeImage.h"
+#include "graphics/texture.h"
 
 using namespace daedalusCore;
 using namespace graphics;

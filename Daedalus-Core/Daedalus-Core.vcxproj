@@ -169,6 +169,7 @@
     <ClCompile Include="graphics\simpleRenderer2D.cpp" />
     <ClCompile Include="graphics\sprite.cpp" />
     <ClCompile Include="graphics\staticSprite.cpp" />
+    <ClCompile Include="graphics\texture.cpp" />
     <ClCompile Include="graphics\Window.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="maths\mat4.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="graphics\simpleRenderer2D.h" />
     <ClInclude Include="graphics\sprite.h" />
     <ClInclude Include="graphics\staticSprite.h" />
+    <ClInclude Include="graphics\texture.h" />
     <ClInclude Include="graphics\Window.h" />
     <ClInclude Include="maths\mat4.h" />
     <ClInclude Include="maths\maths.h" />
@@ -197,6 +199,7 @@
     <ClInclude Include="maths\vec3.h" />
     <ClInclude Include="maths\vec4.h" />
     <ClInclude Include="utils\fileUtils.h" />
+    <ClInclude Include="utils\imageLoad.h" />
     <ClInclude Include="utils\timer.h" />
   </ItemGroup>
   <ItemGroup>

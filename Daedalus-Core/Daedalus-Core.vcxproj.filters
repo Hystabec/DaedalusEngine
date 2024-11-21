@@ -95,6 +95,9 @@
     <ClCompile Include="graphics\layers\group.cpp">
       <Filter>Source Files\graphics\layers</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\texture.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\Window.h">
@@ -159,6 +162,12 @@
     </ClInclude>
     <ClInclude Include="graphics\layers\group.h">
       <Filter>Header Files\graphics\layers</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\texture.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\imageLoad.h">
+      <Filter>Header Files\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
