@@ -15,7 +15,7 @@ namespace daedalusCore { namespace graphics {
 	struct VertexData
 	{
 		maths::vec3 vertex;
-		//maths::vec4 colour;
+		maths::vec2 uv;
 		unsigned int colour;
 	};
 
@@ -25,14 +25,14 @@ namespace daedalusCore { namespace graphics {
 		maths::vec3 m_position;
 		maths::vec2 m_size;
 		maths::vec4 m_colour;
-
+		std::vector<maths::vec2> m_UV;
 	protected:
-		Renderable2D() {}
+		Renderable2D() { setUVDefaults(); }
 
 	public:
 		Renderable2D(maths::vec3 position, maths::vec2 size, maths::vec4 colour) : m_position(position), m_size(size), m_colour(colour)
 		{
-			
+			setUVDefaults();
 		}
 
 		virtual ~Renderable2D() { }
@@ -45,6 +45,16 @@ namespace daedalusCore { namespace graphics {
 		inline const maths::vec3& getPosition() const { return m_position; }
 		inline const maths::vec2& getSize() const { return m_size; }
 		inline const maths::vec4& getColour() const { return m_colour; }
+		inline const std::vector<maths::vec2>& getUV() const { return m_UV; }
+
+	private:
+		void setUVDefaults()
+		{
+			m_UV.push_back(maths::vec2(0, 0));
+			m_UV.push_back(maths::vec2(0, 1));
+			m_UV.push_back(maths::vec2(1, 1));
+			m_UV.push_back(maths::vec2(1, 0));
+		}
 	};
 
 } }

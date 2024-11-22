@@ -54,8 +54,8 @@ int main()
 
 	Group* group2 = new Group(mat4::translate(vec3(1.0f, 1.0f, 0.0f)));
 	group->add(group2);
-	group2->add(new Sprite(0.0f, 0.0f, 6, 2, vec4(1, 1, 0, 1)));
-	group2->add(new Sprite(1.5, 0.5f, 3, 1, vec4(0, 1, 1, 1)));
+	//group2->add(new Sprite(0.0f, 0.0f, 6, 2, vec4(1, 1, 0, 1)));
+	//group2->add(new Sprite(1.5, 0.5f, 3, 1, vec4(0, 1, 1, 1)));
 
 	layer.add(group);
 #endif
@@ -63,6 +63,14 @@ int main()
 	Shader* shader2 = new Shader("resources/shaders/basic.vert", "resources/shaders/basic.frag");
 	TileLayer layer2(shader2);
 	layer2.add(new Sprite(-2, -2, 4, 4, maths::vec4(0, 0, 1, 1)));
+
+	glActiveTexture(GL_TEXTURE0);
+	Texture texture("resources/testImage.png");
+	texture.bind();
+
+	shader->enable();
+	shader->setUniform1i("tex", 0);
+	shader->setUniformMat4("pr_matrix", maths::mat4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
 
 	utils::Timer time;
 	float timer = 0;
