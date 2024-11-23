@@ -13,10 +13,12 @@ namespace daedalusCore { namespace graphics {
 
 		glEnableVertexAttribArray(SHADER_VERTEX_INDEX);
 		glEnableVertexAttribArray(SHADER_UV_INDEX);
+		glEnableVertexAttribArray(SHADER_TID_INDEX);
 		glEnableVertexAttribArray(SHADER_COLOUR_INDEX);
 
 		glVertexAttribPointer(SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)(0));
 		glVertexAttribPointer(SHADER_UV_INDEX, 2, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)(offsetof(VertexData, VertexData::uv)));
+		glVertexAttribPointer(SHADER_TID_INDEX, 1, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)(offsetof(VertexData, VertexData::tid)));
 		glVertexAttribPointer(SHADER_COLOUR_INDEX, 4, GL_UNSIGNED_BYTE, GL_TRUE, RENDERER_VERTEX_SIZE, (const GLvoid*)(offsetof(VertexData, VertexData::colour)));
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -65,30 +67,66 @@ namespace daedalusCore { namespace graphics {
 		const maths::vec2& size = renderable->getSize();
 		const maths::vec4& colour = renderable->getColour();
 		const std::vector<maths::vec2>& uv = renderable->getUV();
+		const GLuint tid = renderable->getTextureID();
 
-		int r = colour.x * 255;
-		int g = colour.y * 255;
-		int b = colour.z * 255;
-		int a = colour.w * 255;
-		unsigned int c = a << 24 | b << 16 | g << 8 | r;
+		unsigned int c = 0;
+
+		float ts = 0.0f;
+		if (tid > 0)
+		{
+			bool found = false;
+			for (int i = 0; i < m_textureSlots.size(); i++)
+			{
+				if (m_textureSlots[i] == tid)
+				{
+					ts = (float)(i + 1);
+					found = true;
+					break;
+				}
+			}
+
+			if (!found)
+			{
+				if (m_textureSlots.size() >= 32)
+				{
+					end();
+					render();
+					begin();
+				}
+				m_textureSlots.push_back(tid);
+				ts = (float)(m_textureSlots.size());
+			}
+		}
+		else
+		{
+			int r = colour.x * 255;
+			int g = colour.y * 255;
+			int b = colour.z * 255;
+			int a = colour.w * 255;
+			c = a << 24 | b << 16 | g << 8 | r;
+		}
 
 		m_Buffer->vertex = *m_transformationBack * position;
 		m_Buffer->uv = uv[0];
+		m_Buffer->tid = ts;
 		m_Buffer->colour = c;
 		m_Buffer++;
 
 		m_Buffer->vertex = *m_transformationBack * maths::vec3(position.x, position.y + size.y, position.z);
 		m_Buffer->uv = uv[1];
+		m_Buffer->tid = ts;
 		m_Buffer->colour = c;
 		m_Buffer++;
 
 		m_Buffer->vertex = *m_transformationBack * maths::vec3(position.x + size.x, position.y + size.y, position.z);
 		m_Buffer->uv = uv[2];
+		m_Buffer->tid = ts;
 		m_Buffer->colour = c;
 		m_Buffer++;
 		
 		m_Buffer->vertex = *m_transformationBack * maths::vec3(position.x + size.x, position.y, position.z);
 		m_Buffer->uv = uv[3];
+		m_Buffer->tid = ts;
 		m_Buffer->colour = c;
 		m_Buffer++;
 
@@ -97,6 +135,12 @@ namespace daedalusCore { namespace graphics {
 
 	void BatchRenderer2D::render()
 	{
+		for (int i = 0; i < m_textureSlots.size(); i++)
+		{
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, m_textureSlots[i]);
+		}
+
 		glBindVertexArray(m_VAO);
 		m_IBO->bind();
 

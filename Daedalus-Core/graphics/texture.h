@@ -20,6 +20,7 @@ namespace daedalusCore { namespace graphics {
 
 		inline const unsigned int getWidth() const { return m_width; }
 		inline const unsigned int getHeight() const { return m_height; }
+		inline const GLuint getID() const { return m_textureID; }
 
 	private:
 		GLuint load();

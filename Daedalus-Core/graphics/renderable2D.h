@@ -7,6 +7,7 @@
 #include "buffers/vertexArray.h"
 
 #include "renderer2D.h"
+#include "texture.h"
 
 #include "shader.h"
 
@@ -16,6 +17,7 @@ namespace daedalusCore { namespace graphics {
 	{
 		maths::vec3 vertex;
 		maths::vec2 uv;
+		float tid;
 		unsigned int colour;
 	};
 
@@ -26,6 +28,7 @@ namespace daedalusCore { namespace graphics {
 		maths::vec2 m_size;
 		maths::vec4 m_colour;
 		std::vector<maths::vec2> m_UV;
+		Texture* m_texture;
 	protected:
 		Renderable2D() { setUVDefaults(); }
 
@@ -46,6 +49,7 @@ namespace daedalusCore { namespace graphics {
 		inline const maths::vec2& getSize() const { return m_size; }
 		inline const maths::vec4& getColour() const { return m_colour; }
 		inline const std::vector<maths::vec2>& getUV() const { return m_UV; }
+		inline const GLuint getTextureID() const { return m_texture == nullptr ? 0 : m_texture->getID(); }
 
 	private:
 		void setUVDefaults()

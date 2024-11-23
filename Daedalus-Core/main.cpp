@@ -1,6 +1,7 @@
 #include "graphics/Window.h"
 #include "maths/maths.h"
 #include "graphics/shader.h"
+#include "utils/timer.h"
 
 #include "graphics/buffers/buffer.h"
 #include "graphics/buffers/indexBuffer.h"
@@ -16,7 +17,6 @@
 
 #include "graphics/layers/group.h"
 
-#include "utils/timer.h"
 
 #include "graphics/texture.h"
 
@@ -40,6 +40,16 @@ int main()
 
 	TileLayer layer(shader);
 
+	//Texture* texture = new Texture("resources/testImage.png");
+	//Texture* texture2 = new Texture("resources/testImage2.png");
+
+	Texture* textures[] =
+	{
+		new Texture("resources/testImage.png"),
+		new Texture("resources/testImage2.png"),
+		new Texture("resources/testImage3.png")
+	};
+
 #if TEST_50K_SPRITES
 	for (float y = -9.0f; y < 9.0f; y += 0.1f)
 	{
@@ -49,27 +59,23 @@ int main()
 		}
 	}
 #else
-	Group* group = new Group(mat4::translate(vec3(-15.0f, 4.0f, 0.0f)));
-	group->add(new Sprite(0, 0, 8, 4, vec4(1, 1, 1, 1)));
-
-	Group* group2 = new Group(mat4::translate(vec3(1.0f, 1.0f, 0.0f)));
-	group->add(group2);
-	//group2->add(new Sprite(0.0f, 0.0f, 6, 2, vec4(1, 1, 0, 1)));
-	//group2->add(new Sprite(1.5, 0.5f, 3, 1, vec4(0, 1, 1, 1)));
-
-	layer.add(group);
+	for (float y = -9.0f; y < 9.0f; y++)
+	{
+		for (float x = -16.0f; x < 16.0f; x++)
+		{
+			//layer.add(new Sprite(x, y, 0.9f, 0.9f, maths::vec4(rand() % 1000 / 1000, 0, 1, 1)));
+			layer.add(new Sprite(x, y, 0.9f, 0.9f, textures[rand() % 3]));
+		}
+	}
 #endif
 
-	Shader* shader2 = new Shader("resources/shaders/basic.vert", "resources/shaders/basic.frag");
-	TileLayer layer2(shader2);
-	layer2.add(new Sprite(-2, -2, 4, 4, maths::vec4(0, 0, 1, 1)));
-
-	glActiveTexture(GL_TEXTURE0);
-	Texture texture("resources/testImage.png");
-	texture.bind();
+	GLint texID[] =
+	{
+		0,1,2,3,4,5,6,7,8,9
+	};
 
 	shader->enable();
-	shader->setUniform1i("tex", 0);
+	shader->setUniform1iv("textures", texID, 10);
 	shader->setUniformMat4("pr_matrix", maths::mat4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
 
 	utils::Timer time;
@@ -84,11 +90,8 @@ int main()
 		window.getMousePosition(x, y);
 		shader->enable();
 		shader->setUniform2f("lightPos", vec2((float)(x * 32.0f / 960.0f - 16.0f), (float)(9.0f - y * 18.0f / 540.0f)));
-		//shader2->enable();
-		//shader2->setUniform2f("lightPos", vec2((float)(x * 32.0f / 960.0f - 16.0f), (float)(9.0f - y * 18.0f / 540.0f)));
 
 		layer.render();
-		//layer2.render();
 
 		window.update();
 		
@@ -100,6 +103,12 @@ int main()
 			frames = 0;
 		}
 	}
+
+	//delete texture;
+	//delete texture2;
+	
+	for (int i = 0; i < 3; i++)
+		delete textures[i];
 
 	return 0;
 }

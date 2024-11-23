@@ -8,6 +8,7 @@ namespace daedalusCore { namespace graphics {
 	{
 	public:
 		Sprite(float x, float y, float width, float height, const maths::vec4& colour);
+		Sprite(float x, float y, float width, float height, Texture* texture);
 	};
 
 } }
