@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Windows.h>
+#include <chrono>
 
 namespace daedalusCore { namespace utils {
 
@@ -29,6 +30,44 @@ namespace daedalusCore { namespace utils {
 			QueryPerformanceCounter(&current);
 			unsigned _int64 cycles = current.QuadPart - m_start.QuadPart;
 			return (float)(m_frequency * cycles);
+		}
+	};
+
+	class modTimer
+	{
+		using Clock = std::chrono::high_resolution_clock;
+		using TimePoint = std::chrono::time_point<Clock>;
+
+	private:
+		TimePoint m_start;
+
+	public:
+		modTimer()
+		{
+			m_start = Clock::now();
+		}
+
+		void reset()
+		{
+			m_start = Clock::now();
+		}
+
+		float getSeconds() const
+		{
+			using namespace std::chrono;
+			return duration_cast<seconds>(Clock::now() - m_start).count();
+		}
+
+		float getMilliseconds() const
+		{
+			using namespace std::chrono;
+			return duration_cast<milliseconds>(Clock::now() - m_start).count();
+		}
+
+		float GetMicroseconds() const
+		{
+			using namespace std::chrono;
+			return duration_cast<microseconds>(Clock::now() - m_start).count();
 		}
 	};
 
