@@ -5,13 +5,13 @@
 
 namespace daedalusCore { namespace utils {
 
-	class Timer
+	class oldTimer
 	{
 	private:
 		LARGE_INTEGER m_start;
 		double m_frequency;
 	public:
-		Timer()
+		oldTimer()
 		{
 			LARGE_INTEGER frequency;
 			QueryPerformanceFrequency(&frequency);
@@ -33,41 +33,38 @@ namespace daedalusCore { namespace utils {
 		}
 	};
 
-	class modTimer
+	class Timer
 	{
-		using Clock = std::chrono::high_resolution_clock;
-		using TimePoint = std::chrono::time_point<Clock>;
-
 	private:
-		TimePoint m_start;
+		std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
 
 	public:
-		modTimer()
+		Timer()
 		{
-			m_start = Clock::now();
+			m_start = std::chrono::high_resolution_clock::now();
 		}
 
 		void reset()
 		{
-			m_start = Clock::now();
+			m_start = std::chrono::high_resolution_clock::now();
 		}
 
-		float getSeconds() const
+		float elapsedSeconds() const
 		{
 			using namespace std::chrono;
-			return duration_cast<seconds>(Clock::now() - m_start).count();
+			return duration_cast<seconds>(std::chrono::high_resolution_clock::now() - m_start).count();
 		}
 
-		float getMilliseconds() const
+		float elapsedMilliseconds() const
 		{
 			using namespace std::chrono;
-			return duration_cast<milliseconds>(Clock::now() - m_start).count();
+			return duration_cast<milliseconds>(std::chrono::high_resolution_clock::now() - m_start).count();
 		}
 
-		float GetMicroseconds() const
+		float elapsedMicroseconds() const
 		{
 			using namespace std::chrono;
-			return duration_cast<microseconds>(Clock::now() - m_start).count();
+			return duration_cast<microseconds>(std::chrono::high_resolution_clock::now() - m_start).count();
 		}
 	};
 

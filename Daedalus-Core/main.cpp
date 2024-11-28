@@ -78,7 +78,7 @@ int main()
 	shader->setUniform1iv("textures", texID, 10);
 	shader->setUniformMat4("pr_matrix", maths::mat4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
 
-	utils::modTimer time;
+	utils::Timer time;
 	float timer = 0;
 	unsigned int frames = 0;
 
@@ -96,7 +96,7 @@ int main()
 		window.update();
 		
 		frames++;
-		if (time.getSeconds() - timer > 1.0f)
+		if (time.elapsedSeconds() - timer > 1.0f)
 		{
 			timer += 1.0f;
 			printf("%d fps\n", frames);
