@@ -24,7 +24,7 @@ void main()
 	if(fs_in.tid > 0.0)
 	{
 		int tid = int(fs_in.tid - 0.5);
-		texColour = texture(textures[tid], fs_in.uv);
+		texColour = texture(textures[tid], fs_in.uv) * texColour;
 	}
 
 	color = texColour * intensity;

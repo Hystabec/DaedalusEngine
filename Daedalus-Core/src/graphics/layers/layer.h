@@ -20,6 +20,8 @@ namespace daedalusCore { namespace graphics{
 
 		virtual void add(Renderable2D* renderable);
 		virtual void render();
+
+		inline const std::vector<Renderable2D*>& getRenderables() const { return m_renderableObjects; }
 	};
 
 }}

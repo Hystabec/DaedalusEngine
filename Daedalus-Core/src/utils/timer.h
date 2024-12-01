@@ -1,17 +1,31 @@
 #pragma once
 
+#ifdef DD_USING_WINDOWS_TIMER
 #include <Windows.h>
+#else
 #include <chrono>
+#endif
 
 namespace daedalusCore { namespace utils {
 
-	class oldTimer
+#ifdef USING_WINDOWS_TIMER
+	class Timer
 	{
 	private:
 		LARGE_INTEGER m_start;
 		double m_frequency;
+
+	private:
+		float elapsed() const
+		{
+			LARGE_INTEGER current;
+			QueryPerformanceCounter(&current);
+			unsigned _int64 cycles = current.QuadPart - m_start.QuadPart;
+			return (float)(m_frequency * cycles);
+		}
+
 	public:
-		oldTimer()
+		Timer()
 		{
 			LARGE_INTEGER frequency;
 			QueryPerformanceFrequency(&frequency);
@@ -24,15 +38,23 @@ namespace daedalusCore { namespace utils {
 			QueryPerformanceCounter(&m_start);
 		}
 
-		float elapsed()
+
+		float elapsedSeconds() const
 		{
-			LARGE_INTEGER current;
-			QueryPerformanceCounter(&current);
-			unsigned _int64 cycles = current.QuadPart - m_start.QuadPart;
-			return (float)(m_frequency * cycles);
+			return elapsed();
+		}
+
+		float elapsedMilliseconds() const
+		{
+			return (elapsed() * 1000.0f);
+		}
+
+		float elapsedMicroseconds() const
+		{
+			return (elapsed() * 1000.0f * 1000.0f);
 		}
 	};
-
+#else
 	class Timer
 	{
 	private:
@@ -67,5 +89,6 @@ namespace daedalusCore { namespace utils {
 			return duration_cast<microseconds>(std::chrono::high_resolution_clock::now() - m_start).count();
 		}
 	};
+#endif
 
 } }

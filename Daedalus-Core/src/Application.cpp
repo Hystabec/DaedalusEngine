@@ -110,6 +110,7 @@ namespace daedalusCore {
 			window.update();
 
 			frames++;
+
 			if (time.elapsedSeconds() - timer > 1.0f)
 			{
 				timer += 1.0f;
@@ -118,8 +119,11 @@ namespace daedalusCore {
 			}
 		}
 
-		//delete texture;
-		//delete texture2;
+		//layer deletes shader
+		//delete shader;
+
+		delete texture;
+		delete texture2;
 
 		for (int i = 0; i < 3; i++)
 			delete textures[i];
