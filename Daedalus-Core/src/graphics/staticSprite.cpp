@@ -3,7 +3,7 @@
 namespace daedalusCore { namespace graphics {
 
 	StaticSprite::StaticSprite(float x, float y, float width, float height, const maths::vec4& colour, Shader& shader) 
-		: Renderable2D(maths::vec3(x, y, 0), maths::vec2(width, height), colour), m_shader(shader)
+		: Renderable2D(maths::vec3(x, y, 0), maths::vec2(width, height), 0xffff00ff), m_shader(shader)
 	{
 		m_vertexArray = new buffers::VertexArray();
 		GLfloat verticies[] =

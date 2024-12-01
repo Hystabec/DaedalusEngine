@@ -137,6 +137,7 @@
     <ClInclude Include="src\maths\vec2.h" />
     <ClInclude Include="src\maths\vec3.h" />
     <ClInclude Include="src\maths\vec4.h" />
+    <ClInclude Include="src\utils\colourConversionUtils.h" />
     <ClInclude Include="src\utils\fileUtils.h" />
     <ClInclude Include="src\utils\imageLoad.h" />
     <ClInclude Include="src\utils\timer.h" />

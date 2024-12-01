@@ -65,11 +65,9 @@ namespace daedalusCore { namespace graphics {
 	{
 		const maths::vec3& position = renderable->getPosition();
 		const maths::vec2& size = renderable->getSize();
-		const maths::vec4& colour = renderable->getColour();
+		const unsigned int colour = renderable->getColour();
 		const std::vector<maths::vec2>& uv = renderable->getUV();
 		const GLuint tid = renderable->getTextureID();
-
-		unsigned int c = 0;
 
 		float ts = 0.0f;
 		if (tid > 0)
@@ -97,37 +95,30 @@ namespace daedalusCore { namespace graphics {
 				ts = (float)(m_textureSlots.size());
 			}
 		}
-		else
-		{
-			int r = colour.x * 255;
-			int g = colour.y * 255;
-			int b = colour.z * 255;
-			int a = colour.w * 255;
-			c = a << 24 | b << 16 | g << 8 | r;
-		}
+		
 
 		m_Buffer->vertex = *m_transformationBack * position;
 		m_Buffer->uv = uv[0];
 		m_Buffer->tid = ts;
-		m_Buffer->colour = c;
+		m_Buffer->colour = colour;
 		m_Buffer++;
 
 		m_Buffer->vertex = *m_transformationBack * maths::vec3(position.x, position.y + size.y, position.z);
 		m_Buffer->uv = uv[1];
 		m_Buffer->tid = ts;
-		m_Buffer->colour = c;
+		m_Buffer->colour = colour;
 		m_Buffer++;
 
 		m_Buffer->vertex = *m_transformationBack * maths::vec3(position.x + size.x, position.y + size.y, position.z);
 		m_Buffer->uv = uv[2];
 		m_Buffer->tid = ts;
-		m_Buffer->colour = c;
+		m_Buffer->colour = colour;
 		m_Buffer++;
 		
 		m_Buffer->vertex = *m_transformationBack * maths::vec3(position.x + size.x, position.y, position.z);
 		m_Buffer->uv = uv[3];
 		m_Buffer->tid = ts;
-		m_Buffer->colour = c;
+		m_Buffer->colour = colour;
 		m_Buffer++;
 
 		m_indexCount += 6;

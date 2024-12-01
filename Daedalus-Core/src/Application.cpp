@@ -19,6 +19,7 @@
 
 #include "graphics/layers/group.h"
 #include "graphics/texture.h"
+#include "utils/colourConversionUtils.h"
 
 namespace daedalusCore {
 
@@ -76,7 +77,7 @@ namespace daedalusCore {
 		{
 			for (float x = -16.0f; x < 16.0f; x++)
 			{
-				//layer.add(new Sprite(x, y, 0.9f, 0.9f, maths::vec4(rand() % 1000 / 1000, 0, 1, 1)));
+				//layer.add(new Sprite(x, y, 0.9f, 0.9f, utils::colour_To_uint(maths::vec4(rand() % 1000 / 1000, 0, 1, 1))));
 				layer.add(new Sprite(x, y, 0.9f, 0.9f, textures[rand() % 3]));
 			}
 		}
