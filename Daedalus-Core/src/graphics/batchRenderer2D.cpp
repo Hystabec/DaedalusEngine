@@ -85,7 +85,7 @@ namespace daedalusCore { namespace graphics {
 
 			if (!found)
 			{
-				if (m_textureSlots.size() >= 32)
+				if (m_textureSlots.size() >= RENDERER_MAX_TEXTURES)
 				{
 					end();
 					render();
@@ -141,6 +141,7 @@ namespace daedalusCore { namespace graphics {
 		glBindVertexArray(0);
 
 		m_indexCount = 0;
+		m_textureSlots.clear();
 	}
 
 } }

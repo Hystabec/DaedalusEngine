@@ -102,9 +102,7 @@
     <ClCompile Include="src\graphics\layers\layer.cpp" />
     <ClCompile Include="src\graphics\layers\tileLayer.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
-    <ClCompile Include="src\graphics\simpleRenderer2D.cpp" />
     <ClCompile Include="src\graphics\sprite.cpp" />
-    <ClCompile Include="src\graphics\staticSprite.cpp" />
     <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\graphics\Window.cpp" />
     <ClCompile Include="src\maths\mat4.cpp" />
@@ -127,9 +125,7 @@
     <ClInclude Include="src\graphics\renderable2D.h" />
     <ClInclude Include="src\graphics\renderer2D.h" />
     <ClInclude Include="src\graphics\shader.h" />
-    <ClInclude Include="src\graphics\simpleRenderer2D.h" />
     <ClInclude Include="src\graphics\sprite.h" />
-    <ClInclude Include="src\graphics\staticSprite.h" />
     <ClInclude Include="src\graphics\texture.h" />
     <ClInclude Include="src\graphics\Window.h" />
     <ClInclude Include="src\maths\mat4.h" />

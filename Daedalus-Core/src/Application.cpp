@@ -9,10 +9,8 @@
 #include "graphics/buffers/indexBuffer.h"
 #include "graphics/buffers/vertexArray.h"
 
-#include "graphics/simpleRenderer2D.h"
 #include "graphics/batchRenderer2D.h"
 #include "graphics/renderable2D.h"
-#include "graphics/staticSprite.h"
 #include "graphics/sprite.h"
 
 #include "graphics/layers/tileLayer.h"
