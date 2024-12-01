@@ -1,5 +1,8 @@
 #include "Application.h"
 
+#define OLD_MAIN 0
+#if OLD_MAIN
+
 #include "graphics/Window.h"
 #include "maths/maths.h"
 #include "graphics/shader.h"
@@ -18,17 +21,25 @@
 #include "graphics/layers/group.h"
 #include "graphics/texture.h"
 #include "utils/colourConversionUtils.h"
+#else
+#include "graphics/Window.h"
+#include "utils/timer.h"
+#endif
 
 namespace daedalusCore {
 
-	Application::Application()
+	Application::Application(const char* applicationName)
 	{
+		m_applicationName = applicationName;
+		Init();
 	}
 
 	Application::~Application()
 	{
 	}
 
+
+#if OLD_MAIN
 	int Application::Run()
 	{
 		//while (true);
@@ -128,5 +139,46 @@ namespace daedalusCore {
 
 		return 0;
 	}
+#else
+	int Application::Run()
+	{
+		graphics::Window window(m_applicationName, 960, 540);
+		utils::Timer time;
+
+		float timer = 0.0f;
+		float updateTimer = 0.0f;
+		float updateTick = 1.0f / 60.0f;
+		unsigned int frames = 0;
+		unsigned int updates = 0;
+
+		while (!window.closed())
+		{
+			window.clear();
+
+			if (time.elapsedSeconds() - updateTimer > updateTick)
+			{
+				updates++;
+				Update();
+				updateTimer += updateTick;
+			}
+
+			frames++;
+			Render();
+			window.update();
+
+			if (time.elapsedSeconds() - timer > 1.0f)
+			{
+				timer += 1.0f;
+				Tick();
+				m_FramesPerSecond = frames;
+				m_UpdatesPerSecond = updates;
+				frames = 0;
+				updates = 0;
+			}
+		}
+
+		return 0;
+	}
+#endif
 
 }

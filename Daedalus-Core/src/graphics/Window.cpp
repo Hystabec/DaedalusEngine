@@ -62,7 +62,7 @@ namespace daedalusCore { namespace graphics {
 			return;
 		}
 
-		std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
+		//std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
 
 		for (int i = 0; i < MAX_KEYS; i++)
 		{

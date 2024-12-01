@@ -6,7 +6,7 @@
 		#define DD_API __declspec(dllexport)
 	#else
 		#define DD_API __declspec(dllimport)
-	#endif // DAEDALUS_BUILD_DLL
+	#endif 
 #else
 	#error Daedalus only supports windows
 #endif

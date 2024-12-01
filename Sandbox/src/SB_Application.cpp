@@ -1,15 +1,21 @@
 #include <Daedalus.h>
+#include <iostream>
 
 class SandBox : public daedalusCore::Application
 {
 public:
 	SandBox()
+		: Application("Sandbox Application")
 	{
-		m_applicationName = "Sandbox Application";
 	}
 
 	~SandBox()
 	{
+	}
+
+	void Tick() override
+	{
+		std::cout << GetFramesPerSecond() << " fps\n";
 	}
 };
 
