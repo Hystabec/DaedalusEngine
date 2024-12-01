@@ -44,137 +44,149 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\graphics\Window.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\maths\vec2.cpp">
+      <Filter>Source Files\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="src\maths\vec3.cpp">
+      <Filter>Source Files\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="src\maths\vec4.cpp">
+      <Filter>Source Files\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="src\maths\mat4.cpp">
+      <Filter>Source Files\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\buffers\buffer.cpp">
+      <Filter>Source Files\graphics\buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\shader.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\buffers\indexBuffer.cpp">
+      <Filter>Source Files\graphics\buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\buffers\vertexArray.cpp">
+      <Filter>Source Files\graphics\buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\batchRenderer2D.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\simpleRenderer2D.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\sprite.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\staticSprite.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\layers\tileLayer.cpp">
+      <Filter>Source Files\graphics\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\layers\layer.cpp">
+      <Filter>Source Files\graphics\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\layers\group.cpp">
+      <Filter>Source Files\graphics\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\texture.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\Window.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="maths\vec2.cpp">
-      <Filter>Source Files\maths</Filter>
-    </ClCompile>
-    <ClCompile Include="maths\vec3.cpp">
-      <Filter>Source Files\maths</Filter>
-    </ClCompile>
-    <ClCompile Include="maths\vec4.cpp">
-      <Filter>Source Files\maths</Filter>
-    </ClCompile>
-    <ClCompile Include="maths\mat4.cpp">
-      <Filter>Source Files\maths</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\buffers\buffer.cpp">
-      <Filter>Source Files\graphics\buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\shader.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\buffers\indexBuffer.cpp">
-      <Filter>Source Files\graphics\buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\buffers\vertexArray.cpp">
-      <Filter>Source Files\graphics\buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\batchRenderer2D.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\simpleRenderer2D.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\sprite.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\staticSprite.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\layers\tileLayer.cpp">
-      <Filter>Source Files\graphics\layers</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\layers\layer.cpp">
-      <Filter>Source Files\graphics\layers</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\layers\group.cpp">
-      <Filter>Source Files\graphics\layers</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\texture.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="graphics\Window.h">
+    <ClInclude Include="src\graphics\Window.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="maths\maths.h">
+    <ClInclude Include="src\maths\maths.h">
       <Filter>Header Files\maths</Filter>
     </ClInclude>
-    <ClInclude Include="maths\vec2.h">
+    <ClInclude Include="src\maths\vec2.h">
       <Filter>Header Files\maths</Filter>
     </ClInclude>
-    <ClInclude Include="maths\vec3.h">
+    <ClInclude Include="src\maths\vec3.h">
       <Filter>Header Files\maths</Filter>
     </ClInclude>
-    <ClInclude Include="maths\vec4.h">
+    <ClInclude Include="src\maths\vec4.h">
       <Filter>Header Files\maths</Filter>
     </ClInclude>
-    <ClInclude Include="maths\mat4.h">
+    <ClInclude Include="src\maths\mat4.h">
       <Filter>Header Files\maths</Filter>
     </ClInclude>
-    <ClInclude Include="utils\fileUtils.h">
+    <ClInclude Include="src\utils\fileUtils.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\shader.h">
+    <ClInclude Include="src\graphics\shader.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\buffers\buffer.h">
+    <ClInclude Include="src\graphics\buffers\buffer.h">
       <Filter>Header Files\graphics\buffers</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\buffers\indexBuffer.h">
+    <ClInclude Include="src\graphics\buffers\indexBuffer.h">
       <Filter>Header Files\graphics\buffers</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\buffers\vertexArray.h">
+    <ClInclude Include="src\graphics\buffers\vertexArray.h">
       <Filter>Header Files\graphics\buffers</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\batchRenderer2D.h">
+    <ClInclude Include="src\graphics\batchRenderer2D.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\renderable2D.h">
+    <ClInclude Include="src\graphics\renderable2D.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\renderer2D.h">
+    <ClInclude Include="src\graphics\renderer2D.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\simpleRenderer2D.h">
+    <ClInclude Include="src\graphics\simpleRenderer2D.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\sprite.h">
+    <ClInclude Include="src\graphics\sprite.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\staticSprite.h">
+    <ClInclude Include="src\graphics\staticSprite.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="utils\timer.h">
+    <ClInclude Include="src\utils\timer.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\layers\layer.h">
+    <ClInclude Include="src\graphics\layers\layer.h">
       <Filter>Header Files\graphics\layers</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\layers\tileLayer.h">
+    <ClInclude Include="src\graphics\layers\tileLayer.h">
       <Filter>Header Files\graphics\layers</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\layers\group.h">
+    <ClInclude Include="src\graphics\layers\group.h">
       <Filter>Header Files\graphics\layers</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\texture.h">
+    <ClInclude Include="src\graphics\texture.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="utils\imageLoad.h">
+    <ClInclude Include="src\utils\imageLoad.h">
       <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Daedalus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EntryPoint.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\shaders\basic.frag">
+    <None Include="src\resources\shaders\basic.frag">
       <Filter>resources\shaders</Filter>
     </None>
-    <None Include="resources\shaders\basic.vert">
+    <None Include="src\resources\shaders\basic.vert">
       <Filter>resources\shaders</Filter>
     </None>
   </ItemGroup>
