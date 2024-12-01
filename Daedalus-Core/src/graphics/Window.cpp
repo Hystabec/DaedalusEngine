@@ -89,8 +89,8 @@ namespace daedalusCore { namespace graphics {
 
 	void Window::update()
 	{
-		memcpy(m_keysPrevious, m_keys, MAX_KEYS);
-		memcpy(m_MouseButtonsPrevious, m_MouseButtons, MAX_BUTTONS);
+		memcpy(m_keysPrevious, m_keys, sizeof(bool) * MAX_KEYS);
+		memcpy(m_MouseButtonsPrevious, m_MouseButtons, sizeof(bool) * MAX_BUTTONS);
 
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR)
@@ -119,6 +119,12 @@ namespace daedalusCore { namespace graphics {
 
 	bool Window::getKeyUp(unsigned int keycode) const
 	{
+		if (keycode >= MAX_KEYS)
+		{
+			std::cout << "Error - keycode out of range" << std::endl;
+			return false;
+		}
+
 		if (!m_keys[keycode] && m_keysPrevious[keycode])
 			return true;
 		else
@@ -127,6 +133,12 @@ namespace daedalusCore { namespace graphics {
 
 	bool Window::getKeyDown(unsigned int keycode) const
 	{
+		if (keycode >= MAX_KEYS)
+		{
+			std::cout << "Error - keycode out of range" << std::endl;
+			return false;
+		}
+
 		if (m_keys[keycode] && !m_keysPrevious[keycode])
 			return true;
 		else
@@ -146,6 +158,12 @@ namespace daedalusCore { namespace graphics {
 
 	bool Window::getMouseUp(unsigned int buttonCode) const
 	{
+		if (buttonCode >= MAX_BUTTONS)
+		{
+			std::cout << "Error - buttonCode out of range" << std::endl;
+			return false;
+		}
+
 		if (!m_MouseButtons[buttonCode] && m_MouseButtonsPrevious[buttonCode])
 			return true;
 		else
@@ -154,6 +172,12 @@ namespace daedalusCore { namespace graphics {
 
 	bool Window::getMouseDown(unsigned int buttonCode) const
 	{
+		if (buttonCode >= MAX_BUTTONS)
+		{
+			std::cout << "Error - buttonCode out of range" << std::endl;
+			return false;
+		}
+
 		if (m_MouseButtons[buttonCode] && !m_MouseButtonsPrevious[buttonCode])
 			return true;
 		else
