@@ -47,20 +47,20 @@ namespace daedalusCore {
 
 		mat4 ortho = mat4::orthographic(0, 16, 0, 9, -1, 1);
 
-		//Shader* shader = new Shader("../resources/shaders/basic.vert", "../resources/shaders/basic.frag");
-		//shader->enable();
-		//shader->setUniform2f("lightPos", vec2(4.0f, 1.5f));
+		Shader* shader = new Shader("../../DaedalusEngine/Daedalus-Core/resources/shaders/basic.vert", "../../DaedalusEngine/Daedalus-Core/resources/shaders/basic.frag");
+		shader->enable();
+		shader->setUniform2f("lightPos", vec2(4.0f, 1.5f));
 
-		//TileLayer layer(shader);
+		TileLayer layer(shader);
 
-		//Texture* texture = new Texture("resources/testImage.png");
-		//Texture* texture2 = new Texture("resources/testImage2.png");
+		Texture* texture = new Texture("../../DaedalusEngine/Daedalus-Core/resources/testImage.png");
+		Texture* texture2 = new Texture("../../DaedalusEngine/Daedalus-Core/resources/testImage2.png");
 
 		Texture* textures[] =
 		{
-			new Texture("../resources/testImage.png"),
-			new Texture("../resources/testImage2.png"),
-			new Texture("../resources/testImage3.png")
+			new Texture("../../DaedalusEngine/Daedalus-Core/resources/testImage.png"),
+			new Texture("../../DaedalusEngine/Daedalus-Core/resources/testImage2.png"),
+			new Texture("../../DaedalusEngine/Daedalus-Core/resources/testImage3.png")
 		};
 
 #if TEST_50K_SPRITES
@@ -77,7 +77,7 @@ namespace daedalusCore {
 			for (float x = -16.0f; x < 16.0f; x++)
 			{
 				//layer.add(new Sprite(x, y, 0.9f, 0.9f, maths::vec4(rand() % 1000 / 1000, 0, 1, 1)));
-				//layer.add(new Sprite(x, y, 0.9f, 0.9f, textures[rand() % 3]));
+				layer.add(new Sprite(x, y, 0.9f, 0.9f, textures[rand() % 3]));
 			}
 		}
 #endif
@@ -87,9 +87,9 @@ namespace daedalusCore {
 			0,1,2,3,4,5,6,7,8,9
 		};
 
-		//shader->enable();
-		//shader->setUniform1iv("textures", texID, 10);
-		//shader->setUniformMat4("pr_matrix", maths::mat4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+		shader->enable();
+		shader->setUniform1iv("textures", texID, 10);
+		shader->setUniformMat4("pr_matrix", maths::mat4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
 
 		utils::Timer time;
 		float timer = 0;
@@ -101,10 +101,10 @@ namespace daedalusCore {
 
 			double x, y;
 			window.getMousePosition(x, y);
-			//shader->enable();
-			//shader->setUniform2f("lightPos", vec2((float)(x * 32.0f / 960.0f - 16.0f), (float)(9.0f - y * 18.0f / 540.0f)));
+			shader->enable();
+			shader->setUniform2f("lightPos", vec2((float)(x * 32.0f / 960.0f - 16.0f), (float)(9.0f - y * 18.0f / 540.0f)));
 
-			//layer.render();
+			layer.render();
 
 			window.update();
 
