@@ -5,6 +5,7 @@ class SandBox : public daedalusCore::Application
 public:
 	SandBox()
 	{
+		m_applicationName = "Sandbox Application";
 	}
 
 	~SandBox()

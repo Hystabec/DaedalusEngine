@@ -42,7 +42,7 @@ namespace daedalusCore {
 #define TEST_50K_SPRITES 0
 
 		
-		Window window("Test Window", 960, 540);
+		Window window(m_applicationName, 960, 540);
 		//glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
 
 		mat4 ortho = mat4::orthographic(0, 16, 0, 9, -1, 1);
@@ -102,7 +102,7 @@ namespace daedalusCore {
 			double x, y;
 			window.getMousePosition(x, y);
 			shader->enable();
-			shader->setUniform2f("lightPos", vec2((float)(x * 32.0f / 960.0f - 16.0f), (float)(9.0f - y * 18.0f / 540.0f)));
+			shader->setUniform2f("lightPos", vec2((float)(x * 32.0f / window.getWidth() - 16.0f), (float)(9.0f - y * 18.0f / window.getHeight())));
 
 			layer.render();
 

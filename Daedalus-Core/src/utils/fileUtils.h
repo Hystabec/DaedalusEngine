@@ -5,7 +5,7 @@
 
 namespace daedalusCore { namespace utils {
 
-	std::string read_file(const char* filePath)
+	static std::string read_file(const char* filePath)
 	{
 		FILE* file = fopen(filePath, "rt");
 		fseek(file, 0, SEEK_END);

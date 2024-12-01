@@ -7,6 +7,12 @@ namespace daedalusCore { namespace graphics {
 	{
 	}
 
+	Group::~Group()
+	{
+		for (const Renderable2D* renderable : m_renderables)
+			delete renderable;
+	}
+
 	void Group::add(Renderable2D* renderable)
 	{
 		m_renderables.push_back(renderable);

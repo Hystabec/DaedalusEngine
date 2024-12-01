@@ -18,8 +18,16 @@ namespace daedalusCore { namespace graphics {
 		bool m_closed = false;
 
 		bool m_keys[MAX_KEYS];
+		bool m_keysPrevious[MAX_KEYS];
 		bool m_MouseButtons[MAX_BUTTONS];
+		bool m_MouseButtonsPrevious[MAX_BUTTONS];
 		double m_mouseX, m_mouseY;
+	private:
+		friend static void window_Resize(GLFWwindow* window, int width, int height);
+		friend static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+		friend static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+		friend static void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
+
 	public:
 		Window(const char* title, int width, int height);
 		~Window();
@@ -27,16 +35,18 @@ namespace daedalusCore { namespace graphics {
 		void update();
 		bool closed() const;
 
-		//inline int getWidth() const { return m_width; };
-		//inline int getHeight() const { return m_height; };
+		inline int getWidth() const { return m_width; };
+		inline int getHeight() const { return m_height; };
 
 		bool getKey(unsigned int keycode) const;
+		bool getKeyUp(unsigned int keycode) const;
+		bool getKeyDown(unsigned int keycode) const;
+
 		bool getMouse(unsigned int buttonCode) const;
+		bool getMouseUp(unsigned int buttonCode) const;
+		bool getMouseDown(unsigned int buttonCode) const;
+
 		void getMousePosition(double& xPos, double& yPos) const;
-	private:
-		static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-		static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-		static void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
 	};
 
 } }
