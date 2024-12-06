@@ -1,0 +1,2 @@
+Sandbox has to include spdlog as well as have /utf-8 as a command line
+abstract the logger to not include these in the header so its not required

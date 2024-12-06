@@ -24,6 +24,7 @@
 #else
 #include "graphics/Window.h"
 #include "utils/timer.h"
+#include "utils/Log.h"
 #endif
 
 namespace daedalusCore {
@@ -31,6 +32,7 @@ namespace daedalusCore {
 	Application::Application(const char* applicationName)
 	{
 		m_applicationName = applicationName;
+		Log::Init();
 		Init();
 	}
 
@@ -170,11 +172,11 @@ namespace daedalusCore {
 			if (time.elapsedSeconds() - timer > 1.0f)
 			{
 				timer += 1.0f;
-				Tick();
 				m_FramesPerSecond = frames;
 				m_UpdatesPerSecond = updates;
 				frames = 0;
 				updates = 0;
+				Tick();
 			}
 		}
 
