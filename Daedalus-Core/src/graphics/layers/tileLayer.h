@@ -1,8 +1,6 @@
 #pragma once
 
 #include "layer.h"
-#include "../batchRenderer2D.h"
-
 
 //example implementation of the Layer
 

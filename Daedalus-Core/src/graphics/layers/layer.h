@@ -1,10 +1,14 @@
 #pragma once
 
-#include "../renderer2D.h"
-#include "../renderable2D.h"
+#include <vector>
+#include "../../maths/mat4.h"
 
 namespace daedalusCore { namespace graphics{
 
+	class Renderer2D;
+	class Renderable2D;
+	class Shader;
+		 
 	class Layer
 	{
 	protected:

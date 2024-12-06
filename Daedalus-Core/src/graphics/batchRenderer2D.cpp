@@ -1,5 +1,7 @@
 #include "batchRenderer2D.h"
 
+#include <cstddef>
+
 namespace daedalusCore { namespace graphics {
 
 	BatchRenderer2D::BatchRenderer2D() : m_indexCount(0), m_Buffer(nullptr)

@@ -1,5 +1,7 @@
 #include "Window.h"
 
+#include <iostream>
+
 namespace daedalusCore { namespace graphics {
 
 	void window_Resize(GLFWwindow* window, int width, int height)

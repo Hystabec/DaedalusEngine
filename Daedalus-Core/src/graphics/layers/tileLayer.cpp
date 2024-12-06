@@ -1,5 +1,7 @@
 #include "tileLayer.h"
 
+#include "../batchRenderer2D.h"
+
 namespace daedalusCore { namespace graphics {
 
 	TileLayer::TileLayer(Shader* shader)

@@ -1,15 +1,15 @@
 #pragma once
 
+//
+//#include "buffers/buffer.h"
+//#include "buffers/indexBuffer.h"
+//#include "buffers/vertexArray.h"
+//#include "shader.h"
+
+#include <vector>
 #include "../maths/maths.h"
-
-#include "buffers/buffer.h"
-#include "buffers/indexBuffer.h"
-#include "buffers/vertexArray.h"
-
-#include "renderer2D.h"
 #include "texture.h"
-
-#include "shader.h"
+#include "renderer2D.h"
 
 namespace daedalusCore { namespace graphics {
 

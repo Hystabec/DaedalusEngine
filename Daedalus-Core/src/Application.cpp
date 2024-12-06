@@ -36,6 +36,7 @@ namespace daedalusCore {
 
 	Application::~Application()
 	{
+		Close();
 	}
 
 

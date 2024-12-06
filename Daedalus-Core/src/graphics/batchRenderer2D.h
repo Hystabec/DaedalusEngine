@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstddef>
 #include "renderer2D.h"
 #include "buffers/indexBuffer.h"
 #include "renderable2D.h"
@@ -18,6 +17,8 @@ namespace daedalusCore { namespace graphics {
 #define SHADER_UV_INDEX			1
 #define SHADER_TID_INDEX		2
 #define SHADER_COLOUR_INDEX		3
+
+
 
 	class BatchRenderer2D : public Renderer2D
 	{

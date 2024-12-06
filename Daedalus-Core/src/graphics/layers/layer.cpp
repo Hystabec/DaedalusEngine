@@ -1,5 +1,9 @@
 #include "layer.h"
 
+#include "../renderer2D.h"
+#include "../renderable2D.h"
+#include "../shader.h"
+
 namespace daedalusCore { namespace graphics {
 
 	Layer::Layer(Renderer2D* renderer, Shader* shader, maths::mat4 projectionMatrix)

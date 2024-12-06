@@ -1,4 +1,5 @@
 #include "vertexArray.h"
+#include "buffer.h"
 
 namespace daedalusCore { namespace graphics { namespace buffers {
 

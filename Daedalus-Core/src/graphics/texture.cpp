@@ -1,5 +1,6 @@
 #include "texture.h"
 
+#include <FreeImage.h>
 #include "../utils/imageLoad.h"
 
 namespace daedalusCore { namespace graphics {

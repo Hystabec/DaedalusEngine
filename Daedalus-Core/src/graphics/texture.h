@@ -1,6 +1,5 @@
 #pragma once
 
-#include <FreeImage.h>
 #include <GL/glew.h>
 
 namespace daedalusCore { namespace graphics {
