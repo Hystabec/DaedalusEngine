@@ -16,8 +16,9 @@ public:
 	void Tick() override
 	{
 		//std::cout << GetFramesPerSecond() << " fps\n";
-		daedalusCore::debug::Log::TestLog("FPS {}", GetFramesPerSecond(), 6, "fd");
-		daedalusCore::debug::Log::TestLog("Hello world");
+		//DD_CORE_LOG_TRACE("FPS {}", GetFramesPerSecond());
+		//daedalusCore::debug::Log::Trace("FPS {}", GetFramesPerSecond());
+		DD_CORE_LOG_INFO("FPS {}", GetFramesPerSecond());
 	}
 };
 
