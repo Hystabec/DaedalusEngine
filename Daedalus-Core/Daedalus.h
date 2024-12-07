@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "src/Application.h"
 
-#include "src/utils/Log.h"
+#include "src/debugTools/Log.h"
 
 ///--ENTRY POINT-----------------------
 #include "src/EntryPoint.h"

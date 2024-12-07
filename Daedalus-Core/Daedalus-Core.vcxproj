@@ -119,7 +119,7 @@
     <ClCompile Include="src\maths\vec2.cpp" />
     <ClCompile Include="src\maths\vec3.cpp" />
     <ClCompile Include="src\maths\vec4.cpp" />
-    <ClCompile Include="src\utils\Log.cpp" />
+    <ClCompile Include="src\debugTools\Log.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
@@ -147,7 +147,7 @@
     <ClInclude Include="src\utils\colourConversionUtils.h" />
     <ClInclude Include="src\utils\fileUtils.h" />
     <ClInclude Include="src\utils\imageLoad.h" />
-    <ClInclude Include="src\utils\Log.h" />
+    <ClInclude Include="src\debugTools\Log.h" />
     <ClInclude Include="src\utils\timer.h" />
   </ItemGroup>
   <ItemGroup>

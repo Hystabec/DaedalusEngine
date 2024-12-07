@@ -24,7 +24,7 @@
 #else
 #include "graphics/Window.h"
 #include "utils/timer.h"
-#include "utils/Log.h"
+#include "debugTools/Log.h"
 #endif
 
 namespace daedalusCore {
@@ -42,7 +42,7 @@ namespace daedalusCore {
 	void Application::Init()
 	{
 		//Engine start Logic
-		Log::Init();
+		debug::Log::Init();
 
 		//Application Start override function
 		Start();
