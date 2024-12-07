@@ -16,6 +16,14 @@ namespace daedalusCore {
 
 		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return m_coreLogger; }
 		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return m_clientLogger; }
+
+		template<typename... Args>
+		static void TestLog(const char* fmt, Args&&...args);
 	};
 
+	template<typename ...Args>
+	inline void Log::TestLog(const char* fmt, Args && ...args)
+	{
+		m_coreLogger->info(fmt, args...);
+	}
 }

@@ -44,7 +44,6 @@ namespace daedalusCore {
 		//Engine start Logic
 		Log::Init();
 
-
 		//Application Start override function
 		Start();
 	}
