@@ -11,6 +11,11 @@ namespace daedalusCore { namespace debug {
 	std::shared_ptr<spdlog::logger> Log::m_coreLogger;
 	std::shared_ptr<spdlog::logger> Log::m_clientLogger;
 
+	void Log::Test_BaseLog(const char* message)
+	{
+		m_coreLogger->trace(message);
+	}
+
 	void Log::Init()
 	{
 		spdlog::set_pattern("%^[%T][%n] %v%$");

@@ -16,11 +16,31 @@ namespace daedalusCore { namespace debug {
 		static std::shared_ptr<spdlog::logger> m_coreLogger;
 		static std::shared_ptr<spdlog::logger> m_clientLogger;
 
+	private:
+		static void Test_BaseLog(const char* message);
+		
+		template<typename...Args> 
+		static const char* Test_Fomat(const char* fmt, const Args&...args)
+		{
+			//this works - dont really like the use of sprint_f
+			//also locks into use of std formatting
+
+			char buffer[256];
+			sprintf_s(buffer, sizeof(buffer), fmt, args...);
+			return buffer;
+		}
+
 	public:
 		static void Init();
 
 		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return m_coreLogger; }
 		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return m_clientLogger; }
+
+		template<typename...Args>
+		static void Test_Trace(const char* fmt, const Args&...args)
+		{
+			TestBaseLog(_Fomat(fmt, args...));
+		}
 
 		/*template<typename T> 
 		static void Trace(const T& message)
