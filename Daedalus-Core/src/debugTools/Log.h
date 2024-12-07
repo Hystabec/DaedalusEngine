@@ -36,10 +36,11 @@ namespace daedalusCore { namespace debug {
 		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return m_coreLogger; }
 		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return m_clientLogger; }
 
+		//uses std formatting for messages
 		template<typename...Args>
 		static void Test_Trace(const char* fmt, const Args&...args)
 		{
-			TestBaseLog(_Fomat(fmt, args...));
+			Test_BaseLog(Test_Fomat(fmt, args...));
 		}
 
 		/*template<typename T> 

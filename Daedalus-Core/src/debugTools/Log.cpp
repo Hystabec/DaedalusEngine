@@ -26,17 +26,4 @@ namespace daedalusCore { namespace debug {
 		m_clientLogger->set_level(spdlog::level::trace);
 	}
 
-
-	//template<typename T>
-	//void Log::Trace(const T& message)
-	//{
-
-	//}
-
-	/*template<typename... Args>
-	void Log::Trace(const char* fmt, const Args&...args)
-	{
-
-	}*/
-
 } }

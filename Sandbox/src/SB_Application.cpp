@@ -19,6 +19,7 @@ public:
 		//DD_CORE_LOG_TRACE("FPS {}", GetFramesPerSecond());
 		//daedalusCore::debug::Log::Trace("FPS {}", GetFramesPerSecond());
 		DD_CORE_LOG_INFO("FPS {}", GetFramesPerSecond());
+		daedalusCore::debug::Log::Test_Trace("Hello world %d", 322);
 	}
 };
 
