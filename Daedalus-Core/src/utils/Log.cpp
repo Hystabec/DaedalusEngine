@@ -2,7 +2,7 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-namespace daedalusCore {
+namespace daedalusCore { namespace debug {
 
 	std::shared_ptr<spdlog::logger> Log::m_coreLogger;
 	std::shared_ptr<spdlog::logger> Log::m_clientLogger;
@@ -18,4 +18,5 @@ namespace daedalusCore {
 	}
 
 	
-}
+
+} }
