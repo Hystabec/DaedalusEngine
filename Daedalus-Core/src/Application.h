@@ -17,8 +17,11 @@ namespace daedalusCore {
 	public:
 		virtual ~Application();
 
+		void Init();
+		int Run();
+
 		//Runs on initialization
-		virtual void Init() {};
+		virtual void Start() {};
 		//Runs on close
 		virtual void Close() {};
 		//Run once per second
@@ -26,9 +29,7 @@ namespace daedalusCore {
 		//Runs 60 times per second
 		virtual void Update() {};
 		//Runs as fast as possible
-		virtual void Render() {};
-
-		int Run();
+		virtual void Render() {}
 
 		inline unsigned int GetFramesPerSecond() const { return m_FramesPerSecond; }
 		inline unsigned int GetUpdatesPerSecond() const { return m_UpdatesPerSecond; }

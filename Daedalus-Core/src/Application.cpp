@@ -32,13 +32,21 @@ namespace daedalusCore {
 	Application::Application(const char* applicationName)
 	{
 		m_applicationName = applicationName;
-		Log::Init();
-		Init();
 	}
 
 	Application::~Application()
 	{
 		Close();
+	}
+
+	void Application::Init()
+	{
+		//Engine start Logic
+		Log::Init();
+
+
+		//Application Start override function
+		Start();
 	}
 
 
