@@ -21,41 +21,61 @@ namespace daedalusCore { namespace debug {
 	void Log::BaseTraceLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
+		{
 			m_coreLogger->trace(message);
+		}
 		else if (caller == Caller::Client)
+		{
 			m_clientLogger->trace(message);
+		}
 	}
 
 	void Log::BaseInfoLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
+		{
 			m_coreLogger->info(message);
+		}
 		else if (caller == Caller::Client)
+		{
 			m_clientLogger->info(message);
+		}
 	}
 
 	void Log::BaseWarnLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
+		{
 			m_coreLogger->warn(message);
+		}
 		else if (caller == Caller::Client)
+		{
 			m_clientLogger->warn(message);
+		}
 	}
 
 	void Log::BaseErrorLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
+		{
 			m_coreLogger->error(message);
+		}
 		else if (caller == Caller::Client)
+		{
 			m_clientLogger->error(message);
+		}
 	}
 
 	void Log::BaseCriticalLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
+		{
 			m_coreLogger->critical(message);
+		}
 		else if (caller == Caller::Client)
+		{
 			m_clientLogger->critical(message);
+		}
 	}
 
 } }
