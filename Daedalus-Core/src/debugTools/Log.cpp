@@ -10,7 +10,7 @@ namespace daedalusCore { namespace debug {
 
 	void Log::Init()
 	{
-		spdlog::set_pattern("%^[%T][%n] %v%$");
+		spdlog::set_pattern("%^[%T][%n][%l] %v%$");
 		m_coreLogger = spdlog::stdout_color_mt("Core");
 		m_coreLogger->set_level(spdlog::level::trace);
 
@@ -18,7 +18,7 @@ namespace daedalusCore { namespace debug {
 		m_clientLogger->set_level(spdlog::level::trace);
 	}
 
-	void Log::BaseTraceLog(Caller& caller, std::string& message)
+	void Log::BaseTraceLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
 			m_coreLogger->trace(message);
@@ -26,7 +26,7 @@ namespace daedalusCore { namespace debug {
 			m_clientLogger->trace(message);
 	}
 
-	void Log::BaseInfoLog(Caller& caller, std::string& message)
+	void Log::BaseInfoLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
 			m_coreLogger->info(message);
@@ -34,7 +34,7 @@ namespace daedalusCore { namespace debug {
 			m_clientLogger->info(message);
 	}
 
-	void Log::BaseWarnLog(Caller& caller, std::string& message)
+	void Log::BaseWarnLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
 			m_coreLogger->warn(message);
@@ -42,7 +42,7 @@ namespace daedalusCore { namespace debug {
 			m_clientLogger->warn(message);
 	}
 
-	void Log::BaseErrorLog(Caller& caller, std::string& message)
+	void Log::BaseErrorLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
 			m_coreLogger->error(message);
@@ -50,7 +50,7 @@ namespace daedalusCore { namespace debug {
 			m_clientLogger->error(message);
 	}
 
-	void Log::BaseCriticalLog(Caller& caller, std::string& message)
+	void Log::BaseCriticalLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
 			m_coreLogger->critical(message);

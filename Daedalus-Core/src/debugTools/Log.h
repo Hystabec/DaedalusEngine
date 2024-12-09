@@ -25,16 +25,24 @@ namespace daedalusCore { namespace debug {
 		};
 
 	private:
-		static void BaseTraceLog(Caller& caller, std::string& message);
-		static void BaseInfoLog(Caller& caller, std::string& message);
-		static void BaseWarnLog(Caller& caller, std::string& message);
-		static void BaseErrorLog(Caller& caller, std::string& message);
-		static void BaseCriticalLog(Caller& caller, std::string& message);
+		static void BaseTraceLog(const Caller& caller, const std::string& message);
+		static void BaseInfoLog(const Caller& caller, const std::string& message);
+		static void BaseWarnLog(const Caller& caller, const std::string& message);
+		static void BaseErrorLog(const Caller& caller, const std::string& message);
+		static void BaseCriticalLog(const Caller& caller, const std::string& message);
 		
 		template<typename...Args> 
 		static std::string strFormatter(const char* fmt, Args&&...args)
 		{
-			return std::vformat(fmt, std::make_format_args(args...));
+			try
+			{
+				return std::vformat(fmt, std::make_format_args(args...));
+			}
+			catch (const std::format_error& ex)
+			{
+				Error(Caller::Core, "Log message formatter: {}", ex.what());
+				return "Error formatting message";
+			}
 		}
 
 	public:
@@ -58,13 +66,13 @@ namespace daedalusCore { namespace debug {
 #pragma region Info
 
 		template<typename T>
-		static void Info(Caller caller, T&& message)
+		static void Info(const Caller& caller, T&& message)
 		{
 			BaseInfoLog(caller, strFormatter("{}", message));
 		}
 
 		template<typename...Args>
-		static void Info(Caller caller, const char* fmt, Args&&...args)
+		static void Info(const Caller& caller, const char* fmt, Args&&...args)
 		{
 			BaseInfoLog(caller, strFormatter(fmt, args...));
 		}
@@ -73,13 +81,13 @@ namespace daedalusCore { namespace debug {
 #pragma region Warn
 
 		template<typename T>
-		static void Warn(Caller caller, T&& message)
+		static void Warn(const Caller& caller, T&& message)
 		{
 			BaseWarmLog(caller, strFormatter("{}", message));
 		}
 
 		template<typename...Args>
-		static void Warn(Caller caller, const char* fmt, Args&&...args)
+		static void Warn(const Caller& caller, const char* fmt, Args&&...args)
 		{
 			BaseWarnLog(caller, strFormatter(fmt, args...));
 		}
@@ -88,13 +96,13 @@ namespace daedalusCore { namespace debug {
 #pragma region Error
 
 		template<typename T>
-		static void Error(Caller caller, T&& message)
+		static void Error(const Caller& caller, T&& message)
 		{
 			BaseErrorLog(caller, strFormatter("{}", message));
 		}
 
 		template<typename...Args>
-		static void Error(Caller caller, const char* fmt, Args&&...args)
+		static void Error(const Caller& caller, const char* fmt, Args&&...args)
 		{
 			BaseErrorLog(caller, strFormatter(fmt, args...));
 		}
@@ -103,13 +111,13 @@ namespace daedalusCore { namespace debug {
 #pragma region Critical
 
 		template<typename T>
-		static void Critical(Caller caller, T&& message)
+		static void Critical(const Caller& caller, T&& message)
 		{
 			BaseCriticalLog(caller, strFormatter("{}", message));
 		}
 
 		template<typename...Args>
-		static void Critical(Caller caller, const char* fmt, Args&&...args)
+		static void Critical(const Caller& caller, const char* fmt, Args&&...args)
 		{
 			BaseCriticalLog(caller, strFormatter(fmt, args...));
 		}
