@@ -1,12 +1,13 @@
 #pragma once
 
-#include <spdlog/spdlog.h>
 #include "../Core.h"
+#include <memory>
+#include <format>
 
-//namespace spdlog
-//{
-//	class logger;
-//}
+namespace spdlog
+{
+	class logger;
+}
 
 namespace daedalusCore { namespace debug {
 
@@ -16,52 +17,121 @@ namespace daedalusCore { namespace debug {
 		static std::shared_ptr<spdlog::logger> m_coreLogger;
 		static std::shared_ptr<spdlog::logger> m_clientLogger;
 
+	public:
+		enum class Caller
+		{
+			Core,
+			Client
+		};
+
 	private:
-		static void Test_BaseLog(const char* message);
+		static void BaseTraceLog(Caller& caller, std::string& message);
+		static void BaseInfoLog(Caller& caller, std::string& message);
+		static void BaseWarnLog(Caller& caller, std::string& message);
+		static void BaseErrorLog(Caller& caller, std::string& message);
+		static void BaseCriticalLog(Caller& caller, std::string& message);
 		
 		template<typename...Args> 
-		static const char* Test_Fomat(const char* fmt, const Args&...args)
+		static std::string strFormatter(const char* fmt, Args&&...args)
 		{
-			//this works - dont really like the use of sprint_f
-			//also locks into use of std formatting
-
-			char buffer[256];
-			sprintf_s(buffer, sizeof(buffer), fmt, args...);
-			return buffer;
+			return std::vformat(fmt, std::make_format_args(args...));
 		}
 
 	public:
 		static void Init();
 
-		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return m_coreLogger; }
-		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return m_clientLogger; }
+#pragma region Trace
 
-		//uses std formatting for messages
+		template<typename T> 
+		static void Trace(Caller caller, T&& message)
+		{
+			BaseTraceLog(caller, strFormatter("{}", message));
+		}
+
 		template<typename...Args>
-		static void Test_Trace(const char* fmt, const Args&...args)
+		static void Trace(Caller caller, const char* fmt, Args&&...args)
 		{
-			Test_BaseLog(Test_Fomat(fmt, args...));
+			BaseTraceLog(caller, strFormatter(fmt, args...));
 		}
 
-		/*template<typename T> 
-		static void Trace(const T& message)
+#pragma endregion
+#pragma region Info
+
+		template<typename T>
+		static void Info(Caller caller, T&& message)
 		{
-			
+			BaseInfoLog(caller, strFormatter("{}", message));
 		}
 
-		template<typename... Args>
-		static void Trace(const char* fmt, const Args&...args)
+		template<typename...Args>
+		static void Info(Caller caller, const char* fmt, Args&&...args)
 		{
-			
-		}*/
+			BaseInfoLog(caller, strFormatter(fmt, args...));
+		}
+
+#pragma endregion
+#pragma region Warn
+
+		template<typename T>
+		static void Warn(Caller caller, T&& message)
+		{
+			BaseWarmLog(caller, strFormatter("{}", message));
+		}
+
+		template<typename...Args>
+		static void Warn(Caller caller, const char* fmt, Args&&...args)
+		{
+			BaseWarnLog(caller, strFormatter(fmt, args...));
+		}
+
+#pragma endregion
+#pragma region Error
+
+		template<typename T>
+		static void Error(Caller caller, T&& message)
+		{
+			BaseErrorLog(caller, strFormatter("{}", message));
+		}
+
+		template<typename...Args>
+		static void Error(Caller caller, const char* fmt, Args&&...args)
+		{
+			BaseErrorLog(caller, strFormatter(fmt, args...));
+		}
+
+#pragma endregion
+#pragma region Critical
+
+		template<typename T>
+		static void Critical(Caller caller, T&& message)
+		{
+			BaseCriticalLog(caller, strFormatter("{}", message));
+		}
+
+		template<typename...Args>
+		static void Critical(Caller caller, const char* fmt, Args&&...args)
+		{
+			BaseCriticalLog(caller, strFormatter(fmt, args...));
+		}
+
+#pragma endregion
+
 	};
 
 } }
 
 //core macros
 
-#define DD_CORE_LOG_TRACE(...)       daedalusCore::debug::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define DD_CORE_LOG_INFO(...)        daedalusCore::debug::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define DD_CORE_LOG_WARN(...)        daedalusCore::debug::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define DD_CORE_LOG_ERROR(...)       daedalusCore::debug::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define DD_CORE_LOG_CRITICAL(...)    daedalusCore::debug::Log::GetCoreLogger()->critical(__VA_ARGS__)
+#define CORE_LOG_TRACE(...)       daedalusCore::debug::Log::Trace(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define CORE_LOG_INFO(...)        daedalusCore::debug::Log::Info(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define CORE_LOG_WARN(...)        daedalusCore::debug::Log::Warn(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define CORE_LOG_ERROR(...)       daedalusCore::debug::Log::Error(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define CORE_LOG_CRITICAL(...)    daedalusCore::debug::Log::Critical(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+
+//client macros
+
+#define LOG_TRACE(...)       daedalusCore::debug::Log::Trace(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define LOG_INFO(...)        daedalusCore::debug::Log::Info(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define LOG_WARN(...)        daedalusCore::debug::Log::Warn(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define LOG_ERROR(...)       daedalusCore::debug::Log::Error(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define LOG_CRITICAL(...)    daedalusCore::debug::Log::Critical(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)

@@ -24,7 +24,7 @@ namespace daedalusCore {
 		virtual void Start() {};
 		//Runs on close
 		virtual void Close() {};
-		//Run once per second
+		//Runs once per second
 		virtual void Tick() {};
 		//Runs 60 times per second
 		virtual void Update() {};
