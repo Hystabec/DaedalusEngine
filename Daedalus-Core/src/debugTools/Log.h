@@ -159,6 +159,8 @@ namespace daedalusCore { namespace debug {
 
 } }
 
+#if !DD_LOGGING_DISABLED
+
 //core macros
 
 #define CORE_LOG_TRACE(...)       daedalusCore::debug::Log::Trace(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
@@ -174,3 +176,19 @@ namespace daedalusCore { namespace debug {
 #define LOG_WARN(...)        daedalusCore::debug::Log::Warn(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
 #define LOG_ERROR(...)       daedalusCore::debug::Log::Error(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
 #define LOG_CRITICAL(...)    daedalusCore::debug::Log::Critical(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+
+#else
+
+#define CORE_LOG_TRACE(...)
+#define CORE_LOG_INFO(...) 
+#define CORE_LOG_WARN(...) 
+#define CORE_LOG_ERROR(...) 
+#define CORE_LOG_CRITICAL(...) 
+
+#define LOG_TRACE(...) 
+#define LOG_INFO(...)
+#define LOG_WARN(...) 
+#define LOG_ERROR(...)
+#define LOG_CRITICAL(...)
+
+#endif
