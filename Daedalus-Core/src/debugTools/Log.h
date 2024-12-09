@@ -32,7 +32,7 @@ namespace daedalusCore { namespace debug {
 		static void BaseCriticalLog(const Caller& caller, const std::string& message);
 		
 		template<typename...Args> 
-		static std::string strFormatter(const char* fmt, Args&&...args)
+		static std::string strFormatter(bool* errorCheck, const char* fmt, Args&&...args)
 		{
 			try
 			{
@@ -40,8 +40,9 @@ namespace daedalusCore { namespace debug {
 			}
 			catch (const std::format_error& ex)
 			{
-				Error(Caller::Core, "Log message formatter: {}", ex.what());
-				return "Error formatting message";
+				Error(Caller::Core, "Log message formatter error: {}", ex.what());
+				(*errorCheck) = true;
+				return "";
 			}
 		}
 
@@ -53,13 +54,19 @@ namespace daedalusCore { namespace debug {
 		template<typename T> 
 		static void Trace(Caller caller, T&& message)
 		{
-			BaseTraceLog(caller, strFormatter("{}", message));
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, "{}", message);
+			if(!check)
+				BaseTraceLog(caller, formatted);
 		}
 
 		template<typename...Args>
 		static void Trace(Caller caller, const char* fmt, Args&&...args)
 		{
-			BaseTraceLog(caller, strFormatter(fmt, args...));
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, fmt, args...);
+			if (!check)
+				BaseTraceLog(caller, formatted);
 		}
 
 #pragma endregion
@@ -68,13 +75,19 @@ namespace daedalusCore { namespace debug {
 		template<typename T>
 		static void Info(const Caller& caller, T&& message)
 		{
-			BaseInfoLog(caller, strFormatter("{}", message));
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, "{}", message);
+			if (!check)
+				BaseInfoLog(caller, formatted);
 		}
 
 		template<typename...Args>
 		static void Info(const Caller& caller, const char* fmt, Args&&...args)
 		{
-			BaseInfoLog(caller, strFormatter(fmt, args...));
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, fmt, args...);
+			if (!check)
+				BaseInfoLog(caller, formatted);
 		}
 
 #pragma endregion
@@ -83,13 +96,19 @@ namespace daedalusCore { namespace debug {
 		template<typename T>
 		static void Warn(const Caller& caller, T&& message)
 		{
-			BaseWarmLog(caller, strFormatter("{}", message));
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, "{}", message);
+			if (!check)
+				BaseWarnLog(caller, formatted);
 		}
 
 		template<typename...Args>
 		static void Warn(const Caller& caller, const char* fmt, Args&&...args)
 		{
-			BaseWarnLog(caller, strFormatter(fmt, args...));
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, fmt, args...);
+			if (!check)
+				BaseWarnLog(caller, formatted);
 		}
 
 #pragma endregion
@@ -98,13 +117,19 @@ namespace daedalusCore { namespace debug {
 		template<typename T>
 		static void Error(const Caller& caller, T&& message)
 		{
-			BaseErrorLog(caller, strFormatter("{}", message));
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, "{}", message);
+			if (!check)
+				BaseErrorLog(caller, formatted);
 		}
 
 		template<typename...Args>
 		static void Error(const Caller& caller, const char* fmt, Args&&...args)
 		{
-			BaseErrorLog(caller, strFormatter(fmt, args...));
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, fmt, args...);
+			if (!check)
+				BaseErrorLog(caller, formatted);
 		}
 
 #pragma endregion
@@ -113,13 +138,19 @@ namespace daedalusCore { namespace debug {
 		template<typename T>
 		static void Critical(const Caller& caller, T&& message)
 		{
-			BaseCriticalLog(caller, strFormatter("{}", message));
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, "{}", message);
+			if (!check)
+				BaseCriticalLog(caller, formatted);
 		}
 
 		template<typename...Args>
 		static void Critical(const Caller& caller, const char* fmt, Args&&...args)
 		{
-			BaseCriticalLog(caller, strFormatter(fmt, args...));
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, fmt, args...);
+			if (!check)
+				BaseCriticalLog(caller, formatted);
 		}
 
 #pragma endregion
