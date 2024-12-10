@@ -126,6 +126,10 @@
     <ClInclude Include="src\Core.h" />
     <ClInclude Include="Daedalus.h" />
     <ClInclude Include="src\EntryPoint.h" />
+    <ClInclude Include="src\events\event.h" />
+    <ClInclude Include="src\events\keyEvent.h" />
+    <ClInclude Include="src\events\mouseEvent.h" />
+    <ClInclude Include="src\events\windowEvent.h" />
     <ClInclude Include="src\graphics\batchRenderer2D.h" />
     <ClInclude Include="src\graphics\buffers\buffer.h" />
     <ClInclude Include="src\graphics\buffers\indexBuffer.h" />

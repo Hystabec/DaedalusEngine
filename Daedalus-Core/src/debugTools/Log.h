@@ -46,7 +46,7 @@ namespace daedalusCore { namespace debug {
 			{
 				return std::vformat(fmt, std::make_format_args(args...));
 			}
-			catch (const std::format_error& ex)
+			catch(const std::format_error& ex)
 			{
 				Error(Caller::Core, "Log message formatter error: {}", ex.what());
 				(*errorCheck) = true;
