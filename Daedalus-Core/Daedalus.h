@@ -2,9 +2,9 @@
 
 //for use by application
 #include <stdio.h>
-#include "src/Application.h"
+#include "src/coreApplication.h"
 
-#include "src/debugTools/Log.h"
+#include "src/debugTools/log.h"
 
 ///--ENTRY POINT-----------------------
-#include "src/EntryPoint.h"
+#include "src/entryPoint.h"

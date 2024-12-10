@@ -44,7 +44,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\graphics\Window.cpp">
+    <ClCompile Include="src\graphics\window.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\maths\vec2.cpp">
@@ -89,15 +89,15 @@
     <ClCompile Include="src\graphics\texture.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Application.cpp">
+    <ClCompile Include="src\coreApplication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\debugTools\Log.cpp">
+    <ClCompile Include="src\debugTools\log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\graphics\Window.h">
+    <ClInclude Include="src\graphics\window.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\maths\maths.h">
@@ -163,19 +163,19 @@
     <ClInclude Include="Daedalus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core.h">
+    <ClInclude Include="src\core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Application.h">
+    <ClInclude Include="src\coreApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\EntryPoint.h">
+    <ClInclude Include="src\entryPoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\colourConversionUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\debugTools\Log.h">
+    <ClInclude Include="src\debugTools\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\events\event.h">
