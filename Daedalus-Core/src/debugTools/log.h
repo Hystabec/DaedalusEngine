@@ -1,9 +1,6 @@
 #pragma once
 
 #include "../core.h"
-#include <memory>
-#include <format>
-
 #include "logFormatMacro.h"
 
 /*
@@ -14,19 +11,10 @@ fire event when log is called?
 log to custom console if added?
 */
 
-namespace spdlog
-{
-	class logger;
-}
-
 namespace daedalusCore { namespace debug {
 
 	class DD_API Log
 	{
-	private:
-		static std::shared_ptr<spdlog::logger> m_coreLogger;
-		static std::shared_ptr<spdlog::logger> m_clientLogger;
-
 	public:
 		enum class Caller
 		{

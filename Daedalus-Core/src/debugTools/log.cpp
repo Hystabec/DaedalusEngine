@@ -6,8 +6,8 @@
 
 namespace daedalusCore { namespace debug {
 
-	std::shared_ptr<spdlog::logger> Log::m_coreLogger;
-	std::shared_ptr<spdlog::logger> Log::m_clientLogger;
+	static std::shared_ptr<spdlog::logger> m_coreLogger;
+	static std::shared_ptr<spdlog::logger> m_clientLogger;
 
 	void Log::Init()
 	{
