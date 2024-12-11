@@ -27,21 +27,25 @@ constexpr auto parse(std::format_parse_context& ctx)\
 /*
 Example:
 
-class Vec2
+namespace math
 {
-private:
-	int z;
-
-public:
-	int x, y;
-
-	Vec2(int x, int y, int z)
-		: x(x), y(y), z(z)
+	class Vec2
 	{
-	}
+	private:
+		int z;
 
-	inline int GetZ() const { return z; }
+	public:
+		int x, y;
+
+		Vec2(int x, int y, int z)
+			: x(x), y(y), z(z)
+		{
+		}
+
+		inline int GetZ() const { return z; }
+	}
 }
 
 TestFormatMacro(Vec2, "x: {}, y:{}, z: {}", vec, vec.x, vec.y, vec.GetZ())
+
 */
