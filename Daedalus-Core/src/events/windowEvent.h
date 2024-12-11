@@ -55,7 +55,6 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_TYPE(EventType::WindowUnfocused)
 	};
 
-	//moved
 	class DD_API WindowMovedEvent : public Event
 	{
 	private:

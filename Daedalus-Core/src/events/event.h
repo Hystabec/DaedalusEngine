@@ -3,6 +3,7 @@
 #include "../core.h"
 
 #include <functional>
+#include "../debugTools/logFormatMacro.h"
 
 namespace daedalusCore { namespace event {
 
@@ -35,7 +36,8 @@ namespace daedalusCore { namespace event {
 
 	class DD_API Event
 	{
-		friend EventDispatcher;
+		friend class EventDispatcher;
+
 	protected:
 		bool m_handled = false;
 
@@ -76,3 +78,5 @@ namespace daedalusCore { namespace event {
 	};
 
 } }
+
+LOG_CREATE_FORMAT(daedalusCore::event::Event, "Event: {}", e, e.GetName())
