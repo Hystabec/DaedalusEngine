@@ -190,6 +190,9 @@
     <ClInclude Include="src\events\windowEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\debugTools\logFormatMacro.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\resources\shaders\basic.frag">

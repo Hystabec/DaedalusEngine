@@ -125,6 +125,7 @@
     <ClInclude Include="src\coreApplication.h" />
     <ClInclude Include="src\core.h" />
     <ClInclude Include="Daedalus.h" />
+    <ClInclude Include="src\debugTools\logFormatMacro.h" />
     <ClInclude Include="src\entryPoint.h" />
     <ClInclude Include="src\events\event.h" />
     <ClInclude Include="src\events\keyEvent.h" />

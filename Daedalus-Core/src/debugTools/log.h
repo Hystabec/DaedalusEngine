@@ -4,6 +4,8 @@
 #include <memory>
 #include <format>
 
+#include "logFormatMacro.h"
+
 /*
 TO DO: 
 expand to log to file

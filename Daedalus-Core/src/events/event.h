@@ -18,16 +18,16 @@ namespace daedalusCore { namespace event {
 	{
 		enum Category
 		{
-			None = 0,
-			Window = BIT(0),
-			Input = BIT(1),
-			Keyboard = BIT(2),
-			Mouse = BIT(3),
+			None        = 0,
+			Window      = BIT(0),
+			Input       = BIT(1),
+			Keyboard    = BIT(2),
+			Mouse       = BIT(3),
 			MouseButton = BIT(4)
 		};
 	}
 
-#define EVENT_CLASS_TYPE(type)  static EventType GetStaticType() { return  (##type); }\
+#define EVENT_CLASS_TYPE(type)  static EventType GetStaticType() { return (##type); }\
 								virtual EventType GetType() const override { return GetStaticType(); }\
 								virtual const char* GetName() const override { return #type; }
 
