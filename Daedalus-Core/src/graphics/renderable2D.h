@@ -7,7 +7,7 @@
 //#include "shader.h"
 
 #include <vector>
-#include "../maths/maths.h"
+#include "maths/maths.h"
 #include "texture.h"
 #include "renderer2D.h"
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../core.h"
+#include "core.h"
 
 #include <functional>
-#include "../debugTools/logFormatMacro.h"
+#include "debugTools/logFormatMacro.h"
 
 namespace daedalusCore { namespace event {
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
-#include "../maths/maths.h"
+#include "maths/maths.h"
 
 namespace daedalusCore { namespace graphics {
 

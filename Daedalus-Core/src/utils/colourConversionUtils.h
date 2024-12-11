@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../maths/vec4.h"
+#include "maths/vec4.h"
 
 namespace daedalusCore { namespace utils {
 

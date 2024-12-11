@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../maths/maths.h"
+#include "maths/maths.h"
 #include <vector>
 
 namespace daedalusCore { namespace graphics {

@@ -1,6 +1,6 @@
 #include "shader.h"
 
-#include "../utils/fileUtils.h"
+#include "utils/fileUtils.h"
 #include <vector>
 #include <iostream>
 

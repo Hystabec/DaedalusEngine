@@ -1,8 +1,8 @@
 #include "layer.h"
 
-#include "../renderer2D.h"
-#include "../renderable2D.h"
-#include "../shader.h"
+#include "graphics/renderer2D.h"
+#include "graphics/renderable2D.h"
+#include "graphics/shader.h"
 
 namespace daedalusCore { namespace graphics {
 
