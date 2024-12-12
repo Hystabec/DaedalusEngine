@@ -1,52 +1,39 @@
 #pragma once
 
-#include <GL/glew.h>
-#include <glfw3.h>
+#include "ddpch.h"
+#include "events/event.h"
 
 namespace daedalusCore { namespace graphics {
 
-#define MAX_KEYS	1024
-#define MAX_BUTTONS 32
-
-	class Window
+	struct WindowProperties
 	{
-	private:
-		const char* m_title = "";
-		unsigned int m_width = 0, m_height = 0;
-		GLFWwindow* m_window;
-		bool m_closed = false;
+		std::string Title;
+		unsigned int Width, Height;
+		bool VSync;
 
-		bool m_keys[MAX_KEYS];
-		bool m_keysPrevious[MAX_KEYS];
-		bool m_MouseButtons[MAX_BUTTONS];
-		bool m_MouseButtonsPrevious[MAX_BUTTONS];
-		double m_mouseX, m_mouseY;
+		WindowProperties(const std::string& title = "Daedalus", unsigned int width = 960, unsigned int height = 540, bool vsync = false)
+			: Title(title), Width(width), Height(height), VSync(vsync)
+		{
+		}
+	};
 
-	private:
-		friend void window_Resize(GLFWwindow* window, int width, int height);
-		friend void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-		friend void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-		friend void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
-
+	class DD_API Window
+	{
 	public:
-		Window(const char* title, int width, int height);
-		~Window();
-		void clear() const;
-		void update();
-		bool closed() const;
+		using EventCallbackFn = std::function<void(daedalusCore::event::Event&)>;
 
-		inline unsigned int getWidth() const { return m_width; };
-		inline unsigned int getHeight() const { return m_height; };
+		virtual ~Window() {}
+		
+		virtual void Update() = 0;
 
-		bool getKey(unsigned int keycode) const;
-		bool getKeyUp(unsigned int keycode) const;
-		bool getKeyDown(unsigned int keycode) const;
+		virtual unsigned int GetWidth() const = 0;
+		virtual unsigned int GetHeight() const = 0;
 
-		bool getMouse(unsigned int buttonCode) const;
-		bool getMouseUp(unsigned int buttonCode) const;
-		bool getMouseDown(unsigned int buttonCode) const;
+		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
+		virtual void SetVSync(bool enabled) = 0;
+		virtual bool IsVSync() const = 0;
 
-		void getMousePosition(double& xPos, double& yPos) const;
+		static Window* Create(const WindowProperties& props = WindowProperties());
 	};
 
 } }

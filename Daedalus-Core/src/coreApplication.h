@@ -1,21 +1,32 @@
 #pragma once
 
 #include "core.h"
+#include "graphics/window.h"
+
+#include "events/event.h"
+#include "events/windowEvent.h"
 
 namespace daedalusCore {
 
 	class DD_API Application
 	{
 	private:
-		const char* m_applicationName = "Daedalus Application";
+		std::unique_ptr<graphics::Window> m_window;
+
 		unsigned int m_FramesPerSecond = 0;
 		unsigned int m_UpdatesPerSecond = 0;
 
+		bool m_running = true;
+	private:
+		bool OnWindowClose(event::WindowClosedEvent& e);
+
 	protected:
-		Application(const char* applicationName);
+		Application(std::string title = "Daedalus Window", unsigned int width = 960, unsigned int height = 540, bool vsync = true);
 
 	public:
 		virtual ~Application();
+
+		void OnEvent(event::Event& e);
 
 		void Init();
 		int Run();

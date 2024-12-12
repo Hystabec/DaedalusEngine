@@ -4,7 +4,7 @@ class SandBox : public daedalusCore::Application
 {
 public:
 	SandBox()
-		: Application("Sandbox Application")
+		: Application()
 	{
 	}
 

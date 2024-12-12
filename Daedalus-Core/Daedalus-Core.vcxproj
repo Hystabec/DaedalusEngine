@@ -124,12 +124,12 @@
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\sprite.cpp" />
     <ClCompile Include="src\graphics\texture.cpp" />
-    <ClCompile Include="src\graphics\window.cpp" />
     <ClCompile Include="src\maths\mat4.cpp" />
     <ClCompile Include="src\maths\vec2.cpp" />
     <ClCompile Include="src\maths\vec3.cpp" />
     <ClCompile Include="src\maths\vec4.cpp" />
     <ClCompile Include="src\debugTools\log.cpp" />
+    <ClCompile Include="src\platformSpecific\windows\windowsWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\coreApplication.h" />
@@ -155,6 +155,7 @@
     <ClInclude Include="src\graphics\sprite.h" />
     <ClInclude Include="src\graphics\texture.h" />
     <ClInclude Include="src\graphics\window.h" />
+    <ClInclude Include="src\platformSpecific\windows\windowsWindow.h" />
     <ClInclude Include="src\maths\mat4.h" />
     <ClInclude Include="src\maths\maths.h" />
     <ClInclude Include="src\maths\vec2.h" />

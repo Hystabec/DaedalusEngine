@@ -43,4 +43,19 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_TYPE(EventType::KeyReleased)
 	};
 
+	class DD_API KeyHeldEvent : public KeyEvent
+	{
+	private:
+		int m_count;
+	public:
+		KeyHeldEvent(int keycode, int count)
+			: KeyEvent(keycode), m_count(count)
+		{
+		}
+
+		inline int Count() const { return m_count; }
+
+		EVENT_CLASS_TYPE(EventType::KeyHeld)
+	};
+
 } }

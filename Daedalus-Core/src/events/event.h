@@ -10,7 +10,7 @@ namespace daedalusCore { namespace event {
 	{
 		None = 0,
 		WindowClosed, WindowResized, WindowFocused, WindowUnfocused, WindowMoved,
-		KeyPressed, KeyReleased,
+		KeyPressed, KeyReleased, KeyHeld,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 

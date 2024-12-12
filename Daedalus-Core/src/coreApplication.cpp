@@ -3,18 +3,29 @@
 
 #include "graphics/window.h"
 #include "utils/timer.h"
-#include "debugTools/log.h"
 
 namespace daedalusCore {
 
-	Application::Application(const char* applicationName)
+	bool Application::OnWindowClose(event::WindowClosedEvent& e)
 	{
-		m_applicationName = applicationName;
+		m_running = false;
+		return true;
+	}
+	Application::Application(std::string title, unsigned int width, unsigned int height, bool vsync)
+	{
+		m_window = std::unique_ptr<graphics::Window>(graphics::Window::Create(graphics::WindowProperties(title, width, height, vsync)));
+		m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 	}
 
 	Application::~Application()
 	{
 		Close();
+	}
+
+	void Application::OnEvent(event::Event& e)
+	{
+		event::EventDispatcher dispatch(e);
+		dispatch.Dispatch<event::WindowClosedEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
 	}
 
 	void Application::Init()
@@ -28,7 +39,6 @@ namespace daedalusCore {
 
 	int Application::Run()
 	{
-		graphics::Window window(m_applicationName, 960, 540);
 		utils::Timer time;
 
 		float timer = 0.0f;
@@ -37,10 +47,8 @@ namespace daedalusCore {
 		unsigned int frames = 0;
 		unsigned int updates = 0;
 
-		while (!window.closed())
+		while (m_running)
 		{
-			window.clear();
-
 			if (time.elapsedSeconds() - updateTimer > updateTick)
 			{
 				updates++;
@@ -50,7 +58,7 @@ namespace daedalusCore {
 
 			frames++;
 			Render();
-			window.update();
+			m_window->Update();
 
 			if (time.elapsedSeconds() - timer > 1.0f)
 			{
@@ -65,4 +73,5 @@ namespace daedalusCore {
 
 		return 0;
 	}
+
 }

@@ -19,3 +19,4 @@
 #include <unordered_set>
 
 #include "core.h"
+#include "debugTools/log.h"
