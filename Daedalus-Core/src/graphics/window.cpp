@@ -37,7 +37,10 @@ namespace daedalusCore { namespace graphics {
 	Window::Window(const char* title, int width, int height) : m_title(title), m_width(width), m_height(height)
 	{
 		if (!glfwInit())
+		{
 			std::cout << "Error - GLFW initialize failed" << std::endl;
+			return;
+		}
 
 		m_window = glfwCreateWindow(width, height, title, NULL, NULL);
 
@@ -60,7 +63,7 @@ namespace daedalusCore { namespace graphics {
 
 		if (glewInit() != GLEW_OK)
 		{
-			std::cout << "Error - Failed to initialize GLEW" << std::endl;
+			std::cout << "Error - GLEW initialize failed" << std::endl;
 			return;
 		}
 
@@ -94,10 +97,12 @@ namespace daedalusCore { namespace graphics {
 		memcpy(m_keysPrevious, m_keys, sizeof(bool) * MAX_KEYS);
 		memcpy(m_MouseButtonsPrevious, m_MouseButtons, sizeof(bool) * MAX_BUTTONS);
 
+		//this takes a lot of time - might not need it or only check for errors after preforming certain actions? 
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR)
 			std::cout << "openGL Error: " << error << std::endl;
 
+		//this also takes a lot of time - might not be able to do anything about it
 		glfwPollEvents();
 
 		glfwSwapBuffers(m_window);
