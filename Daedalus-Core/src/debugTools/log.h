@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../core.h"
 #include "logFormatMacro.h"
 
 //included here for application

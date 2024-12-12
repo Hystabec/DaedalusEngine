@@ -12,7 +12,7 @@ namespace daedalusCore { namespace graphics {
 	{
 	private:
 		const char* m_title = "";
-		int m_width = 0, m_height = 0;
+		unsigned int m_width = 0, m_height = 0;
 		GLFWwindow* m_window;
 		bool m_closed = false;
 
@@ -35,8 +35,8 @@ namespace daedalusCore { namespace graphics {
 		void update();
 		bool closed() const;
 
-		inline int getWidth() const { return m_width; };
-		inline int getHeight() const { return m_height; };
+		inline unsigned int getWidth() const { return m_width; };
+		inline unsigned int getHeight() const { return m_height; };
 
 		bool getKey(unsigned int keycode) const;
 		bool getKeyUp(unsigned int keycode) const;

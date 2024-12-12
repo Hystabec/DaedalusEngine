@@ -13,10 +13,9 @@
 #include <format>
 #include <chrono>
 
-#define _USE_MATH_DEFINES
-#include <math.h>
-
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+
+#include "core.h"

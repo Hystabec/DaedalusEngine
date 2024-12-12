@@ -1,6 +1,8 @@
 #include "ddpch.h"
 #include "window.h"
 
+#include "debugTools/log.h"
+
 namespace daedalusCore { namespace graphics {
 
 	void window_Resize(GLFWwindow* window, int width, int height)
@@ -35,10 +37,9 @@ namespace daedalusCore { namespace graphics {
 
 	Window::Window(const char* title, int width, int height) : m_title(title), m_width(width), m_height(height)
 	{
-		if (!glfwInit())
 		{
-			std::cout << "Error - GLFW initialize failed" << std::endl;
-			return;
+			int success = glfwInit();
+			DD_CORE_ASSERT(success, "GLFW failed to initialize");
 		}
 
 		m_window = glfwCreateWindow(width, height, title, NULL, NULL);
@@ -46,7 +47,7 @@ namespace daedalusCore { namespace graphics {
 		if (!m_window)
 		{
 			glfwTerminate();
-			std::cout << "Error - Failed to create GLFW window" << std::endl;
+			DD_CORE_ASSERT(false, "GLEW failed to create widnow");
 			return;
 		}
 
@@ -62,8 +63,7 @@ namespace daedalusCore { namespace graphics {
 
 		if (glewInit() != GLEW_OK)
 		{
-			std::cout << "Error - GLEW initialize failed" << std::endl;
-			return;
+			DD_CORE_ASSERT(false, "GLEW failed to initialize");
 		}
 
 		//std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
@@ -83,6 +83,7 @@ namespace daedalusCore { namespace graphics {
 
 	Window::~Window()
 	{
+		glfwDestroyWindow(m_window);
 		glfwTerminate();
 	}
 
@@ -95,11 +96,6 @@ namespace daedalusCore { namespace graphics {
 	{
 		memcpy(m_keysPrevious, m_keys, sizeof(bool) * MAX_KEYS);
 		memcpy(m_MouseButtonsPrevious, m_MouseButtons, sizeof(bool) * MAX_BUTTONS);
-
-		//this takes a lot of time - might not need it or only check for errors after preforming certain actions? 
-		GLenum error = glGetError();
-		if (error != GL_NO_ERROR)
-			std::cout << "openGL Error: " << error << std::endl;
 
 		//this also takes a lot of time - might not be able to do anything about it
 		glfwPollEvents();
