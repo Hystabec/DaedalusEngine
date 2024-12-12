@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vector>
 #include "maths/mat4.h"
 
 namespace daedalusCore { namespace graphics{

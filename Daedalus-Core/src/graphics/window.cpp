@@ -1,6 +1,5 @@
+#include "ddpch.h"
 #include "window.h"
-
-#include <iostream>
 
 namespace daedalusCore { namespace graphics {
 

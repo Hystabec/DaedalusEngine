@@ -1,3 +1,4 @@
+#include "ddpch.h"
 #include "texture.h"
 
 #include <FreeImage.h>

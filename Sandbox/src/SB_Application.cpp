@@ -1,5 +1,4 @@
 #include <Daedalus.h>
-#include <iostream>
 
 class SandBox : public daedalusCore::Application
 {

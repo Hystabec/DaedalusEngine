@@ -1,3 +1,4 @@
+#include "ddpch.h"
 #include "batchRenderer2D.h"
 
 #include <cstddef>

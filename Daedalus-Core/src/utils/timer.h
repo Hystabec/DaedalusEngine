@@ -1,11 +1,5 @@
 #pragma once
 
-#ifdef DD_USING_WINDOWS_TIMER
-#include <Windows.h>
-#else
-#include <chrono>
-#endif
-
 namespace daedalusCore { namespace utils {
 
 #ifdef USING_WINDOWS_TIMER

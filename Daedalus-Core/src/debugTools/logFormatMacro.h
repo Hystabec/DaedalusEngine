@@ -1,7 +1,5 @@
 #pragma once
 
-#include <format>
-
 /*
 Use to allow the logger to output custom types
 Use in global namespace

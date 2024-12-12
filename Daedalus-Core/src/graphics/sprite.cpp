@@ -1,3 +1,4 @@
+#include "ddpch.h"
 #include "sprite.h"
 
 namespace daedalusCore { namespace graphics {

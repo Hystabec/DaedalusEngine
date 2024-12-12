@@ -1,8 +1,6 @@
 #pragma once
 
-#include <vector>
 #include <GL/glew.h>
-
 
 namespace daedalusCore { namespace graphics { namespace buffers {
 

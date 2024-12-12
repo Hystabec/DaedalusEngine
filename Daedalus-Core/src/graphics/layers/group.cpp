@@ -1,3 +1,4 @@
+#include "ddpch.h"
 #include "group.h"
 
 namespace daedalusCore { namespace graphics {

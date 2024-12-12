@@ -1,3 +1,4 @@
+#include "ddpch.h"
 #include "mat4.h"
 
 #include "maths.h"
@@ -191,22 +192,22 @@ namespace daedalusCore { namespace maths {
 			return *this;
 		}
 
-		mat4 mat4::orthographic(float left, float right, float botton, float top, float near, float far)
+		mat4 mat4::orthographic(float left, float right, float botton, float top, float nearPlane, float farPlane)
 		{
 			mat4 result(1.0f);
 
 			result.elements[0 + 0 * 4] = 2.0f / (right - left);
 			result.elements[1 + 1 * 4] = 2.0f / (top - botton);
-			result.elements[2 + 2 * 4] = 2.0f / (near - far);
+			result.elements[2 + 2 * 4] = 2.0f / (nearPlane - farPlane);
 
 			result.elements[0 + 3 * 4] = (left + right) / (left - right);
 			result.elements[1 + 3 * 4] = (botton + top) / (botton - top);
-			result.elements[2 + 3 * 4] = (far + near) / (far - near);
+			result.elements[2 + 3 * 4] = (farPlane + nearPlane) / (farPlane - nearPlane);
 
 			return result;
 		}
 
-		mat4 mat4::perspective(float fov, float aspectRatio, float near, float far)
+		mat4 mat4::perspective(float fov, float aspectRatio, float nearPlane, float farPlane)
 		{
 			mat4 result(1.0f);
 			
@@ -215,9 +216,9 @@ namespace daedalusCore { namespace maths {
 			
 			result.elements[0 + 0 * 4] = a;
 			result.elements[1 + 1 * 4] = q;
-			result.elements[2 + 2 * 4] = ((near + far) / (near - far));
+			result.elements[2 + 2 * 4] = ((nearPlane + farPlane) / (nearPlane - farPlane));
 			result.elements[3 + 2 * 4] = -1.0f;
-			result.elements[2 + 3 * 4] = ((2 * near * far) / (near - far));
+			result.elements[2 + 3 * 4] = ((2 * nearPlane * farPlane) / (nearPlane - farPlane));
 
 			return result;
 		}

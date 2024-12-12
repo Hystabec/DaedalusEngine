@@ -1,3 +1,4 @@
+#include "ddpch.h"
 #include "log.h"
 
 #include <spdlog/spdlog.h>

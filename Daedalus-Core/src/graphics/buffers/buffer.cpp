@@ -1,3 +1,4 @@
+#include "ddpch.h"
 #include "buffer.h"
 
 namespace daedalusCore { namespace graphics { namespace buffers {

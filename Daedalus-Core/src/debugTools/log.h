@@ -1,8 +1,11 @@
 #pragma once
 
-
 #include "../core.h"
 #include "logFormatMacro.h"
+
+//included here for application
+#include <string>
+#include <format>
 
 /*
 TO DO: 

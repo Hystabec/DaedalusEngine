@@ -1,8 +1,7 @@
+#include "ddpch.h"
 #include "shader.h"
 
 #include "utils/fileUtils.h"
-#include <vector>
-#include <iostream>
 
 namespace daedalusCore { namespace graphics {
 

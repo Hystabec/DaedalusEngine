@@ -1,3 +1,4 @@
+#include "ddpch.h"
 #include "vec3.h"
 
 namespace daedalusCore { namespace maths {
