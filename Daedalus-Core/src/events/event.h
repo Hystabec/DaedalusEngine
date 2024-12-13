@@ -45,10 +45,12 @@ namespace daedalusCore { namespace event {
 		virtual const char* GetName() const = 0;
 		virtual int GetCategoryFlags() const = 0;
 
-		inline bool IsInCategory(EventCategory::Category category)
+		inline bool IsInCategory(EventCategory::Category category) const
 		{
 			return GetCategoryFlags() & ((int)category);
 		}
+
+		inline bool Handled() const { return m_handled; }
 	};
 
 	class EventDispatcher

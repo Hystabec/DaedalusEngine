@@ -3,8 +3,8 @@
 #include "core.h"
 #include "graphics/window.h"
 
-#include "events/event.h"
 #include "events/windowEvent.h"
+#include "app/layerStack.h"
 
 namespace daedalusCore {
 
@@ -17,6 +17,8 @@ namespace daedalusCore {
 		unsigned int m_UpdatesPerSecond = 0;
 
 		bool m_running = true;
+
+		app::layerStack m_layerStack;
 	private:
 		bool OnWindowClose(event::WindowClosedEvent& e);
 
@@ -30,6 +32,9 @@ namespace daedalusCore {
 
 		void Init();
 		int Run();
+
+		void PushLayer(app::Layer* layer);
+		void PushOverlay(app::Layer* layer);
 
 		//Runs on initialization
 		virtual void Start() {};

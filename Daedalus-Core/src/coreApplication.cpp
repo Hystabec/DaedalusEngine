@@ -26,6 +26,13 @@ namespace daedalusCore {
 	{
 		event::EventDispatcher dispatch(e);
 		dispatch.Dispatch<event::WindowClosedEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
+
+		for (auto it = m_layerStack.end(); it != m_layerStack.begin();)
+		{
+			(*--it)->Event(e);
+			if (e.Handled())
+				break;
+		}
 	}
 
 	void Application::Init()
@@ -56,6 +63,9 @@ namespace daedalusCore {
 				updateTimer += updateTick;
 			}
 
+			for (app::Layer* layer : m_layerStack)
+				layer->Update();
+
 			frames++;
 			Render();
 			m_window->Update();
@@ -72,6 +82,16 @@ namespace daedalusCore {
 		}
 
 		return 0;
+	}
+
+	void Application::PushLayer(app::Layer* layer)
+	{
+		m_layerStack.PushLayer(layer);
+	}
+
+	void Application::PushOverlay(app::Layer* layer)
+	{
+		m_layerStack.PushOverlay(layer);
 	}
 
 }
