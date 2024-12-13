@@ -1,6 +1,9 @@
 #include "ddpch.h"
 #include "windowsWindow.h"
 
+#include <GL/glew.h>
+#include <glfw3.h>
+
 #include "events/windowEvent.h"
 #include "events/keyEvent.h"
 #include "events/mouseEvent.h"
@@ -8,6 +11,7 @@
 namespace daedalusCore { namespace graphics {
 
 	static bool s_GLFWInitialized = false;
+	static bool s_GLEWInitialized = false;
 
 	static void GLFWErrorCallback(int error, const char* description)
 	{
@@ -44,7 +48,12 @@ namespace daedalusCore { namespace graphics {
 			s_GLFWInitialized = true;
 		}
 
+
 		m_window = glfwCreateWindow((int)props.Width, (int)props.Height, m_data.Title.c_str(), nullptr, nullptr);
+
+		if (!m_window)
+			DD_CORE_ASSERT(false, "failed to create window");
+
 		glfwMakeContextCurrent(m_window);
 		glfwSetWindowUserPointer(m_window, &m_data);
 		SetVSync(props.VSync);
@@ -129,6 +138,12 @@ namespace daedalusCore { namespace graphics {
 				event::MouseMovedEvent event((float)xPos, (float)yPos);
 				data.EventCallBack(event);
 			});
+
+		if (!s_GLEWInitialized)
+		{
+			if (glewInit() != GLEW_OK)
+				DD_CORE_ASSERT(false, "GLEW failed to initialize");
+		}
 	}
 
 	WindowsWindow::~WindowsWindow()

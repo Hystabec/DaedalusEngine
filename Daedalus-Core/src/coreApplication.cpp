@@ -13,6 +13,7 @@ namespace daedalusCore {
 	}
 	Application::Application(std::string title, unsigned int width, unsigned int height, bool vsync)
 	{
+		debug::Log::Init();
 		m_window = std::unique_ptr<graphics::Window>(graphics::Window::Create(graphics::WindowProperties(title, width, height, vsync)));
 		m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 	}
@@ -37,7 +38,6 @@ namespace daedalusCore {
 	void Application::Init()
 	{
 		//Engine start Logic
-		debug::Log::Init();
 	}
 
 	int Application::Run()

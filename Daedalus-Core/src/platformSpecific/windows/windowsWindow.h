@@ -2,7 +2,7 @@
 
 #include "graphics/window.h"
 
-#include <glfw3.h>
+struct GLFWwindow;
 
 namespace daedalusCore { namespace graphics {
 
