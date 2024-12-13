@@ -74,9 +74,6 @@
     <ClCompile Include="src\graphics\sprite.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\layers\tileLayer.cpp">
-      <Filter>Source Files\graphics\layers</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\layers\layer.cpp">
       <Filter>Source Files\graphics\layers</Filter>
     </ClCompile>
@@ -149,9 +146,6 @@
       <Filter>Header Files\utils</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\layers\layer.h">
-      <Filter>Header Files\graphics\layers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\graphics\layers\tileLayer.h">
       <Filter>Header Files\graphics\layers</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\layers\group.h">

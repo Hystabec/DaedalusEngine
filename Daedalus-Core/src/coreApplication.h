@@ -21,7 +21,7 @@ namespace daedalusCore {
 		bool OnWindowClose(event::WindowClosedEvent& e);
 
 	protected:
-		Application(std::string title = "Daedalus Window", unsigned int width = 960, unsigned int height = 540, bool vsync = true);
+		Application(std::string title = "Daedalus Window", unsigned int width = 960, unsigned int height = 540, bool vsync = false);
 
 	public:
 		virtual ~Application();
