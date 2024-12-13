@@ -19,7 +19,6 @@ namespace daedalusCore {
 
 	Application::~Application()
 	{
-		Close();
 	}
 
 	void Application::OnEvent(event::Event& e)
@@ -39,46 +38,16 @@ namespace daedalusCore {
 	{
 		//Engine start Logic
 		debug::Log::Init();
-
-		//Application Start override function
-		Start();
 	}
 
 	int Application::Run()
 	{
-		utils::Timer time;
-
-		float timer = 0.0f;
-		float updateTimer = 0.0f;
-		float updateTick = 1.0f / 60.0f;
-		unsigned int frames = 0;
-		unsigned int updates = 0;
-
 		while (m_running)
 		{
-			if (time.elapsedSeconds() - updateTimer > updateTick)
-			{
-				updates++;
-				Update();
-				updateTimer += updateTick;
-			}
-
 			for (app::Layer* layer : m_layerStack)
 				layer->Update();
 
-			frames++;
-			Render();
 			m_window->Update();
-
-			if (time.elapsedSeconds() - timer > 1.0f)
-			{
-				timer += 1.0f;
-				m_FramesPerSecond = frames;
-				m_UpdatesPerSecond = updates;
-				frames = 0;
-				updates = 0;
-				Tick();
-			}
 		}
 
 		return 0;

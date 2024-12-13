@@ -12,10 +12,10 @@ public:
 	{
 	}
 
-	void Tick() override
+	/*void Tick() override
 	{
 		LOG_INFO("FPS {}", GetFramesPerSecond());
-	}
+	}*/
 };
 
 daedalusCore::Application* daedalusCore::CreateApplication()
