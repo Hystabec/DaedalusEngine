@@ -74,7 +74,7 @@
     <ClCompile Include="src\graphics\sprite.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\layers\layer.cpp">
+    <ClCompile Include="src\graphics\layers\graphicsLayer.cpp">
       <Filter>Source Files\graphics\layers</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\layers\group.cpp">
@@ -93,6 +93,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\platformSpecific\windows\windowsWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\app\layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\app\layerStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -145,7 +151,7 @@
     <ClInclude Include="src\utils\timer.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\layers\layer.h">
+    <ClInclude Include="src\graphics\layers\graphicsLayer.h">
       <Filter>Header Files\graphics\layers</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\layers\group.h">
@@ -194,6 +200,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\platformSpecific\windows\windowsWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\app\layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\app\layerStack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
