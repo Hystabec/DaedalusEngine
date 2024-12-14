@@ -1,7 +1,9 @@
 #include <Daedalus.h>
 
+
 class TestLayer : public daedalusCore::application::Layer
 {
+
 private:
 	daedalusCore::utils::Timer time;
 	int frames = 0;
@@ -25,7 +27,12 @@ public:
 
 	void Event(daedalusCore::event::Event& e) override
 	{
-		
+		using namespace daedalusCore::event;
+		if (e.GetType() == EventType::KeyPressed)
+		{
+			KeyPressedEvent& event = (KeyPressedEvent&)e;
+			LOG_TRACE("Pressed {} code: {}", (char)event.GetKeyCode(), event.GetKeyCode());
+		}
 	}
 };
 

@@ -136,6 +136,8 @@
   <ItemGroup>
     <ClInclude Include="src\applicationCore.h" />
     <ClInclude Include="src\application\Input.h" />
+    <ClInclude Include="src\application\inputKeyCodes.h" />
+    <ClInclude Include="src\application\inputMouseCodes.h" />
     <ClInclude Include="src\application\layers\layer.h" />
     <ClInclude Include="src\application\layers\layerStack.h" />
     <ClInclude Include="src\core.h" />
