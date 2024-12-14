@@ -11,10 +11,9 @@ namespace daedalusCore {
 	class DD_API Application
 	{
 	private:
-		std::unique_ptr<application::Window> m_window;
+		static Application* m_instance;
 
-		//unsigned int m_FramesPerSecond = 0;
-		//unsigned int m_UpdatesPerSecond = 0;
+		std::unique_ptr<application::Window> m_window;
 
 		bool m_running = true;
 
@@ -27,6 +26,7 @@ namespace daedalusCore {
 
 	public:
 		virtual ~Application();
+		inline static Application& Get() { return *m_instance; }
 
 		void OnEvent(event::Event& e);
 
@@ -36,8 +36,7 @@ namespace daedalusCore {
 		void PushLayer(application::Layer* layer);
 		void PushOverlay(application::Layer* layer);
 
-		//inline unsigned int GetFramesPerSecond() const { return m_FramesPerSecond; }
-		//inline unsigned int GetUpdatesPerSecond() const { return m_UpdatesPerSecond; }
+		inline application::Window* GetWindow() { return m_window.get(); }
 	};
 
 	//To be defined in client

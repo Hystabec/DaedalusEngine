@@ -2,9 +2,12 @@
 #include "applicationCore.h"
 
 #include "application/window.h"
+#include "application/Input.h"
 #include "utils/timer.h"
 
 namespace daedalusCore {
+
+	Application* Application::m_instance = nullptr;
 
 	bool Application::OnWindowClose(event::WindowClosedEvent& e)
 	{
@@ -13,6 +16,9 @@ namespace daedalusCore {
 	}
 	Application::Application(std::string title, unsigned int width, unsigned int height, bool vsync)
 	{
+		DD_CORE_ASSERT(!m_instance, "Duplicate application");
+		m_instance = this;
+
 		debug::Log::Init();
 		m_window = std::unique_ptr<application::Window>(application::Window::Create(application::WindowProperties(title, width, height, vsync)));
 		m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));

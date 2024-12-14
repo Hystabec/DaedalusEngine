@@ -38,6 +38,8 @@ namespace daedalusCore { namespace application {
 		inline void SetEventCallback(const EventCallbackFn& callback) override { m_data.EventCallBack = callback; }
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;
+
+		inline void* GetNativeWindow() const override { return m_window; }
 	};
 
 } }
