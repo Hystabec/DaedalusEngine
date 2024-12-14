@@ -1,7 +1,7 @@
 #include "ddpch.h"
 #include "layer.h"
 
-namespace daedalusCore { namespace app {
+namespace daedalusCore { namespace application {
 
 	Layer::Layer()
 	{

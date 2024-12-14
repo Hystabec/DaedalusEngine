@@ -1,7 +1,7 @@
 #include "ddpch.h"
 #include "coreApplication.h"
 
-#include "graphics/window.h"
+#include "app/window.h"
 #include "utils/timer.h"
 
 namespace daedalusCore {
@@ -14,7 +14,7 @@ namespace daedalusCore {
 	Application::Application(std::string title, unsigned int width, unsigned int height, bool vsync)
 	{
 		debug::Log::Init();
-		m_window = std::unique_ptr<graphics::Window>(graphics::Window::Create(graphics::WindowProperties(title, width, height, vsync)));
+		m_window = std::unique_ptr<application::Window>(application::Window::Create(application::WindowProperties(title, width, height, vsync)));
 		m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 	}
 
@@ -44,7 +44,7 @@ namespace daedalusCore {
 	{
 		while (m_running)
 		{
-			for (app::Layer* layer : m_layerStack)
+			for (application::Layer* layer : m_layerStack)
 				layer->Update();
 
 			m_window->Update();
@@ -53,12 +53,12 @@ namespace daedalusCore {
 		return 0;
 	}
 
-	void Application::PushLayer(app::Layer* layer)
+	void Application::PushLayer(application::Layer* layer)
 	{
 		m_layerStack.PushLayer(layer);
 	}
 
-	void Application::PushOverlay(app::Layer* layer)
+	void Application::PushOverlay(application::Layer* layer)
 	{
 		m_layerStack.PushOverlay(layer);
 	}

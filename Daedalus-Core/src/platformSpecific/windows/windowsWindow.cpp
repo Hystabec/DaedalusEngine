@@ -8,7 +8,7 @@
 #include "events/keyEvent.h"
 #include "events/mouseEvent.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalusCore { namespace application {
 
 	static bool s_GLFWInitialized = false;
 	static bool s_GLEWInitialized = false;

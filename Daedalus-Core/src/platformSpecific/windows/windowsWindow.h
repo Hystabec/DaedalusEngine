@@ -1,10 +1,10 @@
 #pragma once
 
-#include "graphics/window.h"
+#include "app/window.h"
 
 struct GLFWwindow;
 
-namespace daedalusCore { namespace graphics {
+namespace daedalusCore { namespace application {
 
 	class WindowsWindow : public Window
 	{

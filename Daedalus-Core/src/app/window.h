@@ -3,7 +3,7 @@
 #include "ddpch.h"
 #include "events/event.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalusCore { namespace application {
 
 	struct WindowProperties
 	{

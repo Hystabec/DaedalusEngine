@@ -1,6 +1,6 @@
 #include <Daedalus.h>
 
-class TestLayer : public daedalusCore::app::Layer
+class TestLayer : public daedalusCore::application::Layer
 {
 private:
 	daedalusCore::utils::Timer time;
@@ -33,7 +33,7 @@ class SandBox : public daedalusCore::Application
 {
 public:
 	SandBox()
-		: Application()
+		: Application("SandBox", 960, 540, true)
 	{
 		this->PushLayer(new TestLayer());
 	}

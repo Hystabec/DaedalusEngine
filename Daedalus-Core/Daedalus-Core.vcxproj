@@ -156,7 +156,7 @@
     <ClInclude Include="src\graphics\shader.h" />
     <ClInclude Include="src\graphics\sprite.h" />
     <ClInclude Include="src\graphics\texture.h" />
-    <ClInclude Include="src\graphics\window.h" />
+    <ClInclude Include="src\app\window.h" />
     <ClInclude Include="src\platformSpecific\windows\windowsWindow.h" />
     <ClInclude Include="src\maths\mat4.h" />
     <ClInclude Include="src\maths\maths.h" />

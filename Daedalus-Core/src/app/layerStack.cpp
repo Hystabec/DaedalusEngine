@@ -1,7 +1,7 @@
 #include "ddpch.h"
 #include "layerStack.h"
 
-namespace daedalusCore { namespace app {
+namespace daedalusCore { namespace application {
 
 	layerStack::layerStack()
 	{

@@ -2,7 +2,7 @@
 
 #include "events/event.h"
 
-namespace daedalusCore { namespace app {
+namespace daedalusCore { namespace application {
 
 	class DD_API Layer
 	{
