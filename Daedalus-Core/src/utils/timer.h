@@ -1,9 +1,11 @@
 #pragma once
 
+#include "../core.h"
+
 namespace daedalusCore { namespace utils {
 
 #ifdef USING_WINDOWS_TIMER
-	class Timer
+	class DD_API Timer
 	{
 	private:
 		LARGE_INTEGER m_start;
@@ -49,7 +51,7 @@ namespace daedalusCore { namespace utils {
 		}
 	};
 #else
-	class Timer
+	class DD_API Timer
 	{
 	private:
 		std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
