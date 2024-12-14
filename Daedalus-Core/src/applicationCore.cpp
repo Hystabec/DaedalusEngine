@@ -1,7 +1,7 @@
 #include "ddpch.h"
 #include "applicationCore.h"
 
-#include "app/window.h"
+#include "application/window.h"
 #include "utils/timer.h"
 
 namespace daedalusCore {

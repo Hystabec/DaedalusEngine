@@ -92,10 +92,10 @@
     <ClCompile Include="src\platformSpecific\windows\windowsWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\app\layer.cpp">
+    <ClCompile Include="src\application\layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\app\layerStack.cpp">
+    <ClCompile Include="src\application\layerStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\applicationCore.cpp">
@@ -103,7 +103,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\app\window.h">
+    <ClInclude Include="src\application\window.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\maths\maths.h">
@@ -199,10 +199,10 @@
     <ClInclude Include="src\platformSpecific\windows\windowsWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\app\layer.h">
+    <ClInclude Include="src\application\layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\app\layerStack.h">
+    <ClInclude Include="src\application\layerStack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\applicationCore.h">

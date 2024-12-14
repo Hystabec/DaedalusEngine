@@ -1,10 +1,10 @@
 #pragma once
 
 #include "core.h"
-#include "app/window.h"
+#include "application/window.h"
 
 #include "events/windowEvent.h"
-#include "app/layerStack.h"
+#include "application/layerStack.h"
 
 namespace daedalusCore {
 

@@ -108,8 +108,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\applicationCore.cpp" />
-    <ClCompile Include="src\app\layer.cpp" />
-    <ClCompile Include="src\app\layerStack.cpp" />
+    <ClCompile Include="src\application\layer.cpp" />
+    <ClCompile Include="src\application\layerStack.cpp" />
     <ClCompile Include="src\ddpch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ddpch.h</PrecompiledHeaderFile>
@@ -134,8 +134,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\applicationCore.h" />
-    <ClInclude Include="src\app\layer.h" />
-    <ClInclude Include="src\app\layerStack.h" />
+    <ClInclude Include="src\application\layer.h" />
+    <ClInclude Include="src\application\layerStack.h" />
     <ClInclude Include="src\core.h" />
     <ClInclude Include="Daedalus.h" />
     <ClInclude Include="src\ddpch.h" />
@@ -156,7 +156,7 @@
     <ClInclude Include="src\graphics\shader.h" />
     <ClInclude Include="src\graphics\sprite.h" />
     <ClInclude Include="src\graphics\texture.h" />
-    <ClInclude Include="src\app\window.h" />
+    <ClInclude Include="src\application\window.h" />
     <ClInclude Include="src\platformSpecific\windows\windowsWindow.h" />
     <ClInclude Include="src\maths\mat4.h" />
     <ClInclude Include="src\maths\maths.h" />
