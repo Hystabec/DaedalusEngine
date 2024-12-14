@@ -108,8 +108,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\applicationCore.cpp" />
-    <ClCompile Include="src\application\layer.cpp" />
-    <ClCompile Include="src\application\layerStack.cpp" />
+    <ClCompile Include="src\application\layers\layer.cpp" />
+    <ClCompile Include="src\application\layers\layerStack.cpp" />
     <ClCompile Include="src\ddpch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ddpch.h</PrecompiledHeaderFile>
@@ -134,8 +134,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\applicationCore.h" />
-    <ClInclude Include="src\application\layer.h" />
-    <ClInclude Include="src\application\layerStack.h" />
+    <ClInclude Include="src\application\layers\layer.h" />
+    <ClInclude Include="src\application\layers\layerStack.h" />
     <ClInclude Include="src\core.h" />
     <ClInclude Include="Daedalus.h" />
     <ClInclude Include="src\ddpch.h" />
