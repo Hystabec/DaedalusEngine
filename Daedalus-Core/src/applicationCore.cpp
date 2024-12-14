@@ -1,5 +1,5 @@
 #include "ddpch.h"
-#include "coreApplication.h"
+#include "applicationCore.h"
 
 #include "app/window.h"
 #include "utils/timer.h"

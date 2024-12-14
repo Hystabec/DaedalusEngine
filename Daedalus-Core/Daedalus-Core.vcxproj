@@ -107,9 +107,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\applicationCore.cpp" />
     <ClCompile Include="src\app\layer.cpp" />
     <ClCompile Include="src\app\layerStack.cpp" />
-    <ClCompile Include="src\coreApplication.cpp" />
     <ClCompile Include="src\ddpch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ddpch.h</PrecompiledHeaderFile>
@@ -133,9 +133,9 @@
     <ClCompile Include="src\platformSpecific\windows\windowsWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\applicationCore.h" />
     <ClInclude Include="src\app\layer.h" />
     <ClInclude Include="src\app\layerStack.h" />
-    <ClInclude Include="src\coreApplication.h" />
     <ClInclude Include="src\core.h" />
     <ClInclude Include="Daedalus.h" />
     <ClInclude Include="src\ddpch.h" />

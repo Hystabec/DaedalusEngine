@@ -2,7 +2,7 @@
 
 //for use by application
 #include <stdio.h>
-#include "src/coreApplication.h"
+#include "src/applicationCore.h"
 
 #include "src/utils/timer.h"
 

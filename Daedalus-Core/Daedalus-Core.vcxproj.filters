@@ -83,9 +83,6 @@
     <ClCompile Include="src\graphics\texture.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\coreApplication.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\debugTools\log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -99,6 +96,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\app\layerStack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\applicationCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -169,9 +169,6 @@
     <ClInclude Include="src\core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\coreApplication.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\entryPoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -206,6 +203,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\app\layerStack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\applicationCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
