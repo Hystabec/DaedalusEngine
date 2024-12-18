@@ -8,10 +8,11 @@
 #include "events/keyEvent.h"
 #include "events/mouseEvent.h"
 
+#include "platformSpecific/openGL/openGLContext.h"
+
 namespace daedalusCore { namespace application {
 
 	static bool s_GLFWInitialized = false;
-	static bool s_GLEWInitialized = false;
 
 	static void GLFWErrorCallback(int error, const char* description)
 	{
@@ -54,7 +55,8 @@ namespace daedalusCore { namespace application {
 		if (!m_window)
 			DD_CORE_ASSERT(false, "failed to create window");
 
-		glfwMakeContextCurrent(m_window);
+		m_renderingContext = new graphics::OpenGlContext(m_window);
+		
 		glfwSetWindowUserPointer(m_window, &m_data);
 		SetVSync(props.VSync);
 
@@ -138,12 +140,6 @@ namespace daedalusCore { namespace application {
 				event::MouseMovedEvent event((float)xPos, (float)yPos);
 				data.EventCallBack(event);
 			});
-
-		if (!s_GLEWInitialized)
-		{
-			if (glewInit() != GLEW_OK)
-				DD_CORE_ASSERT(false, "GLEW failed to initialize");
-		}
 	}
 
 	WindowsWindow::~WindowsWindow()
@@ -154,7 +150,7 @@ namespace daedalusCore { namespace application {
 	void WindowsWindow::Update()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_window);
+		m_renderingContext->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)

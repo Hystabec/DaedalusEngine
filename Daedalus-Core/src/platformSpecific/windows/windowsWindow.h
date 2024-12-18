@@ -4,7 +4,11 @@
 
 struct GLFWwindow;
 
-namespace daedalusCore { namespace application {
+namespace daedalusCore {
+	namespace graphics {
+		class RenderingContext;
+	}
+	namespace application {
 
 	class WindowsWindow : public Window
 	{
@@ -22,6 +26,7 @@ namespace daedalusCore { namespace application {
 
 		WindowData m_data;
 
+		graphics::RenderingContext* m_renderingContext;
 	private:
 		virtual void Init(const WindowProperties& props);
 		virtual void Shutdown();

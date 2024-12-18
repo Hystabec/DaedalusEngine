@@ -2,6 +2,7 @@
 
 //for use by application
 #include <stdio.h>
+
 #include "src/applicationCore.h"
 #include "src/application/layers/layer.h"
 

@@ -130,6 +130,7 @@
     <ClCompile Include="src\maths\vec3.cpp" />
     <ClCompile Include="src\maths\vec4.cpp" />
     <ClCompile Include="src\debugTools\log.cpp" />
+    <ClCompile Include="src\platformSpecific\openGL\openGLContext.cpp" />
     <ClCompile Include="src\platformSpecific\windows\windowsInput.cpp" />
     <ClCompile Include="src\platformSpecific\windows\windowsWindow.cpp" />
   </ItemGroup>
@@ -157,10 +158,12 @@
     <ClInclude Include="src\graphics\layers\graphicsLayer.h" />
     <ClInclude Include="src\graphics\renderable2D.h" />
     <ClInclude Include="src\graphics\renderer2D.h" />
+    <ClInclude Include="src\graphics\renderer\renderingContext.h" />
     <ClInclude Include="src\graphics\shader.h" />
     <ClInclude Include="src\graphics\sprite.h" />
     <ClInclude Include="src\graphics\texture.h" />
     <ClInclude Include="src\application\window.h" />
+    <ClInclude Include="src\platformSpecific\openGL\openGLContext.h" />
     <ClInclude Include="src\platformSpecific\windows\windowsInput.h" />
     <ClInclude Include="src\platformSpecific\windows\windowsWindow.h" />
     <ClInclude Include="src\maths\mat4.h" />
