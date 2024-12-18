@@ -16,7 +16,7 @@ namespace daedalusCore { namespace application {
 
 	static void GLFWErrorCallback(int error, const char* description)
 	{
-		CORE_LOG_ERROR("GLFW Error ({}): {}", error, description);
+		DD_CORE_LOG_ERROR("GLFW Error ({}): {}", error, description);
 	}
 
 	Window* Window::Create(const WindowProperties& props)

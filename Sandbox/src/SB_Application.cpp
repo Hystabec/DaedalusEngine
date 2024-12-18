@@ -20,7 +20,7 @@ public:
 		if (time.elapsedSeconds() >= 1.0f)
 		{
 			time.reset();
-			LOG_INFO("FPS: {}", frames);
+			DD_LOG_INFO("FPS: {}", frames);
 			frames = 0;
 		}
 	}
@@ -31,7 +31,7 @@ public:
 		if (e.GetType() == EventType::KeyPressed)
 		{
 			KeyPressedEvent& event = (KeyPressedEvent&)e;
-			LOG_TRACE("Pressed {} code: {}", (char)event.GetKeyCode(), event.GetKeyCode());
+			DD_LOG_TRACE("Pressed {} code: {}", (char)event.GetKeyCode(), event.GetKeyCode());
 		}
 	}
 };

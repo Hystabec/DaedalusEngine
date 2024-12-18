@@ -164,32 +164,32 @@ namespace daedalusCore { namespace debug {
 
 //core macros
 
-#define CORE_LOG_TRACE(...)       daedalusCore::debug::Log::Trace(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
-#define CORE_LOG_INFO(...)        daedalusCore::debug::Log::Info(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
-#define CORE_LOG_WARN(...)        daedalusCore::debug::Log::Warn(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
-#define CORE_LOG_ERROR(...)       daedalusCore::debug::Log::Error(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
-#define CORE_LOG_CRITICAL(...)    daedalusCore::debug::Log::Critical(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define DD_CORE_LOG_TRACE(...)       daedalusCore::debug::Log::Trace(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define DD_CORE_LOG_INFO(...)        daedalusCore::debug::Log::Info(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define DD_CORE_LOG_WARN(...)        daedalusCore::debug::Log::Warn(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define DD_CORE_LOG_ERROR(...)       daedalusCore::debug::Log::Error(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define DD_CORE_LOG_CRITICAL(...)    daedalusCore::debug::Log::Critical(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
 
 //client macros
 
-#define LOG_TRACE(...)       daedalusCore::debug::Log::Trace(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
-#define LOG_INFO(...)        daedalusCore::debug::Log::Info(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
-#define LOG_WARN(...)        daedalusCore::debug::Log::Warn(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
-#define LOG_ERROR(...)       daedalusCore::debug::Log::Error(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
-#define LOG_CRITICAL(...)    daedalusCore::debug::Log::Critical(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define DD_LOG_TRACE(...)       daedalusCore::debug::Log::Trace(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define DD_LOG_INFO(...)        daedalusCore::debug::Log::Info(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define DD_LOG_WARN(...)        daedalusCore::debug::Log::Warn(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define DD_LOG_ERROR(...)       daedalusCore::debug::Log::Error(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define DD_LOG_CRITICAL(...)    daedalusCore::debug::Log::Critical(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
 
 #else
 
-#define CORE_LOG_TRACE(...)
-#define CORE_LOG_INFO(...) 
-#define CORE_LOG_WARN(...) 
-#define CORE_LOG_ERROR(...) 
-#define CORE_LOG_CRITICAL(...) 
+#define DD_CORE_LOG_TRACE(...)
+#define DD_CORE_LOG_INFO(...) 
+#define DD_CORE_LOG_WARN(...) 
+#define DD_CORE_LOG_ERROR(...) 
+#define DD_CORE_LOG_CRITICAL(...) 
 
-#define LOG_TRACE(...) 
-#define LOG_INFO(...)
-#define LOG_WARN(...) 
-#define LOG_ERROR(...)
-#define LOG_CRITICAL(...)
+#define DD_LOG_TRACE(...) 
+#define DD_LOG_INFO(...)
+#define DD_LOG_WARN(...) 
+#define DD_LOG_ERROR(...)
+#define DD_LOG_CRITICAL(...)
 
 #endif
