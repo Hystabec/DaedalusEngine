@@ -1,7 +1,6 @@
 #include "ddpch.h"
 #include "windowsWindow.h"
 
-#include <GL/glew.h>
 #include <glfw3.h>
 
 #include "events/windowEvent.h"
