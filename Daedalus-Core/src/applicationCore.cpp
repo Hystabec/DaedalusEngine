@@ -35,7 +35,7 @@ namespace daedalusCore {
 
 		for (auto it = m_layerStack.end(); it != m_layerStack.begin();)
 		{
-			(*--it)->Event(e);
+			(*--it)->OnEvent(e);
 			if (e.Handled())
 				break;
 		}

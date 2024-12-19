@@ -25,7 +25,7 @@ public:
 		}
 	}
 
-	void Event(daedalusCore::event::Event& e) override
+	void OnEvent(daedalusCore::event::Event& e) override
 	{
 		using namespace daedalusCore::event;
 		if (e.GetType() == EventType::KeyPressed)

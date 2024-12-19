@@ -64,7 +64,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>src;$(ProjectDir)\Dependencies\spdlog\include;$(ProjectDir)\Dependencies\Dear ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;$(ProjectDir)\Dependencies\spdlog\include;$(ProjectDir)\Dependencies\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>ddpch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -91,7 +91,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>src;$(ProjectDir)\Dependencies\spdlog\include;$(ProjectDir)\Dependencies\Dear ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;$(ProjectDir)\Dependencies\spdlog\include;$(ProjectDir)\Dependencies\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>ddpch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -108,6 +108,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\applicationCore.cpp" />
+    <ClCompile Include="src\application\layers\imGuiLayer.cpp" />
     <ClCompile Include="src\application\layers\layer.cpp" />
     <ClCompile Include="src\application\layers\layerStack.cpp" />
     <ClCompile Include="src\ddpch.cpp">
@@ -139,6 +140,7 @@
     <ClInclude Include="src\application\Input.h" />
     <ClInclude Include="src\application\inputKeyCodes.h" />
     <ClInclude Include="src\application\inputMouseCodes.h" />
+    <ClInclude Include="src\application\layers\imGuiLayer.h" />
     <ClInclude Include="src\application\layers\layer.h" />
     <ClInclude Include="src\application\layers\layerStack.h" />
     <ClInclude Include="src\core.h" />
