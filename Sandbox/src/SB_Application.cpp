@@ -43,6 +43,7 @@ public:
 		: Application("SandBox", 960, 540, true)
 	{
 		this->PushLayer(new TestLayer());
+		this->PushLayer(new daedalusCore::application::ImGuiLayer());
 	}
 
 	~SandBox()

@@ -4,8 +4,11 @@
 
 namespace daedalusCore { namespace application {
 
-	class ImGuiLayer : public Layer
+	class DD_API ImGuiLayer : public Layer
 	{
+	private:
+		float m_time = 0.0f;
+
 	public:
 		ImGuiLayer();
 		~ImGuiLayer();

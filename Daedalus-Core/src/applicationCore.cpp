@@ -62,11 +62,13 @@ namespace daedalusCore {
 	void Application::PushLayer(application::Layer* layer)
 	{
 		m_layerStack.PushLayer(layer);
+		layer->Attach();
 	}
 
 	void Application::PushOverlay(application::Layer* layer)
 	{
 		m_layerStack.PushOverlay(layer);
+		layer->Attach();
 	}
 
 }
