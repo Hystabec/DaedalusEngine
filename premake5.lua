@@ -26,7 +26,7 @@ project "Daedalus-Core"
 		"%{prj.name}/src/**.hpp"
 	}
 
-	include
+	includedirs
 	{
 		"%{prj.name}/src",
 		dependdir .. "GLEW/include",
@@ -78,7 +78,7 @@ project "Sandbox"
 		"%{prj.name}/src/**.hpp"
 	}
 
-	include
+	includedirs
 	{
 		"Daedalus-Core"
 	}
