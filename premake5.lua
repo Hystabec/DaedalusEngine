@@ -55,8 +55,8 @@ project "Daedalus-Core"
 	links
 	{
 		"glfw3.lib",
-		"glew32s.lib",
 		"opengl32.lib",
+		"glew32s.lib",
 		"FreeImage.lib"
 	}
 
@@ -70,7 +70,9 @@ project "Daedalus-Core"
 		defines
 		{
 			"DD_PLATFORM_WINDOWS",
-			"DD_BUILD_DLL"
+			"DD_BUILD_DLL",
+			"GLEW_STATIC",
+			"_CRT_SECURE_NO_WARNINGS"
 		}
 
 		postbuildcommands
@@ -79,11 +81,19 @@ project "Daedalus-Core"
 		}
 
 	filter "configurations:Debug"
-		defines "DD_DEBUG"
+		defines
+		{
+			"DD_DEBUG",
+			"DD_USING_ASSERTS"
+		}
 		symbols "On"
 
 	filter "configurations:Realease"
-		defines "DD_RELEASE"
+		defines
+		{
+			"DD_RELEASE",
+			"DD_USING_ASSERTS"
+		}
 		optimize "On"
 
 	filter "configurations:Distro"
