@@ -54,7 +54,7 @@ project "Daedalus-Core"
 
 	links
 	{
-		"glfw3.lib",
+		"glfw3_mt.lib",
 		"opengl32.lib",
 		"glew32s.lib",
 		"FreeImage.lib"
