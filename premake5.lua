@@ -125,6 +125,11 @@ project "Sandbox"
 		"Daedalus-Core"
 	}
 
+	postbuildcommands
+	{
+		("{copy} ../Daedalus-Core/Dependencies/FreeImage/FreeImage.dll ../bin/" .. outputdir .. "/Sandbox")
+	}
+
 	filter "system:windows"
 		cppdialect "C++20"
 		staticruntime "On"
