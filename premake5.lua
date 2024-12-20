@@ -4,17 +4,19 @@ workspace "DaedalusEngine"
 	configurations
 	{
 		"Debug",
-		"Realease",
+		"Release",
 		"Distro"
 	}
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputdir = "%{cfg.buildcfg}/%{cfg.system}-%{cfg.architecture}"
+
+dependFol = "Daedalus-Core/Dependencies"
 
 dependDir = {}
-dependDir["GLFW"] = "Daedalus-Core/Dependencies/GLFW/include"
-dependDir["GLEW"] = "Daedalus-Core/Dependencies/GLEW/include"
-dependDir["FreeImage"] = "Daedalus-Core/Dependencies/FreeImage/include"
-dependDir["spdlog"] = "Daedalus-Core/Dependencies/spdlog/include"
+dependDir["GLFW"] = dependFol .. "/GLFW"
+dependDir["GLEW"] = dependFol .. "/GLEW"
+dependDir["FreeImage"] = dependFol .. "/FreeImage"
+dependDir["spdlog"] = dependFol .. "/spdlog"
 
 project "Daedalus-Core"
 	location "Daedalus-Core"
@@ -29,6 +31,7 @@ project "Daedalus-Core"
 
 	files
 	{
+		"%{prj.name}/Daedalus.h",
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp"
 	}
@@ -36,18 +39,28 @@ project "Daedalus-Core"
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{dependDir.GLFW}",
-		"%{dependDir.GLEW}",
-		"%{dependDir.FreeImage}",
-		"%{dependDir.spdlog}"
+		"%{dependDir.GLFW}/include",
+		"%{dependDir.GLEW}/include",
+		"%{dependDir.FreeImage}/include",
+		"%{dependDir.spdlog}/include"
+	}
+
+	libdirs
+	{
+		"%{dependDir.GLFW}/lib-vc2022",
+		"%{dependDir.GLEW}/lib",
+		"%{dependDir.FreeImage}/lib",
 	}
 
 	links
 	{
 		"glfw3.lib",
+		"glew32s.lib",
 		"opengl32.lib",
 		"FreeImage.lib"
 	}
+
+	buildoptions "/utf-8"
 
 	filter "system:windows"
 		cppdialect "C++20"
