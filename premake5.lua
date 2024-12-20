@@ -9,7 +9,12 @@ workspace "DaedalusEngine"
 	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-dependdir = "%{prj.name}/Dependencies"
+
+dependDir = {}
+dependDir["GLFW"] = "Daedalus-Core/Dependencies/GLFW/include"
+dependDir["GLEW"] = "Daedalus-Core/Dependencies/GLEW/include"
+dependDir["FreeImage"] = "Daedalus-Core/Dependencies/FreeImage/include"
+dependDir["spdlog"] = "Daedalus-Core/Dependencies/spdlog/include"
 
 project "Daedalus-Core"
 	location "Daedalus-Core"
@@ -19,20 +24,29 @@ project "Daedalus-Core"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin/intermediate/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "ddpch.h"
+	pchsource "Daedalus-Core/src/ddpch.cpp"
+
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		"%{prj.name}/src/**.hpp"
+		"%{prj.name}/src/**.cpp"
 	}
 
 	includedirs
 	{
 		"%{prj.name}/src",
-		dependdir .. "GLEW/include",
-		dependdir .. "GLFW/include",
-		dependdir .. "FreeImage/include",
-		dependdir .. "spdlog/include"
+		"%{dependDir.GLFW}",
+		"%{dependDir.GLEW}",
+		"%{dependDir.FreeImage}",
+		"%{dependDir.spdlog}"
+	}
+
+	links
+	{
+		"glfw3.lib",
+		"opengl32.lib",
+		"FreeImage.lib"
 	}
 
 	filter "system:windows"
