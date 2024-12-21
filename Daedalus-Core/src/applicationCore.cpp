@@ -14,6 +14,7 @@ namespace daedalusCore {
 		m_running = false;
 		return true;
 	}
+
 	Application::Application(std::string title, unsigned int width, unsigned int height, bool vsync)
 	{
 		DD_CORE_ASSERT(!m_instance, "Duplicate application");

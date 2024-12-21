@@ -90,7 +90,6 @@ project "Daedalus-Core"
 			"DD_DEBUG",
 			"DD_USING_ASSERTS"
 		}
-		symbols "On"
 
 	filter "configurations:Realease"
 		defines
@@ -146,7 +145,6 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "DD_DEBUG"
-		symbols "On"
 
 	filter "configurations:Realease"
 		defines "DD_RELEASE"

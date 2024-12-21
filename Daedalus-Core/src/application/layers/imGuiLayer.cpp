@@ -28,7 +28,7 @@ namespace daedalusCore { namespace application {
 		io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 		
 
-		ImGui_ImplOpenGL3_Init("#version 330 core");
+		ImGui_ImplOpenGL3_Init("#version 410 core");
 	}
 
 	void ImGuiLayer::Detach()
@@ -37,8 +37,6 @@ namespace daedalusCore { namespace application {
 
 	void ImGuiLayer::Update()
 	{
-		/*ImGui_ImplOpenGL3_NewFrame();
-		ImGui::NewFrame();
 
 		ImGuiIO& io = ImGui::GetIO();
 		Window* win = Application::Get().GetWindow();
@@ -48,11 +46,14 @@ namespace daedalusCore { namespace application {
 		io.DeltaTime = m_time > 0.0f ? (time - m_time) : (1.0f / 60.f);
 		m_time = time;
 
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui::NewFrame();
+
 		static bool show = true;
 		ImGui::ShowDemoWindow(&show);
 
 		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());*/
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
 
 	void ImGuiLayer::OnEvent(event::Event& event)
