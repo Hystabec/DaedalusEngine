@@ -11,12 +11,14 @@ workspace "DaedalusEngine"
 outputdir = "%{cfg.buildcfg}/%{cfg.system}-%{cfg.architecture}"
 
 dependFol = "Daedalus-Core/Dependencies"
-
 dependDir = {}
 dependDir["GLFW"] = dependFol .. "/GLFW"
 dependDir["GLEW"] = dependFol .. "/GLEW"
 dependDir["FreeImage"] = dependFol .. "/FreeImage"
 dependDir["spdlog"] = dependFol .. "/spdlog"
+dependDir["ImGui"] = dependFol .. "/ImGui"
+
+include "Daedalus-Core/Dependencies/ImGui"
 
 project "Daedalus-Core"
 	location "Daedalus-Core"
@@ -42,7 +44,8 @@ project "Daedalus-Core"
 		"%{dependDir.GLFW}/include",
 		"%{dependDir.GLEW}/include",
 		"%{dependDir.FreeImage}/include",
-		"%{dependDir.spdlog}/include"
+		"%{dependDir.spdlog}/include",
+		"%{dependDir.ImGui}/include"
 	}
 
 	libdirs
@@ -54,6 +57,7 @@ project "Daedalus-Core"
 
 	links
 	{
+		"ImGui",
 		"glfw3_mt.lib",
 		"opengl32.lib",
 		"glew32s.lib",
