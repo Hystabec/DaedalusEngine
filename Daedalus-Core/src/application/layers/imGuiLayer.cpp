@@ -2,7 +2,7 @@
 #include "imGuiLayer.h"
 
 #include "imgui.h"
-//#include <backends/imgui_impl_glfw.h>
+#include "platformSpecific/openGL/ImGuiOpenglRenderer.h"
 
 #include <glfw3.h>
 #include "applicationCore.h"
@@ -19,16 +19,16 @@ namespace daedalusCore { namespace application {
 
 	void ImGuiLayer::Attach()
 	{
-		/*
+		
 		ImGui::CreateContext();
 		ImGui::StyleColorsDark();
 
 		ImGuiIO& io = ImGui::GetIO();
 		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 		io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
-		*/
+		
 
-		//ImGui_ImplOpenGL3_Init("#version 330 core");
+		ImGui_ImplOpenGL3_Init("#version 330 core");
 	}
 
 	void ImGuiLayer::Detach()
