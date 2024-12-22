@@ -8,8 +8,8 @@ namespace daedalusCore { namespace application {
 	{
 	protected:
 		bool GetKeyBase(int keycode) override;
-		/*bool GetKeyUpBase(int keycode) override;
-		bool GetKeyDownBase(int keycode) override;*/
+		bool GetKeyUpBase(int keycode) override;
+		bool GetKeyDownBase(int keycode) override;
 
 		bool GetMouseButtonBase(int button) override;
 		std::pair<float, float> GetMousePositionBase() override;

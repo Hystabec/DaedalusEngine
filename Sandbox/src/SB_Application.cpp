@@ -30,7 +30,7 @@ public:
 		if (e.GetType() == EventType::KeyPressed)
 		{
 			KeyPressedEvent& event = (KeyPressedEvent&)e;
-			DD_LOG_TRACE("Pressed {} code: {}", (char)event.GetKeyCode(), event.GetKeyCode());
+			DD_LOG_TRACE("Pressed code: {}", event.GetKeyCode());
 		}
 	}
 };
