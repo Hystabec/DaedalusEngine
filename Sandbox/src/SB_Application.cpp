@@ -1,6 +1,5 @@
 #include <Daedalus.h>
 
-
 class TestLayer : public daedalusCore::application::Layer
 {
 

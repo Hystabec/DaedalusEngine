@@ -46,7 +46,7 @@ namespace daedalusCore { namespace event {
 		int m_buttonCode;
 
 		MouseButtonEvent(int buttonCode)
-			: m_buttonCode(m_buttonCode)
+			: m_buttonCode(buttonCode)
 		{
 		}
 

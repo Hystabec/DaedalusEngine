@@ -58,4 +58,15 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_TYPE(EventType::KeyHeld)
 	};
 
+	class DD_API KeyTypedEvent : public KeyEvent
+	{
+	public:
+		KeyTypedEvent(int keycode)
+			: KeyEvent(keycode)
+		{
+		}
+
+		EVENT_CLASS_TYPE(EventType::KeyTyped)
+	};
+
 } }

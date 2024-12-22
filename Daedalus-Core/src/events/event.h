@@ -10,7 +10,7 @@ namespace daedalusCore { namespace event {
 	{
 		None = 0,
 		WindowClosed, WindowResized, WindowFocused, WindowUnfocused, WindowMoved,
-		KeyPressed, KeyReleased, KeyHeld,
+		KeyPressed, KeyReleased, KeyHeld, KeyTyped,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
@@ -81,3 +81,4 @@ namespace daedalusCore { namespace event {
 } }
 
 LOG_CREATE_FORMAT(daedalusCore::event::Event, "Event: {}", e, e.GetName())
+#define DD_BIND_EVENT_FUN(fun) std::bind(&fun, this, std::placeholders::_1)

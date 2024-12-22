@@ -5,6 +5,8 @@
 #include "application/Input.h"
 #include "utils/timer.h"
 
+#include <glfw3.h>	//temp
+
 namespace daedalusCore {
 
 	Application* Application::m_instance = nullptr;
@@ -51,6 +53,8 @@ namespace daedalusCore {
 	{
 		while (m_running)
 		{
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //temp
+
 			for (application::Layer* layer : m_layerStack)
 				layer->Update();
 

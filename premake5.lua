@@ -120,7 +120,8 @@ project "Sandbox"
 
 	includedirs
 	{
-		"Daedalus-Core"
+		"Daedalus-Core",
+		"Daedalus-Core/src"
 	}
 
 	links
