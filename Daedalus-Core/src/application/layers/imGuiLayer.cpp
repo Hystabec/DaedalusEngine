@@ -136,7 +136,7 @@ namespace daedalusCore { namespace application {
 	bool ImGuiLayer::OnKeyReleasedEvent(event::KeyReleasedEvent& e)
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		io.MouseDown[e.GetKeyCode()] = false;
+		io.KeysDown[e.GetKeyCode()] = false;
 		io.KeyCtrl = io.KeysDown[INPUT_KEY_LEFT_CONTROL] || io.KeysDown[INPUT_KEY_RIGHT_CONTROL];
 		io.KeyShift = io.KeysDown[INPUT_KEY_LEFT_SHIFT] || io.KeysDown[INPUT_KEY_RIGHT_SHIFT];
 		io.KeyAlt = io.KeysDown[INPUT_KEY_LEFT_ALT] || io.KeysDown[INPUT_KEY_RIGHT_ALT];
