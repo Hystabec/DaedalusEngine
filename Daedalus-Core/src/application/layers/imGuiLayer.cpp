@@ -29,6 +29,29 @@ namespace daedalusCore { namespace application {
 		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 		io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;	
 
+		io.KeyMap[ImGuiKey_Tab] = INPUT_KEY_TAB;
+		io.KeyMap[ImGuiKey_LeftArrow] = INPUT_KEY_LEFT;
+		io.KeyMap[ImGuiKey_RightArrow] = INPUT_KEY_RIGHT;
+		io.KeyMap[ImGuiKey_UpArrow] = INPUT_KEY_UP;
+		io.KeyMap[ImGuiKey_DownArrow] = INPUT_KEY_DOWN;
+		io.KeyMap[ImGuiKey_PageUp] = INPUT_KEY_PAGE_UP;
+		io.KeyMap[ImGuiKey_PageDown] = INPUT_KEY_PAGE_DOWN;
+		io.KeyMap[ImGuiKey_Home] = INPUT_KEY_HOME;
+		io.KeyMap[ImGuiKey_End] = INPUT_KEY_END;
+		io.KeyMap[ImGuiKey_Insert] = INPUT_KEY_INSERT;
+		io.KeyMap[ImGuiKey_Delete] = INPUT_KEY_DELETE;
+		io.KeyMap[ImGuiKey_Backspace] = INPUT_KEY_BACKSPACE;
+		io.KeyMap[ImGuiKey_Space] = INPUT_KEY_SPACE;
+		io.KeyMap[ImGuiKey_Enter] = INPUT_KEY_ENTER;
+		io.KeyMap[ImGuiKey_Escape] = INPUT_KEY_ESCAPE;
+		io.KeyMap[ImGuiKey_KeyPadEnter] = INPUT_KEY_KP_ENTER;
+		io.KeyMap[ImGuiKey_A] = INPUT_KEY_A;
+		io.KeyMap[ImGuiKey_C] = INPUT_KEY_C;
+		io.KeyMap[ImGuiKey_V] = INPUT_KEY_V;
+		io.KeyMap[ImGuiKey_X] = INPUT_KEY_X;
+		io.KeyMap[ImGuiKey_Y] = INPUT_KEY_Y;
+		io.KeyMap[ImGuiKey_Z] = INPUT_KEY_Z;
+
 		ImGui_ImplOpenGL3_Init("#version 410 core");
 	}
 
