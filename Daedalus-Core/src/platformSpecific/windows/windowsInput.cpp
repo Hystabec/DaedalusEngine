@@ -8,12 +8,12 @@ namespace daedalusCore { namespace application {
 
 	Input* Input::m_instance = new windowsInput();
 
-	bool windowsInput::GetKeyBase(int keycode)
+	/*bool windowsInput::GetKeyBase(int keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
 		auto state = glfwGetKey(window, keycode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
-	}
+	}*/
 
 	bool windowsInput::GetKeyUpBase(int keycode)
 	{
@@ -26,13 +26,13 @@ namespace daedalusCore { namespace application {
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
 		auto state = glfwGetKey(window, keycode);
-		return state == GLFW_PRESS;
+		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
 	bool windowsInput::GetMouseButtonBase(int button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
-		auto state = glfwGetKey(window, button);
+		auto state = glfwGetMouseButton(window, button);
 		return state == GLFW_PRESS;
 	}
 

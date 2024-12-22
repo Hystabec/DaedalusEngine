@@ -7,7 +7,7 @@ namespace daedalusCore { namespace application {
 	class windowsInput : public Input
 	{
 	protected:
-		bool GetKeyBase(int keycode) override;
+		//bool GetKeyBase(int keycode) override;
 		bool GetKeyUpBase(int keycode) override;
 		bool GetKeyDownBase(int keycode) override;
 

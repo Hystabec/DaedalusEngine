@@ -1,6 +1,7 @@
 #pragma once
 
 //From glfw3.h
+
 #define INPUT_KEY_UNKNOWN            -1
 
 #define INPUT_KEY_SPACE              32

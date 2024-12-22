@@ -10,7 +10,7 @@ namespace daedalusCore { namespace application {
 		static Input* m_instance;
 
 	protected:
-		virtual bool GetKeyBase(int keycode) = 0;
+		//virtual bool GetKeyBase(int keycode) = 0;
 		virtual bool GetKeyUpBase(int keycode) = 0;
 		virtual bool GetKeyDownBase(int keycode) = 0;
 
@@ -20,7 +20,7 @@ namespace daedalusCore { namespace application {
 		virtual float GetMouseYBase() = 0;
 
 	public:
-		inline static bool GetKey(int keycode) { return m_instance->GetKeyBase(keycode); }
+		//inline static bool GetKey(int keycode) { return m_instance->GetKeyBase(keycode); }
 		static bool GetKeyUp(int keycode) { return m_instance->GetKeyUpBase(keycode); }
 		static bool GetKeyDown(int keycode) { return m_instance->GetKeyDownBase(keycode); }
 
