@@ -5,6 +5,7 @@
 
 #include "events/windowEvent.h"
 #include "application/layers/layerStack.h"
+#include "application/layers/imGuiLayer.h"
 
 namespace daedalusCore {
 
@@ -14,6 +15,7 @@ namespace daedalusCore {
 		static Application* m_instance;
 
 		std::unique_ptr<application::Window> m_window;
+		application::ImGuiLayer* m_ImGuiLayer;
 
 		bool m_running = true;
 

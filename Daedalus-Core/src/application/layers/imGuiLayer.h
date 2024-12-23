@@ -12,15 +12,6 @@ namespace daedalusCore { namespace application {
 	{
 	private:
 		float m_time = 0.0f;
-	private:
-		bool OnMouseButtonPressedEvent(event::MouseButtonPressedEvent& e);
-		bool OnMouseButtonReleasedEvent(event::MouseButtonReleasedEvent& e);
-		bool OnMouseMoveEvent(event::MouseMovedEvent& e);
-		bool OnMouseMouseScrolledEvent(event::MouseScrolledEvent& e);
-		bool OnKeyPressedEvent(event::KeyPressedEvent& e);
-		bool OnKeyReleasedEvent(event::KeyReleasedEvent& e);
-		bool OnKeyTypedEvent(event::KeyTypedEvent& e);
-		bool OnWindowResizeEvent(event::WindowResizedEvent& e);
 	public:
 		ImGuiLayer();
 		~ImGuiLayer();
@@ -28,8 +19,10 @@ namespace daedalusCore { namespace application {
 		void Attach() override;
 		void Detach() override;
 
-		void Update() override;
-		void OnEvent(event::Event& event) override;
+		void ImGuiRender() override;
+
+		void Begin();
+		void End();
 	};
 
 } }

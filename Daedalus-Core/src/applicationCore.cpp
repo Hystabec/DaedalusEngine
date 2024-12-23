@@ -25,6 +25,9 @@ namespace daedalusCore {
 		debug::Log::Init();
 		m_window = std::unique_ptr<application::Window>(application::Window::Create(application::WindowProperties(title, width, height, vsync)));
 		m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+
+		m_ImGuiLayer = new application::ImGuiLayer;
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application()
@@ -57,6 +60,11 @@ namespace daedalusCore {
 
 			for (application::Layer* layer : m_layerStack)
 				layer->Update();
+
+			m_ImGuiLayer->Begin();
+			for (application::Layer* layer : m_layerStack)
+				layer->ImGuiRender();
+			m_ImGuiLayer->End();
 
 			m_window->Update();
 		}

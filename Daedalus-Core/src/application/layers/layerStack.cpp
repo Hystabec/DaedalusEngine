@@ -5,7 +5,7 @@ namespace daedalusCore { namespace application {
 
 	layerStack::layerStack()
 	{
-		m_layerInsert = m_layers.begin();
+		m_layers.begin();
 	}
 
 	layerStack::~layerStack()
@@ -16,7 +16,8 @@ namespace daedalusCore { namespace application {
 
 	void layerStack::PushLayer(Layer* layer)
 	{
-		m_layerInsert = m_layers.emplace(m_layerInsert, layer);
+		m_layers.emplace(m_layers.begin() + m_layerInsertIndex, layer);
+		m_layerInsertIndex++;
 	}
 
 	void layerStack::PopLayer(Layer* layer)
@@ -25,7 +26,7 @@ namespace daedalusCore { namespace application {
 		if (it != m_layers.end())
 		{
 			m_layers.erase(it);
-			m_layerInsert--;
+			m_layerInsertIndex--;
 		}
 	}
 

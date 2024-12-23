@@ -13,6 +13,7 @@ namespace daedalusCore { namespace application {
 		virtual void Attach() {}
 		virtual void Detach() {}
 		virtual void Update() {}
+		virtual void ImGuiRender() {}
 		virtual void OnEvent(event::Event& event) {}
 	};
 
