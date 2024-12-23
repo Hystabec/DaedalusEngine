@@ -121,7 +121,8 @@ project "Sandbox"
 	includedirs
 	{
 		"Daedalus-Core",
-		"Daedalus-Core/src"
+		"Daedalus-Core/src",
+		"%{dependDir.ImGui}/include"
 	}
 
 	links

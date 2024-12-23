@@ -1,4 +1,5 @@
 #include <Daedalus.h>
+#include "imgui.h"
 
 class TestLayer : public daedalusCore::application::Layer
 {
@@ -22,6 +23,13 @@ public:
 			DD_LOG_INFO("FPS: {}", frames);
 			frames = 0;
 		}
+	}
+
+	void ImGuiRender()
+	{
+		ImGui::Begin("TestLayer");
+		ImGui::Text("test layer");
+		ImGui::End();
 	}
 
 	void OnEvent(daedalusCore::event::Event& e) override
