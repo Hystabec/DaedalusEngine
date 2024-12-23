@@ -2,7 +2,7 @@
 
 #include "core.h"
 
-#include "debugTools/logFormatMacro.h"
+#include "debugTools/logging/logFormatMacro.h"
 
 namespace daedalusCore { namespace event {
 

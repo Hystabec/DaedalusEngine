@@ -15,7 +15,7 @@
 #include "src/events/mouseEvent.h"
 #include "src/events/windowEvent.h"
 
-#include "src/debugTools/log.h"
+#include "src/debugTools/logging/log.h"
 #include "src/utils/timer.h"
 
 
