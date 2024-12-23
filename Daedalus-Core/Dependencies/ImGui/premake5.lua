@@ -5,19 +5,20 @@ project "ImGui"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin/intermediate" .. outputdir .. "/%{prj.name}")
 
-	files
-	{
-		"include/imconfig.h",
-		"include/imgui.h",
-		"include/imgui.cpp",
-		"include/imgui_draw.cpp",
-		"include/imgui_internal.h",
-		"include/imgui_widgets.cpp",
-		"include/imstb_rectpack.h",
-		"include/imstb_textedit.h",
-		"include/imstb_truetype.h",
-		"include/imgui_demo.cpp"
-	}
+    files
+    {
+        "include/imconfig.h",
+        "include/imgui.cpp",
+        "include/imgui.h",
+        "include/imgui_demo.cpp",
+        "include/imgui_draw.cpp",
+        "include/imgui_internal.h",
+        "include/imgui_tables.cpp",
+        "include/imgui_widgets.cpp",
+        "include/imstb_rectpack.h",
+        "include/imstb_textedit.h",
+        "include/imstb_truetype.h"
+    }
 
 	filter "system:windows"
 		systemversion "latest"
