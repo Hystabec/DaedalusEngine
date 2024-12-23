@@ -27,9 +27,7 @@ public:
 
 	void ImGuiRender()
 	{
-		ImGui::Begin("TestLayer");
-		ImGui::Text("test layer");
-		ImGui::End();
+		
 	}
 
 	void OnEvent(daedalusCore::event::Event& e) override

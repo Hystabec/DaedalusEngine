@@ -5,12 +5,15 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/fmt/ostr.h>
 
+#include "applicationCore.h"
+#include "logImguiLayer.h"
+
 namespace daedalusCore { namespace debug {
 
 	static std::shared_ptr<spdlog::logger> m_coreLogger;
 	static std::shared_ptr<spdlog::logger> m_clientLogger;
 
-	void Log::Init()
+	void Log::Init(LogFlags flags)
 	{
 		spdlog::set_pattern("%^[%T][%n][%l] %v%$");
 		m_coreLogger = spdlog::stdout_color_mt("Core");
@@ -18,6 +21,11 @@ namespace daedalusCore { namespace debug {
 
 		m_clientLogger = spdlog::stderr_color_mt("Client");
 		m_clientLogger->set_level(spdlog::level::trace);
+
+		if ((int)flags & (int)LogFlags::Log_to_ImGui)
+		{
+			Application::Get().PushOverlay(new logImguiLayer());
+		}
 	}
 
 	void Log::BaseTraceLog(const Caller& caller, const std::string& message)

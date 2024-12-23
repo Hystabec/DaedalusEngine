@@ -22,7 +22,7 @@ namespace daedalusCore {
 		DD_CORE_ASSERT(!m_instance, "Duplicate application");
 		m_instance = this;
 
-		debug::Log::Init();
+		debug::Log::Init(debug::Log::LogFlags::Log_to_ImGui);
 		m_window = std::unique_ptr<application::Window>(application::Window::Create(application::WindowProperties(title, width, height, vsync)));
 		m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 

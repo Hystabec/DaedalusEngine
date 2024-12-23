@@ -25,6 +25,12 @@ namespace daedalusCore { namespace debug {
 			Client
 		};
 
+		enum class LogFlags
+		{
+			None = 0,
+			Log_to_ImGui = BIT(0)
+		};
+
 	private:
 		static void BaseTraceLog(const Caller& caller, const std::string& message);
 		static void BaseInfoLog(const Caller& caller, const std::string& message);
@@ -48,7 +54,7 @@ namespace daedalusCore { namespace debug {
 		}
 
 	public:
-		static void Init();
+		static void Init(LogFlags flags = LogFlags::None);
 
 #pragma region Trace
 
