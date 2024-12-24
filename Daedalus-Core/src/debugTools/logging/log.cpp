@@ -12,6 +12,7 @@ namespace daedalusCore { namespace debug {
 
 	static std::shared_ptr<spdlog::logger> m_coreLogger;
 	static std::shared_ptr<spdlog::logger> m_clientLogger;
+	logImguiLayer* Log::logLayer = nullptr; //TEMP
 
 	void Log::Init(LogFlags flags)
 	{
@@ -24,7 +25,8 @@ namespace daedalusCore { namespace debug {
 
 		if ((int)flags & (int)LogFlags::Log_to_ImGui)
 		{
-			Application::Get().PushOverlay(new logImguiLayer());
+			logLayer = new logImguiLayer(); //TEMP
+			Application::Get().PushOverlay(logLayer);
 		}
 	}
 
@@ -50,6 +52,9 @@ namespace daedalusCore { namespace debug {
 		{
 			m_clientLogger->info(message);
 		}
+
+		if (logLayer) //TEMP
+			logLayer->SubmitText(message); //TEMP
 	}
 
 	void Log::BaseWarnLog(const Caller& caller, const std::string& message)

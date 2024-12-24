@@ -2,7 +2,6 @@
 
 
 #ifdef DD_PLATFORM_WINDOWS
-
 #else
 	#error Daedalus only supports windows
 #endif
