@@ -22,11 +22,6 @@ project "ImGui"
 		"include/imstb_truetype.h"
 	}
 
-	defines
-	{
-		"IMGUI_API=__declspec(dllexport)" 
-	}
-
 	filter "system:windows"
 		systemversion "latest"
 
