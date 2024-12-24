@@ -10,7 +10,8 @@ namespace daedalusCore { namespace debug {
 
 	void logImguiLayer::ImGuiRender()
 	{
-		ImGui::Begin("LogLayer");
+		static bool open = true;
+		ImGui::Begin("LogLayer", &open, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
 		ImGui::Text("Log layer");
 		ImGui::End();
 	}
