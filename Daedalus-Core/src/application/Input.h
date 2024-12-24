@@ -4,7 +4,7 @@
 
 namespace daedalusCore { namespace application {
 
-	class DD_API Input
+	class  Input
 	{
 	private:
 		static Input* m_instance;

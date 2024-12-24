@@ -17,7 +17,7 @@ namespace daedalusCore { namespace application {
 		}
 	};
 
-	class DD_API Window
+	class  Window
 	{
 	public:
 		using EventCallbackFn = std::function<void(daedalusCore::event::Event&)>;

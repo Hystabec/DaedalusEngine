@@ -4,7 +4,7 @@
 
 namespace daedalusCore { namespace event {
 
-	class DD_API KeyEvent : public Event
+	class  KeyEvent : public Event
 	{
 	protected:
 		int m_keyCode;
@@ -21,7 +21,7 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_CATEGORY(EventCategory::Keyboard | EventCategory::Input)
 	};
 
-	class DD_API KeyPressedEvent : public KeyEvent
+	class  KeyPressedEvent : public KeyEvent
 	{
 	public:
 		KeyPressedEvent(int keycode)
@@ -32,7 +32,7 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_TYPE(EventType::KeyPressed)
 	};
 
-	class DD_API KeyReleasedEvent : public KeyEvent
+	class  KeyReleasedEvent : public KeyEvent
 	{
 	public:
 		KeyReleasedEvent(int keycode)
@@ -43,7 +43,7 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_TYPE(EventType::KeyReleased)
 	};
 
-	class DD_API KeyHeldEvent : public KeyEvent
+	class  KeyHeldEvent : public KeyEvent
 	{
 	private:
 		int m_count;
@@ -58,7 +58,7 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_TYPE(EventType::KeyHeld)
 	};
 
-	class DD_API KeyTypedEvent : public KeyEvent
+	class  KeyTypedEvent : public KeyEvent
 	{
 	public:
 		KeyTypedEvent(int keycode)

@@ -16,7 +16,7 @@ log to custom console if added?
 
 namespace daedalusCore { namespace debug {
 
-	class DD_API Log
+	class  Log
 	{
 	public:
 		enum class Caller

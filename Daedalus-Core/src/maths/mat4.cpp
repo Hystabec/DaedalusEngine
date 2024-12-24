@@ -184,7 +184,7 @@ namespace daedalusCore { namespace maths {
 				elements[8] * elements[2] * elements[5];
 
 			float determinant = elements[0] * temp[0] + elements[1] * temp[4] + elements[2] * temp[8] + elements[3] * temp[12];
-			determinant = 1.0 / determinant;
+			determinant = (float)(1.0 / determinant);
 
 			for (int i = 0; i < (4 * 4); i++)
 				elements[i] = temp[i] * determinant;

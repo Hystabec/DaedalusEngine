@@ -9,7 +9,7 @@
 
 namespace daedalusCore {
 
-	class DD_API Application
+	class  Application
 	{
 	private:
 		static Application* m_instance;

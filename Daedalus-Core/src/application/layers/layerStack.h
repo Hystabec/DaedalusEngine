@@ -4,7 +4,7 @@
 
 namespace daedalusCore { namespace application {
 
-	class DD_API layerStack
+	class  layerStack
 	{
 	private:
 		std::vector<Layer*> m_layers;

@@ -5,7 +5,6 @@ namespace daedalusCore { namespace application {
 
 	layerStack::layerStack()
 	{
-		m_layers.begin();
 	}
 
 	layerStack::~layerStack()

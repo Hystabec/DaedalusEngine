@@ -1,5 +1,6 @@
 workspace "DaedalusEngine"
 	architecture "x64"
+	startproject "Sandbox"
 
 	configurations
 	{
@@ -22,8 +23,10 @@ include "Daedalus-Core/Dependencies/ImGui"
 
 project "Daedalus-Core"
 	location "Daedalus-Core"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
+	cppdialect "C++20"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin/intermediate/" .. outputdir .. "/%{prj.name}")
@@ -36,6 +39,11 @@ project "Daedalus-Core"
 		"%{prj.name}/Daedalus.h",
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp"
+	}
+
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 
 	includedirs
@@ -67,21 +75,12 @@ project "Daedalus-Core"
 	buildoptions "/utf-8"
 
 	filter "system:windows"
-		cppdialect "C++20"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines
 		{
 			"DD_PLATFORM_WINDOWS",
-			"DD_BUILD_DLL",
-			"GLEW_STATIC",
-			"_CRT_SECURE_NO_WARNINGS"
-		}
-
-		postbuildcommands
-		{
-			("{copy} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+			"GLEW_STATIC"
 		}
 
 	filter "configurations:Debug"
@@ -90,6 +89,7 @@ project "Daedalus-Core"
 			"DD_DEBUG",
 			"DD_USING_ASSERTS"
 		}
+		symbols "on"
 
 	filter "configurations:Realease"
 		defines
@@ -97,16 +97,18 @@ project "Daedalus-Core"
 			"DD_RELEASE",
 			"DD_USING_ASSERTS"
 		}
-		optimize "On"
+		optimize "on"
 
 	filter "configurations:Distro"
 		defines "DD_DISTRO"
-		optimize "On"
+		optimize "on"
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	cppdialect "C++20"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin/intermediate/" .. outputdir .. "/%{prj.name}")
@@ -136,8 +138,6 @@ project "Sandbox"
 	}
 
 	filter "system:windows"
-		cppdialect "C++20"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines
@@ -147,11 +147,12 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "DD_DEBUG"
+		symbols "on"
 
 	filter "configurations:Realease"
 		defines "DD_RELEASE"
-		optimize "On"
+		optimize "on"
 
 	filter "configurations:Distro"
 		defines "DD_DISTRO"
-		optimize "On"
+		optimize "on"

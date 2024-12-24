@@ -5,7 +5,7 @@
 namespace daedalusCore { namespace utils {
 
 #ifdef USING_WINDOWS_TIMER
-	class DD_API Timer
+	class  Timer
 	{
 	private:
 		LARGE_INTEGER m_start;
@@ -51,7 +51,7 @@ namespace daedalusCore { namespace utils {
 		}
 	};
 #else
-	class DD_API Timer
+	class  Timer
 	{
 	private:
 		std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
@@ -70,19 +70,19 @@ namespace daedalusCore { namespace utils {
 		float elapsedSeconds() const
 		{
 			using namespace std::chrono;
-			return duration_cast<seconds>(std::chrono::high_resolution_clock::now() - m_start).count();
+			return (float)duration_cast<seconds>(std::chrono::high_resolution_clock::now() - m_start).count();
 		}
 
 		float elapsedMilliseconds() const
 		{
 			using namespace std::chrono;
-			return duration_cast<milliseconds>(std::chrono::high_resolution_clock::now() - m_start).count();
+			return (float)duration_cast<milliseconds>(std::chrono::high_resolution_clock::now() - m_start).count();
 		}
 
 		float elapsedMicroseconds() const
 		{
 			using namespace std::chrono;
-			return duration_cast<microseconds>(std::chrono::high_resolution_clock::now() - m_start).count();
+			return (float)duration_cast<microseconds>(std::chrono::high_resolution_clock::now() - m_start).count();
 		}
 	};
 #endif

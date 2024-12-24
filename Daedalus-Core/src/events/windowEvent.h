@@ -4,7 +4,7 @@
 
 namespace daedalusCore { namespace event {
 
-	class DD_API WindowClosedEvent : public Event
+	class  WindowClosedEvent : public Event
 	{
 	public:
 		WindowClosedEvent()
@@ -15,7 +15,7 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_TYPE(EventType::WindowClosed)
 	};
 
-	class DD_API WindowResizedEvent : public Event
+	class  WindowResizedEvent : public Event
 	{
 	private:
 		unsigned int m_width, m_height;
@@ -33,7 +33,7 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_TYPE(EventType::WindowResized)
 	};
 
-	class DD_API WindowFocusedEvent : public Event
+	class  WindowFocusedEvent : public Event
 	{
 	public:
 		WindowFocusedEvent()
@@ -44,7 +44,7 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_TYPE(EventType::WindowFocused)
 	};
 
-	class DD_API WindowUnfocusedEvent : public Event
+	class  WindowUnfocusedEvent : public Event
 	{
 	public:
 		WindowUnfocusedEvent()
@@ -55,7 +55,7 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_TYPE(EventType::WindowUnfocused)
 	};
 
-	class DD_API WindowMovedEvent : public Event
+	class  WindowMovedEvent : public Event
 	{
 	private:
 		unsigned int m_x, m_y;

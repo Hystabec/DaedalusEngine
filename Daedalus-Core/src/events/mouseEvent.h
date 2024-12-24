@@ -4,7 +4,7 @@
 
 namespace daedalusCore { namespace event {
 
-	class DD_API MouseMovedEvent : public Event
+	class  MouseMovedEvent : public Event
 	{
 	private:
 		float m_x, m_y;
@@ -22,7 +22,7 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_TYPE(EventType::MouseMoved)
 	};
 
-	class DD_API MouseScrolledEvent : public Event
+	class  MouseScrolledEvent : public Event
 	{
 	private:
 		float m_x, m_y;
@@ -40,7 +40,7 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_TYPE(EventType::MouseScrolled)
 	};
 
-	class DD_API MouseButtonEvent : public Event
+	class  MouseButtonEvent : public Event
 	{
 	protected:
 		int m_buttonCode;
@@ -56,7 +56,7 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_CATEGORY(EventCategory::Mouse | EventCategory::Input)
 	};
 
-	class DD_API MouseButtonPressedEvent : public MouseButtonEvent
+	class  MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonPressedEvent(int buttonCode)
@@ -67,7 +67,7 @@ namespace daedalusCore { namespace event {
 		EVENT_CLASS_TYPE(EventType::MouseButtonPressed)
 	};
 
-	class DD_API MouseButtonReleasedEvent : public MouseButtonEvent
+	class  MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonReleasedEvent(int buttonCode)

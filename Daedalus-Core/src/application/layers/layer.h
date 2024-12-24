@@ -4,7 +4,7 @@
 
 namespace daedalusCore { namespace application {
 
-	class DD_API Layer
+	class  Layer
 	{
 	public:
 		Layer();

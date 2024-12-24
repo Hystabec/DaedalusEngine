@@ -77,7 +77,7 @@ namespace daedalusCore { namespace application {
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		Window* win = Application::Get().GetWindow();
-		io.DisplaySize = ImVec2(win->GetWidth(), win->GetHeight());
+		io.DisplaySize = ImVec2((float)win->GetWidth(), (float)win->GetHeight());
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
