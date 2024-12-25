@@ -1,42 +1,23 @@
 #include "ddpch.h"
 #include "indexBuffer.h"
 
+#include "graphics/renderer/renderer.h"
+#include "platformSpecific/openGL/graphics/buffers/openGLIndexBuffer.h"
+
 namespace daedalusCore { namespace graphics { namespace buffers {
 
-
-	IndexBuffer::IndexBuffer(GLushort* data, GLsizei count)
+	IndexBuffer* buffers::IndexBuffer::Create(uint32_t* indices, uint32_t size)
 	{
-		m_count = count;
+		switch (Renderer::GetCurrentAPI())
+		{
+		case RendererAPI::None: 
+			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
+		case RendererAPI::OpenGL: 
+			return new OpenGLIndexBuffer(indices, size);
+		}
 
-		glGenBuffers(1, &m_bufferID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLushort), data, GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-
-	IndexBuffer::IndexBuffer(GLuint* data, GLsizei count)
-	{
-		m_count = count;
-
-		glGenBuffers(1, &m_bufferID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLuint), data, GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-
-	IndexBuffer::~IndexBuffer()
-	{
-		glDeleteBuffers(1, &m_bufferID);
-	}
-
-	void IndexBuffer::bind() const
-	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferID);
-	}
-
-	void IndexBuffer::unbind() const
-	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		DD_CORE_ASSERT(false, "RendererAPI Unkown");
+		return nullptr;
 	}
 
 } } }

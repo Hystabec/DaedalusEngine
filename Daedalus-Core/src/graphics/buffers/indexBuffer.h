@@ -1,24 +1,16 @@
 #pragma once
 
-#include <GL/glew.h>
-
 namespace daedalusCore {namespace graphics { namespace buffers {
 
 	class IndexBuffer
 	{
-	private:
-		GLuint m_bufferID;
-		GLuint m_count;
-
 	public:
-		IndexBuffer(GLushort* data, GLsizei count);
-		IndexBuffer(GLuint* data, GLsizei count);
-		~IndexBuffer();
+		~IndexBuffer() {};
 
-		void bind() const;
-		void unbind() const;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-		inline GLuint getCount() const { return m_count; }
+		static IndexBuffer* Create(uint32_t* indices, uint32_t size);
 	};
 
 } } }

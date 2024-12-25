@@ -7,7 +7,7 @@
 #include "events/keyEvent.h"
 #include "events/mouseEvent.h"
 
-#include "platformSpecific/openGL/openGLContext.h"
+#include "platformSpecific/openGL/graphics/renderer/openGLContext.h"
 
 namespace daedalusCore { namespace application {
 

@@ -1,23 +1,16 @@
 #pragma once
 
-#include <GL/glew.h>
-
 namespace daedalusCore { namespace graphics { namespace buffers {
-
-	class Buffer;
 
 	class VertexArray
 	{
-	private:
-		GLuint m_arrayID;
-		std::vector<Buffer*> m_buffers;
 	public:
-		VertexArray();
-		~VertexArray();
+		virtual ~VertexArray() {};
 
-		void addBuffer(Buffer* buffer, GLuint index);
-		void bind() const;
-		void unbind() const;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
+
+		static VertexArray* Create(float* verticies, uint32_t size);
 	};
 
 } } }

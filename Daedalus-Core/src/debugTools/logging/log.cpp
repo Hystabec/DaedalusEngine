@@ -52,9 +52,6 @@ namespace daedalusCore { namespace debug {
 		{
 			m_clientLogger->info(message);
 		}
-
-		if (logLayer) //TEMP
-			logLayer->SubmitText(message); //TEMP
 	}
 
 	void Log::BaseWarnLog(const Caller& caller, const std::string& message)
@@ -67,6 +64,9 @@ namespace daedalusCore { namespace debug {
 		{
 			m_clientLogger->warn(message);
 		}
+
+		if (logLayer) //TEMP
+			logLayer->SubmitText(message); //TEMP
 	}
 
 	void Log::BaseErrorLog(const Caller& caller, const std::string& message)
@@ -79,6 +79,9 @@ namespace daedalusCore { namespace debug {
 		{
 			m_clientLogger->error(message);
 		}
+
+		if (logLayer) //TEMP
+			logLayer->SubmitText(message); //TEMP
 	}
 
 	void Log::BaseCriticalLog(const Caller& caller, const std::string& message)
@@ -91,6 +94,9 @@ namespace daedalusCore { namespace debug {
 		{
 			m_clientLogger->critical(message);
 		}
+
+		if (logLayer) //TEMP
+			logLayer->SubmitText(message); //TEMP
 	}
 
 } }
