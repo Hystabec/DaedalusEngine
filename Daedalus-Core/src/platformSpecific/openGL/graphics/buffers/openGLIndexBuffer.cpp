@@ -6,8 +6,10 @@
 namespace daedalusCore { namespace graphics { namespace buffers {
 
 	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t size)
+		: m_count(size)
 	{
 		glCreateBuffers(1, &m_renderID);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
 	}
 
