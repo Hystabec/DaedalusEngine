@@ -16,10 +16,10 @@ namespace daedalusCore { namespace utils {
 
 	static unsigned int colour_vec4_to_uint(const maths::vec4& colour)
 	{
-		int r = colour.x * 255;
-		int g = colour.y * 255;
-		int b = colour.z * 255;
-		int a = colour.w * 255;
+		int r = (int)(colour.x * 255);
+		int g = (int)(colour.y * 255);
+		int b = (int)(colour.z * 255);
+		int a = (int)(colour.w * 255);
 		return (a << 24 | b << 16 | g << 8 | r);
 	}
 

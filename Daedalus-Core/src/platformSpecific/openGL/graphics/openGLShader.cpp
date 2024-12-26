@@ -69,6 +69,7 @@ namespace daedalusCore { namespace graphics {
 	}
 
 	OpenGLShader::OpenGLShader(const GLchar* vertexPath, const GLchar* fragPath)
+		: m_vertPath(vertexPath), m_fragPath(fragPath)
 	{
 		m_shaderID = load();
 	}

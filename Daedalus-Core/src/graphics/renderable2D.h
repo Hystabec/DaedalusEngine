@@ -21,7 +21,7 @@ namespace daedalusCore { namespace graphics {
 		maths::vec2 m_size;
 		unsigned int m_colour;
 		std::vector<maths::vec2> m_UV;
-		Texture* m_texture;
+		Texture* m_texture = nullptr;
 	protected:
 		Renderable2D() { setUVDefaults(); }
 
