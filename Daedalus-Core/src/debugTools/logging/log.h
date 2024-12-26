@@ -16,12 +16,8 @@ log to custom console if added?
 
 namespace daedalusCore { namespace debug {
 
-	class logImguiLayer; //TEMP
-
 	class  Log
 	{
-	private:
-		static logImguiLayer* logLayer; //TEMP
 	public:
 		enum class Caller
 		{

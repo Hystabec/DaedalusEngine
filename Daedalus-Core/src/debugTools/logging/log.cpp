@@ -6,13 +6,11 @@
 #include <spdlog/fmt/ostr.h>
 
 #include "applicationCore.h"
-#include "logImguiLayer.h"
 
 namespace daedalusCore { namespace debug {
 
 	static std::shared_ptr<spdlog::logger> m_coreLogger;
 	static std::shared_ptr<spdlog::logger> m_clientLogger;
-	logImguiLayer* Log::logLayer = nullptr; //TEMP
 
 	void Log::Init(LogFlags flags)
 	{
@@ -22,12 +20,6 @@ namespace daedalusCore { namespace debug {
 
 		m_clientLogger = spdlog::stderr_color_mt("Client");
 		m_clientLogger->set_level(spdlog::level::trace);
-
-		if ((int)flags & (int)LogFlags::Log_to_ImGui)
-		{
-			logLayer = new logImguiLayer(); //TEMP
-			Application::Get().PushOverlay(logLayer);
-		}
 	}
 
 	void Log::BaseTraceLog(const Caller& caller, const std::string& message)
@@ -64,9 +56,6 @@ namespace daedalusCore { namespace debug {
 		{
 			m_clientLogger->warn(message);
 		}
-
-		if (logLayer) //TEMP
-			logLayer->SubmitText(message); //TEMP
 	}
 
 	void Log::BaseErrorLog(const Caller& caller, const std::string& message)
@@ -79,9 +68,6 @@ namespace daedalusCore { namespace debug {
 		{
 			m_clientLogger->error(message);
 		}
-
-		if (logLayer) //TEMP
-			logLayer->SubmitText(message); //TEMP
 	}
 
 	void Log::BaseCriticalLog(const Caller& caller, const std::string& message)
@@ -94,9 +80,6 @@ namespace daedalusCore { namespace debug {
 		{
 			m_clientLogger->critical(message);
 		}
-
-		if (logLayer) //TEMP
-			logLayer->SubmitText(message); //TEMP
 	}
 
 } }
