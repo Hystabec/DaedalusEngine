@@ -8,7 +8,7 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 
 	IndexBuffer* buffers::IndexBuffer::Create(uint32_t* indices, uint32_t size)
 	{
-		switch (Renderer::GetCurrentAPI())
+		switch (Renderer::getCurrentAPI())
 		{
 		case RendererAPI::None: 
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;

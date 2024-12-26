@@ -157,7 +157,7 @@ namespace daedalusCore { namespace application {
 	void WindowsWindow::Update()
 	{
 		glfwPollEvents();
-		m_renderingContext->SwapBuffers();
+		m_renderingContext->swapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)

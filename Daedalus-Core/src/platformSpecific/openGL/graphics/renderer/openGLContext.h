@@ -13,7 +13,7 @@ namespace daedalusCore { namespace graphics {
 	public:
 		OpenGlContext(GLFWwindow* windowHandle);
 
-		void SwapBuffers() override;
+		void swapBuffers() override;
 	};
 
 } }

@@ -22,7 +22,7 @@ namespace daedalusCore { namespace graphics {
 		}
 	}
 
-	void OpenGlContext::SwapBuffers()
+	void OpenGlContext::swapBuffers()
 	{
 		glfwSwapBuffers(m_windowHandle);
 	}

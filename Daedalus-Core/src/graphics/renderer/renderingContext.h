@@ -5,7 +5,7 @@ namespace daedalusCore { namespace graphics {
 	class RenderingContext
 	{
 	public:
-		virtual void SwapBuffers() = 0;
+		virtual void swapBuffers() = 0;
 	};
 
 } }

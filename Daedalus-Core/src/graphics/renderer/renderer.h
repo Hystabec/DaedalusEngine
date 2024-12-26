@@ -13,7 +13,7 @@ namespace daedalusCore { namespace graphics {
 	private:
 		static RendererAPI m_rendererAPI;
 	public:
-		static inline RendererAPI GetCurrentAPI() { return m_rendererAPI; }
+		static inline RendererAPI getCurrentAPI() { return m_rendererAPI; }
 	};
 
 } }

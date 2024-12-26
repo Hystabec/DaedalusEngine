@@ -1,35 +1,32 @@
 #pragma once
 
-#include <GL/glew.h>
-#include "maths/maths.h"
+namespace daedalusCore { namespace maths {
+	struct vec2;
+	struct vec3;
+	struct vec4;
+	struct mat4;
+} }
 
 namespace daedalusCore { namespace graphics {
 
 	class Shader
 	{
-	private:
-		GLuint m_shaderID;
-		const char* m_vertPath, *m_fragPath;
-
 	public:
-		Shader(const char* vertexPath, const char* fragPath);
-		~Shader();
+		virtual ~Shader() {};
 
-		void setUniformMat4(const GLchar* name, const maths::mat4& matrix);
-		void setUniform1i(const GLchar* name, int value);
-		void setUniform1iv(const GLchar* name, int* value, int count);
-		void setUniform1f(const GLchar* name, float value);
-		void setUniform1fv(const GLchar* name, float* value, int count);
-		void setUniform2f(const GLchar* name, const maths::vec2& vector);
-		void setUniform3f(const GLchar* name, const maths::vec3& vector);
-		void setUniform4f(const GLchar* name, const maths::vec4& vector);
+		virtual void setUniformMat4(const char* name, const maths::mat4& matrix) = 0;
+		virtual void setUniform1i(const char* name, int value) = 0;
+		virtual void setUniform1iv(const char* name, int* value, int count) = 0;
+		virtual void setUniform1f(const char* name, float value) = 0;
+		virtual void setUniform1fv(const char* name, float* value, int count) = 0;
+		virtual void setUniform2f(const char* name, const maths::vec2& vector) = 0;
+		virtual void setUniform3f(const char* name, const maths::vec3& vector) = 0;
+		virtual void setUniform4f(const char* name, const maths::vec4& vector) = 0;
 
-		void enable() const;
-		void disable() const;
+		virtual void enable() const = 0;
+		virtual void disable() const = 0;
 
-	private:
-		GLuint load();
-		GLint getUniformLocation(const GLchar* name);
+		static Shader* create(const char* vertexPath, const char* fragPath);
 	};
 
 } }
