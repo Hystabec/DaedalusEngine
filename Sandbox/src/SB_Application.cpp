@@ -14,9 +14,6 @@ public:
 		: daedalusCore::graphics::Layer(new daedalusCore::graphics::BatchRenderer2D(), shader, daedalusCore::maths::mat4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1, 1))
 	{
 	}
-
-	~TileLayer()
-	{ }
 };
 
 class TestLayer : public daedalusCore::application::Layer
