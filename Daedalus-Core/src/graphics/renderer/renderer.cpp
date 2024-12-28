@@ -3,6 +3,10 @@
 
 namespace daedalusCore { namespace graphics {
 
-	RendererAPI Renderer::m_rendererAPI = RendererAPI::OpenGL;
-
+#ifdef DD_RENDER_USING_OPENGL
+	RendererAPI Renderer::m_rendererAPI = RendererAPI::OpenGL; 
+#else
+	#error Daedalus currently only supports OpenGL
+#endif 
+	
 } }

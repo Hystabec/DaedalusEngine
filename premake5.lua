@@ -80,6 +80,7 @@ project "Daedalus-Core"
 		defines
 		{
 			"DD_PLATFORM_WINDOWS",
+			"DD_RENDER_USING_OPENGL",
 			"GLEW_STATIC"
 		}
 
