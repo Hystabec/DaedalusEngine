@@ -6,7 +6,6 @@
 #include <GL/glew.h>
 #endif 
 
-
 namespace daedalusCore { namespace graphics { namespace buffers {
 
 	namespace DataTypes
@@ -30,6 +29,7 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 			}
 		};
 	}
+
 #ifdef DD_RENDER_USING_OPENGL
 	static GLenum Shader_Data_Type_To_Open_GL_Base_Type(DataTypes::BaseDataType baseDataType)
 	{
@@ -96,6 +96,8 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 
 		std::vector<BufferElement>::iterator begin() { return m_elements.begin(); }
 		std::vector<BufferElement>::iterator end() { return m_elements.end(); }
+		std::vector<BufferElement>::const_iterator begin() const { return m_elements.end(); }
+		std::vector<BufferElement>::const_iterator end() const { return m_elements.end(); }
 
 		inline const std::vector<BufferElement>& getElements() const { return m_elements; }
 		inline uint32_t getStide() const { return m_stride; }
