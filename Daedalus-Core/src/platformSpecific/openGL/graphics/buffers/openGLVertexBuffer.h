@@ -1,18 +1,18 @@
 #pragma once
 
-#include "graphics/buffers/vertexArray.h"
+#include "graphics/buffers/vertexBuffer.h"
 
 namespace daedalusCore { namespace graphics { namespace buffers {
 
-	class OpenGlVertexArray : public VertexArray
+	class OpenGlVertexBuffer : public VertexBuffer
 	{
 	private:
 		uint32_t m_renderID;
 		uint32_t m_count;
 		BufferLayout m_layout;
 	public:
-		OpenGlVertexArray(float* verticies, uint32_t size);
-		virtual ~OpenGlVertexArray();
+		OpenGlVertexBuffer(float* verticies, uint32_t size);
+		virtual ~OpenGlVertexBuffer();
 
 		void Bind() const override;
 		void Unbind() const override;

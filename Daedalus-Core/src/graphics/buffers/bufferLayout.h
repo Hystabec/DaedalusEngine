@@ -4,7 +4,7 @@
 
 namespace daedalusCore { namespace graphics { namespace buffers {
 
-	namespace DataTypes
+	namespace dataTypes
 	{
 		enum class BaseDataType
 		{
@@ -15,9 +15,9 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 
 		struct DataType
 		{
-			const uint32_t Size;
-			const BaseDataType Type;
-			const uint32_t ComponentCount;
+			uint32_t Size;
+			BaseDataType Type;
+			uint32_t ComponentCount;
 
 			DataType(uint32_t size, BaseDataType type, uint32_t componentCount)
 				: Size(size), Type(type), ComponentCount(componentCount)
@@ -32,17 +32,21 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 		uint32_t Offset;
 		bool Normalized;
 
-		BufferElement(const DataTypes::DataType& type, const std::string& name, bool normalized = false)
+		BufferElement()
+			: Name("None"), Offset(0), Normalized(false), m_BaseType(dataTypes::DataType(0, dataTypes::BaseDataType::None, 0))
+		{
+		}
+
+		BufferElement(const dataTypes::DataType& type, const std::string& name, bool normalized = false)
 			: Name(name), m_BaseType(type), Offset(0), Normalized(normalized)
 		{
 		}
 
 		inline uint32_t getSize() const { m_BaseType.Size; }
 		inline uint32_t getComponentCount() const { m_BaseType.ComponentCount; }
-		inline DataTypes::BaseDataType getBaseDataType() const { return m_BaseType.Type; }
-
+		inline dataTypes::BaseDataType getBaseDataType() const { return m_BaseType.Type; }
 	private:
-		DataTypes::DataType m_BaseType;
+		dataTypes::DataType m_BaseType;
 		friend class BufferLayout;
 	};
 
@@ -64,6 +68,10 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 			}
 		}
 	public:
+		BufferLayout() 
+		{
+		}
+
 		BufferLayout(std::initializer_list<BufferElement>& element) 
 			: m_elements(element)
 		{
@@ -81,13 +89,13 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 
 } } }
 
-#define DD_BUFFERS_INT   DataTypes::DataType(sizeof(int),           BaseDataType::Int,   1)
-#define DD_BUFFERS_FLOAT DataTypes::DataType(sizeof(float),         BaseDataType::Float, 1)
-#define DD_BUFFERS_BOOL  DataTypes::DataType(sizeof(bool),          BaseDataType::Bool,  1)
-#define DD_BUFFERS_VEC2  DataTypes::DataType(sizeof(float) * 2,     BaseDataType::Float, 2)
-#define DD_BUFFERS_VEC3  DataTypes::DataType(sizeof(float) * 3,     BaseDataType::Float, 3)
-#define DD_BUFFERS_VEC4  DataTypes::DataType(sizeof(float) * 4,     BaseDataType::Float, 4)
-#define DD_BUFFERS_VEC2I DataTypes::DataType(sizeof(int) * 2,       BaseDataType::Int,   2)
-#define DD_BUFFERS_VEC3I DataTypes::DataType(sizeof(int) * 3,       BaseDataType::Int,   3)
-#define DD_BUFFERS_VEC4I DataTypes::DataType(sizeof(int) * 4,       BaseDataType::Int,   4)
-#define DD_BUFFERS_MAT4  DataTypes::DataType(sizeof(float) * 4 * 4, BaseDataType::Float, 4*4)
+#define DD_BUFFERS_INT   daedalusCore::graphics::buffers::dataTypes::DataType(sizeof(int),           BaseDataType::Int,   1)
+#define DD_BUFFERS_FLOAT daedalusCore::graphics::buffers::dataTypes::DataType(sizeof(float),         BaseDataType::Float, 1)
+#define DD_BUFFERS_BOOL  daedalusCore::graphics::buffers::dataTypes::DataType(sizeof(bool),          BaseDataType::Bool,  1)
+#define DD_BUFFERS_VEC2  daedalusCore::graphics::buffers::dataTypes::DataType(sizeof(float) * 2,     BaseDataType::Float, 2)
+#define DD_BUFFERS_VEC3  daedalusCore::graphics::buffers::dataTypes::DataType(sizeof(float) * 3,     BaseDataType::Float, 3)
+#define DD_BUFFERS_VEC4  daedalusCore::graphics::buffers::dataTypes::DataType(sizeof(float) * 4,     BaseDataType::Float, 4)
+#define DD_BUFFERS_VEC2I daedalusCore::graphics::buffers::dataTypes::DataType(sizeof(int) * 2,       BaseDataType::Int,   2)
+#define DD_BUFFERS_VEC3I daedalusCore::graphics::buffers::dataTypes::DataType(sizeof(int) * 3,       BaseDataType::Int,   3)
+#define DD_BUFFERS_VEC4I daedalusCore::graphics::buffers::dataTypes::DataType(sizeof(int) * 4,       BaseDataType::Int,   4)
+#define DD_BUFFERS_MAT4  daedalusCore::graphics::buffers::dataTypes::DataType(sizeof(float) * 4 * 4, BaseDataType::Float, 4*4)

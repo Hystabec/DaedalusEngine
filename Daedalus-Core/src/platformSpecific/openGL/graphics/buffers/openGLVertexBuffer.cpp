@@ -1,11 +1,11 @@
 #include "ddpch.h"
-#include "openGLVertexArray.h"
+#include "openGLVertexBuffer.h"
 
 #include "GL/glew.h"
 
 namespace daedalusCore { namespace graphics { namespace buffers {
 
-	OpenGlVertexArray::OpenGlVertexArray(float* verticies, uint32_t size)
+	OpenGlVertexBuffer::OpenGlVertexBuffer(float* verticies, uint32_t size)
 		: m_count(size)
 	{
 		glCreateBuffers(1, &m_renderID);
@@ -13,17 +13,17 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 		glBufferData(GL_ARRAY_BUFFER, size, verticies, GL_STATIC_DRAW);
 	}
 
-	OpenGlVertexArray::~OpenGlVertexArray()
+	OpenGlVertexBuffer::~OpenGlVertexBuffer()
 	{
 		glDeleteBuffers(1, & m_renderID);
 	}
 
-	void OpenGlVertexArray::Bind() const
+	void OpenGlVertexBuffer::Bind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_renderID);
 	}
 
-	void OpenGlVertexArray::Unbind() const
+	void OpenGlVertexBuffer::Unbind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
