@@ -23,4 +23,9 @@ namespace daedalusCore { namespace utils {
 		return (a << 24 | b << 16 | g << 8 | r);
 	}
 
+	static maths::vec4 colour_vec4_to_normalized_vec4(const maths::vec4& colour)
+	{
+		return maths::vec4(colour.x / 255, colour.y / 255, colour.z / 255, colour.w / 255);
+	}
+
 } }

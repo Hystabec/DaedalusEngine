@@ -1,19 +1,17 @@
 #pragma once
+#include "renderCommands.h"
 
 namespace daedalusCore { namespace graphics {
 
-	enum class RendererAPI
-	{
-		None = 0,
-		OpenGL = 1
-	};
-
 	class Renderer
 	{
-	private:
-		static RendererAPI m_rendererAPI;
 	public:
-		static inline RendererAPI getCurrentAPI() { return m_rendererAPI; }
+		static void Begin();
+		static void End();
+
+		static void Submit(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray);
+
+		static inline RendererAPI::API GetCurrentAPI() { return RendererAPI::GetAPI(); }
 	};
 
 } }

@@ -125,19 +125,12 @@ project "Sandbox"
 	{
 		"Daedalus-Core",
 		"Daedalus-Core/src",
-		"%{dependDir.ImGui}/include",
-		"%{dependDir.GLEW}/include"
-	}
-
-	libdirs
-	{
-		"%{dependDir.GLEW}/lib"
+		"%{dependDir.ImGui}/include"
 	}
 
 	links
 	{
-		"Daedalus-Core",
-		"glew32s.lib"
+		"Daedalus-Core"
 	}
 
 	postbuildcommands
@@ -150,8 +143,7 @@ project "Sandbox"
 
 		defines
 		{
-			"DD_PLATFORM_WINDOWS",
-			"GLEW_STATIC"
+			"DD_PLATFORM_WINDOWS"
 		}
 
 	filter "configurations:Debug"

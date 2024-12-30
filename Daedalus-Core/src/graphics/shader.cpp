@@ -2,8 +2,11 @@
 #include "shader.h"
 
 #include "graphics/renderer/renderer.h"
-#include "platformSpecific/openGL/graphics/openGLShader.h"
 #include "utils/fileUtils.h"
+
+#ifdef DD_RENDER_USING_OPENGL
+#include "platformSpecific/openGL/graphics/openGLShader.h"
+#endif
 
 namespace daedalusCore { namespace graphics {
 
@@ -18,12 +21,14 @@ namespace daedalusCore { namespace graphics {
 			fragSrc = utils::read_file(frag);
 		}
 
-		switch (Renderer::getCurrentAPI())
+		switch (Renderer::GetCurrentAPI())
 		{
-		case RendererAPI::None:
+		case RendererAPI::API::None:
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
-		case RendererAPI::OpenGL:
+#ifdef DD_RENDER_USING_OPENGL
+		case RendererAPI::API::OpenGL:
 			return new OpenGLShader(verSrc.c_str(), fragSrc.c_str());
+#endif
 		}
 
 		DD_CORE_ASSERT(false, "RendererAPI Unkown");

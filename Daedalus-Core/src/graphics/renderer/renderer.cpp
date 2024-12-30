@@ -3,10 +3,18 @@
 
 namespace daedalusCore { namespace graphics {
 
-#ifdef DD_RENDER_USING_OPENGL
-	RendererAPI Renderer::m_rendererAPI = RendererAPI::OpenGL; 
-#else
-	#error Daedalus currently only supports OpenGL
-#endif 
-	
+	void Renderer::Begin()
+	{
+	}
+
+	void Renderer::End()
+	{
+	}
+
+	void Renderer::Submit(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray)
+	{
+		vertexArray->Bind();
+		RenderCommands::DrawIndexed(vertexArray);
+	}
+
 } }
