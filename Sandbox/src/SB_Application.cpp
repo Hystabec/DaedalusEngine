@@ -24,21 +24,21 @@ private:
 	int frames = 0;
 
 	//Temp graphics
-	daedalusCore::graphics::Shader* m_shader;
-	TileLayer* m_layer;
+	//daedalusCore::graphics::Shader* m_shader;
+	//TileLayer* m_layer;
 
 public:
 	TestLayer()
 	{
-		m_shader = daedalusCore::graphics::Shader::create("../Daedalus-Core/resources/shaders/basic.vert", "../Daedalus-Core/resources/shaders/basic.frag");
-		m_shader->enable();
-		m_layer = new TileLayer(m_shader);
-		m_layer->add(new daedalusCore::graphics::Sprite(0.0f, 0.0f, 1.0f, 1.0f, daedalusCore::utils::colour_vec4_to_uint(daedalusCore::maths::vec4(1.0f, 0.0f, 0.0f, 1.0f))));
+		//m_shader = daedalusCore::graphics::Shader::create("../Daedalus-Core/resources/shaders/basic.vert", "../Daedalus-Core/resources/shaders/basic.frag");
+		//m_shader->enable();
+		//m_layer = new TileLayer(m_shader);
+		//m_layer->add(new daedalusCore::graphics::Sprite(0.0f, 0.0f, 1.0f, 1.0f, daedalusCore::utils::colour_vec4_to_uint(daedalusCore::maths::vec4(1.0f, 0.0f, 0.0f, 1.0f))));
 	}
 
 	~TestLayer()
 	{
-		delete m_layer;
+		//delete m_layer;
 	}
 	
 
@@ -53,9 +53,9 @@ public:
 			frames = 0;
 		}
 
-		m_shader->enable();
-		m_layer->render();
-		m_shader->disable();
+		//m_shader->enable();
+		//m_layer->render();
+		//m_shader->disable();
 	}
 
 	void ImGuiRender()

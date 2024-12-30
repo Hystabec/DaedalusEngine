@@ -7,6 +7,12 @@
 #include "application/layers/layerStack.h"
 #include "application/layers/imGuiLayer.h"
 
+#include "graphics/shader.h"
+#include "graphics/buffers/vertexArray.h"
+#include "graphics/buffers/bufferLayout.h"
+#include "graphics/buffers/indexBuffer.h"
+#include "graphics/buffers/vertexBuffer.h"
+
 namespace daedalusCore {
 
 	class  Application
@@ -16,10 +22,11 @@ namespace daedalusCore {
 
 		std::unique_ptr<application::Window> m_window;
 		application::ImGuiLayer* m_ImGuiLayer;
-
 		bool m_running = true;
-
 		application::layerStack m_layerStack;
+
+		std::shared_ptr<graphics::Shader> m_shader;
+		std::shared_ptr<graphics::buffers::VertexArray> m_vertexArray;
 	private:
 		bool OnWindowClose(event::WindowClosedEvent& e);
 

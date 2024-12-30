@@ -11,19 +11,15 @@ namespace daedalusCore { namespace graphics {
 		return glGetUniformLocation(m_shaderID, name);
 	}
 
-	GLuint OpenGLShader::load()
+	GLuint OpenGLShader::load(const GLchar* vert, const GLchar* frag)
 	{
 		GLuint program = glCreateProgram();
 
 		GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
 		GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
 
-		std::string vertSrcS = utils::read_file(m_vertPath);
-		std::string fragSrcS = utils::read_file(m_fragPath);
-		const char* vertSrc = vertSrcS.c_str();
-		const char* fragSrc = fragSrcS.c_str();
 
-		glShaderSource(vertex, 1, &vertSrc, NULL);
+		glShaderSource(vertex, 1, &vert, NULL);
 		glCompileShader(vertex);
 
 		GLint vertexCompileResult;
@@ -40,7 +36,7 @@ namespace daedalusCore { namespace graphics {
 			return 0;
 		}
 
-		glShaderSource(fragment, 1, &fragSrc, NULL);
+		glShaderSource(fragment, 1, &frag, NULL);
 		glCompileShader(fragment);
 
 		GLint fragmentCompileResult;
@@ -68,10 +64,9 @@ namespace daedalusCore { namespace graphics {
 		return program;
 	}
 
-	OpenGLShader::OpenGLShader(const GLchar* vertexPath, const GLchar* fragPath)
-		: m_vertPath(vertexPath), m_fragPath(fragPath)
+	OpenGLShader::OpenGLShader(const GLchar* vertex, const GLchar* fragment)
 	{
-		m_shaderID = load();
+		m_shaderID = load(vertex, fragment);
 	}
 
 	OpenGLShader::~OpenGLShader()

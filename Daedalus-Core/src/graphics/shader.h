@@ -26,7 +26,7 @@ namespace daedalusCore { namespace graphics {
 		virtual void enable() const = 0;
 		virtual void disable() const = 0;
 
-		static Shader* create(const char* vertexPath, const char* fragPath);
+		static Shader* create(const char* vertex, const char* frag, bool fromFile = true);
 	};
 
 } }

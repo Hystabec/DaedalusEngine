@@ -9,12 +9,11 @@ namespace daedalusCore { namespace graphics {
 	{
 	private:
 		GLuint m_shaderID;
-		const char* m_vertPath, * m_fragPath;
 	private:
 		GLint getUniformLocation(const GLchar* name);
-		GLuint load();
+		GLuint load(const GLchar* vertex, const GLchar* fragment);
 	public:
-		OpenGLShader(const GLchar* vertexPath, const GLchar* fragPath);
+		OpenGLShader(const GLchar* vertex, const GLchar* fragment);
 		virtual ~OpenGLShader();
 
 		void setUniformMat4(const GLchar* name, const maths::mat4& matrix) override;
