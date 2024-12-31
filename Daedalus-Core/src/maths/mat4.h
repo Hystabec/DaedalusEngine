@@ -28,9 +28,10 @@ namespace daedalusCore { namespace maths {
 		friend vec4 operator*(const mat4& left, const vec4& right);
 
 		mat4& invert();
+		static mat4 invert(const mat4& matrix);
 
-		static mat4 orthographic(float left, float right, float botton, float top, float near, float far);
-		static mat4 perspective(float fov, float aspectRatio, float near, float far);
+		static mat4 orthographic(float left, float right, float botton, float top, float nearPlane, float farPlane);
+		static mat4 perspective(float fov, float aspectRatio, float nearPlane, float farPlane);
 
 		static mat4 translate(const vec3& translation);
 		static mat4 rotate(float angle, const vec3& axis);

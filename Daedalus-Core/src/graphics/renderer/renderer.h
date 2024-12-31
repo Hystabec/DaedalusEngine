@@ -1,6 +1,8 @@
 #pragma once
 #include "renderCommands.h"
 
+#include "graphics/camera/orthographicCamera.h"
+
 namespace daedalusCore { namespace graphics {
 
 	class Renderer

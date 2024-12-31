@@ -89,8 +89,8 @@ namespace daedalusCore { namespace maths {
 
 		mat4& mat4::invert()
 		{
-			// TODO: insert return statement here
 			float temp[16];
+			memset(temp, 0, sizeof(temp));
 
 			temp[12] = -elements[4] * elements[9] * elements[14] +
 				elements[4] * elements[10] * elements[13] +
@@ -184,12 +184,122 @@ namespace daedalusCore { namespace maths {
 				elements[8] * elements[2] * elements[5];
 
 			float determinant = elements[0] * temp[0] + elements[1] * temp[4] + elements[2] * temp[8] + elements[3] * temp[12];
-			determinant = (float)(1.0 / determinant);
+			if (determinant == 0)
+				return *this;
+			else
+				determinant = (float)(1.0 / determinant);
 
 			for (int i = 0; i < (4 * 4); i++)
 				elements[i] = temp[i] * determinant;
 
 			return *this;
+		}
+
+		mat4 mat4::invert(const mat4& matrix)
+		{
+			mat4 result(0);
+
+			result.elements[12] = -matrix.elements[4] * matrix.elements[9] * matrix.elements[14] +
+				matrix.elements[4] * matrix.elements[10] * matrix.elements[13] +
+				matrix.elements[8] * matrix.elements[5] * matrix.elements[14] -
+				matrix.elements[8] * matrix.elements[6] * matrix.elements[13] -
+				matrix.elements[12] * matrix.elements[5] * matrix.elements[10] +
+				matrix.elements[12] * matrix.elements[6] * matrix.elements[9];
+
+			result.elements[1] = -matrix.elements[1] * matrix.elements[10] * matrix.elements[15] +
+				matrix.elements[1] * matrix.elements[11] * matrix.elements[14] +
+				matrix.elements[9] * matrix.elements[2] * matrix.elements[15] -
+				matrix.elements[9] * matrix.elements[3] * matrix.elements[14] -
+				matrix.elements[13] * matrix.elements[2] * matrix.elements[11] +
+				matrix.elements[13] * matrix.elements[3] * matrix.elements[10];
+
+			result.elements[5] = matrix.elements[0] * matrix.elements[10] * matrix.elements[15] -
+				matrix.elements[0] * matrix.elements[11] * matrix.elements[14] -
+				matrix.elements[8] * matrix.elements[2] * matrix.elements[15] +
+				matrix.elements[8] * matrix.elements[3] * matrix.elements[14] +
+				matrix.elements[12] * matrix.elements[2] * matrix.elements[11] -
+				matrix.elements[12] * matrix.elements[3] * matrix.elements[10];
+
+			result.elements[9] = -matrix.elements[0] * matrix.elements[9] * matrix.elements[15] +
+				matrix.elements[0] * matrix.elements[11] * matrix.elements[13] +
+				matrix.elements[8] * matrix.elements[1] * matrix.elements[15] -
+				matrix.elements[8] * matrix.elements[3] * matrix.elements[13] -
+				matrix.elements[12] * matrix.elements[1] * matrix.elements[11] +
+				matrix.elements[12] * matrix.elements[3] * matrix.elements[9];
+
+			result.elements[13] = matrix.elements[0] * matrix.elements[9] * matrix.elements[14] -
+				matrix.elements[0] * matrix.elements[10] * matrix.elements[13] -
+				matrix.elements[8] * matrix.elements[1] * matrix.elements[14] +
+				matrix.elements[8] * matrix.elements[2] * matrix.elements[13] +
+				matrix.elements[12] * matrix.elements[1] * matrix.elements[10] -
+				matrix.elements[12] * matrix.elements[2] * matrix.elements[9];
+
+			result.elements[2] = matrix.elements[1] * matrix.elements[6] * matrix.elements[15] -
+				matrix.elements[1] * matrix.elements[7] * matrix.elements[14] -
+				matrix.elements[5] * matrix.elements[2] * matrix.elements[15] +
+				matrix.elements[5] * matrix.elements[3] * matrix.elements[14] +
+				matrix.elements[13] * matrix.elements[2] * matrix.elements[7] -
+				matrix.elements[13] * matrix.elements[3] * matrix.elements[6];
+
+			result.elements[6] = -matrix.elements[0] * matrix.elements[6] * matrix.elements[15] +
+				matrix.elements[0] * matrix.elements[7] * matrix.elements[14] +
+				matrix.elements[4] * matrix.elements[2] * matrix.elements[15] -
+				matrix.elements[4] * matrix.elements[3] * matrix.elements[14] -
+				matrix.elements[12] * matrix.elements[2] * matrix.elements[7] +
+				matrix.elements[12] * matrix.elements[3] * matrix.elements[6];
+
+			result.elements[10] = matrix.elements[0] * matrix.elements[5] * matrix.elements[15] -
+				matrix.elements[0] * matrix.elements[7] * matrix.elements[13] -
+				matrix.elements[4] * matrix.elements[1] * matrix.elements[15] +
+				matrix.elements[4] * matrix.elements[3] * matrix.elements[13] +
+				matrix.elements[12] * matrix.elements[1] * matrix.elements[7] -
+				matrix.elements[12] * matrix.elements[3] * matrix.elements[5];
+
+			result.elements[14] = -matrix.elements[0] * matrix.elements[5] * matrix.elements[14] +
+				matrix.elements[0] * matrix.elements[6] * matrix.elements[13] +
+				matrix.elements[4] * matrix.elements[1] * matrix.elements[14] -
+				matrix.elements[4] * matrix.elements[2] * matrix.elements[13] -
+				matrix.elements[12] * matrix.elements[1] * matrix.elements[6] +
+				matrix.elements[12] * matrix.elements[2] * matrix.elements[5];
+
+			result.elements[3] = -matrix.elements[1] * matrix.elements[6] * matrix.elements[11] +
+				matrix.elements[1] * matrix.elements[7] * matrix.elements[10] +
+				matrix.elements[5] * matrix.elements[2] * matrix.elements[11] -
+				matrix.elements[5] * matrix.elements[3] * matrix.elements[10] -
+				matrix.elements[9] * matrix.elements[2] * matrix.elements[7] +
+				matrix.elements[9] * matrix.elements[3] * matrix.elements[6];
+
+			result.elements[7] = matrix.elements[0] * matrix.elements[6] * matrix.elements[11] -
+				matrix.elements[0] * matrix.elements[7] * matrix.elements[10] -
+				matrix.elements[4] * matrix.elements[2] * matrix.elements[11] +
+				matrix.elements[4] * matrix.elements[3] * matrix.elements[10] +
+				matrix.elements[8] * matrix.elements[2] * matrix.elements[7] -
+				matrix.elements[8] * matrix.elements[3] * matrix.elements[6];
+
+			result.elements[11] = -matrix.elements[0] * matrix.elements[5] * matrix.elements[11] +
+				matrix.elements[0] * matrix.elements[7] * matrix.elements[9] +
+				matrix.elements[4] * matrix.elements[1] * matrix.elements[11] -
+				matrix.elements[4] * matrix.elements[3] * matrix.elements[9] -
+				matrix.elements[8] * matrix.elements[1] * matrix.elements[7] +
+				matrix.elements[8] * matrix.elements[3] * matrix.elements[5];
+
+			result.elements[15] = matrix.elements[0] * matrix.elements[5] * matrix.elements[10] -
+				matrix.elements[0] * matrix.elements[6] * matrix.elements[9] -
+				matrix.elements[4] * matrix.elements[1] * matrix.elements[10] +
+				matrix.elements[4] * matrix.elements[2] * matrix.elements[9] +
+				matrix.elements[8] * matrix.elements[1] * matrix.elements[6] -
+				matrix.elements[8] * matrix.elements[2] * matrix.elements[5];
+
+			float determinant = matrix.elements[0] * result.elements[0] + matrix.elements[1] * result.elements[4] + matrix.elements[2] * result.elements[8] + matrix.elements[3] * result.elements[12];
+			if (determinant == 0)
+				return matrix;
+			else
+				determinant = (float)(1.0 / determinant);
+
+			for (int i = 0; i < (4 * 4); i++)
+				result.elements[i] = result.elements[i] * determinant;
+
+			return result;
 		}
 
 		mat4 mat4::orthographic(float left, float right, float botton, float top, float nearPlane, float farPlane)

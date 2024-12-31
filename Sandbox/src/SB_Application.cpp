@@ -2,16 +2,16 @@
 #include "imgui.h"
 
 #include "graphics/shader.h"
-#include "graphics/buffers/vertexArray.h"
-#include "graphics/buffers/bufferLayout.h"
 #include "graphics/buffers/indexBuffer.h"
 #include "graphics/buffers/vertexBuffer.h"
 #include "graphics/renderer/renderer.h"
+#include "graphics/camera/orthographicCamera.h"
 
 class TestLayer : public daedalusCore::application::Layer
 {
 public:
 	TestLayer()
+		: m_othoCam(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		using namespace daedalusCore;
 		m_vertexArray.reset(graphics::buffers::VertexArray::Create());
@@ -36,11 +36,28 @@ public:
 		std::shared_ptr<graphics::buffers::IndexBuffer> indexBuff(graphics::buffers::IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_vertexArray->setIndexBuffer(indexBuff);
 
+		m_squareVertexArray.reset(graphics::buffers::VertexArray::Create());
+		float sqrVerts[4 * 7] = {
+			-0.75f, 0.75f, 0.0f, 0.8f, 0.2f, 0.2f, 1.0f,
+			0.75f, 0.75f, 0.0f, 0.2f, 0.8f, 0.2f, 1.0f,
+			0.75f, -0.75f, 0.0f, 0.8f, 0.2f, 0.2f, 1.0f,
+			-0.75f, -0.75f, 0.0f, 0.2f, 0.8f, 0.2f, 1.0f
+		};
+
+		std::shared_ptr<graphics::buffers::VertexBuffer> sqrVertBuff(graphics::buffers::VertexBuffer::create(sqrVerts, sizeof(sqrVerts)));
+		sqrVertBuff->setLayout(layout);
+		m_squareVertexArray->addVertexBuffer(sqrVertBuff);
+		uint32_t sqrIndices[3 * 2] = { 0, 1, 2, 2, 3, 0 };
+		std::shared_ptr<graphics::buffers::IndexBuffer> sqrIndexBuff(graphics::buffers::IndexBuffer::create(sqrIndices, sizeof(sqrIndices) / sizeof(uint32_t)));
+		m_squareVertexArray->setIndexBuffer(sqrIndexBuff);
+
 		std::string vertexSrc = R"(
 			#version 330 core
 			layout(location = 0) in vec3 a_position;
 			layout(location = 1) in vec4 a_colour;
 	
+			uniform mat4 u_projView;
+
 			out vec3 v_pos;
 			out vec4 v_col;
 
@@ -48,7 +65,7 @@ public:
 			{
 				v_pos = a_position;
 				v_col = a_colour;
-				gl_Position = vec4(a_position, 1.0);
+				gl_Position = u_projView * vec4(a_position, 1.0);
 			}
 		)";
 
@@ -73,6 +90,8 @@ public:
 		daedalusCore::graphics::Renderer::begin();
 
 		m_shader->enable();
+		m_shader->setUniformMat4("u_projView", m_othoCam.getProjectViewMatrix());
+		daedalusCore::graphics::Renderer::submit(m_squareVertexArray);
 		daedalusCore::graphics::Renderer::submit(m_vertexArray);
 
 		daedalusCore::graphics::Renderer::end();
@@ -103,6 +122,8 @@ private:
 
 	std::shared_ptr<daedalusCore::graphics::Shader> m_shader;
 	std::shared_ptr<daedalusCore::graphics::buffers::VertexArray> m_vertexArray;
+	std::shared_ptr<daedalusCore::graphics::buffers::VertexArray> m_squareVertexArray;
+	daedalusCore::graphics::OrthographicCamera m_othoCam;
 };
 
 class SandBox : public daedalusCore::Application
