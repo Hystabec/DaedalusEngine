@@ -90,7 +90,7 @@ namespace daedalusCore { namespace maths {
 		mat4& mat4::invert()
 		{
 			float temp[16];
-			memset(temp, 0, sizeof(temp));
+			memset(temp, 1.0f, sizeof(temp));
 
 			temp[12] = -elements[4] * elements[9] * elements[14] +
 				elements[4] * elements[10] * elements[13] +
@@ -197,7 +197,7 @@ namespace daedalusCore { namespace maths {
 
 		mat4 mat4::invert(const mat4& matrix)
 		{
-			mat4 result(0);
+			mat4 result(1.0f);
 
 			result.elements[12] = -matrix.elements[4] * matrix.elements[9] * matrix.elements[14] +
 				matrix.elements[4] * matrix.elements[10] * matrix.elements[13] +
