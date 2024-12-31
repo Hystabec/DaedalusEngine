@@ -16,42 +16,42 @@ namespace daedalusCore { namespace graphics {
 		glDeleteProgram(m_shaderID);
 	}
 
-	void OpenGLShader::setUniformMat4(const GLchar* name, const maths::mat4& matrix)
+	void OpenGLShader::setUniformMat4(const maths::mat4& matrix, const GLchar* name)
 	{
 		glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.elements);
 	}
 
-	void OpenGLShader::setUniform1i(const GLchar* name, int value)
+	void OpenGLShader::setUniform1i(int value, const GLchar* name)
 	{
 		glUniform1i(getUniformLocation(name), value);
 	}
 
-	void OpenGLShader::setUniform1iv(const GLchar* name, int* value, int count)
+	void OpenGLShader::setUniform1iv(int* value, int count, const GLchar* name)
 	{
 		glUniform1iv(getUniformLocation(name), count, value);
 	}
 
-	void OpenGLShader::setUniform1f(const GLchar* name, float value)
+	void OpenGLShader::setUniform1f(float value, const GLchar* name)
 	{
 		glUniform1f(getUniformLocation(name), value);
 	}
 
-	void OpenGLShader::setUniform1fv(const GLchar* name, float* value, int count)
+	void OpenGLShader::setUniform1fv(float* value, int count, const GLchar* name)
 	{
 		glUniform1fv(getUniformLocation(name), count, value);
 	}
 
-	void OpenGLShader::setUniform2f(const GLchar* name, const maths::vec2& vector)
+	void OpenGLShader::setUniform2f(const maths::vec2& vector, const GLchar* name)
 	{
 		glUniform2f(getUniformLocation(name), vector.x, vector.y);
 	}
 
-	void OpenGLShader::setUniform3f(const GLchar* name, const maths::vec3& vector)
+	void OpenGLShader::setUniform3f(const maths::vec3& vector, const GLchar* name)
 	{
 		glUniform3f(getUniformLocation(name), vector.x, vector.y, vector.z);
 	}
 
-	void OpenGLShader::setUniform4f(const GLchar* name, const maths::vec4& vector)
+	void OpenGLShader::setUniform4f(const maths::vec4& vector, const GLchar* name)
 	{
 		glUniform4f(getUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
 	}

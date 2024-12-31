@@ -38,7 +38,7 @@ namespace daedalusCore { namespace graphics {
 		: m_renderer(renderer), m_shader(shader), m_projectionMatrix(projectionMatrix)
 	{
 		m_shader->enable();
-		m_shader->setUniformMat4("pr_matrix", m_projectionMatrix);
+		m_shader->setUniformMat4(m_projectionMatrix, "pr_matrix");
 		m_shader->disable();
 	}
 

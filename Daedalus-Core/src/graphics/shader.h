@@ -14,14 +14,14 @@ namespace daedalusCore { namespace graphics {
 	public:
 		virtual ~Shader() {};
 
-		virtual void setUniformMat4(const char* name, const maths::mat4& matrix) = 0;
-		virtual void setUniform1i(const char* name, int value) = 0;
-		virtual void setUniform1iv(const char* name, int* value, int count) = 0;
-		virtual void setUniform1f(const char* name, float value) = 0;
-		virtual void setUniform1fv(const char* name, float* value, int count) = 0;
-		virtual void setUniform2f(const char* name, const maths::vec2& vector) = 0;
-		virtual void setUniform3f(const char* name, const maths::vec3& vector) = 0;
-		virtual void setUniform4f(const char* name, const maths::vec4& vector) = 0;
+		virtual void setUniformMat4(const maths::mat4& matrix, const char* name) = 0;
+		virtual void setUniform1i(int value, const char* name) = 0;
+		virtual void setUniform1iv(int* value, int count, const char* name) = 0;
+		virtual void setUniform1f(float value, const char* name) = 0;
+		virtual void setUniform1fv(float* value, int count, const char* name) = 0;
+		virtual void setUniform2f(const maths::vec2& vector, const char* name) = 0;
+		virtual void setUniform3f(const maths::vec3& vector, const char* name) = 0;
+		virtual void setUniform4f(const maths::vec4& vector, const char* name) = 0;
 
 		virtual void enable() const = 0;
 		virtual void disable() const = 0;

@@ -21,7 +21,7 @@ namespace daedalusCore { namespace graphics {
 	void Renderer::submit(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray, const std::shared_ptr<graphics::Shader>& shader)
 	{
 		shader->enable();
-		shader->setUniformMat4("u_projView", m_sceneData->projectionViewMatrix);
+		shader->setUniformMat4(m_sceneData->projectionViewMatrix, "u_projView");
 
 		vertexArray->bind();
 		RenderCommands::drawIndexed(vertexArray);

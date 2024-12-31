@@ -11,14 +11,14 @@ namespace daedalusCore { namespace graphics {
 		OpenGLShader(const GLchar* vertex, const GLchar* fragment);
 		virtual ~OpenGLShader();
 
-		void setUniformMat4(const GLchar* name, const maths::mat4& matrix) override;
-		void setUniform1i(const GLchar* name, int value) override;
-		void setUniform1iv(const GLchar* name, int* value, int count) override;
-		void setUniform1f(const GLchar* name, float value) override;
-		void setUniform1fv(const GLchar* name, float* value, int count) override;
-		void setUniform2f(const GLchar* name, const maths::vec2& vector) override;
-		void setUniform3f(const GLchar* name, const maths::vec3& vector) override;
-		void setUniform4f(const GLchar* name, const maths::vec4& vector) override;
+		void setUniformMat4(const maths::mat4& matrix, const GLchar* name) override;
+		void setUniform1i(int value, const GLchar* name) override;
+		void setUniform1iv(int* value, int count, const GLchar* name) override;
+		void setUniform1f(float value, const GLchar* name) override;
+		void setUniform1fv(float* value, int count, const GLchar* name) override;
+		void setUniform2f(const maths::vec2& vector, const GLchar* name) override;
+		void setUniform3f(const maths::vec3& vector, const GLchar* name) override;
+		void setUniform4f(const maths::vec4& vector, const GLchar* name) override;
 
 		void enable() const override;
 		void disable() const override;
