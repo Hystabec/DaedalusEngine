@@ -10,13 +10,6 @@
 
 class TestLayer : public daedalusCore::application::Layer
 {
-
-private:
-	daedalusCore::utils::Timer time;
-	int frames = 0;
-
-	std::shared_ptr<daedalusCore::graphics::Shader> m_shader;
-	std::shared_ptr<daedalusCore::graphics::buffers::VertexArray> m_vertexArray;
 public:
 	TestLayer()
 	{
@@ -103,6 +96,13 @@ public:
 	{
 
 	}
+
+private:
+	daedalusCore::utils::Timer time;
+	int frames = 0;
+
+	std::shared_ptr<daedalusCore::graphics::Shader> m_shader;
+	std::shared_ptr<daedalusCore::graphics::buffers::VertexArray> m_vertexArray;
 };
 
 class SandBox : public daedalusCore::Application
