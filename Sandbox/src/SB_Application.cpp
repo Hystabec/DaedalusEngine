@@ -83,16 +83,15 @@ public:
 		)";
 
 		m_shader.reset(graphics::Shader::create(vertexSrc.c_str(), fragSrc.c_str(), false));
+		m_othoCam.setPosition({ 0.5f, 0.5f, 0.0f });
 	}
 
 	void update() override
 	{
-		daedalusCore::graphics::Renderer::begin();
+		daedalusCore::graphics::Renderer::begin(m_othoCam);
 
-		m_shader->enable();
-		m_shader->setUniformMat4("u_projView", m_othoCam.getProjectViewMatrix());
-		daedalusCore::graphics::Renderer::submit(m_squareVertexArray);
-		daedalusCore::graphics::Renderer::submit(m_vertexArray);
+		daedalusCore::graphics::Renderer::submit(m_squareVertexArray, m_shader);
+		daedalusCore::graphics::Renderer::submit(m_vertexArray, m_shader);
 
 		daedalusCore::graphics::Renderer::end();
 
