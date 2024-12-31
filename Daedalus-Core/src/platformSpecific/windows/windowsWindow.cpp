@@ -23,16 +23,6 @@ namespace daedalusCore { namespace application {
 		return new WindowsWindow(props);
 	}
 
-	void WindowsWindow::Init(const WindowProperties& props)
-	{
-		Init(props);
-	}
-
-	void WindowsWindow::Shutdown()
-	{
-		glfwDestroyWindow(m_window);
-	}
-
 	WindowsWindow::WindowsWindow(const WindowProperties& props)
 	{
 		m_data.Title = props.Title;
@@ -55,9 +45,9 @@ namespace daedalusCore { namespace application {
 			DD_CORE_ASSERT(false, "failed to create window");
 
 		m_renderingContext = new graphics::OpenGlContext(m_window);
-		
+
 		glfwSetWindowUserPointer(m_window, &m_data);
-		SetVSync(props.VSync);
+		setVSync(props.VSync);
 
 		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
 			{
@@ -84,24 +74,24 @@ namespace daedalusCore { namespace application {
 
 				switch (action)
 				{
-					case GLFW_PRESS:
-					{
-						event::KeyPressedEvent event(key);
-						data.EventCallBack(event);
-						break;
-					}
-					case GLFW_RELEASE:
-					{
-						event::KeyReleasedEvent event(key);
-						data.EventCallBack(event);
-						break;
-					}
-					case GLFW_REPEAT:
-					{
-						event::KeyHeldEvent event(key, 1);
-						data.EventCallBack(event);
-						break;
-					}
+				case GLFW_PRESS:
+				{
+					event::KeyPressedEvent event(key);
+					data.EventCallBack(event);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					event::KeyReleasedEvent event(key);
+					data.EventCallBack(event);
+					break;
+				}
+				case GLFW_REPEAT:
+				{
+					event::KeyHeldEvent event(key, 1);
+					data.EventCallBack(event);
+					break;
+				}
 				}
 			});
 
@@ -120,17 +110,17 @@ namespace daedalusCore { namespace application {
 				switch (action)
 				{
 				case GLFW_PRESS:
-					{
-						event::MouseButtonPressedEvent event(button);
-						data.EventCallBack(event);
-						break;
-					}
-					case GLFW_RELEASE:
-					{
-						event::MouseButtonReleasedEvent event(button);
-						data.EventCallBack(event);
-						break;
-					}
+				{
+					event::MouseButtonPressedEvent event(button);
+					data.EventCallBack(event);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					event::MouseButtonReleasedEvent event(button);
+					data.EventCallBack(event);
+					break;
+				}
 				}
 			});
 
@@ -151,16 +141,16 @@ namespace daedalusCore { namespace application {
 
 	WindowsWindow::~WindowsWindow()
 	{
-		Shutdown();
+		shutdown();
 	}
 
-	void WindowsWindow::Update()
+	void WindowsWindow::update()
 	{
 		glfwPollEvents();
 		m_renderingContext->swapBuffers();
 	}
 
-	void WindowsWindow::SetVSync(bool enabled)
+	void WindowsWindow::setVSync(bool enabled)
 	{
 		if (enabled)
 			glfwSwapInterval(1);
@@ -170,9 +160,19 @@ namespace daedalusCore { namespace application {
 		m_data.Vsync = enabled;
 	}
 
-	bool WindowsWindow::IsVSync() const
+	bool WindowsWindow::isVSync() const
 	{
 		return m_data.Vsync;
+	}
+
+	void WindowsWindow::init(const WindowProperties& props)
+	{
+		init(props);
+	}
+
+	void WindowsWindow::shutdown()
+	{
+		glfwDestroyWindow(m_window);
 	}
 
 } }

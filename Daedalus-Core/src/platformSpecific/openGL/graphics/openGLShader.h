@@ -7,11 +7,6 @@ namespace daedalusCore { namespace graphics {
 
 	class OpenGLShader : public Shader
 	{
-	private:
-		GLuint m_shaderID;
-	private:
-		GLint getUniformLocation(const GLchar* name);
-		GLuint load(const GLchar* vertex, const GLchar* fragment);
 	public:
 		OpenGLShader(const GLchar* vertex, const GLchar* fragment);
 		virtual ~OpenGLShader();
@@ -27,6 +22,13 @@ namespace daedalusCore { namespace graphics {
 
 		void enable() const override;
 		void disable() const override;
+
+	private:
+		GLint getUniformLocation(const GLchar* name);
+		GLuint load(const GLchar* vertex, const GLchar* fragment);
+
+	private:
+		GLuint m_shaderID;
 	};
 
 } }

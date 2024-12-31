@@ -12,6 +12,25 @@ namespace daedalusCore {
 
 	class WindowsWindow : public Window
 	{
+	public:
+		WindowsWindow(const WindowProperties& props);
+		virtual ~WindowsWindow();
+
+		void update() override;
+
+		inline unsigned int getWidth() const override { return m_data.Width; }
+		inline unsigned int getHeight() const override { return m_data.Height; }
+
+		inline void setEventCallback(const EventCallbackFn& callback) override { m_data.EventCallBack = callback; }
+		void setVSync(bool enabled) override;
+		bool isVSync() const override;
+
+		inline void* getNativeWindow() const override { return m_window; }
+
+	private:
+		virtual void init(const WindowProperties& props);
+		virtual void shutdown();
+
 	private:
 		GLFWwindow* m_window;
 
@@ -27,24 +46,6 @@ namespace daedalusCore {
 		WindowData m_data;
 
 		graphics::RenderingContext* m_renderingContext;
-	private:
-		virtual void Init(const WindowProperties& props);
-		virtual void Shutdown();
-
-	public:
-		WindowsWindow(const WindowProperties& props);
-		virtual ~WindowsWindow();
-
-		void Update() override;
-
-		inline unsigned int GetWidth() const override { return m_data.Width; }
-		inline unsigned int GetHeight() const override { return m_data.Height; }
-
-		inline void SetEventCallback(const EventCallbackFn& callback) override { m_data.EventCallBack = callback; }
-		void SetVSync(bool enabled) override;
-		bool IsVSync() const override;
-
-		inline void* GetNativeWindow() const override { return m_window; }
 	};
 
 } }

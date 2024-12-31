@@ -24,16 +24,16 @@ namespace daedalusCore { namespace application {
 
 		virtual ~Window() {}
 		
-		virtual void Update() = 0;
+		virtual void update() = 0;
 
-		virtual unsigned int GetWidth() const = 0;
-		virtual unsigned int GetHeight() const = 0;
+		virtual unsigned int getWidth() const = 0;
+		virtual unsigned int getHeight() const = 0;
 
-		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
-		virtual void SetVSync(bool enabled) = 0;
-		virtual bool IsVSync() const = 0;
+		virtual void setEventCallback(const EventCallbackFn& callback) = 0;
+		virtual void setVSync(bool enabled) = 0;
+		virtual bool isVSync() const = 0;
 
-		virtual void* GetNativeWindow() const = 0;
+		virtual void* getNativeWindow() const = 0;
 
 		static Window* Create(const WindowProperties& props = WindowProperties());
 	};

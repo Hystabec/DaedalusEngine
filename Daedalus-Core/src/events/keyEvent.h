@@ -6,8 +6,10 @@ namespace daedalusCore { namespace event {
 
 	class  KeyEvent : public Event
 	{
-	protected:
-		int m_keyCode;
+	public:
+		inline int getKeyCode() const { return m_keyCode; }
+
+		EVENT_CLASS_CATEGORY(EventCategory::Keyboard | EventCategory::Input)
 
 	protected:
 		KeyEvent(int keycode)
@@ -15,10 +17,8 @@ namespace daedalusCore { namespace event {
 		{
 		}
 
-	public:
-		inline int GetKeyCode() const { return m_keyCode; }
-
-		EVENT_CLASS_CATEGORY(EventCategory::Keyboard | EventCategory::Input)
+	protected:
+		int m_keyCode;
 	};
 
 	class  KeyPressedEvent : public KeyEvent
@@ -45,17 +45,18 @@ namespace daedalusCore { namespace event {
 
 	class  KeyHeldEvent : public KeyEvent
 	{
-	private:
-		int m_count;
 	public:
 		KeyHeldEvent(int keycode, int count)
 			: KeyEvent(keycode), m_count(count)
 		{
 		}
 
-		inline int Count() const { return m_count; }
+		inline int count() const { return m_count; }
 
 		EVENT_CLASS_TYPE(EventType::KeyHeld)
+
+	private:
+		int m_count;
 	};
 
 	class  KeyTypedEvent : public KeyEvent

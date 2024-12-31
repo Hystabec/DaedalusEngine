@@ -8,21 +8,22 @@
 
 namespace daedalusCore { namespace application {
 
-	class  ImGuiLayer : public Layer
+	class ImGuiLayer : public Layer
 	{
-	private:
-		float m_time = 0.0f;
 	public:
 		ImGuiLayer();
 		~ImGuiLayer();
 
-		void Attach() override;
-		void Detach() override;
+		void attach() override;
+		void detach() override;
 
-		void ImGuiRender() override;
+		void imGuiRender() override;
 
-		void Begin();
-		void End();
+		void begin();
+		void end();
+
+	private:
+		float m_time = 0.0f;
 	};
 
 } }

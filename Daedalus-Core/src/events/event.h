@@ -27,38 +27,36 @@ namespace daedalusCore { namespace event {
 		};
 	}
 
-#define EVENT_CLASS_TYPE(type)  static EventType GetStaticType() { return (##type); }\
-								virtual EventType GetType() const override { return GetStaticType(); }\
-								virtual const char* GetName() const override { return #type; }
+#define EVENT_CLASS_TYPE(type)  static EventType getStaticType() { return (##type); }\
+								virtual EventType getType() const override { return getStaticType(); }\
+								virtual const char* getName() const override { return #type; }
 
-#define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category;}
+#define EVENT_CLASS_CATEGORY(category) virtual int getCategoryFlags() const override { return category;}
 
 	class  Event
 	{
 		friend class EventDispatcher;
 
-	protected:
-		bool m_handled = false;
-
 	public:
-		virtual EventType GetType() const = 0;
-		virtual const char* GetName() const = 0;
-		virtual int GetCategoryFlags() const = 0;
+		virtual EventType getType() const = 0;
+		virtual const char* getName() const = 0;
+		virtual int getCategoryFlags() const = 0;
 
-		inline bool IsInCategory(EventCategory::Category category) const
+		inline bool isInCategory(EventCategory::Category category) const
 		{
-			return GetCategoryFlags() & ((int)category);
+			return getCategoryFlags() & ((int)category);
 		}
 
-		inline bool Handled() const { return m_handled; }
+		inline bool handled() const { return m_handled; }
+
+	protected:
+		bool m_handled = false;
 	};
 
 	class EventDispatcher
 	{
 		template<typename T>
 		using EventFun = std::function<bool(T&)>;
-	private:
-		Event& m_event;
 
 	public:
 		EventDispatcher(Event& event)
@@ -67,18 +65,21 @@ namespace daedalusCore { namespace event {
 		}
 
 		template<typename T>
-		bool Dispatch(EventFun<T> func) requires(std::is_base_of<Event, T>::value)
+		bool dispatch(EventFun<T> func) requires(std::is_base_of<Event, T>::value)
 		{
-			if (m_event.GetType() == T::GetStaticType())
+			if (m_event.getType() == T::getStaticType())
 			{
 				m_event.m_handled = func(*(T*)&m_event);
 				return true;
 			}
 			return false;
 		}
+
+	private:
+		Event& m_event;
 	};
 
 } }
 
-LOG_CREATE_FORMAT(daedalusCore::event::Event, "Event: {}", e, e.GetName())
+LOG_CREATE_FORMAT(daedalusCore::event::Event, "Event: {}", e, e.getName())
 #define DD_BIND_EVENT_FUN(fun) std::bind(&fun, this, std::placeholders::_1)

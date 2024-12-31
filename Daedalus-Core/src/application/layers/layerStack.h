@@ -4,24 +4,24 @@
 
 namespace daedalusCore { namespace application {
 
-	class  layerStack
+	class LayerStack
 	{
-	private:
-		std::vector<Layer*> m_layers;
-		unsigned int m_layerInsertIndex = 0;
-
 	public:
-		layerStack();
-		~layerStack();
+		LayerStack();
+		~LayerStack();
 
-		void PushLayer(Layer* layer);
-		void PopLayer(Layer* layer);
+		void pushLayer(Layer* layer);
+		void popLayer(Layer* layer);
 		
-		void PushOverlay(Layer* overlay);
-		void PopOverlay(Layer* overlay);
+		void pushOverlay(Layer* overlay);
+		void popOverlay(Layer* overlay);
 
 		std::vector<Layer*>::iterator begin() { return m_layers.begin(); }
 		std::vector<Layer*>::iterator end() { return m_layers.end(); }
+
+	private:
+		std::vector<Layer*> m_layers;
+		unsigned int m_layerInsertIndex = 0;
 	};
 
 } }

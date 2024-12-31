@@ -7,7 +7,7 @@
 
 namespace daedalusCore { namespace graphics { namespace buffers {
 
-	static GLenum Shader_Data_Type_To_Open_GL_Base_Type(dataTypes::BaseDataType baseDataType)
+	static GLenum shader_data_type_to_Open_GL_base_type(dataTypes::BaseDataType baseDataType)
 	{
 		switch (baseDataType)
 		{
@@ -20,9 +20,9 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 		return 0;
 	}
 
-	static GLenum Shader_Data_Type_To_Open_GL_Base_Type(dataTypes::DataType dataType)
+	static GLenum shader_data_type_to_Open_GL_base_type(dataTypes::DataType dataType)
 	{
-		return Shader_Data_Type_To_Open_GL_Base_Type(dataType.Type);
+		return shader_data_type_to_Open_GL_base_type(dataType.Type);
 	}
 
 } } }

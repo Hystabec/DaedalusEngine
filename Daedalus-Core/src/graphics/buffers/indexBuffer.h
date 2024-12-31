@@ -7,11 +7,11 @@ namespace daedalusCore {namespace graphics { namespace buffers {
 	public:
 		~IndexBuffer() {};
 
-		virtual void Bind() const = 0;
-		virtual void Unbind() const = 0;
-		virtual uint32_t Count() const = 0;
+		virtual void bind() const = 0;
+		virtual void unbind() const = 0;
+		virtual uint32_t count() const = 0;
 
-		static IndexBuffer* Create(uint32_t* indices, uint32_t size);
+		static IndexBuffer* create(uint32_t* indices, uint32_t size);
 	};
 
 } } }

@@ -18,12 +18,12 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 		glDeleteBuffers(1, &m_renderID);
 	}
 
-	void OpenGLIndexBuffer::Bind() const
+	void OpenGLIndexBuffer::bind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderID);
 	}
 
-	void OpenGLIndexBuffer::Unbind() const
+	void OpenGLIndexBuffer::unbind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}

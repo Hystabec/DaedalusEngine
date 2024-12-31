@@ -5,14 +5,14 @@ namespace daedalusCore { namespace graphics {
 
 	class RenderCommands
 	{
+	public:
+		inline static void setClearColour(const maths::vec4& colour) { s_rendererAPI->setClearColour(colour); }
+		inline static void clear() { s_rendererAPI->clear(); }
+
+		inline static void drawIndexed(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray) { s_rendererAPI->drawIndexedArray(vertexArray); }
+
 	private:
 		static RendererAPI* s_rendererAPI;
-
-	public:
-		inline static void SetClearColour(const maths::vec4& colour) { s_rendererAPI->SetClearColour(colour); }
-		inline static void Clear() { s_rendererAPI->Clear(); }
-
-		inline static void DrawIndexed(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray) { s_rendererAPI->DrawIndexedArray(vertexArray); }
 	};
 
 } }

@@ -16,15 +16,6 @@ namespace daedalusCore { namespace graphics {
 
 	class Renderable2D
 	{
-	protected:
-		maths::vec3 m_position;
-		maths::vec2 m_size;
-		unsigned int m_colour;
-		std::vector<maths::vec2> m_UV;
-		Texture* m_texture = nullptr;
-	protected:
-		Renderable2D() { setUVDefaults(); }
-
 	public:
 		Renderable2D(maths::vec3 position, maths::vec2 size, unsigned int colour) : m_position(position), m_size(size), m_colour(colour)
 		{
@@ -54,6 +45,9 @@ namespace daedalusCore { namespace graphics {
 		inline const std::vector<maths::vec2>& getUV() const { return m_UV; }
 		inline const GLuint getTextureID() const { return m_texture == nullptr ? 0 : m_texture->getID(); }
 
+	protected:
+		Renderable2D() { setUVDefaults(); }
+
 	private:
 		void setUVDefaults()
 		{
@@ -62,6 +56,13 @@ namespace daedalusCore { namespace graphics {
 			m_UV.push_back(maths::vec2(1, 1));
 			m_UV.push_back(maths::vec2(1, 0));
 		}
+
+	protected:
+		maths::vec3 m_position;
+		maths::vec2 m_size;
+		unsigned int m_colour;
+		std::vector<maths::vec2> m_UV;
+		Texture* m_texture = nullptr;
 	};
 
 } }

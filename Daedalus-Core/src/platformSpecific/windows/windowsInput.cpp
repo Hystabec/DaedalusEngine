@@ -6,7 +6,7 @@
 
 namespace daedalusCore { namespace application {
 
-	Input* Input::m_instance = new windowsInput();
+	Input* Input::s_instance = new windowsInput();
 
 	/*bool windowsInput::GetKeyBase(int keycode)
 	{
@@ -15,44 +15,44 @@ namespace daedalusCore { namespace application {
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}*/
 
-	bool windowsInput::GetKeyUpBase(int keycode)
+	bool windowsInput::getKeyUpBase(int keycode)
 	{
-		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
+		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 		auto state = glfwGetKey(window, keycode);
 		return state == GLFW_RELEASE;
 	}
 
-	bool windowsInput::GetKeyDownBase(int keycode)
+	bool windowsInput::getKeyDownBase(int keycode)
 	{
-		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
+		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 		auto state = glfwGetKey(window, keycode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool windowsInput::GetMouseButtonBase(int button)
+	bool windowsInput::getMouseButtonBase(int button)
 	{
-		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
+		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 		auto state = glfwGetMouseButton(window, button);
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> windowsInput::GetMousePositionBase()
+	std::pair<float, float> windowsInput::getMousePositionBase()
 	{
-		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
+		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
 		return { (float)x, (float)y };
 	}
 
-	float windowsInput::GetMouseXBase()
+	float windowsInput::getMouseXBase()
 	{
-		auto[x,y] = GetMousePositionBase();
+		auto[x,y] = getMousePositionBase();
 		return x;
 	}
 
-	float windowsInput::GetMouseYBase()
+	float windowsInput::getMouseYBase()
 	{
-		auto[x,y] = GetMousePositionBase();
+		auto[x,y] = getMousePositionBase();
 		return y;
 	}
 

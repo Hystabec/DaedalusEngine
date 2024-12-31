@@ -21,7 +21,7 @@ namespace daedalusCore { namespace application {
 	{
 	}
 
-	void ImGuiLayer::Attach()
+	void ImGuiLayer::attach()
 	{
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
@@ -46,38 +46,38 @@ namespace daedalusCore { namespace application {
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		GLFWwindow* wind = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
+		GLFWwindow* wind = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 
 		// Setup Platform/Renderer backends
 		ImGui_ImplGlfw_InitForOpenGL(wind, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
 	}
 
-	void ImGuiLayer::Detach()
+	void ImGuiLayer::detach()
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 	}
 
-	void ImGuiLayer::ImGuiRender()
+	void ImGuiLayer::imGuiRender()
 	{
 		static bool show = true;
 		ImGui::ShowDemoWindow(&show);
 	}
 
-	void ImGuiLayer::Begin()
+	void ImGuiLayer::begin()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 	}
 
-	void ImGuiLayer::End()
+	void ImGuiLayer::end()
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		Window* win = Application::Get().GetWindow();
-		io.DisplaySize = ImVec2((float)win->GetWidth(), (float)win->GetHeight());
+		Window* win = Application::get().getWindow();
+		io.DisplaySize = ImVec2((float)win->getWidth(), (float)win->getHeight());
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

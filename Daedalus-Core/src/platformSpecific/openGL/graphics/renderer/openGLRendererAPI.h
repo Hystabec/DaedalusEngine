@@ -6,10 +6,10 @@ namespace daedalusCore { namespace graphics {
 	class OpenGLRendererAPI : public RendererAPI
 	{
 	public:
-		void SetClearColour(const maths::vec4& colour) override;
-		void Clear() override;
+		void setClearColour(const maths::vec4& colour) override;
+		void clear() override;
 
-		void DrawIndexedArray(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray) override;
+		void drawIndexedArray(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray) override;
 	};
 
 } }

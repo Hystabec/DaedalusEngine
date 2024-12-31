@@ -5,19 +5,19 @@
 
 namespace daedalusCore { namespace graphics {
 
-	void OpenGLRendererAPI::SetClearColour(const maths::vec4& colour)
+	void OpenGLRendererAPI::setClearColour(const maths::vec4& colour)
 	{
 		glClearColor(colour.x, colour.y, colour.z, colour.w);
 	}
 
-	void OpenGLRendererAPI::Clear()
+	void OpenGLRendererAPI::clear()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void OpenGLRendererAPI::DrawIndexedArray(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray)
+	void OpenGLRendererAPI::drawIndexedArray(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray)
 	{
-		glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->Count(), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->count(), GL_UNSIGNED_INT, nullptr);
 	}
 
 } }

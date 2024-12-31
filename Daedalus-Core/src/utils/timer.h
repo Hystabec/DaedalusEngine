@@ -7,19 +7,6 @@ namespace daedalusCore { namespace utils {
 #ifdef USING_WINDOWS_TIMER
 	class  Timer
 	{
-	private:
-		LARGE_INTEGER m_start;
-		double m_frequency;
-
-	private:
-		float elapsed() const
-		{
-			LARGE_INTEGER current;
-			QueryPerformanceCounter(&current);
-			unsigned _int64 cycles = current.QuadPart - m_start.QuadPart;
-			return (float)(m_frequency * cycles);
-		}
-
 	public:
 		Timer()
 		{
@@ -49,13 +36,23 @@ namespace daedalusCore { namespace utils {
 		{
 			return (elapsed() * 1000.0f * 1000.0f);
 		}
+
+	private:
+		float elapsed() const
+		{
+			LARGE_INTEGER current;
+			QueryPerformanceCounter(&current);
+			unsigned _int64 cycles = current.QuadPart - m_start.QuadPart;
+			return (float)(m_frequency * cycles);
+		}
+
+	private:
+		LARGE_INTEGER m_start;
+		double m_frequency;
 	};
 #else
 	class  Timer
 	{
-	private:
-		std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
-
 	public:
 		Timer()
 		{
@@ -84,6 +81,9 @@ namespace daedalusCore { namespace utils {
 			using namespace std::chrono;
 			return (float)duration_cast<microseconds>(std::chrono::high_resolution_clock::now() - m_start).count();
 		}
+
+	private:
+		std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
 	};
 #endif
 

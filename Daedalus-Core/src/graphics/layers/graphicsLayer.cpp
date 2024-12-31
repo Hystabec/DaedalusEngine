@@ -7,14 +7,6 @@
 
 namespace daedalusCore { namespace graphics {
 
-	Layer::Layer(Renderer2D* renderer, Shader* shader, maths::mat4 projectionMatrix)
-		: m_renderer(renderer), m_shader(shader),  m_projectionMatrix(projectionMatrix)
-	{
-		m_shader->enable();
-		m_shader->setUniformMat4("pr_matrix", m_projectionMatrix);
-		m_shader->disable();
-	}
-
 	Layer::~Layer()
 	{
 		delete m_shader;
@@ -39,6 +31,14 @@ namespace daedalusCore { namespace graphics {
 
 		m_renderer->end();
 		m_renderer->render();
+		m_shader->disable();
+	}
+
+	Layer::Layer(Renderer2D* renderer, Shader* shader, maths::mat4 projectionMatrix)
+		: m_renderer(renderer), m_shader(shader), m_projectionMatrix(projectionMatrix)
+	{
+		m_shader->enable();
+		m_shader->setUniformMat4("pr_matrix", m_projectionMatrix);
 		m_shader->disable();
 	}
 

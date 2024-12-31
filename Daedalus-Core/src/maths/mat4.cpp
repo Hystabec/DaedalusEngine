@@ -211,7 +211,7 @@ namespace daedalusCore { namespace maths {
 		{
 			mat4 result(1.0f);
 			
-			float q = 1.0f / tan(degreesToRadians(fov / 2));
+			float q = 1.0f / tan(degrees_to_radians(fov / 2));
 			float a = q / aspectRatio;
 			
 			result.elements[0 + 0 * 4] = a;
@@ -238,7 +238,7 @@ namespace daedalusCore { namespace maths {
 		{
 			mat4 result(1.0f);
 
-			float asRads = degreesToRadians(angle);
+			float asRads = degrees_to_radians(angle);
 			float c = cos(asRads);
 			float s = sin(asRads);
 			float mc = 1.0f - c;

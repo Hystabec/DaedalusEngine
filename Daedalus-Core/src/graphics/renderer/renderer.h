@@ -6,12 +6,12 @@ namespace daedalusCore { namespace graphics {
 	class Renderer
 	{
 	public:
-		static void Begin();
-		static void End();
+		static void begin();
+		static void end();
 
-		static void Submit(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray);
+		static void submit(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray);
 
-		static inline RendererAPI::API GetCurrentAPI() { return RendererAPI::GetAPI(); }
+		static inline RendererAPI::API getCurrentAPI() { return RendererAPI::getAPI(); }
 	};
 
 } }

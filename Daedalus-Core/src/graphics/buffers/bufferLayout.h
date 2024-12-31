@@ -45,6 +45,7 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 		inline uint32_t getSize() const { return m_BaseType.Size; }
 		inline uint32_t getComponentCount() const { return m_BaseType.ComponentCount; }
 		inline dataTypes::BaseDataType getBaseDataType() const { return m_BaseType.Type; }
+
 	private:
 		dataTypes::DataType m_BaseType;
 		friend class BufferLayout;
@@ -52,21 +53,6 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 
 	class BufferLayout
 	{
-	private:
-		std::vector<BufferElement> m_elements;
-		uint32_t m_stride = 0;
-	private:
-		void calcOffsetStide()
-		{
-			uint32_t offset = 0;
-			m_stride = 0;
-			for (auto& element : m_elements)
-			{
-				element.Offset = offset;
-				offset += element.m_BaseType.Size;
-				m_stride += element.m_BaseType.Size;
-			}
-		}
 	public:
 		BufferLayout() 
 		{
@@ -85,6 +71,23 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 
 		inline const std::vector<BufferElement>& getElements() const { return m_elements; }
 		inline uint32_t getStide() const { return m_stride; }
+
+	private:
+		void calcOffsetStide()
+		{
+			uint32_t offset = 0;
+			m_stride = 0;
+			for (auto& element : m_elements)
+			{
+				element.Offset = offset;
+				offset += element.m_BaseType.Size;
+				m_stride += element.m_BaseType.Size;
+			}
+		}
+
+	private:
+		std::vector<BufferElement> m_elements;
+		uint32_t m_stride = 0;
 	};
 
 } } }

@@ -6,10 +6,6 @@ namespace daedalusCore { namespace graphics {
 
 	class Texture
 	{
-	private:
-		const char* m_fileName;
-		GLuint m_textureID;
-		GLsizei m_width, m_height;
 	public:
 		Texture(const char* fileName);
 		~Texture();
@@ -23,6 +19,11 @@ namespace daedalusCore { namespace graphics {
 
 	private:
 		GLuint load();
+
+	private:
+		const char* m_fileName;
+		GLuint m_textureID;
+		GLsizei m_width, m_height;
 	};
 
 } }

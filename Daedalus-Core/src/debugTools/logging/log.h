@@ -27,16 +27,124 @@ namespace daedalusCore { namespace debug {
 
 		enum class LogFlags
 		{
-			None = 0,
-			Log_to_ImGui = BIT(0)
+			None = 0
 		};
 
+	public:
+		static void init(LogFlags flags = LogFlags::None);
+
+#pragma region Trace
+
+		template<typename T>
+		static void trace(Caller caller, T&& message)
+		{
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, "{}", message);
+			if (!check)
+				baseTraceLog(caller, formatted);
+		}
+
+		template<typename...Args>
+		static void trace(Caller caller, const char* fmt, Args&&...args)
+		{
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, fmt, args...);
+			if (!check)
+				baseTraceLog(caller, formatted);
+		}
+
+#pragma endregion
+#pragma region Info
+
+		template<typename T>
+		static void info(const Caller& caller, T&& message)
+		{
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, "{}", message);
+			if (!check)
+				baseInfoLog(caller, formatted);
+		}
+
+		template<typename...Args>
+		static void info(const Caller& caller, const char* fmt, Args&&...args)
+		{
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, fmt, args...);
+			if (!check)
+				baseInfoLog(caller, formatted);
+		}
+
+#pragma endregion
+#pragma region Warn
+
+		template<typename T>
+		static void warn(const Caller& caller, T&& message)
+		{
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, "{}", message);
+			if (!check)
+				baseWarnLog(caller, formatted);
+		}
+
+		template<typename...Args>
+		static void warn(const Caller& caller, const char* fmt, Args&&...args)
+		{
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, fmt, args...);
+			if (!check)
+				baseWarnLog(caller, formatted);
+		}
+
+#pragma endregion
+#pragma region Error
+
+		template<typename T>
+		static void error(const Caller& caller, T&& message)
+		{
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, "{}", message);
+			if (!check)
+				baseErrorLog(caller, formatted);
+		}
+
+		template<typename...Args>
+		static void error(const Caller& caller, const char* fmt, Args&&...args)
+		{
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, fmt, args...);
+			if (!check)
+				baseErrorLog(caller, formatted);
+		}
+
+#pragma endregion
+#pragma region Critical
+
+		template<typename T>
+		static void critical(const Caller& caller, T&& message)
+		{
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, "{}", message);
+			if (!check)
+				baseCriticalLog(caller, formatted);
+		}
+
+		template<typename...Args>
+		static void critical(const Caller& caller, const char* fmt, Args&&...args)
+		{
+			bool check = false;
+			const std::string& formatted = strFormatter(&check, fmt, args...);
+			if (!check)
+				baseCriticalLog(caller, formatted);
+		}
+
+#pragma endregion
+
 	private:
-		static void BaseTraceLog(const Caller& caller, const std::string& message);
-		static void BaseInfoLog(const Caller& caller, const std::string& message);
-		static void BaseWarnLog(const Caller& caller, const std::string& message);
-		static void BaseErrorLog(const Caller& caller, const std::string& message);
-		static void BaseCriticalLog(const Caller& caller, const std::string& message);
+		static void baseTraceLog(const Caller& caller, const std::string& message);
+		static void baseInfoLog(const Caller& caller, const std::string& message);
+		static void baseWarnLog(const Caller& caller, const std::string& message);
+		static void baseErrorLog(const Caller& caller, const std::string& message);
+		static void baseCriticalLog(const Caller& caller, const std::string& message);
 		
 		template<typename...Args> 
 		static std::string strFormatter(bool* errorCheck, const char* fmt, Args&&...args)
@@ -47,120 +155,11 @@ namespace daedalusCore { namespace debug {
 			}
 			catch(const std::format_error& ex)
 			{
-				Error(Caller::Core, "Log message formatter error: {}", ex.what());
+				error(Caller::Core, "Log message formatter error: {}", ex.what());
 				(*errorCheck) = true;
 				return "";
 			}
 		}
-
-	public:
-		static void Init(LogFlags flags = LogFlags::None);
-
-#pragma region Trace
-
-		template<typename T> 
-		static void Trace(Caller caller, T&& message)
-		{
-			bool check = false;
-			const std::string& formatted = strFormatter(&check, "{}", message);
-			if(!check)
-				BaseTraceLog(caller, formatted);
-		}
-
-		template<typename...Args>
-		static void Trace(Caller caller, const char* fmt, Args&&...args)
-		{
-			bool check = false;
-			const std::string& formatted = strFormatter(&check, fmt, args...);
-			if (!check)
-				BaseTraceLog(caller, formatted);
-		}
-
-#pragma endregion
-#pragma region Info
-
-		template<typename T>
-		static void Info(const Caller& caller, T&& message)
-		{
-			bool check = false;
-			const std::string& formatted = strFormatter(&check, "{}", message);
-			if (!check)
-				BaseInfoLog(caller, formatted);
-		}
-
-		template<typename...Args>
-		static void Info(const Caller& caller, const char* fmt, Args&&...args)
-		{
-			bool check = false;
-			const std::string& formatted = strFormatter(&check, fmt, args...);
-			if (!check)
-				BaseInfoLog(caller, formatted);
-		}
-
-#pragma endregion
-#pragma region Warn
-
-		template<typename T>
-		static void Warn(const Caller& caller, T&& message)
-		{
-			bool check = false;
-			const std::string& formatted = strFormatter(&check, "{}", message);
-			if (!check)
-				BaseWarnLog(caller, formatted);
-		}
-
-		template<typename...Args>
-		static void Warn(const Caller& caller, const char* fmt, Args&&...args)
-		{
-			bool check = false;
-			const std::string& formatted = strFormatter(&check, fmt, args...);
-			if (!check)
-				BaseWarnLog(caller, formatted);
-		}
-
-#pragma endregion
-#pragma region Error
-
-		template<typename T>
-		static void Error(const Caller& caller, T&& message)
-		{
-			bool check = false;
-			const std::string& formatted = strFormatter(&check, "{}", message);
-			if (!check)
-				BaseErrorLog(caller, formatted);
-		}
-
-		template<typename...Args>
-		static void Error(const Caller& caller, const char* fmt, Args&&...args)
-		{
-			bool check = false;
-			const std::string& formatted = strFormatter(&check, fmt, args...);
-			if (!check)
-				BaseErrorLog(caller, formatted);
-		}
-
-#pragma endregion
-#pragma region Critical
-
-		template<typename T>
-		static void Critical(const Caller& caller, T&& message)
-		{
-			bool check = false;
-			const std::string& formatted = strFormatter(&check, "{}", message);
-			if (!check)
-				BaseCriticalLog(caller, formatted);
-		}
-
-		template<typename...Args>
-		static void Critical(const Caller& caller, const char* fmt, Args&&...args)
-		{
-			bool check = false;
-			const std::string& formatted = strFormatter(&check, fmt, args...);
-			if (!check)
-				BaseCriticalLog(caller, formatted);
-		}
-
-#pragma endregion
 
 	};
 
@@ -170,19 +169,19 @@ namespace daedalusCore { namespace debug {
 
 //core macros
 
-#define DD_CORE_LOG_TRACE(...)       daedalusCore::debug::Log::Trace(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
-#define DD_CORE_LOG_INFO(...)        daedalusCore::debug::Log::Info(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
-#define DD_CORE_LOG_WARN(...)        daedalusCore::debug::Log::Warn(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
-#define DD_CORE_LOG_ERROR(...)       daedalusCore::debug::Log::Error(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
-#define DD_CORE_LOG_CRITICAL(...)    daedalusCore::debug::Log::Critical(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define DD_CORE_LOG_TRACE(...)       daedalusCore::debug::Log::trace(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define DD_CORE_LOG_INFO(...)        daedalusCore::debug::Log::info(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define DD_CORE_LOG_WARN(...)        daedalusCore::debug::Log::warn(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define DD_CORE_LOG_ERROR(...)       daedalusCore::debug::Log::error(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
+#define DD_CORE_LOG_CRITICAL(...)    daedalusCore::debug::Log::critical(daedalusCore::debug::Log::Caller::Core, __VA_ARGS__)
 
 //client macros
 
-#define DD_LOG_TRACE(...)       daedalusCore::debug::Log::Trace(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
-#define DD_LOG_INFO(...)        daedalusCore::debug::Log::Info(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
-#define DD_LOG_WARN(...)        daedalusCore::debug::Log::Warn(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
-#define DD_LOG_ERROR(...)       daedalusCore::debug::Log::Error(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
-#define DD_LOG_CRITICAL(...)    daedalusCore::debug::Log::Critical(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define DD_LOG_TRACE(...)       daedalusCore::debug::Log::trace(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define DD_LOG_INFO(...)        daedalusCore::debug::Log::info(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define DD_LOG_WARN(...)        daedalusCore::debug::Log::warn(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define DD_LOG_ERROR(...)       daedalusCore::debug::Log::error(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
+#define DD_LOG_CRITICAL(...)    daedalusCore::debug::Log::critical(daedalusCore::debug::Log::Caller::Client, __VA_ARGS__)
 
 #else
 

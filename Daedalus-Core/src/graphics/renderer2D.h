@@ -8,15 +8,6 @@ namespace daedalusCore { namespace graphics {
 
 	class Renderer2D
 	{
-	protected:
-		std::vector<maths::mat4> m_transformationStack;
-		const maths::mat4* m_transformationBack;
-	protected:
-		Renderer2D()
-		{
-			m_transformationStack.push_back(maths::mat4::identity());
-			m_transformationBack = &m_transformationStack.back();
-		}
 	public:
 		void push(const maths::mat4& matrix, bool override = false)
 		{
@@ -40,6 +31,17 @@ namespace daedalusCore { namespace graphics {
 		virtual void end()	 {}
 		virtual void submit(const Renderable2D* renderable) = 0;
 		virtual void render() = 0;
+
+	protected:
+		Renderer2D()
+		{
+			m_transformationStack.push_back(maths::mat4::identity());
+			m_transformationBack = &m_transformationStack.back();
+		}
+
+	protected:
+		std::vector<maths::mat4> m_transformationStack;
+		const maths::mat4* m_transformationBack;
 	};
 
 } }

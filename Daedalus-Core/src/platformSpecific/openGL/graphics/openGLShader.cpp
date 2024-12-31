@@ -6,64 +6,6 @@
 
 namespace daedalusCore { namespace graphics {
 
-	GLint OpenGLShader::getUniformLocation(const GLchar* name)
-	{
-		return glGetUniformLocation(m_shaderID, name);
-	}
-
-	GLuint OpenGLShader::load(const GLchar* vert, const GLchar* frag)
-	{
-		GLuint program = glCreateProgram();
-
-		GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
-		GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
-
-
-		glShaderSource(vertex, 1, &vert, NULL);
-		glCompileShader(vertex);
-
-		GLint vertexCompileResult;
-		glGetShaderiv(vertex, GL_COMPILE_STATUS, &vertexCompileResult);
-		if (vertexCompileResult == GL_FALSE)
-		{
-			GLint length;
-			glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &length);
-			std::vector<char> error(length);
-			glGetShaderInfoLog(vertex, length, &length, &error[0]);
-
-			std::cout << "Failed to compile vertex shader" << std::endl << &error[0] << std::endl;
-			glDeleteShader(vertex);
-			return 0;
-		}
-
-		glShaderSource(fragment, 1, &frag, NULL);
-		glCompileShader(fragment);
-
-		GLint fragmentCompileResult;
-		glGetShaderiv(fragment, GL_COMPILE_STATUS, &fragmentCompileResult);
-		if (fragmentCompileResult == GL_FALSE)
-		{
-			GLint length;
-			glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &length);
-			std::vector<char> error(length);
-			glGetShaderInfoLog(fragment, length, &length, &error[0]);
-			std::cout << "Failed to compile fragment shader" << std::endl << &error[0] << std::endl;
-			glDeleteShader(fragment);
-			return 0;
-		}
-
-		glAttachShader(program, vertex);
-		glAttachShader(program, fragment);
-
-		glLinkProgram(program);
-		glValidateProgram(program);
-
-		glDeleteShader(vertex);
-		glDeleteShader(fragment);
-
-		return program;
-	}
-
 	OpenGLShader::OpenGLShader(const GLchar* vertex, const GLchar* fragment)
 	{
 		m_shaderID = load(vertex, fragment);
@@ -122,6 +64,64 @@ namespace daedalusCore { namespace graphics {
 	void OpenGLShader::disable() const
 	{
 		glUseProgram(0);
+	}
+
+	GLint OpenGLShader::getUniformLocation(const GLchar* name)
+	{
+		return glGetUniformLocation(m_shaderID, name);
+	}
+
+	GLuint OpenGLShader::load(const GLchar* vert, const GLchar* frag)
+	{
+		GLuint program = glCreateProgram();
+
+		GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
+		GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
+
+
+		glShaderSource(vertex, 1, &vert, NULL);
+		glCompileShader(vertex);
+
+		GLint vertexCompileResult;
+		glGetShaderiv(vertex, GL_COMPILE_STATUS, &vertexCompileResult);
+		if (vertexCompileResult == GL_FALSE)
+		{
+			GLint length;
+			glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &length);
+			std::vector<char> error(length);
+			glGetShaderInfoLog(vertex, length, &length, &error[0]);
+
+			std::cout << "Failed to compile vertex shader" << std::endl << &error[0] << std::endl;
+			glDeleteShader(vertex);
+			return 0;
+		}
+
+		glShaderSource(fragment, 1, &frag, NULL);
+		glCompileShader(fragment);
+
+		GLint fragmentCompileResult;
+		glGetShaderiv(fragment, GL_COMPILE_STATUS, &fragmentCompileResult);
+		if (fragmentCompileResult == GL_FALSE)
+		{
+			GLint length;
+			glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &length);
+			std::vector<char> error(length);
+			glGetShaderInfoLog(fragment, length, &length, &error[0]);
+			std::cout << "Failed to compile fragment shader" << std::endl << &error[0] << std::endl;
+			glDeleteShader(fragment);
+			return 0;
+		}
+
+		glAttachShader(program, vertex);
+		glAttachShader(program, fragment);
+
+		glLinkProgram(program);
+		glValidateProgram(program);
+
+		glDeleteShader(vertex);
+		glDeleteShader(fragment);
+
+		return program;
 	}
 
 } }

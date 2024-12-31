@@ -8,13 +8,13 @@ namespace daedalusCore { namespace application {
 	{
 	protected:
 		//bool GetKeyBase(int keycode) override;
-		bool GetKeyUpBase(int keycode) override;
-		bool GetKeyDownBase(int keycode) override;
+		bool getKeyUpBase(int keycode) override;
+		bool getKeyDownBase(int keycode) override;
 
-		bool GetMouseButtonBase(int button) override;
-		std::pair<float, float> GetMousePositionBase() override;
-		float GetMouseXBase() override;
-		float GetMouseYBase() override;
+		bool getMouseButtonBase(int button) override;
+		std::pair<float, float> getMousePositionBase() override;
+		float getMouseXBase() override;
+		float getMouseYBase() override;
 	};
 
 } }

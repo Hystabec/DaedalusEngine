@@ -21,7 +21,7 @@ namespace daedalusCore { namespace graphics {
 			fragSrc = utils::read_file(frag);
 		}
 
-		switch (Renderer::GetCurrentAPI())
+		switch (Renderer::getCurrentAPI())
 		{
 		case RendererAPI::API::None:
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;

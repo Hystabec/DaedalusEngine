@@ -22,14 +22,6 @@ namespace daedalusCore { namespace graphics {
 
 	class BatchRenderer2D : public Renderer2D
 	{
-	private:
-		GLuint m_VAO;
-		GLuint m_BO;
-		buffers::IndexBuffer* m_IBO;
-		GLsizei m_indexCount;
-		VertexData* m_Buffer;
-
-		std::vector<GLuint> m_textureSlots;
 	public:
 		BatchRenderer2D();
 		~BatchRenderer2D();
@@ -38,6 +30,15 @@ namespace daedalusCore { namespace graphics {
 		void end() override;
 		void submit(const Renderable2D* renderable) override;
 		void render() override;
+
+	private:
+		GLuint m_VAO;
+		GLuint m_BO;
+		buffers::IndexBuffer* m_IBO;
+		GLsizei m_indexCount;
+		VertexData* m_Buffer;
+
+		std::vector<GLuint> m_textureSlots;
 	};
 
 } }

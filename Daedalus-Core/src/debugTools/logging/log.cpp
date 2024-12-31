@@ -9,76 +9,76 @@
 
 namespace daedalusCore { namespace debug {
 
-	static std::shared_ptr<spdlog::logger> m_coreLogger;
-	static std::shared_ptr<spdlog::logger> m_clientLogger;
+	static std::shared_ptr<spdlog::logger> s_coreLogger;
+	static std::shared_ptr<spdlog::logger> s_clientLogger;
 
-	void Log::Init(LogFlags flags)
+	void Log::init(LogFlags flags)
 	{
 		spdlog::set_pattern("%^[%T][%n][%l] %v%$");
-		m_coreLogger = spdlog::stdout_color_mt("Core");
-		m_coreLogger->set_level(spdlog::level::trace);
+		s_coreLogger = spdlog::stdout_color_mt("Core");
+		s_coreLogger->set_level(spdlog::level::trace);
 
-		m_clientLogger = spdlog::stderr_color_mt("Client");
-		m_clientLogger->set_level(spdlog::level::trace);
+		s_clientLogger = spdlog::stderr_color_mt("Client");
+		s_clientLogger->set_level(spdlog::level::trace);
 	}
 
-	void Log::BaseTraceLog(const Caller& caller, const std::string& message)
+	void Log::baseTraceLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
 		{
-			m_coreLogger->trace(message);
+			s_coreLogger->trace(message);
 		}
 		else if (caller == Caller::Client)
 		{
-			m_clientLogger->trace(message);
+			s_clientLogger->trace(message);
 		}
 	}
 
-	void Log::BaseInfoLog(const Caller& caller, const std::string& message)
+	void Log::baseInfoLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
 		{
-			m_coreLogger->info(message);
+			s_coreLogger->info(message);
 		}
 		else if (caller == Caller::Client)
 		{
-			m_clientLogger->info(message);
+			s_clientLogger->info(message);
 		}
 	}
 
-	void Log::BaseWarnLog(const Caller& caller, const std::string& message)
+	void Log::baseWarnLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
 		{
-			m_coreLogger->warn(message);
+			s_coreLogger->warn(message);
 		}
 		else if (caller == Caller::Client)
 		{
-			m_clientLogger->warn(message);
+			s_clientLogger->warn(message);
 		}
 	}
 
-	void Log::BaseErrorLog(const Caller& caller, const std::string& message)
+	void Log::baseErrorLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
 		{
-			m_coreLogger->error(message);
+			s_coreLogger->error(message);
 		}
 		else if (caller == Caller::Client)
 		{
-			m_clientLogger->error(message);
+			s_clientLogger->error(message);
 		}
 	}
 
-	void Log::BaseCriticalLog(const Caller& caller, const std::string& message)
+	void Log::baseCriticalLog(const Caller& caller, const std::string& message)
 	{
 		if (caller == Caller::Core)
 		{
-			m_coreLogger->critical(message);
+			s_coreLogger->critical(message);
 		}
 		else if (caller == Caller::Client)
 		{
-			m_clientLogger->critical(message);
+			s_clientLogger->critical(message);
 		}
 	}
 

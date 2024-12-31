@@ -3,18 +3,18 @@
 
 namespace daedalusCore { namespace graphics {
 
-	void Renderer::Begin()
+	void Renderer::begin()
 	{
 	}
 
-	void Renderer::End()
+	void Renderer::end()
 	{
 	}
 
-	void Renderer::Submit(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray)
+	void Renderer::submit(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray)
 	{
-		vertexArray->Bind();
-		RenderCommands::DrawIndexed(vertexArray);
+		vertexArray->bind();
+		RenderCommands::drawIndexed(vertexArray);
 	}
 
 } }

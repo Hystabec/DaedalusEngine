@@ -10,7 +10,7 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 
     VertexArray* VertexArray::Create()
     {
-		switch (Renderer::GetCurrentAPI())
+		switch (Renderer::getCurrentAPI())
 		{
 		case RendererAPI::API::None:
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;

@@ -42,7 +42,7 @@ namespace daedalusCore { namespace graphics {
 			offset += 4;
 		}
 
-		m_IBO = buffers::IndexBuffer::Create(indices, RENDERER_INDICES_SIZE);
+		m_IBO = buffers::IndexBuffer::create(indices, RENDERER_INDICES_SIZE);
 		glBindVertexArray(0);
 	}
 
@@ -136,11 +136,11 @@ namespace daedalusCore { namespace graphics {
 		}
 
 		glBindVertexArray(m_VAO);
-		m_IBO->Bind();
+		m_IBO->bind();
 
 		glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_INT, NULL);
 
-		m_IBO->Unbind();
+		m_IBO->unbind();
 		glBindVertexArray(0);
 
 		m_indexCount = 0;

@@ -14,12 +14,12 @@ namespace daedalusCore { namespace graphics {
 			OpenGL = 1
 		};
 	public:
-		virtual void SetClearColour(const maths::vec4& colour) = 0;
-		virtual void Clear() = 0;
+		virtual void setClearColour(const maths::vec4& colour) = 0;
+		virtual void clear() = 0;
 
-		virtual void DrawIndexedArray(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray) = 0;
+		virtual void drawIndexedArray(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray) = 0;
 
-		inline static API GetAPI() { return s_API; }
+		inline static API getAPI() { return s_API; }
 	private:
 		static API s_API;
 	};

@@ -7,13 +7,13 @@ namespace daedalusCore { namespace graphics {
 
 	class OpenGlContext : public RenderingContext
 	{
-	private:
-		GLFWwindow* m_windowHandle;
-
 	public:
 		OpenGlContext(GLFWwindow* windowHandle);
 
 		void swapBuffers() override;
+
+	private:
+		GLFWwindow* m_windowHandle;
 	};
 
 } }

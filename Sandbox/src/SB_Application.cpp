@@ -28,7 +28,7 @@ public:
 			0.0f, 0.5f, 0.0f, 0.4f, 0.7f, 0.0f, 1.0f
 		};
 
-		std::shared_ptr<graphics::buffers::VertexBuffer> verBuff(graphics::buffers::VertexBuffer::Create(vertcies, sizeof(vertcies)));
+		std::shared_ptr<graphics::buffers::VertexBuffer> verBuff(graphics::buffers::VertexBuffer::create(vertcies, sizeof(vertcies)));
 
 		graphics::buffers::BufferLayout layout =
 		{
@@ -36,12 +36,12 @@ public:
 			{ DD_BUFFERS_VEC4, "a_colour" }
 		};
 
-		verBuff->SetLayout(layout);
-		m_vertexArray->AddVertexBuffer(verBuff);
+		verBuff->setLayout(layout);
+		m_vertexArray->addVertexBuffer(verBuff);
 
 		uint32_t indices[3] = { 0, 1, 2 };
-		std::shared_ptr<graphics::buffers::IndexBuffer> indexBuff(graphics::buffers::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		m_vertexArray->SetIndexBuffer(indexBuff);
+		std::shared_ptr<graphics::buffers::IndexBuffer> indexBuff(graphics::buffers::IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t)));
+		m_vertexArray->setIndexBuffer(indexBuff);
 
 		std::string vertexSrc = R"(
 			#version 330 core
@@ -75,14 +75,14 @@ public:
 		m_shader.reset(graphics::Shader::create(vertexSrc.c_str(), fragSrc.c_str(), false));
 	}
 
-	void Update() override
+	void update() override
 	{
-		daedalusCore::graphics::Renderer::Begin();
+		daedalusCore::graphics::Renderer::begin();
 
 		m_shader->enable();
-		daedalusCore::graphics::Renderer::Submit(m_vertexArray);
+		daedalusCore::graphics::Renderer::submit(m_vertexArray);
 
-		daedalusCore::graphics::Renderer::End();
+		daedalusCore::graphics::Renderer::end();
 
 		frames++;
 
@@ -94,12 +94,12 @@ public:
 		}
 	}
 
-	void ImGuiRender()
+	void imGuiRender()
 	{
 		
 	}
 
-	void OnEvent(daedalusCore::event::Event& e) override
+	void onEvent(daedalusCore::event::Event& e) override
 	{
 
 	}
@@ -111,7 +111,7 @@ public:
 	SandBox()
 		: Application("SandBox", 960, 540, true)
 	{
-		this->PushLayer(new TestLayer());
+		this->pushLayer(new TestLayer());
 	}
 
 	~SandBox()
@@ -119,7 +119,7 @@ public:
 	}
 };
 
-daedalusCore::Application* daedalusCore::CreateApplication()
+daedalusCore::Application* daedalusCore::createApplication()
 {
 	return new SandBox();
 }

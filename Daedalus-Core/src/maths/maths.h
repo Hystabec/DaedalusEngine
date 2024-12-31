@@ -10,7 +10,7 @@
 
 namespace daedalusCore { namespace maths {
 
-	inline float degreesToRadians(float degrees) 
+	inline float degrees_to_radians(float degrees)
 	{
 		return (float)(degrees * ((float)M_PI / 180.0f));
 	}

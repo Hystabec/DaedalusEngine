@@ -3,23 +3,23 @@
 
 namespace daedalusCore { namespace application {
 
-	layerStack::layerStack()
+	LayerStack::LayerStack()
 	{
 	}
 
-	layerStack::~layerStack()
+	LayerStack::~LayerStack()
 	{
 		for (Layer* layer : m_layers)
 			delete layer;
 	}
 
-	void layerStack::PushLayer(Layer* layer)
+	void LayerStack::pushLayer(Layer* layer)
 	{
 		m_layers.emplace(m_layers.begin() + m_layerInsertIndex, layer);
 		m_layerInsertIndex++;
 	}
 
-	void layerStack::PopLayer(Layer* layer)
+	void LayerStack::popLayer(Layer* layer)
 	{
 		auto it = std::find(m_layers.begin(), m_layers.end(), layer);
 		if (it != m_layers.end())
@@ -29,12 +29,12 @@ namespace daedalusCore { namespace application {
 		}
 	}
 
-	void layerStack::PushOverlay(Layer* overlay)
+	void LayerStack::pushOverlay(Layer* overlay)
 	{
 		m_layers.emplace_back(overlay);
 	}
 
-	void layerStack::PopOverlay(Layer* overlay)
+	void LayerStack::popOverlay(Layer* overlay)
 	{
 		auto it = std::find(m_layers.begin(), m_layers.end(), overlay);
 		if (it != m_layers.end())

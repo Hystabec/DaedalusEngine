@@ -4,30 +4,30 @@
 
 namespace daedalusCore { namespace application {
 
-	class  Input
+	class Input
 	{
-	private:
-		static Input* m_instance;
+	public:
+		//inline static bool GetKey(int keycode) { return m_instance->GetKeyBase(keycode); }
+		static bool getKeyUp(int keycode) { return s_instance->getKeyUpBase(keycode); }
+		static bool getKeyDown(int keycode) { return s_instance->getKeyDownBase(keycode); }
+
+		inline static bool getMouseButton(int button) { return s_instance->getMouseButtonBase(button); }
+		inline static std::pair<float, float> getMousePosition() { return s_instance->getMousePositionBase(); }
+		inline static float getMouseX() { return s_instance->getMouseXBase(); }
+		inline static float getMouseY() { return s_instance->getMouseYBase(); }
 
 	protected:
 		//virtual bool GetKeyBase(int keycode) = 0;
-		virtual bool GetKeyUpBase(int keycode) = 0;
-		virtual bool GetKeyDownBase(int keycode) = 0;
+		virtual bool getKeyUpBase(int keycode) = 0;
+		virtual bool getKeyDownBase(int keycode) = 0;
 
-		virtual bool GetMouseButtonBase(int button) = 0;
-		virtual std::pair<float, float> GetMousePositionBase() = 0;
-		virtual float GetMouseXBase() = 0;
-		virtual float GetMouseYBase() = 0;
+		virtual bool getMouseButtonBase(int button) = 0;
+		virtual std::pair<float, float> getMousePositionBase() = 0;
+		virtual float getMouseXBase() = 0;
+		virtual float getMouseYBase() = 0;
 
-	public:
-		//inline static bool GetKey(int keycode) { return m_instance->GetKeyBase(keycode); }
-		static bool GetKeyUp(int keycode) { return m_instance->GetKeyUpBase(keycode); }
-		static bool GetKeyDown(int keycode) { return m_instance->GetKeyDownBase(keycode); }
-
-		inline static bool GetMouseButton(int button) { return m_instance->GetMouseButtonBase(button); }
-		inline static std::pair<float,float> GetMousePosition() { return m_instance->GetMousePositionBase(); }
-		inline static float GetMouseX() { return m_instance->GetMouseXBase(); }
-		inline static float GetMouseY() { return m_instance->GetMouseYBase(); }
+	private:
+		static Input* s_instance;
 	};
 
 } }

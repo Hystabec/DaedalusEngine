@@ -11,35 +11,36 @@ namespace daedalusCore {
 
 	class  Application
 	{
-	private:
-		static Application* m_instance;
+	public:
+		virtual ~Application();
+		inline static Application& get() { return *s_instance; }
 
-		std::unique_ptr<application::Window> m_window;
-		application::ImGuiLayer* m_ImGuiLayer;
-		bool m_running = true;
-		application::layerStack m_layerStack;
-	private:
-		bool OnWindowClose(event::WindowClosedEvent& e);
+		void onEvent(event::Event& e);
+
+		void init();
+		int run();
+
+		void pushLayer(application::Layer* layer);
+		void pushOverlay(application::Layer* layer);
+
+		inline application::Window* getWindow() { return m_window.get(); }
 
 	protected:
 		Application(std::string title = "Daedalus Window", unsigned int width = 960, unsigned int height = 540, bool vsync = false);
 
-	public:
-		virtual ~Application();
-		inline static Application& Get() { return *m_instance; }
+	private:
+		bool onWindowClose(event::WindowClosedEvent& e);
 
-		void OnEvent(event::Event& e);
+	private:
+		static Application* s_instance;
 
-		void Init();
-		int Run();
-
-		void PushLayer(application::Layer* layer);
-		void PushOverlay(application::Layer* layer);
-
-		inline application::Window* GetWindow() { return m_window.get(); }
+		std::unique_ptr<application::Window> m_window;
+		application::ImGuiLayer* m_ImGuiLayer;
+		bool m_running = true;
+		application::LayerStack m_layerStack;
 	};
 
 	//To be defined in client
-	Application* CreateApplication();
+	Application* createApplication();
 
 }

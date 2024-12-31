@@ -8,9 +8,9 @@
 
 namespace daedalusCore { namespace graphics { namespace buffers {
 
-	VertexBuffer* buffers::VertexBuffer::Create(float* verticies, uint32_t size)
+	VertexBuffer* buffers::VertexBuffer::create(float* verticies, uint32_t size)
 	{
-		switch (Renderer::GetCurrentAPI())
+		switch (Renderer::getCurrentAPI())
 		{
 		case RendererAPI::API::None:
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;

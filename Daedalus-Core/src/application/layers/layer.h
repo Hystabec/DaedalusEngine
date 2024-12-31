@@ -4,17 +4,17 @@
 
 namespace daedalusCore { namespace application {
 
-	class  Layer
+	class Layer
 	{
 	public:
 		Layer();
 		virtual ~Layer();
 
-		virtual void Attach() {}
-		virtual void Detach() {}
-		virtual void Update() {}
-		virtual void ImGuiRender() {}
-		virtual void OnEvent(event::Event& event) {}
+		virtual void attach() {}
+		virtual void detach() {}
+		virtual void update() {}
+		virtual void imGuiRender() {}
+		virtual void onEvent(event::Event& event) {}
 	};
 
 } }
