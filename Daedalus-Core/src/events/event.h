@@ -75,6 +75,17 @@ namespace daedalusCore { namespace event {
 			return false;
 		}
 
+		template<typename T>
+		bool dispatchLambda(EventFun<T> func) requires(std::is_base_of<Event, T>::value)
+		{
+			if (m_event.getType() == T::getStaticType())
+			{
+				m_event.m_handled = func(*(T*)&m_event);
+				return true;
+			}
+			return false;
+		}
+
 	private:
 		Event& m_event;
 	};

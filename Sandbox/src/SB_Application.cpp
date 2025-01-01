@@ -87,6 +87,15 @@ public:
 
 	void update() override
 	{
+		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_W))
+			m_othoCam.setPosition(m_othoCam.getPosition() + daedalusCore::maths::vec3(0, 0.1f, 0));
+		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_D))
+			m_othoCam.setPosition(m_othoCam.getPosition() + daedalusCore::maths::vec3(0.1f, 0, 0));
+		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_S))
+			m_othoCam.setPosition(m_othoCam.getPosition() + daedalusCore::maths::vec3(0, -0.1f, 0));
+		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_A))
+			m_othoCam.setPosition(m_othoCam.getPosition() + daedalusCore::maths::vec3(-0.1f, 0, 0));
+
 		daedalusCore::graphics::Renderer::begin(m_othoCam);
 
 		daedalusCore::graphics::Renderer::submit(m_squareVertexArray, m_shader);
