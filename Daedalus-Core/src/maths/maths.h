@@ -15,4 +15,9 @@ namespace daedalusCore { namespace maths {
 		return (float)(degrees * (float)M_PI / 180.0f);
 	}
 
+	inline float radians_to_degrees(float rads)
+	{
+		return (float)(rads * 180.0f / (float)M_PI);
+	}
+
 } }

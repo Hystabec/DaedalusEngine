@@ -90,7 +90,7 @@ namespace daedalusCore { namespace maths {
 		mat4& mat4::invert()
 		{
 			float temp[16];
-			memset(temp, 1.0f, sizeof(temp));
+			memset(temp, 1, sizeof(temp));
 
 			temp[0] = elements[5] * elements[10] * elements[15] -
 				elements[5] * elements[11] * elements[14] -

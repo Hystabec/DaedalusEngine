@@ -62,8 +62,6 @@ namespace daedalusCore { namespace application {
 
 	void ImGuiLayer::imGuiRender()
 	{
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
 	}
 
 	void ImGuiLayer::begin()

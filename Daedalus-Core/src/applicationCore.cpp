@@ -37,9 +37,6 @@ namespace daedalusCore {
 	{
 		while (m_running)
 		{
-			graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
-			graphics::RenderCommands::clear();
-
 			for (application::Layer* layer : m_layerStack)
 				layer->update();
 

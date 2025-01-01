@@ -1,12 +1,6 @@
 #include <Daedalus.h>
 #include "imgui.h"
 
-#include "graphics/shader.h"
-#include "graphics/buffers/indexBuffer.h"
-#include "graphics/buffers/vertexBuffer.h"
-#include "graphics/renderer/renderer.h"
-#include "graphics/camera/orthographicCamera.h"
-
 class TestLayer : public daedalusCore::application::Layer
 {
 public:
@@ -87,6 +81,9 @@ public:
 
 	void update() override
 	{
+		daedalusCore::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
+		daedalusCore::graphics::RenderCommands::clear();
+
 		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_W))
 			m_othoCam.setPosition(m_othoCam.getPosition() + daedalusCore::maths::vec3(0, 0.1f, 0));
 		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_D))
@@ -115,7 +112,17 @@ public:
 
 	void imGuiRender()
 	{
+		ImGui::Begin("Camera Control");
+		daedalusCore::maths::vec3 camPos = m_othoCam.getPosition();
+		float pos[3] = { camPos.x, camPos.y, camPos.z };
+		if (ImGui::InputFloat3("Position", (float*)pos, "%.1f"))
+			m_othoCam.setPosition({ pos[0], pos[1], pos[2] });
+
+		float zRot = daedalusCore::maths::degrees_to_radians(m_othoCam.getRotation());
+		if (ImGui::SliderAngle("Z Rotation", &zRot))
+			m_othoCam.setRotation(daedalusCore::maths::radians_to_degrees(zRot));
 		
+		ImGui::End();
 	}
 
 	void onEvent(daedalusCore::event::Event& e) override

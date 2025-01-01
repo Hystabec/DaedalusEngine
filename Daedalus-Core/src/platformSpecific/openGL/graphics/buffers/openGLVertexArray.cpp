@@ -39,7 +39,12 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 		for (const auto& element : layout.getElements())
 		{
 			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index, element.getComponentCount(), shader_data_type_to_Open_GL_base_type(element.getBaseDataType()), element.Normalized ? GL_TRUE : GL_FALSE, layout.getStide(), (const void*)element.Offset);
+			glVertexAttribPointer(index,
+				element.getComponentCount(),
+				shader_data_type_to_Open_GL_base_type(element.getBaseDataType()),
+				element.Normalized ? GL_TRUE : GL_FALSE,
+				layout.getStide(),
+				((void*)element.Offset));
 			index++;
 		}
 		m_VertexBuffers.push_back(vertexBuffer);
