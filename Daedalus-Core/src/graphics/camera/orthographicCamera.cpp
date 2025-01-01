@@ -11,9 +11,7 @@ namespace daedalusCore { namespace graphics {
 
 	void OrthographicCamera::recalcViewMatrix()
 	{
-		maths::mat4 transform = maths::mat4::translate(m_position) * maths::mat4::rotate(m_zRotation, maths::vec3(0, 0, 1));
-		m_viewMatrix = maths::mat4::invert(transform);
-
+		m_viewMatrix = maths::mat4::invert(maths::mat4::translate(m_position) * maths::mat4::rotate(m_zRotation, maths::vec3(0, 0, 1)));
 		m_ProjectionviewMatrix = m_projectionMatrix * m_viewMatrix;
 	}
 

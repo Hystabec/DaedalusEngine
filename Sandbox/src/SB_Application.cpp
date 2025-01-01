@@ -83,7 +83,6 @@ public:
 		)";
 
 		m_shader.reset(graphics::Shader::create(vertexSrc.c_str(), fragSrc.c_str(), false));
-		m_othoCam.setRotation(45);
 	}
 
 	void update() override

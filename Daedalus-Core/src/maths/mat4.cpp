@@ -28,16 +28,16 @@ namespace daedalusCore { namespace maths {
 		mat4& mat4::multiply(const mat4& other)
 		{
 			float data[16];
-			for (int y = 0; y < 4; y++)
+			for (int col = 0; col < 4; col++)
 			{
-				for (int x = 0; x < 4; x++)
+				for (int row = 0; row < 4; row++)
 				{
 					float sum = 0.0f;
 					for (int elm = 0; elm < 4; elm++)
 					{
-						sum += elements[x + elm * 4] * other.elements[elm + y * 4];
+						sum += elements[row + elm * 4] * other.elements[elm + col * 4];
 					}
-					data[x + y * 4] = sum;
+					data[row + col * 4] = sum;
 				}
 			}
 
@@ -91,6 +91,27 @@ namespace daedalusCore { namespace maths {
 		{
 			float temp[16];
 			memset(temp, 1.0f, sizeof(temp));
+
+			temp[0] = elements[5] * elements[10] * elements[15] -
+				elements[5] * elements[11] * elements[14] -
+				elements[9] * elements[6] * elements[15] +
+				elements[9] * elements[7] * elements[14] +
+				elements[13] * elements[6] * elements[11] -
+				elements[13] * elements[7] * elements[10];
+
+			temp[4] = -elements[4] * elements[10] * elements[15] +
+				elements[4] * elements[11] * elements[14] +
+				elements[8] * elements[6] * elements[15] -
+				elements[8] * elements[7] * elements[14] -
+				elements[12] * elements[6] * elements[11] +
+				elements[12] * elements[7] * elements[10];
+
+			temp[8] = elements[4] * elements[9] * elements[15] -
+				elements[4] * elements[11] * elements[13] -
+				elements[8] * elements[5] * elements[15] +
+				elements[8] * elements[7] * elements[13] +
+				elements[12] * elements[5] * elements[11] -
+				elements[12] * elements[7] * elements[9];
 
 			temp[12] = -elements[4] * elements[9] * elements[14] +
 				elements[4] * elements[10] * elements[13] +
@@ -184,10 +205,7 @@ namespace daedalusCore { namespace maths {
 				elements[8] * elements[2] * elements[5];
 
 			float determinant = elements[0] * temp[0] + elements[1] * temp[4] + elements[2] * temp[8] + elements[3] * temp[12];
-			if (determinant == 0)
-				return *this;
-			else
-				determinant = (float)(1.0 / determinant);
+			determinant = (float)(1.0 / determinant);
 
 			for (int i = 0; i < (4 * 4); i++)
 				elements[i] = temp[i] * determinant;
@@ -198,6 +216,27 @@ namespace daedalusCore { namespace maths {
 		mat4 mat4::invert(const mat4& matrix)
 		{
 			mat4 result(1.0f);
+
+			result.elements[0] = matrix.elements[5] * matrix.elements[10] * matrix.elements[15] -
+				matrix.elements[5] * matrix.elements[11] * matrix.elements[14] -
+				matrix.elements[9] * matrix.elements[6] * matrix.elements[15] +
+				matrix.elements[9] * matrix.elements[7] * matrix.elements[14] +
+				matrix.elements[13] * matrix.elements[6] * matrix.elements[11] -
+				matrix.elements[13] * matrix.elements[7] * matrix.elements[10];
+
+			result.elements[4] = -matrix.elements[4] * matrix.elements[10] * matrix.elements[15] +
+				matrix.elements[4] * matrix.elements[11] * matrix.elements[14] +
+				matrix.elements[8] * matrix.elements[6] * matrix.elements[15] -
+				matrix.elements[8] * matrix.elements[7] * matrix.elements[14] -
+				matrix.elements[12] * matrix.elements[6] * matrix.elements[11] +
+				matrix.elements[12] * matrix.elements[7] * matrix.elements[10];
+
+			result.elements[8] = matrix.elements[4] * matrix.elements[9] * matrix.elements[15] -
+				matrix.elements[4] * matrix.elements[11] * matrix.elements[13] -
+				matrix.elements[8] * matrix.elements[5] * matrix.elements[15] +
+				matrix.elements[8] * matrix.elements[7] * matrix.elements[13] +
+				matrix.elements[12] * matrix.elements[5] * matrix.elements[11] -
+				matrix.elements[12] * matrix.elements[7] * matrix.elements[9];
 
 			result.elements[12] = -matrix.elements[4] * matrix.elements[9] * matrix.elements[14] +
 				matrix.elements[4] * matrix.elements[10] * matrix.elements[13] +
@@ -291,10 +330,7 @@ namespace daedalusCore { namespace maths {
 				matrix.elements[8] * matrix.elements[2] * matrix.elements[5];
 
 			float determinant = matrix.elements[0] * result.elements[0] + matrix.elements[1] * result.elements[4] + matrix.elements[2] * result.elements[8] + matrix.elements[3] * result.elements[12];
-			if (determinant == 0)
-				return matrix;
-			else
-				determinant = (float)(1.0 / determinant);
+			determinant = (float)(1.0 / determinant);
 
 			for (int i = 0; i < (4 * 4); i++)
 				result.elements[i] = result.elements[i] * determinant;
@@ -328,7 +364,7 @@ namespace daedalusCore { namespace maths {
 			result.elements[1 + 1 * 4] = q;
 			result.elements[2 + 2 * 4] = ((nearPlane + farPlane) / (nearPlane - farPlane));
 			result.elements[3 + 2 * 4] = -1.0f;
-			result.elements[2 + 3 * 4] = ((2 * nearPlane * farPlane) / (nearPlane - farPlane));
+			result.elements[2 + 3 * 4] = ((2.0f * nearPlane * farPlane) / (nearPlane - farPlane));
 
 			return result;
 		}
@@ -351,19 +387,19 @@ namespace daedalusCore { namespace maths {
 			float asRads = degrees_to_radians(angle);
 			float c = cos(asRads);
 			float s = sin(asRads);
-			float mc = 1.0f - c;
+			float omc = 1.0f - c;
 
-			result.elements[0 + 0 * 4] = axis.x * mc + c;
-			result.elements[1 + 0 * 4] = axis.y * axis.x * mc + axis.z * s;
-			result.elements[2 + 0 * 4] = axis.x * axis.z * mc - axis.y * s;
+			result.elements[0 + 0 * 4] = axis.x * axis.x * omc + c;
+			result.elements[1 + 0 * 4] = axis.y * axis.x * omc + axis.z * s;
+			result.elements[2 + 0 * 4] = axis.x * axis.z * omc - axis.y * s;
 
-			result.elements[0 + 1 * 4] = axis.x * axis.y * mc - axis.z * s;
-			result.elements[1 + 1 * 4] = axis.y * mc + c;
-			result.elements[2 + 1 * 4] = axis.y * axis.z * mc + axis.x * s;
+			result.elements[0 + 1 * 4] = axis.x * axis.y * omc - axis.z * s;
+			result.elements[1 + 1 * 4] = axis.y * axis.y * omc + c;
+			result.elements[2 + 1 * 4] = axis.y * axis.z * omc + axis.x * s;
 
-			result.elements[0 + 2 * 4] = axis.x * axis.z * mc + axis.y * s;
-			result.elements[1 + 2 * 4] = axis.y * axis.z * mc - axis.x * s;
-			result.elements[2 + 2 * 4] = axis.z * mc + c;
+			result.elements[0 + 2 * 4] = axis.x * axis.z * omc + axis.y * s;
+			result.elements[1 + 2 * 4] = axis.y * axis.z * omc - axis.x * s;
+			result.elements[2 + 2 * 4] = axis.z * axis.z * omc + c;
 
 			return result;
 		}
