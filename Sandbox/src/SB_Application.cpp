@@ -69,10 +69,15 @@ public:
 			in vec3 v_pos;
 			in vec4 v_col;
 
+			uniform vec2 lightPos = vec2(1);
+
 			void main()
 			{
+				float intensity = (1.0 / (length(v_pos.xy - lightPos)));	
+
 				colour = vec4(v_pos * 0.5 + 0.5, 1.0);
 				colour = v_col;
+				colour *= intensity;
 			}
 		)";
 
@@ -92,6 +97,12 @@ public:
 			m_othoCam.setPosition(m_othoCam.getPosition() + daedalusCore::maths::vec3(0, -0.1f, 0));
 		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_A))
 			m_othoCam.setPosition(m_othoCam.getPosition() + daedalusCore::maths::vec3(-0.1f, 0, 0));
+
+		auto [x, y] = daedalusCore::application::Input::getMousePosition();
+		float windW = daedalusCore::Application::get().getWindow()->getWidth();
+		float windH = daedalusCore::Application::get().getWindow()->getHeight();
+		m_shader->setUniform2f(daedalusCore::maths::vec2((x / windW), -(y / windH)), "lightPos"); /*needs to be converted from screen to world space*/
+		DD_LOG_TRACE("Mouse pos: x {}, y {}", x, y);
 
 		daedalusCore::graphics::Renderer::begin(m_othoCam);
 
