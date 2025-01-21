@@ -39,3 +39,10 @@ namespace daedalusCore { namespace maths {
 	};
 
 } }
+
+LOG_CREATE_FORMAT(daedalusCore::maths::mat4, "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}", 
+	thisMat4, 
+	thisMat4.elements[0], thisMat4.elements[1], thisMat4.elements[2], thisMat4.elements[3], 
+	thisMat4.elements[4], thisMat4.elements[5], thisMat4.elements[6], thisMat4.elements[7],
+	thisMat4.elements[8], thisMat4.elements[9], thisMat4.elements[10], thisMat4.elements[11],
+	thisMat4.elements[12], thisMat4.elements[13], thisMat4.elements[14], thisMat4.elements[15])

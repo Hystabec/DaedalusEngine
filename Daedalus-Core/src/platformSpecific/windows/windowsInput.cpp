@@ -36,7 +36,7 @@ namespace daedalusCore { namespace application {
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> windowsInput::getMousePositionBase()
+	maths::vec2 windowsInput::getMousePositionBase()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 		double x, y;

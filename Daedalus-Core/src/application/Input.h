@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../core.h"
+#include "../maths/vec2.h"
 
 namespace daedalusCore { namespace application {
 
@@ -12,7 +13,7 @@ namespace daedalusCore { namespace application {
 		static bool getKeyDown(int keycode) { return s_instance->getKeyDownBase(keycode); }
 
 		inline static bool getMouseButton(int button) { return s_instance->getMouseButtonBase(button); }
-		inline static std::pair<float, float> getMousePosition() { return s_instance->getMousePositionBase(); }
+		inline static maths::vec2 getMousePosition() { return s_instance->getMousePositionBase(); }
 		inline static float getMouseX() { return s_instance->getMouseXBase(); }
 		inline static float getMouseY() { return s_instance->getMouseYBase(); }
 
@@ -22,7 +23,7 @@ namespace daedalusCore { namespace application {
 		virtual bool getKeyDownBase(int keycode) = 0;
 
 		virtual bool getMouseButtonBase(int button) = 0;
-		virtual std::pair<float, float> getMousePositionBase() = 0;
+		virtual maths::vec2 getMousePositionBase() = 0;
 		virtual float getMouseXBase() = 0;
 		virtual float getMouseYBase() = 0;
 

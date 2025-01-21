@@ -9,6 +9,12 @@ namespace daedalusCore { namespace graphics {
 		m_ProjectionviewMatrix = m_projectionMatrix * m_viewMatrix;
 	}
 
+
+	const maths::vec3 OrthographicCamera::convertScreenToWorldSpace(maths::vec2 screenSpace)
+	{
+		return maths::vec3(0, 0, 0);
+	}
+
 	void OrthographicCamera::recalcViewMatrix()
 	{
 		m_viewMatrix = maths::mat4::invert(maths::mat4::translate(m_position) * maths::mat4::rotate(m_zRotation, maths::vec3(0, 0, 1)));

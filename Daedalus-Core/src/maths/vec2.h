@@ -32,3 +32,5 @@ namespace daedalusCore { namespace maths {
 	};
 
 } }
+
+LOG_CREATE_FORMAT(daedalusCore::maths::vec2, "x: {}, y: {}", vec, vec.x, vec.y);

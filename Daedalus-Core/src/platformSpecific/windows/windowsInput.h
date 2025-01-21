@@ -12,7 +12,7 @@ namespace daedalusCore { namespace application {
 		bool getKeyDownBase(int keycode) override;
 
 		bool getMouseButtonBase(int button) override;
-		std::pair<float, float> getMousePositionBase() override;
+		maths::vec2 getMousePositionBase() override;
 		float getMouseXBase() override;
 		float getMouseYBase() override;
 	};
