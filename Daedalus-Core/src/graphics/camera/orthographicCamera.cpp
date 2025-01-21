@@ -12,7 +12,8 @@ namespace daedalusCore { namespace graphics {
 
 	const maths::vec3 OrthographicCamera::convertScreenToWorldSpace(maths::vec2 screenSpace)
 	{
-		return maths::vec3(0, 0, 0);
+		maths::vec3 temp = { screenSpace.x, screenSpace.y, 1 };
+		return m_projectionMatrix * temp;
 	}
 
 	void OrthographicCamera::recalcViewMatrix()

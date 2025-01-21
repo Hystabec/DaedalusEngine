@@ -101,7 +101,7 @@ public:
 		daedalusCore::maths::vec2 mousePos = daedalusCore::application::Input::getMousePosition();
 		float windW = daedalusCore::Application::get().getWindow()->getWidth();
 		float windH = daedalusCore::Application::get().getWindow()->getHeight();
-		m_shader->setUniform3f(m_othoCam.convertScreenToWorldSpace(mousePos), "lightPos"); /*needs to be converted from screen to world space*/
+		m_shader->setUniform3f(m_othoCam.convertScreenToWorldSpace({ windW / 2, windH / 2}), "lightPos"); /*needs to be converted from screen to world space*/
 
 		daedalusCore::graphics::Renderer::begin(m_othoCam);
 
