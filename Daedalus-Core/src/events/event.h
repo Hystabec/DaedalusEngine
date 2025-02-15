@@ -75,17 +75,6 @@ namespace daedalusCore { namespace event {
 			return false;
 		}
 
-		template<typename T>
-		bool dispatchLambda(EventFun<T> func) requires(std::is_base_of<Event, T>::value)
-		{
-			if (m_event.getType() == T::getStaticType())
-			{
-				m_event.m_handled = func(*(T*)&m_event);
-				return true;
-			}
-			return false;
-		}
-
 	private:
 		Event& m_event;
 	};
@@ -93,4 +82,9 @@ namespace daedalusCore { namespace event {
 } }
 
 LOG_CREATE_FORMAT(daedalusCore::event::Event, "Event: {}", e, e.getName())
+
+//use this macro to bind a member function when passing to event dispatcher
 #define DD_BIND_EVENT_FUN(fun) std::bind(&fun, this, std::placeholders::_1)
+
+//use of this macro is unnecessary however it mimics using a member function
+#define DD_BIND_EVENT_LAMBDA_FUN(fun) fun
