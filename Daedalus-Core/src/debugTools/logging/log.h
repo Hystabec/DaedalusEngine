@@ -10,7 +10,6 @@
 TO DO: 
 expand to log to file
 
-fire event when log is called?
 log to custom console if added?
 */
 
