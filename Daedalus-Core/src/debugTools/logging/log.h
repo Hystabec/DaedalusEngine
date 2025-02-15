@@ -27,7 +27,10 @@ namespace daedalusCore { namespace debug {
 
 		enum class LogFlags
 		{
-			None = 0
+			None = 0,
+			LogToConsole = BIT(0),
+			LogToFile = BIT(1),
+			Everything = LogToConsole | LogToFile
 		};
 
 	public:
