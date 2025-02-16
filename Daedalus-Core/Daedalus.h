@@ -1,11 +1,11 @@
 #pragma once
 
 //for use by application
+#include "src/core.h"
 #include "src/applicationCore.h"
 
 #include "src/application/layers/layer.h"
 #include "src/application/layers/imGuiLayer.h"
-
 
 #include "src/application/Input.h"
 #include "src/application/inputKeyCodes.h"
