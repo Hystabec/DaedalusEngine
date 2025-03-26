@@ -18,7 +18,6 @@ namespace daedalusCore { namespace graphics {
 		const maths::mat4& getViewMatrix() const { return m_viewMatrix; }
 		const maths::mat4& getProjectViewMatrix() const { return m_ProjectionviewMatrix; }
 
-		//maths::vec3 convertScreenToWorldSpace(const maths::vec2& screenSpace) const;
 	private:
 		void recalcViewMatrix();
 	private:

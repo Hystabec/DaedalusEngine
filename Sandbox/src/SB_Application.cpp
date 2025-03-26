@@ -79,7 +79,7 @@ public:
 		m_shader.reset(graphics::Shader::create(vertexSrc.c_str(), fragSrc.c_str(), false));
 	}
 
-	void update() override
+	void update(daedalusCore::application::DeltaTime dt) override
 	{
 		daedalusCore::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
 		daedalusCore::graphics::RenderCommands::clear();

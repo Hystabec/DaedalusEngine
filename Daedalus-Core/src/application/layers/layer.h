@@ -1,6 +1,7 @@
 #pragma once
 
 #include "events/event.h"
+#include "application/deltaTime.h"
 
 namespace daedalusCore { namespace application {
 
@@ -12,7 +13,7 @@ namespace daedalusCore { namespace application {
 
 		virtual void attach() {}
 		virtual void detach() {}
-		virtual void update() {}
+		virtual void update(application::DeltaTime dt) {}
 		virtual void imGuiRender() {}
 		virtual void onEvent(event::Event& event) {}
 	};

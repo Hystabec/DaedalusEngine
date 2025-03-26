@@ -6,6 +6,7 @@
 #include "events/windowEvent.h"
 #include "application/layers/layerStack.h"
 #include "application/layers/imGuiLayer.h"
+#include "application/deltaTime.h"
 
 namespace daedalusCore {
 
@@ -38,6 +39,8 @@ namespace daedalusCore {
 		application::ImGuiLayer* m_ImGuiLayer;
 		bool m_running = true;
 		application::LayerStack m_layerStack;
+
+		float m_lastFrameTime = 0.0f;
 	};
 
 	//To be defined in client
