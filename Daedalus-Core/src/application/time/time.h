@@ -17,9 +17,9 @@ namespace daedalusCore { namespace application {
 		void update() { m_lastFrameTime = getTime(); }
 
 		/// @brief Gets the time since the begining of the program in seconds
-		const float getTime() { return m_timer.elapsedSeconds(); };
+		float getTime() const { return m_timer.elapsedSeconds(); };
 
-		const application::DeltaTime getDeltaTime() { return application::DeltaTime(getTime() - m_lastFrameTime); }
+		application::DeltaTime getDeltaTime() const { return application::DeltaTime(getTime() - m_lastFrameTime); }
 
 	private:
 		utils::Timer m_timer;
