@@ -2,17 +2,17 @@
 
 //for use by application
 #include "src/core.h"
-#include "src/applicationCore.h"
+#include "src/application/applicationCore.h"
 
-#include "src/application/time.h"
-#include "src/application/deltaTime.h"
+#include "src/application/time/time.h"
+#include "src/application/time/deltaTime.h"
 
 #include "src/application/layers/layer.h"
 #include "src/application/layers/imGuiLayer.h"
 
-#include "src/application/Input.h"
-#include "src/application/inputKeyCodes.h"
-#include "src/application/inputMouseCodes.h"
+#include "src/application/input/Input.h"
+#include "src/application/input/inputKeyCodes.h"
+#include "src/application/input/inputMouseCodes.h"
 
 #include "src/events/keyEvent.h"
 #include "src/events/mouseEvent.h"

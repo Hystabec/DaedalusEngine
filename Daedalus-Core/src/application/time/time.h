@@ -1,7 +1,7 @@
 #pragma once
 
 #include "utils/timer.h"
-#include "application/deltaTime.h"
+#include "application/time/deltaTime.h"
 
 namespace daedalusCore { namespace application {
 

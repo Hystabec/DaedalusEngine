@@ -2,7 +2,7 @@
 #include "applicationCore.h"
 
 #include "application/window.h"
-#include "application/Input.h"
+#include "application/input/Input.h"
 #include "utils/timer.h"
 
 #include "graphics/renderer/renderer.h"

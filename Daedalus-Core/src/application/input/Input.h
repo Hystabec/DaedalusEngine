@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../core.h"
-#include "../maths/vec2.h"
+#include "../../core.h"
+#include "../../maths/vec2.h"
 
 namespace daedalusCore { namespace application {
 

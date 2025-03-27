@@ -5,8 +5,8 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
-#include "applicationCore.h"
-#include "application/inputKeyCodes.h"
+#include "application/applicationCore.h"
+#include "application/input/inputKeyCodes.h"
 
 //temp
 #include <glfw3.h>

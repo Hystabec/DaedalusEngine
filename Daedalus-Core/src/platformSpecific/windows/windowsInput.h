@@ -1,6 +1,6 @@
 #pragma once
 
-#include "application/Input.h"
+#include "application/input/Input.h"
 
 namespace daedalusCore { namespace application {
 

@@ -2,7 +2,7 @@
 #include "windowsInput.h"
 
 #include <glfw3.h>
-#include "applicationCore.h"
+#include "application/applicationCore.h"
 
 namespace daedalusCore { namespace application {
 

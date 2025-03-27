@@ -85,13 +85,13 @@ public:
 		daedalusCore::graphics::RenderCommands::clear();
 
 		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_W))
-			m_othoCam.setPosition(m_othoCam.getPosition() + daedalusCore::maths::vec3(0, 0.1f, 0));
+			m_othoCam.setPosition(m_othoCam.getPosition() + (daedalusCore::maths::vec3(0, 1.0f, 0) * (float)dt));
 		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_D))
-			m_othoCam.setPosition(m_othoCam.getPosition() + daedalusCore::maths::vec3(0.1f, 0, 0));
+			m_othoCam.setPosition(m_othoCam.getPosition() + (daedalusCore::maths::vec3(1.0f, 0, 0) * (float)dt));
 		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_S))
-			m_othoCam.setPosition(m_othoCam.getPosition() + daedalusCore::maths::vec3(0, -0.1f, 0));
+			m_othoCam.setPosition(m_othoCam.getPosition() + (daedalusCore::maths::vec3(0, -1.0f, 0) * (float)dt));
 		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_A))
-			m_othoCam.setPosition(m_othoCam.getPosition() + daedalusCore::maths::vec3(-0.1f, 0, 0));
+			m_othoCam.setPosition(m_othoCam.getPosition() + (daedalusCore::maths::vec3(-1.0f, 0, 0) * (float)dt));
 
 		daedalusCore::graphics::Renderer::begin(m_othoCam);
 
