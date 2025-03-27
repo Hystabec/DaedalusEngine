@@ -7,8 +7,6 @@
 
 #include "graphics/renderer/renderer.h"
 
-#include <glfw3.h> //TEMP
-
 namespace daedalusCore {
 
 	Application* Application::s_instance = nullptr;
@@ -39,12 +37,11 @@ namespace daedalusCore {
 	{
 		while (m_running)
 		{
-			float tempTime = (float)glfwGetTime(); //change to my API getTime()
-			application::DeltaTime deltaTime = tempTime - m_lastFrameTime;
-			m_lastFrameTime = tempTime;
+			application::DeltaTime dt = m_time.getDeltaTime();
+			m_time.update();
 
 			for (application::Layer* layer : m_layerStack)
-				layer->update(deltaTime);
+				layer->update(dt);
 
 			m_ImGuiLayer->begin();
 			for (application::Layer* layer : m_layerStack)

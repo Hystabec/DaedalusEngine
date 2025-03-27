@@ -67,19 +67,19 @@ namespace daedalusCore { namespace utils {
 		float elapsedSeconds() const
 		{
 			using namespace std::chrono;
-			return (float)duration_cast<seconds>(std::chrono::high_resolution_clock::now() - m_start).count();
+			return duration<float>(high_resolution_clock::now() - m_start).count();
 		}
 
-		float elapsedMilliseconds() const
+		double elapsedMilliseconds() const
 		{
 			using namespace std::chrono;
-			return (float)duration_cast<milliseconds>(std::chrono::high_resolution_clock::now() - m_start).count();
+			return duration<double, std::milli>(high_resolution_clock::now() - m_start).count();
 		}
 
-		float elapsedMicroseconds() const
+		double elapsedMicroseconds() const
 		{
 			using namespace std::chrono;
-			return (float)duration_cast<microseconds>(std::chrono::high_resolution_clock::now() - m_start).count();
+			return duration<double, std::micro>(high_resolution_clock::now() - m_start).count();
 		}
 
 	private:

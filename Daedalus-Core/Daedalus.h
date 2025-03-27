@@ -4,6 +4,7 @@
 #include "src/core.h"
 #include "src/applicationCore.h"
 
+#include "src/application/time.h"
 #include "src/application/deltaTime.h"
 
 #include "src/application/layers/layer.h"

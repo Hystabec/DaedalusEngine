@@ -13,7 +13,7 @@ namespace daedalusCore { namespace application {
 
 		virtual void attach() {}
 		virtual void detach() {}
-		virtual void update(application::DeltaTime dt) {}
+		virtual void update(const application::DeltaTime& dt) {}
 		virtual void imGuiRender() {}
 		virtual void onEvent(event::Event& event) {}
 	};

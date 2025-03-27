@@ -3,10 +3,11 @@
 #include "core.h"
 #include "application/window.h"
 
+#include "application/time.h"
+
 #include "events/windowEvent.h"
 #include "application/layers/layerStack.h"
 #include "application/layers/imGuiLayer.h"
-#include "application/deltaTime.h"
 
 namespace daedalusCore {
 
@@ -41,6 +42,7 @@ namespace daedalusCore {
 		application::LayerStack m_layerStack;
 
 		float m_lastFrameTime = 0.0f;
+		application::Time m_time;
 	};
 
 	//To be defined in client
