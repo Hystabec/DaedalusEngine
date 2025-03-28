@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace daedalusCore { namespace utils {
 
 	static std::string read_file(const char* filePath)
