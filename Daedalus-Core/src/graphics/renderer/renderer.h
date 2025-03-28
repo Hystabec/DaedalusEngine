@@ -12,7 +12,7 @@ namespace daedalusCore { namespace graphics {
 		static void begin(OrthographicCamera& othoCamera);
 		static void end();
 
-		static void submit(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray, const std::shared_ptr<graphics::Shader>& shader);
+		static void submit(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray, const std::shared_ptr<graphics::Shader>& shader, const maths::mat4& transform = maths::mat4(1.0f));
 
 		static inline RendererAPI::API getCurrentAPI() { return RendererAPI::getAPI(); }
 

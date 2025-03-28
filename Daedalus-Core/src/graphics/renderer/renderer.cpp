@@ -18,10 +18,11 @@ namespace daedalusCore { namespace graphics {
 		m_sceneData->inUse = false;
 	}
 
-	void Renderer::submit(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray, const std::shared_ptr<graphics::Shader>& shader)
+	void Renderer::submit(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray, const std::shared_ptr<graphics::Shader>& shader, const maths::mat4& transform)
 	{
 		shader->enable();
 		shader->setUniformMat4(m_sceneData->projectionViewMatrix, "u_projView");
+		shader->setUniformMat4(transform, "u_transform");
 
 		vertexArray->bind();
 		RenderCommands::drawIndexed(vertexArray);

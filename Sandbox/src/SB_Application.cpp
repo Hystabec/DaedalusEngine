@@ -5,7 +5,7 @@ class TestLayer : public daedalusCore::application::Layer
 {
 public:
 	TestLayer()
-		: m_othoCam(-1.6f, 1.6f, -0.9f, 0.9f)
+		: m_othoCam(-1.6f, 1.6f, -0.9f, 0.9f), m_squarePos(0)
 	{
 		using namespace daedalusCore;
 		m_vertexArray.reset(graphics::buffers::VertexArray::Create());
@@ -51,6 +51,7 @@ public:
 			layout(location = 1) in vec4 a_colour;
 	
 			uniform mat4 u_projView;
+			uniform mat4 u_transform;
 
 			out vec3 v_pos;
 			out vec4 v_col;
@@ -59,7 +60,7 @@ public:
 			{
 				v_pos = a_position;
 				v_col = a_colour;
-				gl_Position = u_projView * vec4(a_position, 1.0);
+				gl_Position = u_projView * u_transform * vec4(a_position, 1.0);
 			}
 		)";
 
@@ -93,9 +94,20 @@ public:
 		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_A))
 			m_othoCam.setPosition(m_othoCam.getPosition() + (daedalusCore::maths::vec3(-1.0f, 0, 0) * (float)dt));
 
+		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_I))
+			m_squarePos += daedalusCore::maths::vec3(0.0f, 1.0f, 0.0f) * (float)dt;
+		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_L))
+			m_squarePos += daedalusCore::maths::vec3(1.0f, 0.0f, 0.0f) * (float)dt;
+		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_K))
+			m_squarePos += daedalusCore::maths::vec3(0.0f, -1.0f, 0.0f) * (float)dt;
+		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_J))
+			m_squarePos += daedalusCore::maths::vec3(-1.0f, 0.0f, 0.0f) * (float)dt;
+
+		daedalusCore::maths::mat4 squareTransform = daedalusCore::maths::mat4::translate(m_squarePos);
+
 		daedalusCore::graphics::Renderer::begin(m_othoCam);
 
-		daedalusCore::graphics::Renderer::submit(m_squareVertexArray, m_shader);
+		daedalusCore::graphics::Renderer::submit(m_squareVertexArray, m_shader, squareTransform);
 		daedalusCore::graphics::Renderer::submit(m_vertexArray, m_shader);
 
 		daedalusCore::graphics::Renderer::end();
@@ -138,6 +150,8 @@ private:
 	std::shared_ptr<daedalusCore::graphics::buffers::VertexArray> m_vertexArray;
 	std::shared_ptr<daedalusCore::graphics::buffers::VertexArray> m_squareVertexArray;
 	daedalusCore::graphics::OrthographicCamera m_othoCam;
+
+	daedalusCore::maths::vec3 m_squarePos;
 };
 
 class SandBox : public daedalusCore::Application
