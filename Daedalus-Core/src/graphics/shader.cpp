@@ -10,15 +10,15 @@
 
 namespace daedalusCore { namespace graphics {
 
-	Shader* graphics::Shader::create(const char* vertex, const char* frag, bool fromFile)
+	Shader* graphics::Shader::create(const std::string& vertex, const std::string& frag, bool fromFile)
 	{
 		std::string verSrc = vertex;
 		std::string fragSrc = frag;
 
 		if (fromFile)
 		{
-			verSrc = utils::read_file(vertex);
-			fragSrc = utils::read_file(frag);
+			verSrc = utils::read_file(vertex.c_str());
+			fragSrc = utils::read_file(frag.c_str());
 		}
 
 		switch (Renderer::getCurrentAPI())

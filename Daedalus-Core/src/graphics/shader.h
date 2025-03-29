@@ -1,11 +1,9 @@
 #pragma once
 
-namespace daedalusCore { namespace maths {
-	struct vec2;
-	struct vec3;
-	struct vec4;
-	struct mat4;
-} }
+#include "../maths/vec2.h"
+#include "../maths/vec3.h"
+#include "../maths/vec4.h"
+#include "../maths/mat4.h"
 
 namespace daedalusCore { namespace graphics {
 
@@ -26,7 +24,7 @@ namespace daedalusCore { namespace graphics {
 		virtual void enable() const = 0;
 		virtual void disable() const = 0;
 
-		static Shader* create(const char* vertex, const char* frag, bool fromFile = true);
+		static Shader* create(const std::string& vertex, const std::string& frag, bool fromFile = true);
 	};
 
 } }
