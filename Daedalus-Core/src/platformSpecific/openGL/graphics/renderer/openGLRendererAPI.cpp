@@ -15,7 +15,7 @@ namespace daedalusCore { namespace graphics {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void OpenGLRendererAPI::drawIndexedArray(const std::shared_ptr<graphics::buffers::VertexArray>& vertexArray)
+	void OpenGLRendererAPI::drawIndexedArray(const shr_ptr<graphics::buffers::VertexArray>& vertexArray)
 	{
 		glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->count(), GL_UNSIGNED_INT, nullptr);
 	}

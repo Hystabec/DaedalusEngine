@@ -15,7 +15,7 @@ public:
 			0.0f, 0.5f, 0.0f, 0.4f, 0.7f, 0.0f, 1.0f
 		};
 
-		std::shared_ptr<graphics::buffers::VertexBuffer> verBuff(graphics::buffers::VertexBuffer::create(vertcies, sizeof(vertcies)));
+		shr_ptr<graphics::buffers::VertexBuffer> verBuff(graphics::buffers::VertexBuffer::create(vertcies, sizeof(vertcies)));
 
 		graphics::buffers::BufferLayout layout =
 		{
@@ -27,7 +27,7 @@ public:
 		m_vertexArray->addVertexBuffer(verBuff);
 
 		uint32_t indices[3] = { 0, 1, 2 };
-		std::shared_ptr<graphics::buffers::IndexBuffer> indexBuff(graphics::buffers::IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t)));
+		shr_ptr<graphics::buffers::IndexBuffer> indexBuff(graphics::buffers::IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_vertexArray->setIndexBuffer(indexBuff);
 
 		m_squareVertexArray.reset(graphics::buffers::VertexArray::Create());
@@ -38,11 +38,11 @@ public:
 			-0.75f, -0.75f, 0.0f, 0.2f, 0.8f, 0.2f, 1.0f
 		};
 
-		std::shared_ptr<graphics::buffers::VertexBuffer> sqrVertBuff(graphics::buffers::VertexBuffer::create(sqrVerts, sizeof(sqrVerts)));
+		shr_ptr<graphics::buffers::VertexBuffer> sqrVertBuff(graphics::buffers::VertexBuffer::create(sqrVerts, sizeof(sqrVerts)));
 		sqrVertBuff->setLayout(layout);
 		m_squareVertexArray->addVertexBuffer(sqrVertBuff);
 		uint32_t sqrIndices[3 * 2] = { 0, 1, 2, 2, 3, 0 };
-		std::shared_ptr<graphics::buffers::IndexBuffer> sqrIndexBuff(graphics::buffers::IndexBuffer::create(sqrIndices, sizeof(sqrIndices) / sizeof(uint32_t)));
+		shr_ptr<graphics::buffers::IndexBuffer> sqrIndexBuff(graphics::buffers::IndexBuffer::create(sqrIndices, sizeof(sqrIndices) / sizeof(uint32_t)));
 		m_squareVertexArray->setIndexBuffer(sqrIndexBuff);
 
 		std::string vertexSrc = R"(
@@ -165,10 +165,10 @@ private:
 	daedalusCore::utils::Timer time;
 	int frames = 0;
 
-	std::shared_ptr<daedalusCore::graphics::Shader> m_shader;
-	std::shared_ptr<daedalusCore::graphics::Shader> m_flatShader;
-	std::shared_ptr<daedalusCore::graphics::buffers::VertexArray> m_vertexArray;
-	std::shared_ptr<daedalusCore::graphics::buffers::VertexArray> m_squareVertexArray;
+	daedalusCore::shr_ptr<daedalusCore::graphics::Shader> m_shader;
+	daedalusCore::shr_ptr<daedalusCore::graphics::Shader> m_flatShader;
+	daedalusCore::shr_ptr<daedalusCore::graphics::buffers::VertexArray> m_vertexArray;
+	daedalusCore::shr_ptr<daedalusCore::graphics::buffers::VertexArray> m_squareVertexArray;
 	daedalusCore::graphics::OrthographicCamera m_othoCam;
 
 	daedalusCore::maths::vec3 m_triPos;

@@ -36,7 +36,7 @@ namespace daedalusCore {
 	private:
 		static Application* s_instance;
 
-		std::unique_ptr<application::Window> m_window;
+		uni_ptr<application::Window> m_window;
 		application::ImGuiLayer* m_ImGuiLayer;
 		bool m_running = true;
 		application::LayerStack m_layerStack;

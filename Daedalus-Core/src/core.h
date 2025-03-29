@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 
 #ifdef DD_PLATFORM_WINDOWS
 #else
@@ -15,3 +16,13 @@
 #endif
 
 #define BIT(x) (1 << x)
+
+namespace daedalusCore {
+
+	template<typename T>
+	using uni_ptr = std::unique_ptr<T>;
+
+	template<typename T>
+	using shr_ptr = std::shared_ptr<T>;
+
+}

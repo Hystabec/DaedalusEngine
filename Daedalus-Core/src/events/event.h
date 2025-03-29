@@ -83,8 +83,8 @@ namespace daedalusCore { namespace event {
 
 LOG_CREATE_FORMAT(daedalusCore::event::Event, "Event: {}", e, e.getName())
 
-//use this macro to bind a member function when passing to event dispatcher
+/// @brief Use this macro to bind a member function when passing to event dispatcher
 #define DD_BIND_EVENT_FUN(fun) std::bind(&fun, this, std::placeholders::_1)
 
-//use of this macro is unnecessary however it mimics using a member function
+/// @brief Use of this macro is unnecessary however it mimics using the member function macro
 #define DD_BIND_EVENT_LAMBDA_FUN(fun) fun

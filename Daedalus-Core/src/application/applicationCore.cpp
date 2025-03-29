@@ -72,7 +72,7 @@ namespace daedalusCore {
 		s_instance = this;
 
 		debug::Log::init();
-		m_window = std::unique_ptr<application::Window>(application::Window::Create(application::WindowProperties(title, width, height, vsync)));
+		m_window = uni_ptr<application::Window>(application::Window::Create(application::WindowProperties(title, width, height, vsync)));
 		m_window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
 
 		m_ImGuiLayer = new application::ImGuiLayer;

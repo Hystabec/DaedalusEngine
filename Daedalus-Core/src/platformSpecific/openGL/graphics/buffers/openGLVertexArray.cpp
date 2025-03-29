@@ -27,7 +27,7 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVertexArray::addVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
+	void OpenGLVertexArray::addVertexBuffer(const shr_ptr<VertexBuffer>& vertexBuffer)
 	{
 		glBindVertexArray(m_renderID);
 		vertexBuffer->bind();
@@ -50,7 +50,7 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 		m_VertexBuffers.push_back(vertexBuffer);
 	}
 
-	void OpenGLVertexArray::setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
+	void OpenGLVertexArray::setIndexBuffer(const shr_ptr<IndexBuffer>& indexBuffer)
 	{
 		glBindVertexArray(m_renderID);
 		indexBuffer->bind();
