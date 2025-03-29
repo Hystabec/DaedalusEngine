@@ -44,7 +44,7 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 				shader_data_type_to_Open_GL_base_type(element.getBaseDataType()),
 				element.Normalized ? GL_TRUE : GL_FALSE,
 				layout.getStide(),
-				((void*)element.Offset));
+				((const void*)element.Offset));
 			index++;
 		}
 		m_VertexBuffers.push_back(vertexBuffer);

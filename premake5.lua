@@ -15,7 +15,6 @@ dependFol = "Daedalus-Core/Dependencies"
 dependDir = {}
 dependDir["GLFW"] = dependFol .. "/GLFW"
 dependDir["GLEW"] = dependFol .. "/GLEW"
-dependDir["FreeImage"] = dependFol .. "/FreeImage"
 dependDir["spdlog"] = dependFol .. "/spdlog"
 dependDir["ImGui"] = dependFol .. "/ImGui"
 
@@ -51,7 +50,6 @@ project "Daedalus-Core"
 		"%{prj.name}/src",
 		"%{dependDir.GLFW}/include",
 		"%{dependDir.GLEW}/include",
-		"%{dependDir.FreeImage}/include",
 		"%{dependDir.spdlog}/include",
 		"%{dependDir.ImGui}/include"
 	}
@@ -60,7 +58,6 @@ project "Daedalus-Core"
 	{
 		"%{dependDir.GLFW}/lib-vc2022",
 		"%{dependDir.GLEW}/lib",
-		"%{dependDir.FreeImage}/lib",
 	}
 
 	links
@@ -68,8 +65,7 @@ project "Daedalus-Core"
 		"ImGui",
 		"glfw3_mt.lib",
 		"opengl32.lib",
-		"glew32s.lib",
-		"FreeImage.lib"
+		"glew32s.lib"
 	}
 
 	buildoptions "/utf-8"
@@ -135,7 +131,6 @@ project "Sandbox"
 
 	postbuildcommands
 	{
-		("{copy} ../Daedalus-Core/Dependencies/FreeImage/FreeImage.dll ../bin/" .. outputdir .. "/Sandbox")
 	}
 
 	filter "system:windows"
