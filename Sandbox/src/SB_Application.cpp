@@ -145,7 +145,9 @@ public:
 
 		m_texutureShader.reset(daedalusCore::graphics::Shader::create(texutureVertexSrc.c_str(), textureFragSrc.c_str(), false));
 
-		m_texture.reset(daedalusCore::graphics::Texture2D::create("resources/testImage3.png"));
+		m_texture.reset(daedalusCore::graphics::Texture2D::create("resources/testImage.png"));
+		m_DDTestImage.reset(daedalusCore::graphics::Texture2D::create("resources/DD_testImage.png"));
+
 		m_texutureShader->setUniform1i(0, "u_texture");
 	}
 
@@ -195,6 +197,8 @@ public:
 
 		m_texture->bind();
 		daedalusCore::graphics::Renderer::submit(m_texuterVerexArray, m_texutureShader, daedalusCore::maths::mat4::translate(daedalusCore::maths::vec3(-1, 0, 0)) * daedalusCore::maths::mat4::scale({1.5f}));
+		m_DDTestImage->bind();
+		daedalusCore::graphics::Renderer::submit(m_texuterVerexArray, m_texutureShader, daedalusCore::maths::mat4::translate(daedalusCore::maths::vec3(-1, 0, 0)) * daedalusCore::maths::mat4::scale({1.5f}));
 
 		daedalusCore::graphics::Renderer::submit(m_vertexArray, m_shader, triangleTransform);
 
@@ -236,7 +240,7 @@ private:
 
 	daedalusCore::shr_ptr<daedalusCore::graphics::Shader> m_shader, m_flatShader, m_texutureShader;
 	daedalusCore::shr_ptr<daedalusCore::graphics::buffers::VertexArray> m_vertexArray, m_squareVertexArray, m_texuterVerexArray;
-	daedalusCore::shr_ptr<daedalusCore::graphics::Texture2D> m_texture;
+	daedalusCore::shr_ptr<daedalusCore::graphics::Texture2D> m_texture, m_DDTestImage;
 
 	daedalusCore::graphics::OrthographicCamera m_othoCam;
 

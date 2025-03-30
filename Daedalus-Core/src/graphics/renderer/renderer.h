@@ -9,6 +9,8 @@ namespace daedalusCore { namespace graphics {
 	class Renderer
 	{
 	public:
+		static void init();
+
 		static void begin(OrthographicCamera& othoCamera);
 		static void end();
 

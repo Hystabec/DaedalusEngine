@@ -14,6 +14,8 @@ namespace daedalusCore { namespace graphics {
 			OpenGL = 1
 		};
 	public:
+		virtual void init() = 0;
+
 		virtual void setClearColour(const maths::vec4& colour) = 0;
 		virtual void clear() = 0;
 

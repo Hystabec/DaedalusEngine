@@ -5,6 +5,12 @@
 
 namespace daedalusCore { namespace graphics {
 
+	void OpenGLRendererAPI::init()
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
 	void OpenGLRendererAPI::setClearColour(const maths::vec4& colour)
 	{
 		glClearColor(colour.x, colour.y, colour.z, colour.w);

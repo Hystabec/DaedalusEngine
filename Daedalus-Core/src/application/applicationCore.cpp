@@ -73,7 +73,9 @@ namespace daedalusCore {
 
 		debug::Log::init();
 		m_window = uni_ptr<application::Window>(application::Window::Create(application::WindowProperties(title, width, height, vsync)));
-		m_window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
+		m_window->setEventCallback(DD_BIND_EVENT_FUN(Application::onEvent));
+
+		graphics::Renderer::init();
 
 		m_ImGuiLayer = new application::ImGuiLayer;
 		pushOverlay(m_ImGuiLayer);

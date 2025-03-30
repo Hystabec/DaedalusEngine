@@ -6,6 +6,8 @@ namespace daedalusCore { namespace graphics {
 	class RenderCommands
 	{
 	public:
+		inline static void init() { s_rendererAPI->init(); }
+
 		inline static void setClearColour(const maths::vec4& colour) { s_rendererAPI->setClearColour(colour); }
 		inline static void clear() { s_rendererAPI->clear(); }
 

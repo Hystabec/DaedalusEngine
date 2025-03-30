@@ -5,6 +5,11 @@ namespace daedalusCore { namespace graphics {
 
 	Renderer::sceneData* Renderer::m_sceneData = new Renderer::sceneData;
 	
+	void Renderer::init()
+	{
+		RenderCommands::init();
+	}
+
 	void Renderer::begin(OrthographicCamera& othoCamera)
 	{
 		DD_CORE_ASSERT(!m_sceneData->inUse, "Renderer::end() not called");
