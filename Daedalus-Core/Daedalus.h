@@ -22,9 +22,12 @@
 #include "src/graphics/renderer/renderCommands.h"
 
 #include "src/graphics/shader.h"
+#include "src/graphics/rendering/texture.h"
+
 #include "src/graphics/buffers/vertexBuffer.h"
 #include "src/graphics/buffers/indexBuffer.h"
 #include "src/graphics/buffers/vertexArray.h"
+
 #include "src/graphics/camera/orthographicCamera.h"
 
 

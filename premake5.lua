@@ -17,6 +17,7 @@ dependDir["GLFW"] = dependFol .. "/GLFW"
 dependDir["GLEW"] = dependFol .. "/GLEW"
 dependDir["spdlog"] = dependFol .. "/spdlog"
 dependDir["ImGui"] = dependFol .. "/ImGui"
+dependDir["stb_image"] = dependFol .. "/stb_image"
 
 include "Daedalus-Core/Dependencies/ImGui"
 
@@ -37,7 +38,9 @@ project "Daedalus-Core"
 	{
 		"%{prj.name}/Daedalus.h",
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/Dependencies/stb_image/**.h",
+		"%{prj.name}/Dependencies/stb_image/**.cpp"
 	}
 
 	defines
@@ -51,7 +54,8 @@ project "Daedalus-Core"
 		"%{dependDir.GLFW}/include",
 		"%{dependDir.GLEW}/include",
 		"%{dependDir.spdlog}/include",
-		"%{dependDir.ImGui}/include"
+		"%{dependDir.ImGui}/include",
+		"%{dependDir.stb_image}"
 	}
 
 	libdirs
