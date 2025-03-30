@@ -1,0 +1,9 @@
+Raw pointers used in -
+Texture2D::Create - texture.h/.cpp
+Shader::create - shader.h/.cpp
+VertexBuffer::create - vertexBuffer.h/.cpp
+VertexArray::create - vertexArray.h/.cpp
+IndexBuffer::create - indexBuffer.h/.cpp
+Window::create - window.h
+
+Use of raw pointers should be replaced by managed pointers once I have a better point system in place

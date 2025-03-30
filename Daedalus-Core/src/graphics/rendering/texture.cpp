@@ -8,7 +8,7 @@
 
 namespace daedalusCore { namespace graphics {
 
-    Texture2D* Texture2D::Create(const std::string& filePath)
+    Texture2D* Texture2D::create(const std::string& filePath)
     {
 		switch (Renderer::getCurrentAPI())
 		{

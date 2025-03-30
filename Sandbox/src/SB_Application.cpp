@@ -145,7 +145,7 @@ public:
 
 		m_texutureShader.reset(daedalusCore::graphics::Shader::create(texutureVertexSrc.c_str(), textureFragSrc.c_str(), false));
 
-		m_texture.reset(daedalusCore::graphics::Texture2D::Create("resources/testImage3.png"));
+		m_texture.reset(daedalusCore::graphics::Texture2D::create("resources/testImage3.png"));
 		m_texutureShader->setUniform1i(0, "u_texture");
 	}
 
