@@ -26,6 +26,7 @@ namespace daedalusCore { namespace graphics {
 
 		vertexArray->bind();
 		RenderCommands::drawIndexed(vertexArray);
+		//shader->disable();
 	}
 
 } }
