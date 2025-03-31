@@ -18,7 +18,7 @@ namespace daedalusCore {
 	void Application::onEvent(event::Event& e)
 	{
 		event::EventDispatcher dispatch(e);
-		dispatch.dispatch<event::WindowClosedEvent>(std::bind(&Application::onWindowClose, this, std::placeholders::_1));
+		dispatch.dispatch<event::WindowClosedEvent>(DD_BIND_EVENT_FUN(Application::onWindowClose));
 
 		for (auto it = m_layerStack.end(); it != m_layerStack.begin();)
 		{

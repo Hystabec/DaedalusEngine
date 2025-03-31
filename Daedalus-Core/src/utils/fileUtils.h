@@ -7,7 +7,7 @@ namespace daedalusCore { namespace utils {
 	static std::string read_file(const std::string& filePath, bool* checkBool = nullptr)
 	{
 		std::string result;
-		std::ifstream in(filePath, std::ios::in, std::ios::binary);
+		std::ifstream in(filePath, std::ios::in | std::ios::binary);
 
 		if (in)
 		{
