@@ -16,12 +16,16 @@ namespace daedalusCore { namespace utils {
 			in.seekg(0, std::ios::beg);
 			in.read(&result[0], result.size());
 			in.close();
-			(*checkBool) = true;
+
+			if(checkBool)
+				(*checkBool) = true;
 		}
 		else
 		{
 			DD_CORE_LOG_ERROR("Could not open file '{}'", filePath);
-			(*checkBool) = false;
+
+			if(checkBool)
+				(*checkBool) = false;
 		}
 
 		return result;
