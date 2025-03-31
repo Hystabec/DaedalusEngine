@@ -38,6 +38,7 @@
 
 #include "src/utils/timer.h"
 #include "src/utils/colourConversionUtils.h"
+#include "src/utils/fileUtils.h"
 
 
 //--ENTRY POINT--

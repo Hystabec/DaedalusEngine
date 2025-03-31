@@ -35,6 +35,13 @@ namespace daedalusCore { namespace debug {
 	public:
 		static void init(LogFlags flags = LogFlags::None);
 
+		/// @brief This function can be used to get a string formatted using the logger formatting
+		template<typename...Args>
+		static std::string formatLogMessage(const char* fmt, Args&&...args)
+		{
+			return strFormatter(nullptr, fmt, args...);
+		}
+
 #pragma region Trace
 
 		template<typename T>
