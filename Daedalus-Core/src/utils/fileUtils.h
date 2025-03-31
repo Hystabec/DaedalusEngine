@@ -1,19 +1,29 @@
 #pragma once
 
+#include <fstream>
+
 namespace daedalusCore { namespace utils {
 
-	static std::string read_file(const char* filePath)
+	static std::string read_file(const std::string& filePath, bool* checkBool = nullptr)
 	{
-		FILE* file = fopen(filePath, "rt");
-		fseek(file, 0, SEEK_END);
-		unsigned long length = ftell(file);
-		char* data = new char[length + 1];
-		memset(data, 0, length + 1);
-		fseek(file, 0, SEEK_SET);
-		fread(data, 1, length, file);
-		fclose(file);
-		std::string result(data);
-		delete[] data;
+		std::string result;
+		std::ifstream in(filePath, std::ios::in, std::ios::binary);
+
+		if (in)
+		{
+			in.seekg(0, std::ios::end);
+			result.resize(in.tellg());
+			in.seekg(0, std::ios::beg);
+			in.read(&result[0], result.size());
+			in.close();
+			(*checkBool) = true;
+		}
+		else
+		{
+			DD_CORE_LOG_ERROR("Could not open file '{}'", filePath);
+			(*checkBool) = false;
+		}
+
 		return result;
 	}
 

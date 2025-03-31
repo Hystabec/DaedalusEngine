@@ -33,7 +33,6 @@
 
 #include "src/debugTools/logging/log.h"
 
-
 #include "maths/maths.h"
 
 #include "src/utils/timer.h"
