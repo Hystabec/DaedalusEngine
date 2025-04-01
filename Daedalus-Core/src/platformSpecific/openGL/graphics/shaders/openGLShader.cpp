@@ -136,7 +136,7 @@ namespace daedalusCore { namespace graphics {
 	{
 		GLuint program = glCreateProgram();
 
-		DD_CORE_ASSERT(shaderSources.size() <= 2, "Only supports up to 2 shaders");
+		DD_CORE_ASSERT(shaderSources.size() <= 3, "Only supports up to 3 shaders");
 		std::array<GLenum, 3> glShaderIDs;
 
 		int glShaderIDIndex = 0;
