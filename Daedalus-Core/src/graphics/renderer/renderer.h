@@ -2,7 +2,7 @@
 #include "renderCommands.h"
 
 #include "graphics/camera/orthographicCamera.h"
-#include "graphics/shader.h"
+#include "graphics/shaders/shader.h"
 
 namespace daedalusCore { namespace graphics {
 

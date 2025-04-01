@@ -21,7 +21,7 @@
 #include "src/graphics/renderer/renderer.h"
 #include "src/graphics/renderer/renderCommands.h"
 
-#include "src/graphics/shader.h"
+#include "src/graphics/shaders/shader.h"
 #include "src/graphics/rendering/texture.h"
 
 #include "src/graphics/buffers/vertexBuffer.h"

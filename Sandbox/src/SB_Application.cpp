@@ -1,6 +1,8 @@
 #include <Daedalus.h>
 #include "imgui.h"
 
+#include "src/graphics/shaders/shaderLibrary.h"
+
 class TestLayer : public daedalusCore::application::Layer
 {
 public:
@@ -8,8 +10,9 @@ public:
 		: m_othoCam(-1.6f, 1.6f, -0.9f, 0.9f), m_triPos(0)
 	{
 		using namespace daedalusCore;
+
 		//triangle
-		m_vertexArray.reset(graphics::buffers::VertexArray::Create());
+		m_vertexArray = graphics::buffers::VertexArray::Create();
 		float vertcies[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
 			0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.5f, 1.0f,
@@ -32,7 +35,7 @@ public:
 		m_vertexArray->setIndexBuffer(indexBuff);
 		//triangle end
 
-		m_squareVertexArray.reset(graphics::buffers::VertexArray::Create());
+		m_squareVertexArray = graphics::buffers::VertexArray::Create();
 		float sqrVerts[4 * 7] = {
 			-0.75f, 0.75f, 0.0f,
 			0.75f, 0.75f, 0.0f,
@@ -52,7 +55,7 @@ public:
 		shr_ptr<graphics::buffers::IndexBuffer> sqrIndexBuff(graphics::buffers::IndexBuffer::create(sqrIndices, sizeof(sqrIndices) / sizeof(uint32_t)));
 		m_squareVertexArray->setIndexBuffer(sqrIndexBuff);
 
-		std::string vertexSrc = R"(
+		std::string triangleVertexSrc = R"(
 			#version 330 core
 
 			layout(location = 0) in vec3 a_position;
@@ -72,7 +75,7 @@ public:
 			}
 		)";
 
-		std::string fragSrc = R"(
+		std::string triangleFragSrc = R"(
 			#version 330 core
 
 			layout(location = 0) out vec4 colour;
@@ -87,9 +90,10 @@ public:
 			}
 		)";
 
-		m_shader.reset(graphics::Shader::create(vertexSrc.c_str(), fragSrc.c_str(), false));
+		auto triShader = graphics::Shader::create("TriangleShader", triangleVertexSrc, triangleFragSrc);
+		m_shaderLib.add("TriangleShader", triShader);
 
-		m_flatShader.reset(graphics::Shader::create("resources/flatVertex.vert", "resources/flatFrag.frag", true));
+		m_shaderLib.load("resources/shaders/flatShader.glsl");
 
 		float textureVerts[5 * 4] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -103,52 +107,19 @@ public:
 			{ DD_BUFFERS_VEC2, "a_texCoord" }
 		};
 
-		m_texuterVerexArray.reset(graphics::buffers::VertexArray::Create());
+		m_texuterVerexArray = graphics::buffers::VertexArray::Create();
 		shr_ptr<graphics::buffers::VertexBuffer> textureVerBuff(graphics::buffers::VertexBuffer::create(textureVerts, sizeof(textureVerts)));
 		textureVerBuff->setLayout(textureLayout);
 		m_texuterVerexArray->addVertexBuffer(textureVerBuff);
 		shr_ptr<graphics::buffers::IndexBuffer> textureIndexBuff(graphics::buffers::IndexBuffer::create(sqrIndices, sizeof(sqrIndices) / sizeof(uint32_t)));
 		m_texuterVerexArray->setIndexBuffer(textureIndexBuff);
 
-		std::string texutureVertexSrc = R"(
-			#version 330 core
+		m_shaderLib.load("texSha", "resources/shaders/textureShader.glsl");
 
-			layout(location = 0) in vec3 a_position;
-			layout(location = 1) in vec2 a_texCoord;
-	
-			uniform mat4 u_projView;
-			uniform mat4 u_transform;
+		m_texture = daedalusCore::graphics::Texture2D::create("resources/testImage.png");
+		m_DDTestImage = daedalusCore::graphics::Texture2D::create("resources/DD_testImage.png");
 
-			out vec2 v_TexCoord;
-
-			void main()
-			{
-				v_TexCoord = a_texCoord;
-				gl_Position = u_projView * u_transform * vec4(a_position, 1.0);
-			}
-		)";
-
-		std::string textureFragSrc = R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 colour;
-
-			in vec2 v_TexCoord;
-
-			uniform sampler2D u_texture;
-
-			void main()
-			{
-				colour = texture(u_texture, v_TexCoord);
-			}
-		)";
-
-		m_texutureShader.reset(daedalusCore::graphics::Shader::create(texutureVertexSrc.c_str(), textureFragSrc.c_str(), false));
-
-		m_texture.reset(daedalusCore::graphics::Texture2D::create("resources/testImage.png"));
-		m_DDTestImage.reset(daedalusCore::graphics::Texture2D::create("resources/DD_testImage.png"));
-
-		m_texutureShader->setUniform1i(0, "u_texture");
+		m_shaderLib.get("texSha")->setUniform1i(0, "u_texture");
 	}
 
 	void update(const daedalusCore::application::DeltaTime& dt) override
@@ -188,19 +159,21 @@ public:
 			{
 				daedalusCore::maths::mat4 squareTransform = daedalusCore::maths::mat4::translate(daedalusCore::maths::vec3(x * 0.2f, y * 0.2f, 0.0f)) * daedalusCore::maths::mat4::scale({0.1f});
 
-				m_flatShader->enable();
-				x % 2 == 0 ? m_flatShader->setUniform4f(redCol, "u_colour") : m_flatShader->setUniform4f(greenCol, "u_colour");
+				auto flatShader = m_shaderLib.get("flatShader");
+				flatShader->enable();
+				x % 2 == 0 ? flatShader->setUniform4f(redCol, "u_colour") : flatShader->setUniform4f(greenCol, "u_colour");
 
-				daedalusCore::graphics::Renderer::submit(m_squareVertexArray, m_flatShader, squareTransform);
+				daedalusCore::graphics::Renderer::submit(m_squareVertexArray, flatShader, squareTransform);
 			}
 		}
 
+		auto textureShader = m_shaderLib.get("texSha");
 		m_texture->bind();
-		daedalusCore::graphics::Renderer::submit(m_texuterVerexArray, m_texutureShader, daedalusCore::maths::mat4::translate(daedalusCore::maths::vec3(-1, 0, 0)) * daedalusCore::maths::mat4::scale({1.5f}));
+		daedalusCore::graphics::Renderer::submit(m_texuterVerexArray, textureShader, daedalusCore::maths::mat4::translate(daedalusCore::maths::vec3(-1, 0, 0)) * daedalusCore::maths::mat4::scale({1.5f}));
 		m_DDTestImage->bind();
-		daedalusCore::graphics::Renderer::submit(m_texuterVerexArray, m_texutureShader, daedalusCore::maths::mat4::translate(daedalusCore::maths::vec3(-1, 0, 0)) * daedalusCore::maths::mat4::scale({1.5f}));
+		daedalusCore::graphics::Renderer::submit(m_texuterVerexArray, textureShader, daedalusCore::maths::mat4::translate(daedalusCore::maths::vec3(-1, 0, 0)) * daedalusCore::maths::mat4::scale({1.5f}));
 
-		daedalusCore::graphics::Renderer::submit(m_vertexArray, m_shader, triangleTransform);
+		daedalusCore::graphics::Renderer::submit(m_vertexArray, m_shaderLib.get("TriangleShader"), triangleTransform);
 
 		daedalusCore::graphics::Renderer::end();
 
@@ -238,7 +211,8 @@ private:
 	daedalusCore::utils::Timer time;
 	int frames = 0;
 
-	daedalusCore::shr_ptr<daedalusCore::graphics::Shader> m_shader, m_flatShader, m_texutureShader;
+	daedalusCore::graphics::ShaderLibrary m_shaderLib;
+
 	daedalusCore::shr_ptr<daedalusCore::graphics::buffers::VertexArray> m_vertexArray, m_squareVertexArray, m_texuterVerexArray;
 	daedalusCore::shr_ptr<daedalusCore::graphics::Texture2D> m_texture, m_DDTestImage;
 
