@@ -8,7 +8,7 @@
 
 namespace daedalusCore { namespace graphics { namespace buffers {
 
-    VertexArray* VertexArray::Create()
+    shr_ptr<VertexArray> VertexArray::Create()
     {
 		switch (Renderer::getCurrentAPI())
 		{
@@ -16,7 +16,7 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
 #ifdef DD_RENDER_USING_OPENGL
 		case RendererAPI::API::OpenGL:
-			return new OpenGLVertexArray();
+			return std::make_shared<OpenGLVertexArray>();
 #endif
 		}
 

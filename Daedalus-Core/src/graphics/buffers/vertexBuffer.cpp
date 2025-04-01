@@ -8,7 +8,7 @@
 
 namespace daedalusCore { namespace graphics { namespace buffers {
 
-	VertexBuffer* buffers::VertexBuffer::create(float* verticies, uint32_t size)
+	shr_ptr<VertexBuffer> buffers::VertexBuffer::create(float* verticies, uint32_t size)
 	{
 		switch (Renderer::getCurrentAPI())
 		{
@@ -16,7 +16,7 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
 #ifdef DD_RENDER_USING_OPENGL
 		case RendererAPI::API::OpenGL:
-			return new OpenGlVertexBuffer(verticies, size);
+			return std::make_shared<OpenGlVertexBuffer>(verticies, size);
 #endif
 		}
 

@@ -8,7 +8,7 @@
 
 namespace daedalusCore { namespace graphics {
 
-    Texture2D* Texture2D::create(const std::string& filePath)
+	shr_ptr<Texture2D> Texture2D::create(const std::string& filePath)
     {
 		switch (Renderer::getCurrentAPI())
 		{
@@ -16,7 +16,7 @@ namespace daedalusCore { namespace graphics {
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
 #ifdef DD_RENDER_USING_OPENGL
 		case RendererAPI::API::OpenGL:
-			return new OpenGLTexture2D(filePath);
+			return std::make_shared<OpenGLTexture2D>(filePath);
 #endif
 		}
 

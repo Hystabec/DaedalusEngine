@@ -35,7 +35,7 @@ namespace daedalusCore { namespace application {
 
 		virtual void* getNativeWindow() const = 0;
 
-		static Window* Create(const WindowProperties& props = WindowProperties());
+		static uni_ptr<Window> Create(const WindowProperties& props = WindowProperties());
 	};
 
 } }

@@ -19,7 +19,7 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 		virtual const std::vector<shr_ptr<VertexBuffer>>& getVertexBuffers() const = 0;
 		virtual const shr_ptr<IndexBuffer>& getIndexBuffer() const = 0;
 
-		static VertexArray* Create();
+		static shr_ptr<VertexArray> Create();
 	};
 
 } } }

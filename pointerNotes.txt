@@ -1,9 +1,12 @@
-Raw pointers used in -
-Texture2D::Create - texture.h/.cpp
-Shader::create - shader.h/.cpp
-VertexBuffer::create - vertexBuffer.h/.cpp
-VertexArray::create - vertexArray.h/.cpp
-IndexBuffer::create - indexBuffer.h/.cpp
-Window::create - window.h
+std::make_shared used in -
+Texture2D::Create - texture.cpp
+Shader::create - shader.cpp
+VertexBuffer::create - vertexBuffer.cpp
+VertexArray::create - vertexArray.cpp
+IndexBuffer::create - indexBuffer.cpp
 
-Use of raw pointers should be replaced by managed pointers once I have a better point system in place
+std::make_unique used in -
+Window::create - windowsWindow.cpp
+
+
+These will need to be changed if and when i implement a custom way to create managed pointers

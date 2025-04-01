@@ -16,7 +16,7 @@ namespace daedalusCore { namespace graphics {
 	class Texture2D : public Texture
 	{
 	public:
-		static Texture2D* create(const std::string& filePath);
+		static shr_ptr<Texture2D> create(const std::string& filePath);
 	};
 
 } }
