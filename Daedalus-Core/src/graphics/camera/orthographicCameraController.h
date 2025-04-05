@@ -24,6 +24,9 @@ namespace daedalusCore { namespace graphics {
 		const maths::vec3& getPosition() const { return m_cameraPosition; }
 		const float& getRotation() const { return m_cameraRotation; }
 
+		const float& getZoomLevel() const { return m_zoomLevel; }
+		void setZoomLevel(float level) { m_zoomLevel = level; }
+
 	private:
 		bool onMouseScrolled(event::MouseScrolledEvent& e);
 		bool onWindowResize(event::WindowResizedEvent& e);

@@ -7,7 +7,7 @@ class TestLayer : public daedalusCore::application::Layer
 {
 public:
 	TestLayer()
-		: m_camController(1280 / 720), m_triPos(0)
+		: m_camController(1280.0f / 720.0f), m_triPos(0)
 	{
 		using namespace daedalusCore;
 

@@ -10,6 +10,11 @@ namespace daedalusCore { namespace graphics {
 		RenderCommands::init();
 	}
 
+	void Renderer::onWindowResize(uint32_t width, uint32_t height)
+	{
+		RenderCommands::setViewport(0, 0, width, height);
+	}
+
 	void Renderer::begin(OrthographicCamera& othoCamera)
 	{
 		DD_CORE_ASSERT(!m_sceneData->inUse, "Renderer::end() not called");

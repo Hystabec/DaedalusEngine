@@ -10,6 +10,7 @@ namespace daedalusCore { namespace graphics {
 	{
 	public:
 		static void init();
+		static void onWindowResize(uint32_t width, uint32_t height);
 
 		static void begin(OrthographicCamera& othoCamera);
 		static void end();

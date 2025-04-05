@@ -11,6 +11,8 @@ TO DO:
 expand to log to file
 
 log to custom console if added?
+
+static_assert on Log::strFormatter to check if the args have a format set?
 */
 
 namespace daedalusCore { namespace debug {
@@ -24,7 +26,7 @@ namespace daedalusCore { namespace debug {
 			Client
 		};
 
-		enum class LogFlags
+		enum class LogFlags	//These flags currently dont do anything
 		{
 			None = 0,
 			LogToConsole = BIT(0),
@@ -33,7 +35,7 @@ namespace daedalusCore { namespace debug {
 		};
 
 	public:
-		static void init(LogFlags flags = LogFlags::None);
+		static void init(LogFlags flags = LogFlags::LogToConsole);
 
 		/// @brief This function can be used to get a string formatted using the logger formatting
 		template<typename...Args>

@@ -19,6 +19,7 @@ namespace daedalusCore {
 	{
 		event::EventDispatcher dispatch(e);
 		dispatch.dispatch<event::WindowClosedEvent>(DD_BIND_EVENT_FUN(Application::onWindowClose));
+		dispatch.dispatch<event::WindowResizedEvent>(DD_BIND_EVENT_FUN(Application::onWindowResize));
 
 		for (auto it = m_layerStack.end(); it != m_layerStack.begin();)
 		{
@@ -40,8 +41,11 @@ namespace daedalusCore {
 			application::DeltaTime dt = m_time.getDeltaTime();
 			m_time.update();
 
-			for (application::Layer* layer : m_layerStack)
-				layer->update(dt);
+			if (!m_minimized)
+			{
+				for (application::Layer* layer : m_layerStack)
+					layer->update(dt);
+			}
 
 			m_ImGuiLayer->begin();
 			for (application::Layer* layer : m_layerStack)
@@ -85,6 +89,20 @@ namespace daedalusCore {
 	{
 		m_running = false;
 		return true;
+	}
+
+	bool Application::onWindowResize(event::WindowResizedEvent& e)
+	{
+		if (e.getWidth() == 0 || e.getHeight() == 0)
+		{
+			m_minimized = true;
+			return false;
+		}
+
+		m_minimized = false;
+		graphics::Renderer::onWindowResize(e.getWidth(), e.getHeight());
+
+		return false;
 	}
 
 }

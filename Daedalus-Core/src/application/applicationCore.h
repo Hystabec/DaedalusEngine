@@ -32,13 +32,15 @@ namespace daedalusCore {
 
 	private:
 		bool onWindowClose(event::WindowClosedEvent& e);
+		bool onWindowResize(event::WindowResizedEvent& e);
 
 	private:
 		static Application* s_instance;
-
+		
 		uni_ptr<application::Window> m_window;
 		application::ImGuiLayer* m_ImGuiLayer;
 		bool m_running = true;
+		bool m_minimized = false;
 		application::LayerStack m_layerStack;
 
 		float m_lastFrameTime = 0.0f;
