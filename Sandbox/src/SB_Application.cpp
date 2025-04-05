@@ -7,7 +7,7 @@ class TestLayer : public daedalusCore::application::Layer
 {
 public:
 	TestLayer()
-		: m_othoCam(-1.6f, 1.6f, -0.9f, 0.9f), m_triPos(0)
+		: m_camController(1280 / 720), m_triPos(0)
 	{
 		using namespace daedalusCore;
 
@@ -124,17 +124,10 @@ public:
 
 	void update(const daedalusCore::application::DeltaTime& dt) override
 	{
+		m_camController.update(dt);
+
 		daedalusCore::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
 		daedalusCore::graphics::RenderCommands::clear();
-
-		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_W))
-			m_othoCam.setPosition(m_othoCam.getPosition() + (daedalusCore::maths::vec3(0, 1.0f, 0) * (float)dt));
-		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_D))
-			m_othoCam.setPosition(m_othoCam.getPosition() + (daedalusCore::maths::vec3(1.0f, 0, 0) * (float)dt));
-		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_S))
-			m_othoCam.setPosition(m_othoCam.getPosition() + (daedalusCore::maths::vec3(0, -1.0f, 0) * (float)dt));
-		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_A))
-			m_othoCam.setPosition(m_othoCam.getPosition() + (daedalusCore::maths::vec3(-1.0f, 0, 0) * (float)dt));
 
 		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_I))
 			m_triPos += daedalusCore::maths::vec3(0.0f, 1.0f, 0.0f) * (float)dt;
@@ -151,7 +144,7 @@ public:
 		daedalusCore::maths::vec4 greenCol(0.2f, 0.8f, 0.3f, 1.0f);
 		daedalusCore::maths::vec4 blueCol(0.2f, 0.3f, 0.8f, 1.0f);
 
-		daedalusCore::graphics::Renderer::begin(m_othoCam);
+		daedalusCore::graphics::Renderer::begin(m_camController.getCamera());
 
 		for (int y = 0; y < 10; y++)
 		{
@@ -190,21 +183,21 @@ public:
 	void imGuiRender()
 	{
 		ImGui::Begin("Camera Control");
-		daedalusCore::maths::vec3 camPos = m_othoCam.getPosition();
+		daedalusCore::maths::vec3 camPos = m_camController.getPosition();
 		float pos[3] = { camPos.x, camPos.y, camPos.z };
 		if (ImGui::InputFloat3("Position", (float*)pos, "%.1f"))
-			m_othoCam.setPosition({ pos[0], pos[1], pos[2] });
+			m_camController.setPosition({ pos[0], pos[1], pos[2] });
 
-		float zRot = daedalusCore::maths::degrees_to_radians(m_othoCam.getRotation());
+		float zRot = daedalusCore::maths::degrees_to_radians(m_camController.getRotation());
 		if (ImGui::SliderAngle("Z Rotation", &zRot))
-			m_othoCam.setRotation(daedalusCore::maths::radians_to_degrees(zRot));
+			m_camController.setRotation(daedalusCore::maths::radians_to_degrees(zRot));
 		
 		ImGui::End();
 	}
 
 	void onEvent(daedalusCore::event::Event& e) override
 	{
-
+		m_camController.onEvent(e);
 	}
 
 private:
@@ -216,7 +209,7 @@ private:
 	daedalusCore::shr_ptr<daedalusCore::graphics::buffers::VertexArray> m_vertexArray, m_squareVertexArray, m_texuterVerexArray;
 	daedalusCore::shr_ptr<daedalusCore::graphics::Texture2D> m_texture, m_DDTestImage;
 
-	daedalusCore::graphics::OrthographicCamera m_othoCam;
+	daedalusCore::graphics::OrthographicCameraController m_camController;
 
 	daedalusCore::maths::vec3 m_triPos;
 };
@@ -225,7 +218,7 @@ class SandBox : public daedalusCore::Application
 {
 public:
 	SandBox()
-		: Application("SandBox", 960, 540, true)
+		: Application("SandBox", 1280, 720, true)
 	{
 		this->pushLayer(new TestLayer());
 	}

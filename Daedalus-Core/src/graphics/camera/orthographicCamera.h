@@ -8,6 +8,8 @@ namespace daedalusCore { namespace graphics {
 	{
 	public:
 		OrthographicCamera(float left, float right, float bottom, float top, float zNear = -1.0f, float zFar = 1.0f);
+
+		void setProjection(float left, float right, float bottom, float top, float zNear = -1.0f, float zFar = 1.0f);
 		
 		void setPosition(const maths::vec3& position) { m_position = position; recalcViewMatrix(); }
 		void setRotation(float zRotation) { m_zRotation = zRotation; recalcViewMatrix(); }
@@ -20,10 +22,12 @@ namespace daedalusCore { namespace graphics {
 
 	private:
 		void recalcViewMatrix();
+
 	private:
 		maths::mat4 m_projectionMatrix;
 		maths::mat4 m_viewMatrix;
 		maths::mat4 m_ProjectionviewMatrix;
+
 		maths::vec3 m_position;
 		float m_zRotation = 0.0f;
 	};

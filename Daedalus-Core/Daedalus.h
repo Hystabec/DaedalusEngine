@@ -2,6 +2,8 @@
 
 //for use by application
 #include "src/core.h"
+
+// ---application
 #include "src/application/applicationCore.h"
 
 #include "src/application/time/time.h"
@@ -14,10 +16,12 @@
 #include "src/application/input/inputKeyCodes.h"
 #include "src/application/input/inputMouseCodes.h"
 
+// ---events
 #include "src/events/keyEvent.h"
 #include "src/events/mouseEvent.h"
 #include "src/events/windowEvent.h"
 
+// ---graphics
 #include "src/graphics/renderer/renderer.h"
 #include "src/graphics/renderer/renderCommands.h"
 
@@ -29,17 +33,19 @@
 #include "src/graphics/buffers/vertexArray.h"
 
 #include "src/graphics/camera/orthographicCamera.h"
+#include "src/graphics/camera/orthographicCameraController.h"
 
-
-#include "src/debugTools/logging/log.h"
-
+// ---maths
 #include "maths/maths.h"
 
+// ---utils
 #include "src/utils/timer.h"
 #include "src/utils/colourConversionUtils.h"
 #include "src/utils/fileUtils.h"
 
+// ---debug
+#include "src/debugTools/logging/log.h"
 
-//--ENTRY POINT--
+//--ENTRY POINT-----------------
 #include "src/entryPoint.h"
-//_______________
+//------------------------------
