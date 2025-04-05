@@ -55,21 +55,18 @@ namespace daedalusCore { namespace event {
 
 	class EventDispatcher
 	{
-		template<typename T>
-		using EventFun = std::function<bool(T&)>;
-
 	public:
 		EventDispatcher(Event& event)
 			: m_event(event)
 		{
 		}
 
-		template<typename T>
-		bool dispatch(EventFun<T> func) requires(std::is_base_of<Event, T>::value)
+		template<typename T, typename F>
+		bool dispatch(const F& func) requires(std::is_base_of<Event, T>::value)
 		{
 			if (m_event.getType() == T::getStaticType())
 			{
-				m_event.m_handled = func(*(T*)&m_event);
+				m_event.m_handled = func(static_cast<T&>(m_event));
 				return true;
 			}
 			return false;
