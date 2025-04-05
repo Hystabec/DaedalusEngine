@@ -20,6 +20,19 @@ namespace daedalusCore { namespace maths {
 			elements[3 + 3 * 4] = diaganol;
 		}
 
+		mat4::mat4(float* elements)
+		{
+			memcpy(this->elements, elements, sizeof(float) * 16);
+		}
+
+		mat4::mat4(const vec4& column0, const vec4& column1, const vec4& column2, const vec4& column3)
+		{
+			columns[0] = column0;
+			columns[1] = column1;
+			columns[2] = column2;
+			columns[3] = column3;
+		}
+
 		mat4 mat4::identity()
 		{
 			return mat4(1.0f);
@@ -45,7 +58,7 @@ namespace daedalusCore { namespace maths {
 
 			return *this;
 		}
-		
+
 		mat4 operator*(mat4 left, const mat4& right)
 		{
 			return left.multiply(right);
