@@ -25,6 +25,7 @@
 #include "src/graphics/renderer/renderer.h"
 #include "src/graphics/renderer/renderCommands.h"
 
+#include "src/graphics/shaders/shaderLibrary.h"
 #include "src/graphics/shaders/shader.h"
 #include "src/graphics/rendering/texture.h"
 
@@ -45,7 +46,3 @@
 
 // ---debug
 #include "src/debugTools/logging/log.h"
-
-//--ENTRY POINT-----------------
-#include "src/entryPoint.h"
-//------------------------------
