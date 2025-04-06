@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "platformSpecific/platformDetection.h"
 
 #ifdef DD_PLATFORM_WINDOWS
 #else
