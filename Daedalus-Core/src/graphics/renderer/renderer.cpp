@@ -1,6 +1,8 @@
 #include "ddpch.h"
 #include "renderer.h"
 
+#include "renderer2D.h"
+
 namespace daedalusCore { namespace graphics {
 
 	Renderer::sceneData* Renderer::m_sceneData = new Renderer::sceneData;
@@ -8,6 +10,13 @@ namespace daedalusCore { namespace graphics {
 	void Renderer::init()
 	{
 		RenderCommands::init();
+		Renderer2D::init();
+	}
+
+	void Renderer::shutdown()
+	{
+		RenderCommands::shutdown();
+		Renderer2D::shutdown();
 	}
 
 	void Renderer::onWindowResize(uint32_t width, uint32_t height)

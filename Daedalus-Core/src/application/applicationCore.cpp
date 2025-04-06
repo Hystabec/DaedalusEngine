@@ -13,6 +13,7 @@ namespace daedalusCore {
 
 	Application::~Application()
 	{
+		graphics::Renderer::shutdown();
 	}
 
 	void Application::onEvent(event::Event& e)

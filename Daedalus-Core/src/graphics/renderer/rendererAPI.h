@@ -15,6 +15,7 @@ namespace daedalusCore { namespace graphics {
 		};
 	public:
 		virtual void init() = 0;
+		virtual void shutdown() {};
 
 		virtual void setViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
 

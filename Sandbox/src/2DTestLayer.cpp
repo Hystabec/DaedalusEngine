@@ -9,28 +9,6 @@ Layer2D::Layer2D()
 
 void Layer2D::attach()
 {
-	m_vertexArray = daedalusCore::graphics::buffers::VertexArray::Create();
-	float sqrVerts[4 * 7] = {
-		-0.75f, 0.75f, 0.0f,
-		0.75f, 0.75f, 0.0f,
-		0.75f, -0.75f, 0.0f,
-		-0.75f, -0.75f, 0.0f
-	};
-
-	daedalusCore::graphics::buffers::BufferLayout sqrLayout =
-	{
-		{ DD_BUFFERS_VEC3, "a_position" }
-	};
-
-	daedalusCore::shr_ptr<daedalusCore::graphics::buffers::VertexBuffer> sqrVertBuff(daedalusCore::graphics::buffers::VertexBuffer::create(sqrVerts, sizeof(sqrVerts)));
-	sqrVertBuff->setLayout(sqrLayout);
-	m_vertexArray->addVertexBuffer(sqrVertBuff);
-	uint32_t sqrIndices[3 * 2] = { 0, 1, 2, 2, 3, 0 };
-	daedalusCore::shr_ptr<daedalusCore::graphics::buffers::IndexBuffer> sqrIndexBuff(daedalusCore::graphics::buffers::IndexBuffer::create(sqrIndices, sizeof(sqrIndices) / sizeof(uint32_t)));
-	m_vertexArray->setIndexBuffer(sqrIndexBuff);
-
-	m_shader = daedalusCore::graphics::Shader::create("resources/shaders/flatShader.glsl");
-	m_colour = daedalusCore::maths::vec4(0.8f, 0.2f, 0.3f, 1.0f);
 }
 
 void Layer2D::detach()
@@ -44,19 +22,26 @@ void Layer2D::update(const daedalusCore::application::DeltaTime& dt)
 	daedalusCore::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
 	daedalusCore::graphics::RenderCommands::clear();
 
-	daedalusCore::graphics::Renderer::begin(m_camController.getCamera());
+	daedalusCore::graphics::Renderer2D::begin(m_camController.getCamera());
 
-	m_shader->enable();
-	m_shader->setUniform4f(m_colour, "u_colour");
-	daedalusCore::graphics::Renderer::submit(m_vertexArray, m_shader);
+	daedalusCore::graphics::Renderer2D::drawQuad(m_position, m_scale, m_zRot, m_colour);
+	daedalusCore::graphics::Renderer2D::drawQuad({ -2, 0 }, { 0.75f, 0.75f }, { 0.3f, 0.8f, 0.2f, 1.0f });
 
-	daedalusCore::graphics::Renderer::end();
+	daedalusCore::graphics::Renderer2D::end();
 }
 
 void Layer2D::imGuiRender()
 {
 	ImGui::Begin("Settings");
+
 	ImGui::ColorEdit4("Colour", &(m_colour.x));
+	ImGui::InputFloat2("position", &(m_position.x));
+	ImGui::InputFloat2("scale", &(m_scale.x));
+
+	float asRads = daedalusCore::maths::degrees_to_radians(-m_zRot);
+	if (ImGui::SliderAngle("Z Rotation", &asRads))
+		m_zRot = daedalusCore::maths::radians_to_degrees(-asRads);
+
 	ImGui::End();
 }
 

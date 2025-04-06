@@ -23,6 +23,7 @@
 
 // ---graphics
 #include "src/graphics/renderer/renderer.h"
+#include "src/graphics/renderer/renderer2D.h"
 #include "src/graphics/renderer/renderCommands.h"
 
 #include "src/graphics/shaders/shaderLibrary.h"
