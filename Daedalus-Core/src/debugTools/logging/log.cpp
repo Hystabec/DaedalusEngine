@@ -29,63 +29,49 @@ namespace daedalusCore { namespace debug {
 		hasInit = true;
 	}
 
-	void Log::baseTraceLog(const Caller& caller, const std::string& message)
+	void Log::baseLog(Caller caller, Type type, const std::string& message)
 	{
 		if (caller == Caller::Core)
 		{
-			s_coreLogger->trace(message);
+			switch (type)
+			{
+			case Type::trace:
+				s_coreLogger->trace(message);
+				break;
+			case Type::info:
+				s_coreLogger->info(message);
+				break;
+			case Type::warn:
+				s_coreLogger->warn(message);
+				break;
+			case Type::error:
+				s_coreLogger->error(message);
+				break;
+			case Type::critical:
+				s_coreLogger->critical(message);
+				break;
+			}
 		}
 		else if (caller == Caller::Client)
 		{
-			s_clientLogger->trace(message);
-		}
-	}
-
-	void Log::baseInfoLog(const Caller& caller, const std::string& message)
-	{
-		if (caller == Caller::Core)
-		{
-			s_coreLogger->info(message);
-		}
-		else if (caller == Caller::Client)
-		{
-			s_clientLogger->info(message);
-		}
-	}
-
-	void Log::baseWarnLog(const Caller& caller, const std::string& message)
-	{
-		if (caller == Caller::Core)
-		{
-			s_coreLogger->warn(message);
-		}
-		else if (caller == Caller::Client)
-		{
-			s_clientLogger->warn(message);
-		}
-	}
-
-	void Log::baseErrorLog(const Caller& caller, const std::string& message)
-	{
-		if (caller == Caller::Core)
-		{
-			s_coreLogger->error(message);
-		}
-		else if (caller == Caller::Client)
-		{
-			s_clientLogger->error(message);
-		}
-	}
-
-	void Log::baseCriticalLog(const Caller& caller, const std::string& message)
-	{
-		if (caller == Caller::Core)
-		{
-			s_coreLogger->critical(message);
-		}
-		else if (caller == Caller::Client)
-		{
-			s_clientLogger->critical(message);
+			switch (type)
+			{
+			case Type::trace:
+				s_clientLogger->trace(message);
+				break;
+			case Type::info:
+				s_clientLogger->info(message);
+				break;
+			case Type::warn:
+				s_clientLogger->warn(message);
+				break;
+			case Type::error:
+				s_clientLogger->error(message);
+				break;
+			case Type::critical:
+				s_clientLogger->critical(message);
+				break;
+			}
 		}
 	}
 
