@@ -44,7 +44,7 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 				shader_data_type_to_Open_GL_base_type(element.getBaseDataType()),
 				element.Normalized ? GL_TRUE : GL_FALSE,
 				layout.getStide(),
-				((const void*)element.Offset));
+				((const void*)((uint64_t)element.Offset)));	//cast to a uint64_t first to remove compiler warning when casting uint32_t to a void*
 			index++;
 		}
 		m_VertexBuffers.push_back(vertexBuffer);
