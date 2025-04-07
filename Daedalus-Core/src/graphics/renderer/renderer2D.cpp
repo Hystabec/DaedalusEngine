@@ -11,7 +11,8 @@ namespace daedalusCore { namespace graphics {
 	{
 		bool beginCalled = false;
 		shr_ptr<buffers::VertexArray> quadVertexArray;
-		shr_ptr<Shader> flatColourShader;
+		shr_ptr<Shader> defaultShader;
+		shr_ptr<Texture2D> whiteTexture;
 	};
 
 	static Renderer2DStorage* s_data = nullptr;
@@ -23,16 +24,17 @@ namespace daedalusCore { namespace graphics {
 		s_data = new Renderer2DStorage();
 
 		s_data->quadVertexArray = buffers::VertexArray::Create();
-		float sqrVerts[4 * 3] = {
-			-1.0f,  1.0f, 0.0f,
-			 1.0f,  1.0f, 0.0f,
-			 1.0f, -1.0f, 0.0f,
-			-1.0f, -1.0f, 0.0f
+		float sqrVerts[4 * 5] = {
+			-1.0f,  1.0f, 0.0f, 0.0f, 0.0f,
+			 1.0f,  1.0f, 0.0f, 1.0f, 0.0f,
+			 1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+			-1.0f, -1.0f, 0.0f, 0.0f, 1.0f
 		};
 
 		buffers::BufferLayout sqrLayout =
 		{
-			{ DD_BUFFERS_VEC3, "a_position" }
+			{ DD_BUFFERS_VEC3, "a_position" },
+			{ DD_BUFFERS_VEC2, "a_texCoord" }
 		};
 
 		shr_ptr<buffers::VertexBuffer> sqrVertBuff(buffers::VertexBuffer::create(sqrVerts, sizeof(sqrVerts)));
@@ -42,7 +44,13 @@ namespace daedalusCore { namespace graphics {
 		shr_ptr<buffers::IndexBuffer> sqrIndexBuff(buffers::IndexBuffer::create(sqrIndices, sizeof(sqrIndices) / sizeof(uint32_t)));
 		s_data->quadVertexArray->setIndexBuffer(sqrIndexBuff);
 
-		s_data->flatColourShader = Shader::create("resources/shaders/flatShader.glsl");
+		s_data->whiteTexture = graphics::Texture2D::create(1, 1);
+		uint32_t whiteTextureData = 0xffffffff;
+		s_data->whiteTexture->setData(&whiteTextureData, sizeof(whiteTextureData));
+
+		s_data->defaultShader = Shader::create("../Daedalus-Core/resources/shaders/default2DShader.glsl");	//relative directory could be an issue 
+		s_data->defaultShader->enable();
+		s_data->defaultShader->setUniform1i(0, "u_texture");
 	}
 
 	void Renderer2D::shutdown()
@@ -56,9 +64,8 @@ namespace daedalusCore { namespace graphics {
 		DD_CORE_ASSERT(!(s_data->beginCalled), "Renderer2D::end not called");
 		s_data->beginCalled = true;
 
-		s_data->flatColourShader->enable();
-		s_data->flatColourShader->setUniformMat4(othoCamera.getProjectViewMatrix(), "u_projView");
-		//s_data->flatColourShader->setUniformMat4(maths::mat4(1.0f), "u_transform");
+		s_data->defaultShader->enable();
+		s_data->defaultShader->setUniformMat4(othoCamera.getProjectViewMatrix(), "u_projView");
 	}
 
 	void Renderer2D::end()
@@ -68,28 +75,37 @@ namespace daedalusCore { namespace graphics {
 		s_data->beginCalled = false;
 	}
 
-	void Renderer2D::drawQuad(const maths::vec2& position, const maths::vec2& size, const maths::vec4& colour)
-	{
-		drawQuad({ position.x, position.y, 0 }, size, 0, colour);
-	}
-
 	void Renderer2D::drawQuad(const maths::vec2& position, const maths::vec2& size, const float& rotation, const maths::vec4& colour)
 	{
 		drawQuad({ position.x, position.y, 0 }, size, rotation, colour);
-	}
-
-	void Renderer2D::drawQuad(const maths::vec3& position, const maths::vec2& size, const maths::vec4& colour)
-	{
-		drawQuad(position, size, 0, colour);
 	}
 
 	void Renderer2D::drawQuad(const maths::vec3& position, const maths::vec2& size, const float& rotation, const maths::vec4& colour)
 	{
 		DD_CORE_ASSERT((s_data->beginCalled), "Renderer2D::begin not called");
 
-		s_data->flatColourShader->enable();
-		s_data->flatColourShader->setUniform4f(colour, "u_colour");
-		s_data->flatColourShader->setUniformMat4(maths::mat4::translate(position) * maths::mat4::rotate(rotation, { 0,0,1 }) * maths::mat4::scale({ size.x, size.y, 1 }), "u_transform");
+		s_data->defaultShader->setUniform4f(colour, "u_colour");
+		s_data->defaultShader->setUniformMat4(maths::mat4::translate(position) * maths::mat4::rotate(rotation, { 0,0,1 }) * maths::mat4::scale({ size.x, size.y, 1 }), "u_transform");
+
+		s_data->whiteTexture->bind();
+
+		s_data->quadVertexArray->bind();
+		RenderCommands::drawIndexed(s_data->quadVertexArray);
+	}
+
+	void Renderer2D::drawQuad(const maths::vec2& position, const maths::vec2& size, const float& rotation, const shr_ptr<graphics::Texture2D>& texture, const maths::vec4& colour)
+	{
+		drawQuad({ position.x, position.y, 0 }, size, rotation, texture, colour);
+	}
+
+	void Renderer2D::drawQuad(const maths::vec3& position, const maths::vec2& size, const float& rotation, const shr_ptr<graphics::Texture2D>& texture, const maths::vec4& colour)
+	{
+		DD_CORE_ASSERT((s_data->beginCalled), "Renderer2D::begin not called");
+
+		s_data->defaultShader->setUniform4f(colour, "u_colour");
+		s_data->defaultShader->setUniformMat4(maths::mat4::translate(position) * maths::mat4::rotate(rotation, { 0,0,1 }) * maths::mat4::scale({ size.x, size.y, 1 }), "u_transform");
+
+		texture->bind();
 
 		s_data->quadVertexArray->bind();
 		RenderCommands::drawIndexed(s_data->quadVertexArray);

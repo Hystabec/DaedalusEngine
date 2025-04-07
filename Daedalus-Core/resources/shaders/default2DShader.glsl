@@ -1,4 +1,4 @@
-//basic texture shader
+//This is the default 2D shader that render2D uses
 
 #type vertex
 #version 330 core
