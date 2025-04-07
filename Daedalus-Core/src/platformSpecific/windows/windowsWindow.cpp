@@ -20,7 +20,7 @@ namespace daedalusCore { namespace application {
 
 	uni_ptr<Window> Window::Create(const WindowProperties& props)
 	{
-		return std::make_unique<WindowsWindow>(props);
+		return create_uni_ptr<WindowsWindow>(props);
 	}
 
 	WindowsWindow::WindowsWindow(const WindowProperties& props)

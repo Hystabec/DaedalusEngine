@@ -18,7 +18,7 @@ namespace daedalusCore { namespace graphics {
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
 #ifdef DD_RENDER_USING_OPENGL
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLShader>(filePath);
+			return create_shr_ptr<OpenGLShader>(filePath);
 #endif
 		}
 
@@ -34,7 +34,7 @@ namespace daedalusCore { namespace graphics {
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
 #ifdef DD_RENDER_USING_OPENGL
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLShader>(name, vertex, frag);
+			return create_shr_ptr<OpenGLShader>(name, vertex, frag);
 #endif
 		}
 

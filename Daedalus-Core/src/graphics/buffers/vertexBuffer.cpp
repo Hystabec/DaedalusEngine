@@ -16,7 +16,7 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
 #ifdef DD_RENDER_USING_OPENGL
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGlVertexBuffer>(verticies, size);
+			return create_shr_ptr<OpenGlVertexBuffer>(verticies, size);
 #endif
 		}
 

@@ -23,7 +23,19 @@ namespace daedalusCore {
 	template<typename T>
 	using uni_ptr = std::unique_ptr<T>;
 
+	template<typename T, typename...Args>
+	constexpr uni_ptr<T> create_uni_ptr(Args&& ...args)
+	{
+		return std::make_unique<T>(std::forward<Args>(args)...);
+	}
+
 	template<typename T>
 	using shr_ptr = std::shared_ptr<T>;
+
+	template<typename T, typename...Args>
+	constexpr shr_ptr<T> create_shr_ptr(Args&& ...args)
+	{
+		return std::make_shared<T>(std::forward<Args>(args)...);
+	}
 
 }
