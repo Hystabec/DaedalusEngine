@@ -37,6 +37,7 @@ project "Daedalus-Core"
 	files
 	{
 		"%{prj.name}/Daedalus.h",
+		"%{prj.name}/entryPoint.h",
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/Dependencies/stb_image/**.h",
