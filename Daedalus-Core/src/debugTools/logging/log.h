@@ -51,7 +51,7 @@ namespace daedalusCore { namespace debug {
 
 		/// @brief This function can be used to get a string formatted using the logger formatting
 		template<typename...Args>
-		static std::string formatLogMessage(const std::string& fmt, Args&&...args)
+		static std::string formatLogMessage(const char* fmt, Args&&...args)
 		{
 			return strFormatter(nullptr, fmt, args...);
 		}
@@ -66,7 +66,7 @@ namespace daedalusCore { namespace debug {
 		}
 
 		template<typename...Args>
-		static void log(Caller caller, Type type, const std::string& fmt, Args&&... args)
+		static void log(Caller caller, Type type, const char* fmt, Args&&... args)
 		{
 			bool check = false;
 			const std::string& formatted = strFormatter(&check, fmt, args...);
@@ -78,7 +78,7 @@ namespace daedalusCore { namespace debug {
 		static void baseLog(Caller caller, Type type, const std::string& message);
 
 		template<typename...Args> 
-		static std::string strFormatter(bool* errorCheck, const std::string& fmt, Args&&...args)
+		static std::string strFormatter(bool* errorCheck, const char* fmt, Args&&...args)
 		{
 			try
 			{
