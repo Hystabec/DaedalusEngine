@@ -47,3 +47,4 @@
 
 // ---debug
 #include "src/debugTools/logging/log.h"
+#include "src/debugTools/profiling/instrumentor.h"

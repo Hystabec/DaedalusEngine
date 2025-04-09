@@ -88,7 +88,8 @@ project "Daedalus-Core"
 		defines
 		{
 			"DD_DEBUG",
-			"DD_USING_ASSERTS"
+			"DD_USING_ASSERTS",
+			"DD_USING_PROFILING"
 		}
 		symbols "on"
 
@@ -96,7 +97,8 @@ project "Daedalus-Core"
 		defines
 		{
 			"DD_RELEASE",
-			"DD_USING_ASSERTS"
+			"DD_USING_ASSERTS",
+			"DD_USING_PROFILING"
 		}
 		optimize "on"
 
@@ -145,11 +147,21 @@ project "Sandbox"
 		}
 
 	filter "configurations:Debug"
-		defines "DD_DEBUG"
+		defines 
+		{
+			"DD_DEBUG",
+			"DD_USING_ASSERTS",
+			"DD_USING_PROFILING"
+		}
 		symbols "on"
 
 	filter "configurations:Realease"
-		defines "DD_RELEASE"
+		defines
+		{
+			"DD_RELEASE",
+			"DD_USING_ASSERTS",
+			"DD_USING_PROFILING"
+		} 
 		optimize "on"
 
 	filter "configurations:Distro"

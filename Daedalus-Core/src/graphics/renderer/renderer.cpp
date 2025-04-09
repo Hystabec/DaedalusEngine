@@ -9,6 +9,7 @@ namespace daedalusCore { namespace graphics {
 	
 	void Renderer::init()
 	{
+		DD_PROFILE_FUNCTION();
 		RenderCommands::init();
 		Renderer2D::init();
 	}

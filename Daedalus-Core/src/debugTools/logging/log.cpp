@@ -11,12 +11,12 @@ namespace daedalusCore { namespace debug {
 
 	static std::shared_ptr<spdlog::logger> s_coreLogger;
 	static std::shared_ptr<spdlog::logger> s_clientLogger;
-	static bool hasInit = false;
+	static bool s_hasInit = false;
 
 
 	void Log::init(LogFlags flags)
 	{
-		if (hasInit)
+		if (s_hasInit)
 			return;
 
 		spdlog::set_pattern("%^[%T][%n][%l] %v%$");
@@ -26,7 +26,12 @@ namespace daedalusCore { namespace debug {
 		s_clientLogger = spdlog::stderr_color_mt("Client");
 		s_clientLogger->set_level(spdlog::level::trace);
 
-		hasInit = true;
+		s_hasInit = true;
+	}
+
+	bool Log::hasInit()
+	{
+		return s_hasInit;
 	}
 
 	void Log::baseLog(Caller caller, Type type, const std::string& message)

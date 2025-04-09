@@ -9,31 +9,43 @@ Layer2D::Layer2D()
 
 void Layer2D::attach()
 {
+	DD_PROFILE_FUNCTION();
 	m_texture = daedalusCore::graphics::Texture2D::create("resources/DD_testImage.png");
 }
 
 void Layer2D::detach()
 {
+	DD_PROFILE_FUNCTION();
 }
 
 void Layer2D::update(const daedalusCore::application::DeltaTime& dt)
 {
+	DD_PROFILE_FUNCTION();
+
 	m_camController.update(dt);
 
-	daedalusCore::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
-	daedalusCore::graphics::RenderCommands::clear();
+	{
+		DD_PROFILE_SCOPE("renderer prep");
+		daedalusCore::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
+		daedalusCore::graphics::RenderCommands::clear();
+	}
 
-	daedalusCore::graphics::Renderer2D::begin(m_camController.getCamera());
+	{
+		DD_PROFILE_SCOPE("renderer draw");
+		daedalusCore::graphics::Renderer2D::begin(m_camController.getCamera());
 
-	daedalusCore::graphics::Renderer2D::drawQuad(m_position, m_scale, m_zRot, m_colour);
-	daedalusCore::graphics::Renderer2D::drawQuad({ -2, 0 }, { 0.75f, 0.75f }, 0, { 0.3f, 0.8f, 0.2f, 1.0f });
-	daedalusCore::graphics::Renderer2D::drawQuad({ 2, 0 }, { 0.5f, 0.5f }, 0, m_texture);
+		daedalusCore::graphics::Renderer2D::drawQuad(m_position, m_scale, m_zRot, m_colour);
+		daedalusCore::graphics::Renderer2D::drawQuad({ -2, 0 }, { 0.75f, 0.75f }, 0, { 0.3f, 0.8f, 0.2f, 1.0f });
+		daedalusCore::graphics::Renderer2D::drawQuad({ 2, 0 }, { 0.5f, 0.5f }, 0, m_texture);
 
-	daedalusCore::graphics::Renderer2D::end();
+		daedalusCore::graphics::Renderer2D::end();
+	}
 }
 
 void Layer2D::imGuiRender()
 {
+	DD_PROFILE_FUNCTION();
+
 	ImGui::Begin("Settings");
 
 	ImGui::ColorEdit4("Colour", &(m_colour.x));

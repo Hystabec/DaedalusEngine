@@ -13,6 +13,7 @@ namespace daedalusCore { namespace graphics {
 	{
 		DD_CORE_ASSERT(windowHandle, "Window handle is nullptr");
 
+		DD_PROFILE_FUNCTION();
 		glfwMakeContextCurrent(m_windowHandle);
 
 		if (!s_GLEWInitialized)
@@ -34,6 +35,7 @@ namespace daedalusCore { namespace graphics {
 
 	void OpenGlContext::swapBuffers()
 	{
+		DD_PROFILE_FUNCTION();
 		glfwSwapBuffers(m_windowHandle);
 	}
 

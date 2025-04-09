@@ -19,6 +19,8 @@ namespace daedalusCore { namespace graphics {
 
 	void Renderer2D::init()
 	{
+		DD_PROFILE_FUNCTION();
+
 		DD_CORE_ASSERT(!s_data, "Renderer2D::init called twice");
 
 		s_data = new Renderer2DStorage();
@@ -55,12 +57,15 @@ namespace daedalusCore { namespace graphics {
 
 	void Renderer2D::shutdown()
 	{
+		DD_PROFILE_FUNCTION();
+
 		delete s_data;
 		s_data = nullptr;
 	}
 
 	void Renderer2D::begin(const OrthographicCamera& othoCamera)
 	{
+		DD_PROFILE_FUNCTION();
 		DD_CORE_ASSERT(!(s_data->beginCalled), "Renderer2D::end not called");
 		s_data->beginCalled = true;
 
@@ -70,6 +75,7 @@ namespace daedalusCore { namespace graphics {
 
 	void Renderer2D::end()
 	{
+		DD_PROFILE_FUNCTION();
 		DD_CORE_ASSERT((s_data->beginCalled), "Renderer2D::begin not called");
 
 		s_data->beginCalled = false;
@@ -82,6 +88,7 @@ namespace daedalusCore { namespace graphics {
 
 	void Renderer2D::drawQuad(const maths::vec3& position, const maths::vec2& size, const float& rotation, const maths::vec4& colour)
 	{
+		DD_PROFILE_FUNCTION();
 		DD_CORE_ASSERT((s_data->beginCalled), "Renderer2D::begin not called");
 
 		s_data->defaultShader->setUniform4f(colour, "u_colour");
@@ -100,6 +107,7 @@ namespace daedalusCore { namespace graphics {
 
 	void Renderer2D::drawQuad(const maths::vec3& position, const maths::vec2& size, const float& rotation, const shr_ptr<graphics::Texture2D>& texture, const maths::vec4& colour)
 	{
+		DD_PROFILE_FUNCTION();
 		DD_CORE_ASSERT((s_data->beginCalled), "Renderer2D::begin not called");
 
 		s_data->defaultShader->setUniform4f(colour, "u_colour");

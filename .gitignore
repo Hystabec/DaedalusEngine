@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+
+## daedalus-files
+#profiler generated files
+*.profile.json
 #imgui file
 imgui.ini
 

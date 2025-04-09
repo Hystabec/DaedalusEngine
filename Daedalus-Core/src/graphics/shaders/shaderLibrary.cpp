@@ -5,7 +5,7 @@ namespace daedalusCore { namespace graphics {
 
 	void ShaderLibrary::add(const std::string& name, const shr_ptr<Shader>& shader)
 	{
-		DD_CORE_ASSERT(!exists(name), debug::Log::formatLogMessage("Shader '{}' already exists", name));
+		DD_CORE_ASSERT(!exists(name), DD_ASSERT_FORMAT_MESSAGE("Shader '{}' already exists", name));
 		m_shaderMap[name] = shader;
 	}
 	void ShaderLibrary::add(const shr_ptr<Shader>& shader)
@@ -30,7 +30,7 @@ namespace daedalusCore { namespace graphics {
 
 	shr_ptr<Shader> ShaderLibrary::get(const std::string& name)
 	{
-		DD_CORE_ASSERT(exists(name), debug::Log::formatLogMessage("Shader '{}' not found", name));
+		DD_CORE_ASSERT(exists(name), DD_ASSERT_FORMAT_MESSAGE("Shader '{}' not found", name));
 		return m_shaderMap[name];
 	}
 

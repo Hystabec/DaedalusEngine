@@ -13,6 +13,8 @@ namespace daedalusCore { namespace graphics {
 
 	void OrthographicCameraController::update(const application::DeltaTime& dt)
 	{
+		DD_PROFILE_FUNCTION();
+
 		if (application::Input::getKeyDown(DD_INPUT_KEY_W))
 			m_cameraPosition.y += m_cameraTranslationSpeed * dt;
 		if (application::Input::getKeyDown(DD_INPUT_KEY_S))
@@ -38,6 +40,8 @@ namespace daedalusCore { namespace graphics {
 
 	void OrthographicCameraController::onEvent(event::Event& e)
 	{
+		DD_PROFILE_FUNCTION();
+
 		event::EventDispatcher dispatcher(e);
 		dispatcher.dispatch<event::MouseScrolledEvent>(DD_BIND_EVENT_FUN(OrthographicCameraController::onMouseScrolled));
 		dispatcher.dispatch<event::WindowResizedEvent>(DD_BIND_EVENT_FUN(OrthographicCameraController::onWindowResize));
@@ -45,6 +49,8 @@ namespace daedalusCore { namespace graphics {
 
 	bool OrthographicCameraController::onMouseScrolled(event::MouseScrolledEvent& e)
 	{
+		DD_PROFILE_FUNCTION();
+
 		m_zoomLevel -= e.getY() * 0.25f;
 		m_zoomLevel = ((m_zoomLevel) > (0.25f)) ? (m_zoomLevel) : (0.25f);
 		m_camera.setProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
@@ -56,6 +62,8 @@ namespace daedalusCore { namespace graphics {
 
 	bool OrthographicCameraController::onWindowResize(event::WindowResizedEvent& e)
 	{
+		DD_PROFILE_FUNCTION();
+
 		m_aspectRatio = (float)e.getWidth() / (float)e.getHeight();
 		m_camera.setProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
 

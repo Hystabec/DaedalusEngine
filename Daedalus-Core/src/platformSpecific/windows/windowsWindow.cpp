@@ -25,6 +25,8 @@ namespace daedalusCore { namespace application {
 
 	WindowsWindow::WindowsWindow(const WindowProperties& props)
 	{
+		DD_PROFILE_FUNCTION();
+
 		m_data.Title = props.Title;
 		m_data.Width = props.Width;
 		m_data.Height = props.Height;
@@ -32,17 +34,20 @@ namespace daedalusCore { namespace application {
 
 		if (!s_GLFWInitialized)
 		{
+			DD_PROFILE_SCOPE("glfwInit");
 			int success = glfwInit();
 			DD_CORE_ASSERT(success, "GLFW failed to initialize");
 			glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLFWInitialized = true;
 		}
 
+		{
+			DD_PROFILE_SCOPE("glfwCreateWindow");
+			m_window = glfwCreateWindow((int)props.Width, (int)props.Height, m_data.Title.c_str(), nullptr, nullptr);
 
-		m_window = glfwCreateWindow((int)props.Width, (int)props.Height, m_data.Title.c_str(), nullptr, nullptr);
-
-		if (!m_window)
-			DD_CORE_ASSERT(false, "failed to create window");
+			if (!m_window)
+				DD_CORE_ASSERT(false, "failed to create window");
+		}
 
 		m_renderingContext = new graphics::OpenGlContext(m_window);
 
@@ -141,17 +146,21 @@ namespace daedalusCore { namespace application {
 
 	WindowsWindow::~WindowsWindow()
 	{
+		DD_PROFILE_FUNCTION();
 		shutdown();
 	}
 
 	void WindowsWindow::update()
 	{
+		DD_PROFILE_FUNCTION();
 		glfwPollEvents();
 		m_renderingContext->swapBuffers();
 	}
 
 	void WindowsWindow::setVSync(bool enabled)
 	{
+		DD_PROFILE_FUNCTION();
+
 		if (enabled)
 			glfwSwapInterval(1);
 		else

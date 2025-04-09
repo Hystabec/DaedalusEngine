@@ -48,6 +48,7 @@ namespace daedalusCore { namespace debug {
 
 	public:
 		static void init(LogFlags flags = LogFlags::LogToConsole);
+		static bool hasInit();
 
 		/// @brief This function can be used to get a string formatted using the logger formatting
 		template<typename...Args>

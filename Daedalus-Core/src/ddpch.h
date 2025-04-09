@@ -22,3 +22,4 @@
 
 #include "core.h"
 #include "debugTools/logging/log.h"
+#include "debugTools/profiling/instrumentor.h"

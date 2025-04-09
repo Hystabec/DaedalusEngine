@@ -9,26 +9,36 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
+		DD_PROFILE_FUNCTION();
+
 		glCreateVertexArrays(1, &m_renderID);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
+		DD_PROFILE_FUNCTION();
+
 		glDeleteVertexArrays(1, &m_renderID);
 	}
 
 	void OpenGLVertexArray::bind() const
 	{
+		DD_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_renderID);
 	}
 
 	void OpenGLVertexArray::unbind() const
 	{
+		DD_PROFILE_FUNCTION();
+
 		glBindVertexArray(0);
 	}
 
 	void OpenGLVertexArray::addVertexBuffer(const shr_ptr<VertexBuffer>& vertexBuffer)
 	{
+		DD_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_renderID);
 		vertexBuffer->bind();
 
@@ -52,6 +62,8 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 
 	void OpenGLVertexArray::setIndexBuffer(const shr_ptr<IndexBuffer>& indexBuffer)
 	{
+		DD_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_renderID);
 		indexBuffer->bind();
 		m_IndexBuffer = indexBuffer;

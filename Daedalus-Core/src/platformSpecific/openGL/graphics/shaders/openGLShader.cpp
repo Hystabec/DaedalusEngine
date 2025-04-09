@@ -13,12 +13,14 @@ namespace daedalusCore { namespace graphics {
 		if (type == "fragment" || type == "pixel")
 			return GL_FRAGMENT_SHADER;
 
-		DD_CORE_ASSERT(false, debug::Log::formatLogMessage("Unknown shader type: {}", type));
+		DD_CORE_ASSERT(false, DD_ASSERT_FORMAT_MESSAGE("Unknown shader type: {}", type));
 		return 0;
 	} 
 
 	OpenGLShader::OpenGLShader(const std::string& filePath)
 	{
+		DD_PROFILE_FUNCTION();
+
 		bool wasReadCorrectly = true;
 		std::string shaderSrc = utils::read_file(filePath, &wasReadCorrectly);
 
@@ -44,6 +46,8 @@ namespace daedalusCore { namespace graphics {
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertex, const std::string& fragment)
 		: m_name(name)
 	{
+		DD_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources{ {GL_VERTEX_SHADER, vertex}, {GL_FRAGMENT_SHADER, fragment} };
 
 		m_shaderID = compile(shaderSources);
@@ -51,16 +55,22 @@ namespace daedalusCore { namespace graphics {
 
 	OpenGLShader::~OpenGLShader()
 	{
+		DD_PROFILE_FUNCTION();
+
 		glDeleteProgram(m_shaderID);
 	}
 
 	void OpenGLShader::setUniformMat4(const maths::mat4& matrix, const std::string& name)
 	{
+		DD_PROFILE_FUNCTION();
+
 		glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.elements);
 	}
 
 	void OpenGLShader::setUniform1i(int value, const std::string& name)
 	{
+		DD_PROFILE_FUNCTION();
+
 		glUniform1i(getUniformLocation(name), value);
 	}
 
@@ -71,6 +81,8 @@ namespace daedalusCore { namespace graphics {
 
 	void OpenGLShader::setUniform1f(float value, const std::string& name)
 	{
+		DD_PROFILE_FUNCTION();
+
 		glUniform1f(getUniformLocation(name), value);
 	}
 
@@ -81,36 +93,50 @@ namespace daedalusCore { namespace graphics {
 
 	void OpenGLShader::setUniform2f(const maths::vec2& vector, const std::string& name)
 	{
+		DD_PROFILE_FUNCTION();
+
 		glUniform2f(getUniformLocation(name), vector.x, vector.y);
 	}
 
 	void OpenGLShader::setUniform3f(const maths::vec3& vector, const std::string& name)
 	{
+		DD_PROFILE_FUNCTION();
+
 		glUniform3f(getUniformLocation(name), vector.x, vector.y, vector.z);
 	}
 
 	void OpenGLShader::setUniform4f(const maths::vec4& vector, const std::string& name)
 	{
+		DD_PROFILE_FUNCTION();
+
 		glUniform4f(getUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
 	}
 
 	void OpenGLShader::enable() const
 	{
+		DD_PROFILE_FUNCTION();
+
 		glUseProgram(m_shaderID);
 	}
 
 	void OpenGLShader::disable() const
 	{
+		DD_PROFILE_FUNCTION();
+
 		glUseProgram(0);
 	}
 
 	GLint OpenGLShader::getUniformLocation(const std::string& name)
 	{
+		DD_PROFILE_FUNCTION();
+
 		return glGetUniformLocation(m_shaderID, name.c_str());
 	}
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::preProcess(const std::string& source)
 	{
+		DD_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 
 		const char* typeToken = "#type";
@@ -134,6 +160,8 @@ namespace daedalusCore { namespace graphics {
 
 	GLuint OpenGLShader::compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
+		DD_PROFILE_FUNCTION();
+
 		GLuint program = glCreateProgram();
 
 		DD_CORE_ASSERT(shaderSources.size() <= 3, "Only supports up to 3 shaders");

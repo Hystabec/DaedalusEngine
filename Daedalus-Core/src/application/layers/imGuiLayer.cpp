@@ -23,6 +23,8 @@ namespace daedalusCore { namespace application {
 
 	void ImGuiLayer::attach()
 	{
+		DD_PROFILE_FUNCTION();
+
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -55,6 +57,8 @@ namespace daedalusCore { namespace application {
 
 	void ImGuiLayer::detach()
 	{
+		DD_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -66,6 +70,8 @@ namespace daedalusCore { namespace application {
 
 	void ImGuiLayer::begin()
 	{
+		DD_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -73,6 +79,8 @@ namespace daedalusCore { namespace application {
 
 	void ImGuiLayer::end()
 	{
+		DD_PROFILE_FUNCTION();
+
 		ImGuiIO& io = ImGui::GetIO();
 		Window* win = Application::get().getWindow();
 		io.DisplaySize = ImVec2((float)win->getWidth(), (float)win->getHeight());

@@ -6,7 +6,7 @@ namespace daedalusCore { namespace graphics {
 	class RenderCommands
 	{
 	public:
-		inline static void init() { s_rendererAPI->init(); }
+		inline static void init() { DD_PROFILE_FUNCTION(); s_rendererAPI->init(); }
 		inline static void shutdown() { s_rendererAPI->shutdown(); }
 
 		inline static void setViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
