@@ -2,6 +2,7 @@
 
 #include "graphics/camera/orthographicCamera.h"
 #include "graphics/rendering/texture.h"
+#include "graphics/rendering/primative2DProperties.h"
 
 namespace daedalusCore { namespace graphics {
 
@@ -14,11 +15,12 @@ namespace daedalusCore { namespace graphics {
 		static void begin(const OrthographicCamera& othoCamera);
 		static void end();
 
-		// primatives
-		static void drawQuad(const maths::vec2& position, const maths::vec2& size, const float& rotation, const maths::vec4& colour);
-		static void drawQuad(const maths::vec3& position, const maths::vec2& size, const float& rotation, const maths::vec4& colour);
-		static void drawQuad(const maths::vec2& position, const maths::vec2& size, const float& rotation, const shr_ptr<graphics::Texture2D>& texture, const maths::vec4& colour = { 1 });
-		static void drawQuad(const maths::vec3& position, const maths::vec2& size, const float& rotation, const shr_ptr<graphics::Texture2D>& texture, const maths::vec4& colour = { 1 });
+		// primatives		
+		static void drawQuad(const primatives2D::QuadProperties& quadProps);
+
+		//static void drawRotatedQuad(const primatives2D::RotatedQuadProperties& rotQuadProps); 
+		//-potential implementation of rotated quads - might want to keep seperate from standard quads for collision detection (AABB) 
+		// as wells as standard quad wont need to do mat4::rotate for a non rotated quad.
 	};
 
 } }

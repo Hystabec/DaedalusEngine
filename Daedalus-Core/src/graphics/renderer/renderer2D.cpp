@@ -81,39 +81,24 @@ namespace daedalusCore { namespace graphics {
 		s_data->beginCalled = false;
 	}
 
-	void Renderer2D::drawQuad(const maths::vec2& position, const maths::vec2& size, const float& rotation, const maths::vec4& colour)
-	{
-		drawQuad({ position.x, position.y, 0 }, size, rotation, colour);
-	}
-
-	void Renderer2D::drawQuad(const maths::vec3& position, const maths::vec2& size, const float& rotation, const maths::vec4& colour)
+	void Renderer2D::drawQuad(const primatives2D::QuadProperties& quadProps)
 	{
 		DD_PROFILE_FUNCTION();
 		DD_CORE_ASSERT((s_data->beginCalled), "Renderer2D::begin not called");
 
-		s_data->defaultShader->setUniform4f(colour, "u_colour");
-		s_data->defaultShader->setUniformMat4(maths::mat4::translate(position) * maths::mat4::rotate(rotation, { 0,0,1 }) * maths::mat4::scale({ size.x, size.y, 1 }), "u_transform");
+		s_data->defaultShader->setUniform4f(quadProps.colour, "u_colour");
+		s_data->defaultShader->setUniform1f(quadProps.tilingFactor, "u_tilingFactor");
 
-		s_data->whiteTexture->bind();
+		s_data->defaultShader->setUniformMat4(
+			maths::mat4::translate(quadProps.position) 
+			* maths::mat4::rotate(quadProps.rotation, { 0,0,1 }) 
+			* maths::mat4::scale({ quadProps.size.x, quadProps.size.y, 1 })
+			, "u_transform");
 
-		s_data->quadVertexArray->bind();
-		RenderCommands::drawIndexed(s_data->quadVertexArray);
-	}
-
-	void Renderer2D::drawQuad(const maths::vec2& position, const maths::vec2& size, const float& rotation, const shr_ptr<graphics::Texture2D>& texture, const maths::vec4& colour)
-	{
-		drawQuad({ position.x, position.y, 0 }, size, rotation, texture, colour);
-	}
-
-	void Renderer2D::drawQuad(const maths::vec3& position, const maths::vec2& size, const float& rotation, const shr_ptr<graphics::Texture2D>& texture, const maths::vec4& colour)
-	{
-		DD_PROFILE_FUNCTION();
-		DD_CORE_ASSERT((s_data->beginCalled), "Renderer2D::begin not called");
-
-		s_data->defaultShader->setUniform4f(colour, "u_colour");
-		s_data->defaultShader->setUniformMat4(maths::mat4::translate(position) * maths::mat4::rotate(rotation, { 0,0,1 }) * maths::mat4::scale({ size.x, size.y, 1 }), "u_transform");
-
-		texture->bind();
+		if (quadProps.texture != nullptr)
+			quadProps.texture->bind();	//might need to also check if the shr_ptr is still valid
+		else
+			s_data->whiteTexture->bind();
 
 		s_data->quadVertexArray->bind();
 		RenderCommands::drawIndexed(s_data->quadVertexArray);

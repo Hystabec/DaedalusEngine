@@ -34,9 +34,9 @@ void Layer2D::update(const daedalusCore::application::DeltaTime& dt)
 		DD_PROFILE_SCOPE("renderer draw");
 		daedalusCore::graphics::Renderer2D::begin(m_camController.getCamera());
 
-		daedalusCore::graphics::Renderer2D::drawQuad(m_position, m_scale, m_zRot, m_colour);
-		daedalusCore::graphics::Renderer2D::drawQuad({ -2, 0 }, { 0.75f, 0.75f }, 0, { 0.3f, 0.8f, 0.2f, 1.0f });
-		daedalusCore::graphics::Renderer2D::drawQuad({ 2, 0 }, { 0.5f, 0.5f }, 0, m_texture);
+		daedalusCore::graphics::Renderer2D::drawQuad({ m_position, m_scale, m_zRot, m_colour });
+		daedalusCore::graphics::Renderer2D::drawQuad({ { -2, 0 }, { 0.75f, 0.75f }, 0, { 0.3f, 0.8f, 0.2f, 1.0f } });
+		daedalusCore::graphics::Renderer2D::drawQuad({ { 2, 0 }, { 0.5f, 0.5f }, 0, m_texture });
 
 		daedalusCore::graphics::Renderer2D::end();
 	}
