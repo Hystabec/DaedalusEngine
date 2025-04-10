@@ -11,32 +11,82 @@ namespace daedalusCore { namespace graphics { namespace primatives2D {
 		{
 		};
 
-		QuadProperties(const maths::vec2& position, const maths::vec2& size, const float& rotation, const maths::vec4& colourTint)
+		QuadProperties(const maths::vec2& position, const maths::vec2& size, const maths::vec4& colourTint)
+			: position({ position.x, position.y, 0.0f }), size(size), colour(colourTint)
+		{
+		}
+
+		QuadProperties(const maths::vec3& position, const maths::vec2& size, const maths::vec4& colourTint)
+			: position(position), size(size), colour(colourTint)
+		{
+		}
+
+		QuadProperties(const maths::vec3& position, const maths::vec2& size, const shr_ptr<Texture2D>& texture, const maths::vec4& colourTint = { 1.0f })
+			: position(position), size(size), texture(texture), colour(colourTint)
+		{
+		}
+
+		QuadProperties(const maths::vec2& position, const maths::vec2& size, const shr_ptr<Texture2D>& texture, const maths::vec4& colourTint = { 1.0f })
+			: position({ position.x, position.y, 0.0f }), size(size), texture(texture), colour(colourTint)
+		{
+		}
+
+		QuadProperties(const maths::vec3& position, const maths::vec2& size, const shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::vec4& colourTint = { 1.0f })
+			: position(position), size(size), texture(texture), tilingFactor(tilingFactor), colour(colourTint)
+		{
+		}
+
+		QuadProperties(const maths::vec2& position, const maths::vec2& size, const shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::vec4& colourTint = { 1.0f })
+			: position({ position.x, position.y, 0.0f }), size(size), texture(texture), tilingFactor(tilingFactor), colour(colourTint)
+		{
+		}
+
+		maths::vec3 position = { 0.0f };
+		maths::vec2 size = { 1.0f };
+		shr_ptr<Texture2D> texture = nullptr;
+		float tilingFactor = 1.0f;
+		maths::vec4 colour = { 1.0f };
+	};
+
+	struct RotatedQuadProperties
+	{
+		RotatedQuadProperties()
+		{
+		};
+
+		/*
+		RotatedQuadProperties(const QuadProperties& quadProps, const float& rotation)
+			: position(quadProps.position), size(quadProps.size), rotation(rotation), texture(quadProps.texture), tilingFactor(quadProps.tilingFactor), colour(quadProps.colour)
+		{
+		}
+		*/
+
+		RotatedQuadProperties(const maths::vec2& position, const maths::vec2& size, const float& rotation, const maths::vec4& colourTint)
 			: position({ position.x, position.y, 0.0f }), size(size), rotation(rotation), colour(colourTint)
 		{
 		}
 
-		QuadProperties(const maths::vec3& position, const maths::vec2& size, const float& rotation, const maths::vec4& colourTint)
+		RotatedQuadProperties(const maths::vec3& position, const maths::vec2& size, const float& rotation, const maths::vec4& colourTint)
 			: position(position), size(size), rotation(rotation), colour(colourTint)
 		{
 		}
 
-		QuadProperties(const maths::vec3& position, const maths::vec2& size, const float& rotation, const shr_ptr<Texture2D>& texture, const maths::vec4& colourTint = { 1.0f })
+		RotatedQuadProperties(const maths::vec3& position, const maths::vec2& size, const float& rotation, const shr_ptr<Texture2D>& texture, const maths::vec4& colourTint = { 1.0f })
 			: position(position), size(size), rotation(rotation), texture(texture), colour(colourTint)
 		{
 		}
 
-		QuadProperties(const maths::vec2& position, const maths::vec2& size, const float& rotation, const shr_ptr<Texture2D>& texture, const maths::vec4& colourTint = { 1.0f })
+		RotatedQuadProperties(const maths::vec2& position, const maths::vec2& size, const float& rotation, const shr_ptr<Texture2D>& texture, const maths::vec4& colourTint = { 1.0f })
 			: position({ position.x, position.y, 0.0f }), size(size), rotation(rotation), texture(texture), colour(colourTint)
 		{
 		}
 
-		QuadProperties(const maths::vec3& position, const maths::vec2& size, const float& rotation, const shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::vec4& colourTint = { 1.0f })
+		RotatedQuadProperties(const maths::vec3& position, const maths::vec2& size, const float& rotation, const shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::vec4& colourTint = { 1.0f })
 			: position(position), size(size), rotation(rotation), texture(texture), tilingFactor(tilingFactor), colour(colourTint)
 		{
 		}
 
-		QuadProperties(const maths::vec2& position, const maths::vec2& size, const float& rotation, const shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::vec4& colourTint = { 1.0f })
+		RotatedQuadProperties(const maths::vec2& position, const maths::vec2& size, const float& rotation, const shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::vec4& colourTint = { 1.0f })
 			: position({ position.x, position.y, 0.0f }), size(size), rotation(rotation), texture(texture), tilingFactor(tilingFactor), colour(colourTint)
 		{
 		}

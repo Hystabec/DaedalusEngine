@@ -17,10 +17,7 @@ namespace daedalusCore { namespace graphics {
 
 		// primatives		
 		static void drawQuad(const primatives2D::QuadProperties& quadProps);
-
-		//static void drawRotatedQuad(const primatives2D::RotatedQuadProperties& rotQuadProps); 
-		//-potential implementation of rotated quads - might want to keep seperate from standard quads for collision detection (AABB) 
-		// as wells as standard quad wont need to do mat4::rotate for a non rotated quad.
+		static void drawRotatedQuad(const primatives2D::RotatedQuadProperties& rotQuadProps); 
 	};
 
 } }

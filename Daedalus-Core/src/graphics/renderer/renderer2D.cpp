@@ -91,12 +91,34 @@ namespace daedalusCore { namespace graphics {
 
 		s_data->defaultShader->setUniformMat4(
 			maths::mat4::translate(quadProps.position) 
-			* maths::mat4::rotate(quadProps.rotation, { 0,0,1 }) 
 			* maths::mat4::scale({ quadProps.size.x, quadProps.size.y, 1 })
 			, "u_transform");
 
 		if (quadProps.texture != nullptr)
 			quadProps.texture->bind();	//might need to also check if the shr_ptr is still valid
+		else
+			s_data->whiteTexture->bind();
+
+		s_data->quadVertexArray->bind();
+		RenderCommands::drawIndexed(s_data->quadVertexArray);
+	}
+
+	void Renderer2D::drawRotatedQuad(const primatives2D::RotatedQuadProperties& rotQuadProps)
+	{
+		DD_PROFILE_FUNCTION();
+		DD_CORE_ASSERT((s_data->beginCalled), "Renderer2D::begin not called");
+
+		s_data->defaultShader->setUniform4f(rotQuadProps.colour, "u_colour");
+		s_data->defaultShader->setUniform1f(rotQuadProps.tilingFactor, "u_tilingFactor");
+
+		s_data->defaultShader->setUniformMat4(
+			maths::mat4::translate(rotQuadProps.position)
+			* maths::mat4::rotate(rotQuadProps.rotation, { 0,0,1 })
+			* maths::mat4::scale({ rotQuadProps.size.x, rotQuadProps.size.y, 1 })
+			, "u_transform");
+
+		if (rotQuadProps.texture != nullptr)
+			rotQuadProps.texture->bind();	//might need to also check if the shr_ptr is still valid
 		else
 			s_data->whiteTexture->bind();
 
