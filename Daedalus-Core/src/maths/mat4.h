@@ -38,7 +38,11 @@ namespace daedalusCore { namespace maths {
 		static mat4 perspective(float fov, float aspectRatio, float nearPlane, float farPlane);
 
 		static mat4 translate(const vec3& translation);
-		static mat4 rotate(float angle, const vec3& axis);
+
+		/// @brief Returns an indenty matrix rotated by the specified angle and axis. 
+		/// A bool can be passed in as the final peramiter to pass angle as radians.
+		static mat4 rotate(float angle, const vec3& axis, bool inRadians = false);
+
 		static mat4 scale(const vec3& scale);
 	};
 

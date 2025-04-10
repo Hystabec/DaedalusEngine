@@ -111,6 +111,7 @@ namespace daedalusCore { namespace graphics {
 		s_data->defaultShader->setUniform4f(rotQuadProps.colour, "u_colour");
 		s_data->defaultShader->setUniform1f(rotQuadProps.tilingFactor, "u_tilingFactor");
 
+		//rotation assumed to be degrees
 		s_data->defaultShader->setUniformMat4(
 			maths::mat4::translate(rotQuadProps.position)
 			* maths::mat4::rotate(rotQuadProps.rotation, { 0,0,1 })

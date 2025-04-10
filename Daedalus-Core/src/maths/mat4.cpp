@@ -393,11 +393,11 @@ namespace daedalusCore { namespace maths {
 			return result;
 		}
 
-		mat4 mat4::rotate(float angle, const vec3& axis)
+		mat4 mat4::rotate(float angle, const vec3& axis, bool inRadians)
 		{
 			mat4 result(1.0f);
 
-			float asRads = degrees_to_radians(angle);
+			float asRads = inRadians ? angle : degrees_to_radians(angle);
 			float c = cos(asRads);
 			float s = sin(asRads);
 			float omc = 1.0f - c;

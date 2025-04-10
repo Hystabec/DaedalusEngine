@@ -5,6 +5,9 @@
 
 namespace daedalusCore { namespace graphics { namespace primatives2D {
 
+	/// <summary>
+	/// Struct used to store the properties of Quads used in renderer2D::drawQuad
+	/// </summary>
 	struct QuadProperties
 	{
 		QuadProperties() 
@@ -68,6 +71,9 @@ namespace daedalusCore { namespace graphics { namespace primatives2D {
 		maths::vec4 colour = { 1.0f };
 	};
 
+	/// <summary>
+	/// Struct used to store the properties of RotatedQuads used in renderer2D::drawRotatedQuad
+	/// </summary>
 	struct RotatedQuadProperties
 	{
 		RotatedQuadProperties()
@@ -116,11 +122,6 @@ namespace daedalusCore { namespace graphics { namespace primatives2D {
 		{
 		}
 
-		RotatedQuadProperties(const maths::vec3& position, const maths::vec2& size, const float& rotation, const maths::vec4& colourTint)
-			: position(position), size(size), rotation(rotation), colour(colourTint)
-		{
-		}
-
 		RotatedQuadProperties(const maths::vec3& position, const maths::vec2& size, const float& rotation, const shr_ptr<Texture2D>& texture, const maths::vec4& colourTint = { 1.0f })
 			: position(position), size(size), rotation(rotation), texture(texture), colour(colourTint)
 		{
@@ -131,13 +132,18 @@ namespace daedalusCore { namespace graphics { namespace primatives2D {
 		{
 		}
 
-		RotatedQuadProperties(const maths::vec3& position, const maths::vec2& size, const float& rotation, const shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::vec4& colourTint = { 1.0f })
-			: position(position), size(size), rotation(rotation), texture(texture), tilingFactor(tilingFactor), colour(colourTint)
+		RotatedQuadProperties(const maths::vec3& position, const maths::vec2& size, const float& rotation, const maths::vec4& colourTint)
+			: position(position), size(size), rotation(rotation), colour(colourTint)
 		{
 		}
 
 		RotatedQuadProperties(const maths::vec2& position, const maths::vec2& size, const float& rotation, const shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::vec4& colourTint = { 1.0f })
 			: position({ position.x, position.y, 0.0f }), size(size), rotation(rotation), texture(texture), tilingFactor(tilingFactor), colour(colourTint)
+		{
+		}
+
+		RotatedQuadProperties(const maths::vec3& position, const maths::vec2& size, const float& rotation, const shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::vec4& colourTint = { 1.0f })
+			: position(position), size(size), rotation(rotation), texture(texture), tilingFactor(tilingFactor), colour(colourTint)
 		{
 		}
 
