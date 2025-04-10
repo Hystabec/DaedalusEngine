@@ -5,9 +5,7 @@
 
 namespace daedalusCore { namespace graphics { namespace primatives2D {
 
-	/// <summary>
-	/// Struct used to store the properties of Quads used in renderer2D::drawQuad
-	/// </summary>
+	/// @brief Struct used to store the properties of Quads used in renderer2D::drawQuad
 	struct QuadProperties
 	{
 		QuadProperties() 
@@ -70,10 +68,8 @@ namespace daedalusCore { namespace graphics { namespace primatives2D {
 		float tilingFactor = 1.0f;
 		maths::vec4 colour = { 1.0f };
 	};
-
-	/// <summary>
-	/// Struct used to store the properties of RotatedQuads used in renderer2D::drawRotatedQuad
-	/// </summary>
+	
+	/// @brief Struct used to store the properties of RotatedQuads used in renderer2D::drawRotatedQuad
 	struct RotatedQuadProperties
 	{
 		RotatedQuadProperties()

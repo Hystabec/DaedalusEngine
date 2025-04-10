@@ -397,7 +397,9 @@ namespace daedalusCore { namespace maths {
 		{
 			mat4 result(1.0f);
 
-			float asRads = inRadians ? angle : degrees_to_radians(angle);
+			//-angle is used so that rotation is applied clockwise - i dont think i should have to do that
+			//TO DO: when i have a basic 3D scene test rotaion in other axis / multiple axis to see if the same is true
+			float asRads = inRadians ? -angle : degrees_to_radians(-angle);
 			float c = cos(asRads);
 			float s = sin(asRads);
 			float omc = 1.0f - c;

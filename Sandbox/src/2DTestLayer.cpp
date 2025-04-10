@@ -52,9 +52,9 @@ void Layer2D::imGuiRender()
 	ImGui::InputFloat3("position", &(m_squareProps.position.x));
 	ImGui::InputFloat2("scale", &(m_squareProps.size.x));
 
-	float asRads = daedalusCore::maths::degrees_to_radians(-m_squareProps.rotation);
+	float asRads = daedalusCore::maths::degrees_to_radians(m_squareProps.rotation);
 	if (ImGui::SliderAngle("Z Rotation", &asRads))
-		m_squareProps.rotation = daedalusCore::maths::radians_to_degrees(-asRads);
+		m_squareProps.rotation = daedalusCore::maths::radians_to_degrees(asRads);
 
 	ImGui::End();
 }
