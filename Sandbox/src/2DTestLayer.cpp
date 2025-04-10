@@ -34,7 +34,7 @@ void Layer2D::update(const daedalusCore::application::DeltaTime& dt)
 		DD_PROFILE_SCOPE("renderer draw");
 		daedalusCore::graphics::Renderer2D::begin(m_camController.getCamera());
 
-		daedalusCore::graphics::Renderer2D::drawRotatedQuad({ m_position, m_scale, m_zRot, m_colour });
+		daedalusCore::graphics::Renderer2D::drawRotatedQuad(m_squareProps);
 		daedalusCore::graphics::Renderer2D::drawQuad({ { -2, 0 }, { 0.75f, 0.75f }, { 0.3f, 0.8f, 0.2f, 1.0f } });
 		daedalusCore::graphics::Renderer2D::drawQuad({ { 2, 0 }, { 0.5f, 0.5f }, m_texture });
 
@@ -48,13 +48,13 @@ void Layer2D::imGuiRender()
 
 	ImGui::Begin("Settings");
 
-	ImGui::ColorEdit4("Colour", &(m_colour.x));
-	ImGui::InputFloat3("position", &(m_position.x));
-	ImGui::InputFloat2("scale", &(m_scale.x));
+	ImGui::ColorEdit4("Colour", &(m_squareProps.colour.x));
+	ImGui::InputFloat3("position", &(m_squareProps.position.x));
+	ImGui::InputFloat2("scale", &(m_squareProps.size.x));
 
-	float asRads = daedalusCore::maths::degrees_to_radians(-m_zRot);
+	float asRads = daedalusCore::maths::degrees_to_radians(-m_squareProps.rotation);
 	if (ImGui::SliderAngle("Z Rotation", &asRads))
-		m_zRot = daedalusCore::maths::radians_to_degrees(-asRads);
+		m_squareProps.rotation = daedalusCore::maths::radians_to_degrees(-asRads);
 
 	ImGui::End();
 }

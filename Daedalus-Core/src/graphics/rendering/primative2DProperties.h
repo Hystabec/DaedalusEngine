@@ -44,23 +44,23 @@ namespace daedalusCore { namespace graphics { namespace primatives2D {
 		{
 		}
 
-		QuadProperties(const maths::vec3& position, const maths::vec2& size, const shr_ptr<Texture2D>& texture, const maths::vec4& colourTint = { 1.0f })
-			: position(position), size(size), texture(texture), colour(colourTint)
-		{
-		}
-
 		QuadProperties(const maths::vec2& position, const maths::vec2& size, const shr_ptr<Texture2D>& texture, const maths::vec4& colourTint = { 1.0f })
 			: position({ position.x, position.y, 0.0f }), size(size), texture(texture), colour(colourTint)
 		{
 		}
 
-		QuadProperties(const maths::vec3& position, const maths::vec2& size, const shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::vec4& colourTint = { 1.0f })
-			: position(position), size(size), texture(texture), tilingFactor(tilingFactor), colour(colourTint)
+		QuadProperties(const maths::vec3& position, const maths::vec2& size, const shr_ptr<Texture2D>& texture, const maths::vec4& colourTint = { 1.0f })
+			: position(position), size(size), texture(texture), colour(colourTint)
 		{
 		}
 
 		QuadProperties(const maths::vec2& position, const maths::vec2& size, const shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::vec4& colourTint = { 1.0f })
 			: position({ position.x, position.y, 0.0f }), size(size), texture(texture), tilingFactor(tilingFactor), colour(colourTint)
+		{
+		}
+
+		QuadProperties(const maths::vec3& position, const maths::vec2& size, const shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::vec4& colourTint = { 1.0f })
+			: position(position), size(size), texture(texture), tilingFactor(tilingFactor), colour(colourTint)
 		{
 		}
 
@@ -117,8 +117,13 @@ namespace daedalusCore { namespace graphics { namespace primatives2D {
 		{
 		}
 
-		RotatedQuadProperties(const maths::vec2& position, const maths::vec2& size, const float& rotation, const maths::vec4& colourTint)
-			: position({ position.x, position.y, 0.0f }), size(size), rotation(rotation), colour(colourTint)
+		RotatedQuadProperties(const maths::vec2& position, const maths::vec2& size, const float& rotation, const maths::vec4& colour)
+			: position({ position.x, position.y, 0.0f }), size(size), rotation(rotation), colour(colour)
+		{
+		}
+
+		RotatedQuadProperties(const maths::vec3& position, const maths::vec2& size, const float& rotation, const maths::vec4& colour)
+			: position(position), size(size), rotation(rotation), colour(colour)
 		{
 		}
 
@@ -129,11 +134,6 @@ namespace daedalusCore { namespace graphics { namespace primatives2D {
 
 		RotatedQuadProperties(const maths::vec2& position, const maths::vec2& size, const float& rotation, const shr_ptr<Texture2D>& texture, const maths::vec4& colourTint = { 1.0f })
 			: position({ position.x, position.y, 0.0f }), size(size), rotation(rotation), texture(texture), colour(colourTint)
-		{
-		}
-
-		RotatedQuadProperties(const maths::vec3& position, const maths::vec2& size, const float& rotation, const maths::vec4& colourTint)
-			: position(position), size(size), rotation(rotation), colour(colourTint)
 		{
 		}
 
