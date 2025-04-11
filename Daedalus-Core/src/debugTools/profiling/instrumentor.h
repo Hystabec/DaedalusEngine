@@ -200,7 +200,7 @@ namespace daedalusCore { namespace debug {
 	}
 } }
 
-//#undef DD_USING_PROFILING
+#undef DD_USING_PROFILING
 #ifdef DD_USING_PROFILING
 	// Resolve which function signature macro will be used. Note that this only
 	// is resolved when the (pre)compiler starts, so the syntax highlighting

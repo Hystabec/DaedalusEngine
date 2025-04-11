@@ -14,6 +14,7 @@ namespace daedalusCore { namespace graphics {
 
 		static void begin(const OrthographicCamera& othoCamera);
 		static void end();
+		static void flush();
 
 
 		// primatives
@@ -25,8 +26,20 @@ namespace daedalusCore { namespace graphics {
 		/// Rotation should be in degrees
 		static void drawRotatedQuad(const primatives2D::RotatedQuadProperties& rotQuadProps); 
 
+#ifndef DD_DISTRO
+		struct Statistics
+		{
+			uint32_t drawCalls = 0;
+			uint32_t quadCount = 0;
+
+			uint32_t getTotalVertexCount() { return quadCount * 4; }
+			uint32_t getTotalIndexCount() { return quadCount * 6; }
+		};
+		static void resetStats();
+		static Statistics getStats();
+#endif
 	private:
-		static void flush();
+		static void flushAndReset();
 	};
 
 } }

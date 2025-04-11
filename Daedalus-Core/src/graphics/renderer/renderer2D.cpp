@@ -18,9 +18,9 @@ namespace daedalusCore { namespace graphics {
 
 	struct Renderer2DData
 	{
-		const uint32_t maxQuads = 10000;
-		const uint32_t maxVertices = maxQuads * 4;
-		const uint32_t maxIndices = maxQuads * 6;
+		static const uint32_t maxQuads = 10000;
+		static const uint32_t maxVertices = maxQuads * 4;
+		static const uint32_t maxIndices = maxQuads * 6;
 		static const uint32_t maxTextureSlots = 32; // TO DO: RenderCaps
 
 		bool beginCalled = false;
@@ -37,6 +37,10 @@ namespace daedalusCore { namespace graphics {
 		uint32_t textureSlotIndex = 1; // 0 = white texture
 
 		maths::vec3 quadVertexPositions[4];
+
+#ifndef DD_DISTRO
+		Renderer2D::Statistics stats;
+#endif
 	};
 
 	static Renderer2DData s_data;
@@ -131,13 +135,43 @@ namespace daedalusCore { namespace graphics {
 		flush();
 	}
 
+	void Renderer2D::flush()
+	{
+		DD_PROFILE_FUNCTION();
+
+		for (uint32_t i = 0; i < s_data.textureSlotIndex; i++)
+			s_data.textureSlots[i]->bind(i);
+
+		RenderCommands::drawIndexed(s_data.quadVertexArray, s_data.quadIndexCount);
+
+#ifndef DD_DISTRO
+		s_data.stats.drawCalls++;
+#endif 
+	}
+
+	void Renderer2D::flushAndReset()
+	{
+		// from end()
+		uint32_t dataSize = (uint8_t*)s_data.QuadVertexBufferPtr - (uint8_t*)s_data.QuadVertexBufferBase;
+		s_data.quadVertexBuffer->setData(s_data.QuadVertexBufferBase, dataSize);
+		flush();
+
+		// from begin()
+		s_data.quadIndexCount = 0;
+		s_data.QuadVertexBufferPtr = s_data.QuadVertexBufferBase;
+		s_data.textureSlotIndex = 1;
+	}
+
 	void Renderer2D::drawQuad(const primatives2D::QuadProperties& quadProps)
 	{
 		DD_PROFILE_FUNCTION();
 		DD_CORE_ASSERT((s_data.beginCalled), "Renderer2D::begin not called");
 
-		// TO DO: flush if the textureSlots are all full
-		// or if the QuadVertexBuffer is full
+		// TO DO: flush and reset if all texture slots are taken
+
+		//flush and reset if all the indices are used
+		if (s_data.quadIndexCount >= Renderer2DData::maxIndices)
+			flushAndReset();
 
 		float textureIndex = 0.0f;
 		if (quadProps.texture) //might need to also check if the shr_ptr is still valid
@@ -191,6 +225,10 @@ namespace daedalusCore { namespace graphics {
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.quadIndexCount += 6;
+
+#ifndef DD_DISTRO
+		s_data.stats.quadCount++;
+#endif 
 	}
 
 	void Renderer2D::drawRotatedQuad(const primatives2D::RotatedQuadProperties& rotQuadProps)
@@ -199,7 +237,10 @@ namespace daedalusCore { namespace graphics {
 		DD_CORE_ASSERT((s_data.beginCalled), "Renderer2D::begin not called");
 
 		// TO DO: flush if the textureSlots are all full
-		// or if the QuadVertexBuffer is full
+
+		//flush and reset if all the indices are used
+		if (s_data.quadIndexCount >= Renderer2DData::maxIndices)
+			flushAndReset();
 
 		float textureIndex = 0.0f;
 		if (rotQuadProps.texture) //might need to also check if the shr_ptr is still valid
@@ -254,14 +295,22 @@ namespace daedalusCore { namespace graphics {
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.quadIndexCount += 6;
+
+#ifndef DD_DISTRO
+		s_data.stats.quadCount++;
+#endif 
 	}
 
-	void Renderer2D::flush()
+#ifndef DD_DISTRO
+	void Renderer2D::resetStats()
 	{
-		for (uint32_t i = 0; i < s_data.textureSlotIndex; i++)
-			s_data.textureSlots[i]->bind(i);
-
-		RenderCommands::drawIndexed(s_data.quadVertexArray, s_data.quadIndexCount);
+		memset(&s_data.stats, 0, sizeof(Renderer2D::Statistics));
 	}
+
+	Renderer2D::Statistics Renderer2D::getStats()
+	{
+		return s_data.stats;
+	}
+#endif
 
 } }

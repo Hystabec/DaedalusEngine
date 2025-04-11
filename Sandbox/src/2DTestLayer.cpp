@@ -25,6 +25,9 @@ void Layer2D::update(const daedalusCore::application::DeltaTime& dt)
 
 	m_camController.update(dt);
 
+#ifndef DD_DISTRO
+	daedalusCore::graphics::Renderer2D::resetStats();
+#endif
 	{
 		DD_PROFILE_SCOPE("renderer prep");
 		daedalusCore::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
@@ -45,6 +48,15 @@ void Layer2D::update(const daedalusCore::application::DeltaTime& dt)
 		daedalusCore::graphics::Renderer2D::drawQuad({ { 2, 2 }, { 1.5f, 1.0f }, m_texture2 });
 		daedalusCore::graphics::Renderer2D::drawRotatedQuad({{0, 1},{0.25f, 0.25f}, rotation, m_texture2, {1.0f, 0.6f, 0.6f, 1.0f}});
 
+		for (float y = -5.0f; y < 5.0f; y += 0.05f)
+		{
+			for (float x = -5.0f; x < 5.0f; x += 0.05f)
+			{
+				daedalusCore::maths::vec4 colour = { (x + 5.0f) / 10.0f , 0.2f, (y + 5.0f) / 10.0f, 0.5f };
+				daedalusCore::graphics::Renderer2D::drawQuad({ {x, y}, { 0.2f }, colour });
+			}
+		}
+
 		daedalusCore::graphics::Renderer2D::end();
 	}
 }
@@ -54,6 +66,16 @@ void Layer2D::imGuiRender()
 	DD_PROFILE_FUNCTION();
 
 	ImGui::Begin("Settings");
+#ifndef DD_DISTRO
+	auto stats = daedalusCore::graphics::Renderer2D::getStats();
+	ImGui::Text("Renderer2D Stats:");
+	ImGui::Text("Draw calls: %d", stats.drawCalls);
+	ImGui::Text("Quads: %d", stats.quadCount);
+	ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
+	ImGui::Text("Indices: %d", stats.getTotalIndexCount());
+
+	ImGui::NewLine();
+#endif
 
 	ImGui::ColorEdit4("Colour", &(m_squareProps.colour.x));
 	ImGui::InputFloat3("position", &(m_squareProps.position.x));
