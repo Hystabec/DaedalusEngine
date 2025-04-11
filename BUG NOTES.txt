@@ -1,0 +1,20 @@
+alpha blending only applies to objects draw before them, objects draw after will be blocked even if alpha is 0
+
+e.g.
+-----------------------------------------------
+object1 alpha = 1.0f;
+object2 alpha = 0.0f;
+
+draw(object1)
+draw(object2)
+
+--object 1 will be visible
+-----------------------------------------------
+object1 alpha = 0.0f;
+object2 alpha = 1.0f;
+
+draw(object1)
+draw(object2)
+
+--object 2 will be blocked (not visible)
+-----------------------------------------------
