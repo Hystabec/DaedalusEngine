@@ -74,10 +74,10 @@ namespace daedalusCore { namespace graphics {
 		glUniform1i(getUniformLocation(name), value);
 	}
 
-	/*void OpenGLShader::setUniform1iv(int* value, int count, const std::string& name)
+	void OpenGLShader::setUniformia(int* values, uint32_t count, const std::string& name)
 	{
-		glUniform1iv(getUniformLocation(name), count, value);
-	}*/
+		glUniform1iv(getUniformLocation(name), count, values);
+	}
 
 	void OpenGLShader::setUniform1f(float value, const std::string& name)
 	{
@@ -86,10 +86,10 @@ namespace daedalusCore { namespace graphics {
 		glUniform1f(getUniformLocation(name), value);
 	}
 
-	/*void OpenGLShader::setUniform1fv(float* value, int count, const std::string& name)
+	void OpenGLShader::setUniformfa(float* values, uint32_t count, const std::string& name)
 	{
-		glUniform1fv(getUniformLocation(name), count, value);
-	}*/
+		glUniform1fv(getUniformLocation(name), count, values);
+	}
 
 	void OpenGLShader::setUniform2f(const maths::vec2& vector, const std::string& name)
 	{

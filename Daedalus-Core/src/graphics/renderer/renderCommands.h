@@ -17,7 +17,7 @@ namespace daedalusCore { namespace graphics {
 		inline static void setClearColour(const maths::vec4& colour) { s_rendererAPI->setClearColour(colour); }
 		inline static void clear() { s_rendererAPI->clear(); }
 
-		inline static void drawIndexed(const shr_ptr<graphics::buffers::VertexArray>& vertexArray) { s_rendererAPI->drawIndexedArray(vertexArray); }
+		inline static void drawIndexed(const shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount = 0) { s_rendererAPI->drawIndexed(vertexArray, indexCount); }
 
 	private:
 		static RendererAPI* s_rendererAPI;

@@ -18,14 +18,14 @@ namespace daedalusCore { namespace graphics {
 		/// @brief sets 1 int for a specified uniform location - shader->enable needs to be called first
 		virtual void setUniform1i(int value, const std::string& name) = 0;
 
-		// /// @brief sets 1 int variable at specified count for a specified uniform location - shader->enable needs to be called first
-		//virtual void setUniform1iv(int* value, int count, const std::string& name) = 0;
+		/// @brief sets an array of ints of specified count at specified uniform location - shader->enable needs to be called first
+		virtual void setUniformia(int* values, uint32_t count, const std::string& name) = 0;
 
 		/// @brief sets 1 float for a specified uniform location - shader->enable needs to be called first
 		virtual void setUniform1f(float value, const std::string& name) = 0;
 
-		// /// @brief sets 1 float variable at specified count for a specified uniform location - shader->enable needs to be called first
-		// virtual void setUniform1fv(float* value, int count, const std::string& name) = 0;
+		/// @brief sets an array of float of specified count at specified uniform location - shader->enable needs to be called first
+		virtual void setUniformfa(float* values, uint32_t count, const std::string& name) = 0;
 
 		/// @brief sets a 2 float vector for a specified uniform location - shader->enable needs to be called first
 		virtual void setUniform2f(const maths::vec2& vector, const std::string& name) = 0;

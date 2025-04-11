@@ -15,6 +15,7 @@ namespace daedalusCore { namespace graphics {
 		static void begin(const OrthographicCamera& othoCamera);
 		static void end();
 
+
 		// primatives
 		
 		/// @brief Draws a 2D Quad to the screen
@@ -23,6 +24,9 @@ namespace daedalusCore { namespace graphics {
 		/// @brief  Draws a 2D Quad to the screen with the option to be rotated.
 		/// Rotation should be in degrees
 		static void drawRotatedQuad(const primatives2D::RotatedQuadProperties& rotQuadProps); 
+
+	private:
+		static void flush();
 	};
 
 } }

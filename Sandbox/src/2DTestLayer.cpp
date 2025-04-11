@@ -11,6 +11,7 @@ void Layer2D::attach()
 {
 	DD_PROFILE_FUNCTION();
 	m_texture = daedalusCore::graphics::Texture2D::create("resources/DD_testImage.png");
+	m_texture2 = daedalusCore::graphics::Texture2D::create("resources/testImage.png");
 }
 
 void Layer2D::detach()
@@ -32,11 +33,17 @@ void Layer2D::update(const daedalusCore::application::DeltaTime& dt)
 
 	{
 		DD_PROFILE_SCOPE("renderer draw");
+		
+		static float rotation = 0.0f;
+		rotation += dt * 50.0f;
+
 		daedalusCore::graphics::Renderer2D::begin(m_camController.getCamera());
 
 		daedalusCore::graphics::Renderer2D::drawRotatedQuad(m_squareProps);
 		daedalusCore::graphics::Renderer2D::drawQuad({ { -2, 0 }, { 0.75f, 0.75f }, { 0.3f, 0.8f, 0.2f, 1.0f } });
 		daedalusCore::graphics::Renderer2D::drawQuad({ { 2, 0 }, { 0.5f, 0.5f }, m_texture });
+		daedalusCore::graphics::Renderer2D::drawQuad({ { 2, 2 }, { 1.5f, 1.0f }, m_texture2 });
+		daedalusCore::graphics::Renderer2D::drawRotatedQuad({{0, 1},{0.25f, 0.25f}, rotation, m_texture2, {1.0f, 0.6f, 0.6f, 1.0f}});
 
 		daedalusCore::graphics::Renderer2D::end();
 	}

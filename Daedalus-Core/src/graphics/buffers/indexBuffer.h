@@ -2,6 +2,7 @@
 
 namespace daedalusCore {namespace graphics { namespace buffers {
 
+	// Only supports 32-bit index buffers
 	class IndexBuffer
 	{
 	public:
@@ -11,7 +12,7 @@ namespace daedalusCore {namespace graphics { namespace buffers {
 		virtual void unbind() const = 0;
 		virtual uint32_t count() const = 0;
 
-		static shr_ptr<IndexBuffer> create(uint32_t* indices, uint32_t size);
+		static shr_ptr<IndexBuffer> create(uint32_t* indices, uint32_t count);
 	};
 
 } } }

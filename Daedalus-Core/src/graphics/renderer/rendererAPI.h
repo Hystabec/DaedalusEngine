@@ -22,7 +22,7 @@ namespace daedalusCore { namespace graphics {
 		virtual void setClearColour(const maths::vec4& colour) = 0;
 		virtual void clear() = 0;
 
-		virtual void drawIndexedArray(const shr_ptr<graphics::buffers::VertexArray>& vertexArray) = 0;
+		virtual void drawIndexed(const shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount = 0) = 0;
 
 		inline static API getAPI() { return s_API; }
 	private:

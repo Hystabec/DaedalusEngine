@@ -8,7 +8,7 @@
 
 namespace daedalusCore { namespace graphics { namespace buffers {
 
-	shr_ptr<IndexBuffer> buffers::IndexBuffer::create(uint32_t* indices, uint32_t size)
+	shr_ptr<IndexBuffer> buffers::IndexBuffer::create(uint32_t* indices, uint32_t count)
 	{
 		switch (Renderer::getCurrentAPI())
 		{
@@ -16,7 +16,7 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
 #ifdef DD_RENDER_USING_OPENGL
 		case RendererAPI::API::OpenGL:
-			return create_shr_ptr<OpenGLIndexBuffer>(indices, size);
+			return create_shr_ptr<OpenGLIndexBuffer>(indices, count);
 #endif
 		}
 

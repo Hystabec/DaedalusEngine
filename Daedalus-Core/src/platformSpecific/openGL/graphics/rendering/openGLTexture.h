@@ -19,6 +19,11 @@ namespace daedalusCore { namespace graphics {
 
 		void bind(uint32_t slot = 0) const override;
 
+		bool operator==(const Texture& other) const override 
+		{
+			return m_rendererID == ((OpenGLTexture2D&)other).m_rendererID;
+		};
+
 	private:
 		std::string m_path;
 

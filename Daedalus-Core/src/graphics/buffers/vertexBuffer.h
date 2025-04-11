@@ -14,7 +14,10 @@ namespace daedalusCore { namespace graphics { namespace buffers {
 
 		virtual const BufferLayout& getLayout() const = 0;
 		virtual void setLayout(const BufferLayout& layout) = 0;
+		
+		virtual void setData(const void* data, uint32_t size) = 0;
 
+		static shr_ptr<VertexBuffer> create(uint32_t size);
 		static shr_ptr<VertexBuffer> create(float* verticies, uint32_t size);
 	};
 

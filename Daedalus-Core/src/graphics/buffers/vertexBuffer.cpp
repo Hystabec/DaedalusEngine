@@ -8,6 +8,22 @@
 
 namespace daedalusCore { namespace graphics { namespace buffers {
 
+	shr_ptr<VertexBuffer> VertexBuffer::create(uint32_t size)
+	{
+		switch (Renderer::getCurrentAPI())
+		{
+		case RendererAPI::API::None:
+			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
+#ifdef DD_RENDER_USING_OPENGL
+		case RendererAPI::API::OpenGL:
+			return create_shr_ptr<OpenGlVertexBuffer>(size);
+#endif
+		}
+
+		DD_CORE_ASSERT(false, "RendererAPI Unkown");
+		return nullptr;
+	}
+
 	shr_ptr<VertexBuffer> buffers::VertexBuffer::create(float* verticies, uint32_t size)
 	{
 		switch (Renderer::getCurrentAPI())

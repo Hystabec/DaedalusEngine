@@ -13,7 +13,7 @@ namespace daedalusCore { namespace graphics {
 		void setClearColour(const maths::vec4& colour) override;
 		void clear() override;
 
-		void drawIndexedArray(const shr_ptr<graphics::buffers::VertexArray>& vertexArray) override;
+		void drawIndexed(const shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount = 0) override;
 	};
 
 } }
