@@ -18,3 +18,6 @@ draw(object2)
 
 --object 2 will be blocked (not visible)
 -----------------------------------------------
+
+I think the issue might have to do with the depth testing - if a quad is draw on top of another with a (less than 1) alpha value the bellow quad will fail the depth test so wont be renderer and will also then have no blending applied.
+but depth testing is needed so that layers/depth still works
