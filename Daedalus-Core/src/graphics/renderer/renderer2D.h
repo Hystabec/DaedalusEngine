@@ -23,7 +23,7 @@ namespace daedalusCore { namespace graphics {
 		static void drawQuad(const primatives2D::QuadProperties& quadProps);
 		
 		/// @brief  Draws a 2D Quad to the screen with the option to be rotated.
-		/// Rotation should be in degrees
+		/// Rotation should be in radians
 		static void drawRotatedQuad(const primatives2D::RotatedQuadProperties& rotQuadProps); 
 
 #ifndef DD_DISTRO

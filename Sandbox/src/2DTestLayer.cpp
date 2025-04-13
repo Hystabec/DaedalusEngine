@@ -39,7 +39,7 @@ void Layer2D::update(const daedalusCore::application::DeltaTime& dt)
 		DD_PROFILE_SCOPE("renderer draw");
 		
 		static float rotation = 0.0f;
-		rotation += dt * 50.0f;
+		rotation += dt * 5.0f;
 
 		daedalusCore::graphics::Renderer2D::begin(m_camController.getCamera());
 
@@ -82,9 +82,7 @@ void Layer2D::imGuiRender()
 	ImGui::InputFloat3("position", &(m_squareProps.position.x));
 	ImGui::InputFloat2("scale", &(m_squareProps.size.x));
 
-	float asRads = daedalusCore::maths::degrees_to_radians(m_squareProps.rotation);
-	if (ImGui::SliderAngle("Z Rotation", &asRads))
-		m_squareProps.rotation = daedalusCore::maths::radians_to_degrees(asRads);
+	ImGui::SliderAngle("Z Rotation", &m_squareProps.rotation);
 
 	ImGui::End();
 }

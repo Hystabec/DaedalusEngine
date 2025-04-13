@@ -263,7 +263,7 @@ namespace daedalusCore { namespace graphics {
 		}
 
 		maths::mat4 transform = maths::mat4::translate(rotQuadProps.position)
-			* maths::mat4::rotate(rotQuadProps.rotation, { 0,0,1 })
+			* maths::mat4::rotate(rotQuadProps.rotation, { 0,0,1 }, true)
 			* maths::mat4::scale({ rotQuadProps.size.x, rotQuadProps.size.y, 1 });
 
 		s_data.QuadVertexBufferPtr->position = transform * s_data.quadVertexPositions[0];
