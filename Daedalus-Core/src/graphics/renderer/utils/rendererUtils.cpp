@@ -6,6 +6,9 @@
 namespace daedalusCore::graphics {
 namespace renderer2DUtils {
 
+	/// TO DO: I could add a post build command to premake that copies the "default2DShader.glsl"
+    /// into the (or creates if path doesnt already exist) "resources\shaders" path next too the compiled .exe
+ 
 	std::string get_default_shader_path(bool* checkBool)
 	{
         DD_PROFILE_FUNCTION();
