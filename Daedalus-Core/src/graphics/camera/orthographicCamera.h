@@ -20,6 +20,7 @@ namespace daedalusCore { namespace graphics {
 		const maths::mat4& getViewMatrix() const { return m_viewMatrix; }
 		const maths::mat4& getProjectViewMatrix() const { return m_ProjectionviewMatrix; }
 
+
 	private:
 		void recalcViewMatrix();
 

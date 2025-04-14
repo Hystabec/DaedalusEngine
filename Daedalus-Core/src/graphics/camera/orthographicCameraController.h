@@ -8,6 +8,15 @@
 
 namespace daedalusCore { namespace graphics {
 
+	struct OrthgraphicCameraBounds
+	{
+		float left, right;
+		float bottom, top;
+
+		float getWidth() const { return right - left; }
+		float getHeight() const { return top - bottom; }
+	};
+
 	class OrthographicCameraController
 	{
 	public:
@@ -27,6 +36,8 @@ namespace daedalusCore { namespace graphics {
 		const float& getZoomLevel() const { return m_zoomLevel; }
 		void setZoomLevel(float level) { m_zoomLevel = level; }
 
+		const OrthgraphicCameraBounds& getBounds() const { return m_bounds; }
+		maths::vec2 mouseToWorldPosition(maths::vec2 mousePos) const;
 	private:
 		bool onMouseScrolled(event::MouseScrolledEvent& e);
 		bool onWindowResize(event::WindowResizedEvent& e);
@@ -35,6 +46,7 @@ namespace daedalusCore { namespace graphics {
 		float m_aspectRatio;
 		float m_zoomLevel = 1.0f;
 
+		OrthgraphicCameraBounds m_bounds;
 		OrthographicCamera m_camera;
 
 		bool m_useRotation;

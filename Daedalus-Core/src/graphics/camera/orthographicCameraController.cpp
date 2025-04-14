@@ -3,11 +3,12 @@
 
 #include "application/input/Input.h"
 #include "application/input/inputKeyCodes.h"
+#include "application/applicationCore.h"
 
 namespace daedalusCore { namespace graphics {
 
 	OrthographicCameraController::OrthographicCameraController(float aspectRatio, bool allowRotation)
-		: m_aspectRatio(aspectRatio), m_camera(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel), m_useRotation(allowRotation)
+		: m_aspectRatio(aspectRatio), m_bounds({ -aspectRatio * m_zoomLevel, aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel }), m_camera(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top), m_useRotation(allowRotation)
 	{
 	}
 
@@ -38,6 +39,17 @@ namespace daedalusCore { namespace graphics {
 		}
 	}
 
+	maths::vec2 OrthographicCameraController::mouseToWorldPosition(maths::vec2 mousePos) const
+	{
+		auto width = Application::get().getWindow()->getWidth();
+		auto height = Application::get().getWindow()->getHeight();
+
+		float x = (mousePos.x / width) * m_bounds.getWidth() - m_bounds.getWidth() * 0.5f;
+		float y = m_bounds.getHeight() * 0.5f - (mousePos.y / height) * m_bounds.getHeight();
+
+		return {x + m_cameraPosition.x, y + m_cameraPosition.y};
+	}
+
 	void OrthographicCameraController::onEvent(event::Event& e)
 	{
 		DD_PROFILE_FUNCTION();
@@ -53,7 +65,9 @@ namespace daedalusCore { namespace graphics {
 
 		m_zoomLevel -= e.getY() * 0.25f;
 		m_zoomLevel = ((m_zoomLevel) > (0.25f)) ? (m_zoomLevel) : (0.25f);
-		m_camera.setProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
+
+		m_bounds = { -m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel };
+		m_camera.setProjection(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top);
 
 		m_cameraTranslationSpeed = m_zoomLevel;
 
@@ -72,3 +86,5 @@ namespace daedalusCore { namespace graphics {
 
 
 } }
+
+
