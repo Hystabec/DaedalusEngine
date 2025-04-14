@@ -5,6 +5,8 @@
 #include "../shaders/shader.h"
 #include "renderCommands.h"
 
+#include "utils/rendererUtils.h"
+
 namespace daedalusCore { namespace graphics {
 
 	struct QuadVertex
@@ -91,14 +93,10 @@ namespace daedalusCore { namespace graphics {
 		for (uint32_t i = 0; i < s_data.maxTextureSlots; i++)
 			samplers[i] = i;
 
-		// There might be a more efficient way to do this but it find the default shader relative to this file
-		// so if this file or this folder move this will no longer work
-		//
-		// After testing this works while in IDE (MSVS) however once compiled into .exe no longer works as intended
-		std::string defaultShaderLoc = __FILE__;
-		defaultShaderLoc.erase(defaultShaderLoc.find_last_of('\\'));
-		defaultShaderLoc += "\\..\\..\\..\\resources\\shaders\\default2DShader.glsl";
-		s_data.defaultShader = Shader::create(defaultShaderLoc);
+		bool testBool;
+		std::string shaderPath = renderer2DUtils::get_default_shader_path(&testBool);
+		DD_CORE_ASSERT(testBool, "Default Shader file not found");
+		s_data.defaultShader = Shader::create(shaderPath);
 
 		s_data.defaultShader->enable();
 		s_data.defaultShader->setUniformia(samplers, s_data.maxTextureSlots, "u_textures");
