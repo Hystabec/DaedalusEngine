@@ -91,7 +91,13 @@ namespace daedalusCore { namespace graphics {
 		for (uint32_t i = 0; i < s_data.maxTextureSlots; i++)
 			samplers[i] = i;
 
-		s_data.defaultShader = Shader::create("../Daedalus-Core/resources/shaders/default2DShader.glsl");	//relative directory could be an issue 
+		// There might be a more efficient way to do this but it find the default shader relative to this file
+		// so if this file or this folder move this will no longer work
+		std::string defaultShaderLoc = __FILE__;
+		defaultShaderLoc.erase(defaultShaderLoc.find_last_of('\\'));
+		defaultShaderLoc += "\\..\\..\\..\\resources\\shaders\\default2DShader.glsl";
+		s_data.defaultShader = Shader::create(defaultShaderLoc);
+
 		s_data.defaultShader->enable();
 		s_data.defaultShader->setUniformia(samplers, s_data.maxTextureSlots, "u_textures");
 		
