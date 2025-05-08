@@ -15,6 +15,11 @@ namespace renderer2DUtils {
 
         // There might be a more efficient way to do this but it find the default shader relative to this file
         // so if this file or this folder move this will no longer work
+
+#ifndef DD_DISTRO
+
+        //when not in Distro build check in project files, for easier debugging
+
         std::string defaultShaderLoc = __FILE__;
         defaultShaderLoc.erase(defaultShaderLoc.find_last_of('\\'));
         defaultShaderLoc += "\\..\\..\\..\\..\\resources\\shaders\\default2DShader.glsl";
@@ -26,6 +31,8 @@ namespace renderer2DUtils {
             return defaultShaderLoc;
         }
 
+#endif 
+
         // Check if next to executable
         if (std::filesystem::exists("resources\\shaders\\default2DShader.glsl"))
         {
@@ -33,9 +40,15 @@ namespace renderer2DUtils {
             return "resources\\shaders\\default2DShader.glsl";
         }
 
+#ifndef DD_DISTRO
         //doesnt support launching from different dir that executable
         DD_CORE_ASSERT(false, DD_ASSERT_FORMAT_MESSAGE("default2DShader.glsl not found in {} or {}", defaultShaderLoc, "resources\\shaders\\default2DShader.glsl"));
         (*checkBool) = false;
+#else
+        DD_CORE_LOG_CRITICAL("default2DShader.glsl not found in {}", "resources\\shaders\\default2DShader.glsl");
+        (*checkBool) = false;
+#endif
+
         return "";
 	}
 
