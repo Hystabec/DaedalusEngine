@@ -39,6 +39,16 @@ namespace daedalusCore { namespace graphics {
 		}
 	}
 
+	void OrthographicCameraController::setZoomLevel(float level)
+	{
+		m_zoomLevel = level;
+
+		m_bounds = { -m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel };
+		m_camera.setProjection(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top);
+
+		m_cameraTranslationSpeed = m_zoomLevel;
+	}
+
 	maths::vec2 OrthographicCameraController::mouseToWorldPosition(maths::vec2 mousePos) const
 	{
 		auto width = Application::get().getWindow()->getWidth();

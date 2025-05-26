@@ -34,7 +34,7 @@ namespace daedalusCore { namespace graphics {
 		const float& getRotation() const { return m_cameraRotation; }
 
 		const float& getZoomLevel() const { return m_zoomLevel; }
-		void setZoomLevel(float level) { m_zoomLevel = level; }
+		void setZoomLevel(float level);
 
 		const OrthgraphicCameraBounds& getBounds() const { return m_bounds; }
 		maths::vec2 mouseToWorldPosition(maths::vec2 mousePos) const;

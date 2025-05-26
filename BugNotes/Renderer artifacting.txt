@@ -1,0 +1,2 @@
+In a different project ( https://github.com/Hystabec/Gossip-Simulator )
+occasionally some random graphical artifacting occurs - there is no clear reason for this potentially reading uninitialized memory somewhere.
