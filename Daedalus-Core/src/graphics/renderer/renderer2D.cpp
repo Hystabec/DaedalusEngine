@@ -135,7 +135,8 @@ namespace daedalusCore { namespace graphics {
 		DD_CORE_ASSERT((s_data.beginCalled), "Renderer2D::begin not called");
 		s_data.beginCalled = false;
 
-		uint32_t dataSize = (uint8_t*)s_data.QuadVertexBufferPtr - (uint8_t*)s_data.QuadVertexBufferBase;
+		//size of buffer in bytes
+		uint32_t dataSize = (uint32_t)((uint8_t*)s_data.QuadVertexBufferPtr - (uint8_t*)s_data.QuadVertexBufferBase);
 		s_data.quadVertexBuffer->setData(s_data.QuadVertexBufferBase, dataSize);
 
 		flush();
