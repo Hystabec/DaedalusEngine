@@ -1,9 +1,10 @@
 #include "jumperLayer.h"
+#include <imgui.h>
 
 namespace jumper {
 
 	JumperLayer::JumperLayer()
-		: m_camController(1280.0f / 720.0f), m_testPlatform(daedalusCore::graphics::Texture2D::create("resources/jumperAssets/platfromTexture.png"))
+		: m_gameCamera(1280.0f / 720.0f, 0.5f, true), m_testPlatform(daedalusCore::graphics::Texture2D::create("resources/jumperAssets/platfromTexture.png"))
 	{
 	}
 
@@ -17,17 +18,20 @@ namespace jumper {
 
 	void JumperLayer::update(const daedalusCore::application::DeltaTime& dt)
 	{
+#ifndef DD_DISTRO
+		daedalusCore::graphics::Renderer2D::resetStats();
+#endif
+
 		// Clear
 		daedalusCore::graphics::RenderCommands::setClearColour({ 0.2f, 0.2f, 0.2f, 1.0f });
 		daedalusCore::graphics::RenderCommands::clear();
 
 		// Update Logic
 		m_jumperCharacter.update(dt);
-
-		//m_camController.setPosition(m_jumperCharacter.getPosition());
+		m_gameCamera.update(dt, m_jumperCharacter);
 
 		// Render
-		daedalusCore::graphics::Renderer2D::begin(m_camController.getCamera());
+		daedalusCore::graphics::Renderer2D::begin(m_gameCamera.getCamera());
 		m_testPlatform.render();
 		m_jumperCharacter.render();
 		daedalusCore::graphics::Renderer2D::end();
@@ -35,11 +39,20 @@ namespace jumper {
 
 	void JumperLayer::imGuiRender()
 	{
+#ifndef DD_DISTRO
+		ImGui::Begin("Renderer Stats");
+		auto stats = daedalusCore::graphics::Renderer2D::getStats();
+		ImGui::Text("Renderer2D Stats:");
+		ImGui::Text("Draw calls: %d", stats.drawCalls);
+		ImGui::Text("Quads: %d", stats.quadCount);
+		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
+		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
+		ImGui::End();
+#endif
 	}
 
 	void JumperLayer::onEvent(daedalusCore::event::Event& e)
 	{
-		m_camController.onEvent(e);
 	}
 
 }

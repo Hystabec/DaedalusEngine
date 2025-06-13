@@ -16,13 +16,17 @@ namespace jumper {
 		inline const daedalusCore::maths::vec3& getPosition() const { return m_graphicsProps.position; }
 
 	private:
+		void flipSprite(bool flipRight);
+
+	private:
 		daedalusCore::shr_ptr<daedalusCore::graphics::Texture2D> m_mainTexture;
 		daedalusCore::graphics::primatives2D::QuadProperties m_graphicsProps;
 
 		const float spriteScale = 0.25f;
-
 		const float gravity = 0.5f;
 		const float jumpImpulse = 1.0f;
+		const float movementSpeed = 1.0f;
+
 		float m_currentJumpForce = 0.0f;
 	};
 

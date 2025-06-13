@@ -1,6 +1,7 @@
 #pragma once
 #include <Daedalus.h>
 
+#include "gameCamera.h"
 #include "jumperMan.h"
 #include "platform.h"
 
@@ -18,8 +19,7 @@ namespace jumper {
 		void onEvent(daedalusCore::event::Event& e) override;
 
 	private:
-		daedalusCore::graphics::OrthographicCameraController m_camController;
-
+		GameCamera m_gameCamera;
 		JumperMan m_jumperCharacter;
 		Platform m_testPlatform;
 	};
