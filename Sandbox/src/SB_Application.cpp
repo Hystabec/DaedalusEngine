@@ -1,21 +1,17 @@
 #include <Daedalus.h>
 #include "imgui.h"
 
-#include "generalLayer.h"
-#include "2DTestLayer.h"
-#include "alphaBlendingTestLayer.h"
-
 #include "entryPoint.h"
+
+#include "Jumper/jumperLayer.h"
 
 class SandBox : public daedalusCore::Application
 {
 public:
 	SandBox()
-		: Application("SandBox", 1280, 720, true)
+		: Application("Jumper", 1280, 720, true)
 	{
-		//this->pushLayer(new generalLayer());
-		this->pushLayer(new Layer2D());
-		//this->pushLayer(new AlphaBlendingTestLayer());
+		this->pushLayer(new jumper::JumperLayer());
 	}
 
 	~SandBox()
