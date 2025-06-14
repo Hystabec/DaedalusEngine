@@ -3,7 +3,7 @@
 
 #include "gameCamera.h"
 #include "jumperMan.h"
-#include "platform.h"
+#include "levelManager.h"
 
 namespace jumper {
 
@@ -20,8 +20,8 @@ namespace jumper {
 
 	private:
 		GameCamera m_gameCamera;
+		LevelManager m_levelManager;
 		JumperMan m_jumperCharacter;
-		Platform m_testPlatform;
 	};
 
 }

@@ -28,6 +28,7 @@ namespace jumper {
 		const float movementSpeed = 1.0f;
 
 		float m_currentJumpForce = 0.0f;
+		float m_currentMaxHeightReached = 0.0f;
 	};
 
 }

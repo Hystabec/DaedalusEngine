@@ -14,6 +14,11 @@ namespace jumper
 
 	void JumperMan::update(const daedalusCore::application::DeltaTime& dt)
 	{
+		if (m_currentMaxHeightReached < m_graphicsProps.position.y)
+			m_currentMaxHeightReached = m_graphicsProps.position.y;
+
+		//DD_LOG_INFO("Score: {}", m_currentMaxHeightReached);
+
 		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_A))
 		{
 			m_graphicsProps.position.x -= movementSpeed * dt;
@@ -26,6 +31,13 @@ namespace jumper
 		}
 
 		// if touching a platform reset jump force
+		
+		/*
+		* for all the platforms in the level check if the player is touching any of them,
+		* then check if the player is currently falling,
+		* if both are TRUE reset the jump force
+		*/
+
 
 		// once collisions are added change this to reset force when touching platform
 		if (m_currentJumpForce < (-jumpImpulse))

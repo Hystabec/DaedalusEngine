@@ -1,11 +1,14 @@
 #include "jumperLayer.h"
 #include <imgui.h>
 
+#include "randomNumber.h"
+
 namespace jumper {
 
 	JumperLayer::JumperLayer()
-		: m_gameCamera(1280.0f / 720.0f, 0.5f, true), m_testPlatform(daedalusCore::graphics::Texture2D::create("resources/jumperAssets/platfromTexture.png"))
+		: m_gameCamera(1280.0f / 720.0f, 0.5f, true)
 	{
+		RandomNumber::init();
 	}
 
 	void JumperLayer::attach()
@@ -32,7 +35,7 @@ namespace jumper {
 
 		// Render
 		daedalusCore::graphics::Renderer2D::begin(m_gameCamera.getCamera());
-		m_testPlatform.render();
+		m_levelManager.renderLevel();
 		m_jumperCharacter.render();
 		daedalusCore::graphics::Renderer2D::end();
 	}
@@ -53,6 +56,8 @@ namespace jumper {
 
 	void JumperLayer::onEvent(daedalusCore::event::Event& e)
 	{
+		m_gameCamera.onEvent(e);
 	}
+
 
 }

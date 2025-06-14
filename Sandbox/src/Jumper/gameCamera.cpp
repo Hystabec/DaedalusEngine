@@ -14,10 +14,11 @@ namespace jumper
 	{
 		if (m_useCameraTrailing)
 		{
-			if (vectorUtils::magnitudeVector3(character.getPosition() - this->m_cameraPosition) < m_maxTrailDistance)
-				m_cameraPosition += (vectorUtils::normalizeVector3(character.getPosition() - this->m_cameraPosition)) * m_maxTrailDistance * (float)dt;
+			auto mag = vectorUtils::magnitudeVector3(character.getPosition() - this->m_cameraPosition);
+			if (mag > m_maxTrailDistance)
+				m_cameraPosition += (vectorUtils::normalizeVector3(character.getPosition() - this->m_cameraPosition)) * (float)dt;
 			else
-				m_cameraPosition += ((vectorUtils::normalizeVector3(character.getPosition() - this->m_cameraPosition)) * m_trailSpeed) * (float)dt;;
+				m_cameraPosition += ((vectorUtils::normalizeVector3(character.getPosition() - this->m_cameraPosition)) * m_trailSpeed) * mag * (float)dt;;
 		}
 		else
 			m_cameraPosition = character.getPosition();
@@ -26,6 +27,20 @@ namespace jumper
 			m_cameraPosition.y = m_minYLevel;
 
 		m_camera.setPosition(m_cameraPosition);
+	}
+
+	void GameCamera::onEvent(daedalusCore::event::Event& e)
+	{
+		daedalusCore::event::EventDispatcher dispatcher(e);
+		dispatcher.dispatch<daedalusCore::event::WindowResizedEvent>(DD_BIND_EVENT_FUN(GameCamera::onWindowResize));
+	}
+
+	bool GameCamera::onWindowResize(daedalusCore::event::WindowResizedEvent& e)
+	{
+		m_aspectRatio = (float)e.getWidth() / (float)e.getHeight();
+		m_camera.setProjection(-m_aspectRatio, m_aspectRatio, -1, 1);
+
+		return false;
 	}
 
 }

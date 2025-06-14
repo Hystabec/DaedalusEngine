@@ -10,11 +10,16 @@ namespace jumper
 	class GameCamera
 	{
 	public:
-		GameCamera(float aspectRatio, float minYLevel, bool useCameraTrailing = false, float trailSpeed = 0.75f, float maxTrailDistance = 0.25f);
+		GameCamera(float aspectRatio, float minYLevel, bool useCameraTrailing = false, float trailSpeed = 1.0f, float maxTrailDistance = 0.5f);
 
 		void update(const daedalusCore::application::DeltaTime& dt, const JumperMan& character);
 
+		void onEvent(daedalusCore::event::Event& e);
+
 		inline const daedalusCore::graphics::OrthographicCamera& getCamera() const { return m_camera; }
+
+	private:
+		bool onWindowResize(daedalusCore::event::WindowResizedEvent& e);
 
 	private:
 		float m_aspectRatio;
