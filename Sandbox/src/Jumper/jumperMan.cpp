@@ -1,4 +1,5 @@
 #include "jumperMan.h"
+#include "levelManager.h"
 
 namespace jumper
 {
@@ -31,16 +32,13 @@ namespace jumper
 		}
 
 		// if touching a platform reset jump force
-		
 		/*
 		* for all the platforms in the level check if the player is touching any of them,
 		* then check if the player is currently falling,
 		* if both are TRUE reset the jump force
 		*/
-
-
-		// once collisions are added change this to reset force when touching platform
-		if (m_currentJumpForce < (-jumpImpulse))
+		//DD_LOG_TRACE("Collision Check: {}", LevelManager::get()->collisionCheck(*this));
+		if (LevelManager::get()->collisionCheck(*this) && m_currentJumpForce <= 0)
 			m_currentJumpForce = jumpImpulse;
 
 		m_graphicsProps.position += (daedalusCore::maths::vec3(0.0f, m_currentJumpForce, 0.0f) * (float)dt);

@@ -14,6 +14,7 @@ namespace jumper {
 
 		inline void setPosition(const daedalusCore::maths::vec3& newPos) { m_graphicsProps.position = newPos; }
 		inline const daedalusCore::maths::vec3& getPosition() const { return m_graphicsProps.position; }
+		inline const daedalusCore::maths::vec2& getScale() const { return m_graphicsProps.size; }
 
 	private:
 		void flipSprite(bool flipRight);
