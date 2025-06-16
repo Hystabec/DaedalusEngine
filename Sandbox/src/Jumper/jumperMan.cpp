@@ -18,7 +18,7 @@ namespace jumper
 		if (m_currentMaxHeightReached < m_graphicsProps.position.y)
 			m_currentMaxHeightReached = m_graphicsProps.position.y;
 
-		//DD_LOG_INFO("Score: {}", m_currentMaxHeightReached);
+		DD_LOG_INFO("Score: {}", m_currentMaxHeightReached * 100.0f);
 
 		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_A))
 		{
@@ -31,13 +31,6 @@ namespace jumper
 			flipSprite(true);
 		}
 
-		// if touching a platform reset jump force
-		/*
-		* for all the platforms in the level check if the player is touching any of them,
-		* then check if the player is currently falling,
-		* if both are TRUE reset the jump force
-		*/
-		//DD_LOG_TRACE("Collision Check: {}", LevelManager::get()->collisionCheck(*this));
 		if (LevelManager::get()->collisionCheck(*this) && m_currentJumpForce <= 0)
 			m_currentJumpForce = jumpImpulse;
 

@@ -40,6 +40,9 @@ namespace jumper
 		m_aspectRatio = (float)e.getWidth() / (float)e.getHeight();
 		m_camera.setProjection(-m_aspectRatio, m_aspectRatio, -1, 1);
 
+		m_bounds.left = -m_aspectRatio;
+		m_bounds.right = m_aspectRatio;
+
 		return false;
 	}
 

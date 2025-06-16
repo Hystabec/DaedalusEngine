@@ -18,6 +18,9 @@ namespace jumper
 
 		inline const daedalusCore::graphics::OrthographicCamera& getCamera() const { return m_camera; }
 
+		inline const daedalusCore::graphics::OrthgraphicCameraBounds& getBounds() const { return m_bounds; }
+		inline const daedalusCore::maths::vec3& getPosition() const { return m_cameraPosition; }
+
 	private:
 		bool onWindowResize(daedalusCore::event::WindowResizedEvent& e);
 

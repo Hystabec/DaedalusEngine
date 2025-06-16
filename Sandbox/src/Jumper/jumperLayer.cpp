@@ -32,6 +32,7 @@ namespace jumper {
 		// Update Logic
 		m_jumperCharacter.update(dt);
 		m_gameCamera.update(dt, m_jumperCharacter);
+		m_levelManager.update(m_jumperCharacter, m_gameCamera);
 
 		// Render
 		daedalusCore::graphics::Renderer2D::begin(m_gameCamera.getCamera());

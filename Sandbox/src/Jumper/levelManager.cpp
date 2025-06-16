@@ -21,14 +21,40 @@ namespace jumper
 		m_currentSpawnIndex = 1;
 	}
 
-	void LevelManager::update(const JumperMan& character)
+	void LevelManager::update(const JumperMan& character, const GameCamera& gameCam)
 	{
+		// check if the platforms are still on the screen
+		// if they are not "despawn" them
+
+		auto& camPos = gameCam.getPosition();
+		auto& camBounds = gameCam.getBounds();
+
+		daedalusCore::maths::vec4 squareVerts[4] = {
+			{camBounds.left, camBounds.bottom, 0.0f, 1.0f},
+			{camBounds.right, camBounds.bottom, 0.0f, 1.0f},
+			{camBounds.right, camBounds.top, 0.0f, 1.0f },
+			{camBounds.left, camBounds.top, 0.0f, 1.0f}
+		};
+
+		for (int i = 0; i < 4; i++)
+		{
+			daedalusCore::maths::vec4 sqaurePnt = daedalusCore::maths::mat4::translate({ camPos.x, camPos.y, 0.0f })
+				* daedalusCore::maths::mat4::scale({ 1.0f, 1.0f, 0.0f })
+				* squareVerts[i];
+
+			m_boundSquares.emplace_back(sqaurePnt.x, sqaurePnt.y);
+		}
 	}
 
 	void LevelManager::renderLevel()
 	{
 		for (auto& platform : m_platforms)
 			platform.render();
+
+		for (auto& camPnt : m_boundSquares)
+			daedalusCore::graphics::Renderer2D::drawQuad({ { camPnt.x, camPnt.y, 0.5f }, {0.1f, 0.1f}, {1.0f, 0.0f, 0.0f, 1.0f} });
+
+		m_boundSquares.clear();
 	}
 
 	bool LevelManager::collisionCheck(const JumperMan& character)

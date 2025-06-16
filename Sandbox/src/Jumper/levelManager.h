@@ -3,6 +3,7 @@
 #include <vector>
 #include "platform.h"
 #include "jumperMan.h"
+#include "gameCamera.h"
 
 namespace jumper
 {
@@ -12,7 +13,7 @@ namespace jumper
 	public:
 		LevelManager();
 
-		void update(const JumperMan& character);
+		void update(const JumperMan& character, const GameCamera& gameCam);
 		void renderLevel();
 
 		bool collisionCheck(const JumperMan& character);
@@ -24,6 +25,8 @@ namespace jumper
 		static const uint32_t platfromPoolSize = 12;
 		std::vector<Platform> m_platforms;
 		uint32_t m_currentSpawnIndex = 0;
+
+		std::vector<daedalusCore::maths::vec2> m_boundSquares;
 	};
 
 }
