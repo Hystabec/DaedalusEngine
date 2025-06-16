@@ -90,6 +90,7 @@ namespace daedalusCore { namespace graphics {
 
 		m_aspectRatio = (float)e.getWidth() / (float)e.getHeight();
 		m_camera.setProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
+		m_bounds = { -m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel };
 
 		return false;
 	}
