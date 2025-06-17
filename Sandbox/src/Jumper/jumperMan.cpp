@@ -1,6 +1,8 @@
 #include "jumperMan.h"
 #include "levelManager.h"
 
+#define DISABLE_JUMP true
+
 namespace jumper
 {
 
@@ -31,8 +33,13 @@ namespace jumper
 			flipSprite(true);
 		}
 
+#if !DISABLE_JUMP
 		if (LevelManager::get()->collisionCheck(*this) && m_currentJumpForce <= 0)
 			m_currentJumpForce = jumpImpulse;
+#else
+		if (LevelManager::get()->collisionCheck(*this) && m_currentJumpForce <= 0)
+			m_currentJumpForce = 0;
+#endif
 
 		m_graphicsProps.position += (daedalusCore::maths::vec3(0.0f, m_currentJumpForce, 0.0f) * (float)dt);
 

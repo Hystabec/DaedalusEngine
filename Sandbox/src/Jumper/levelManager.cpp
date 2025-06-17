@@ -29,7 +29,7 @@ namespace jumper
 		auto& camPos = gameCam.getPosition();
 		auto& camBounds = gameCam.getBounds();
 
-		daedalusCore::maths::vec4 squareVerts[4] = {
+		daedalusCore::maths::vec4 cameraCorners[4] = {
 			{camBounds.left, camBounds.bottom, 0.0f, 1.0f},
 			{camBounds.right, camBounds.bottom, 0.0f, 1.0f},
 			{camBounds.right, camBounds.top, 0.0f, 1.0f },
@@ -38,11 +38,11 @@ namespace jumper
 
 		for (int i = 0; i < 4; i++)
 		{
-			daedalusCore::maths::vec4 sqaurePnt = daedalusCore::maths::mat4::translate({ camPos.x, camPos.y, 0.0f })
+			cameraCorners[i] = daedalusCore::maths::mat4::translate({camPos.x, camPos.y, 0.0f})
 				* daedalusCore::maths::mat4::scale({ 1.0f, 1.0f, 0.0f })
-				* squareVerts[i];
+				* cameraCorners[i];
 
-			m_boundSquares.emplace_back(sqaurePnt.x, sqaurePnt.y);
+			m_boundSquares.emplace_back(cameraCorners[i].x, cameraCorners[i].y);
 		}
 	}
 
