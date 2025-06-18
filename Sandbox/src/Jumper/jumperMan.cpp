@@ -2,6 +2,7 @@
 #include "levelManager.h"
 
 #define DISABLE_JUMP false
+#define USING_PARTICLE_SYSTEM true
 
 namespace jumper
 {
@@ -16,13 +17,13 @@ namespace jumper
 
 		m_jetpackPaticles.position = { 0.0f };
 		m_jetpackPaticles.velocity = { 0.0f, -1.0f };
-		m_jetpackPaticles.velocityVariation = { 2.0f };
-		m_jetpackPaticles.sizeBegin = 0.05f;
+		m_jetpackPaticles.velocityVariation = { 0.5f, 2.0f };
+		m_jetpackPaticles.sizeBegin = 0.025f;
 		m_jetpackPaticles.sizeEnd = 0.0f;
-		m_jetpackPaticles.sizeVariation = 0.0025f;
-		m_jetpackPaticles.colourBegin = daedalusCore::utils::colour_vec4_to_normalized_vec4({247, 15, 7, 255});
-		m_jetpackPaticles.colourEnd = daedalusCore::utils::colour_vec4_to_normalized_vec4({ 247, 216, 216, 255 });
-		m_jetpackPaticles.lifeTime = 1.0f;
+		m_jetpackPaticles.sizeVariation = 0.0125f;
+		m_jetpackPaticles.colourBegin = daedalusCore::utils::colour_vec4_to_normalized_vec4({255, 217, 0, 255});
+		m_jetpackPaticles.colourEnd = daedalusCore::utils::colour_vec4_to_normalized_vec4({ 247, 15, 7, 255 });
+		m_jetpackPaticles.lifeTime = 0.5f;
 	}
 
 	bool JumperMan::update(const daedalusCore::application::DeltaTime& dt)
@@ -60,12 +61,13 @@ namespace jumper
 
 		m_currentJumpForce -= gravity * dt;
 
+#if USING_PARTICLE_SYSTEM
 		if (m_currentJumpForce > 0.0f)
 		{
 			// paricles
 			if (m_time > m_particleNextEmitTime)
 			{
-				m_jetpackPaticles.position = { m_graphicsProps.position.x, m_graphicsProps.position.y - 0.1f };
+				m_jetpackPaticles.position = { m_graphicsProps.position.x, m_graphicsProps.position.y - 0.07f };
 
 				if (flipped)
 					m_jetpackPaticles.position.x += 0.05f;
@@ -77,13 +79,16 @@ namespace jumper
 			}
 		}
 		m_particleSystem.update(dt);
+#endif
 
 		return false;
 	}
 
 	void JumperMan::render() const
 	{
+#if USING_PARTICLE_SYSTEM
 		m_particleSystem.render();
+#endif
 
 		daedalusCore::graphics::Renderer2D::drawQuad(m_graphicsProps);
 	}

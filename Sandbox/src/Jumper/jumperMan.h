@@ -39,7 +39,7 @@ namespace jumper {
 		psystem::ParticleSysyem m_particleSystem;
 		psystem::PartProps m_jetpackPaticles;
 		float m_time = 0.0f;
-		float m_particleInterval = 0.05f;
+		float m_particleInterval = 0.025f;
 		float m_particleNextEmitTime = m_particleInterval;
 	};
 
