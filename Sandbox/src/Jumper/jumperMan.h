@@ -8,7 +8,7 @@ namespace jumper {
 	public:
 		JumperMan();
 
-		void update(const daedalusCore::application::DeltaTime& dt);
+		bool update(const daedalusCore::application::DeltaTime& dt);
 
 		void render() const;
 

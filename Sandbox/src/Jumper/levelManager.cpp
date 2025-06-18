@@ -10,14 +10,17 @@ namespace jumper
 		DD_ASSERT(!s_instance, "Duplicate Level Managers");
 		s_instance = this;
 
+		m_platforms.reserve(platfromPoolSize);
+
 		auto platformTexture = daedalusCore::graphics::Texture2D::create("resources/jumperAssets/platfromTexture.png");
 		for (int i = 0; i < platfromPoolSize; i++)
 		{
-			m_platforms.push_back(Platform(platformTexture));
-			m_platforms.back().setPosition({ 0.0f, -25.0f });
+			m_platforms.emplace_back(platformTexture);
+			m_platforms.back().setPosition({0.0f, -25.0f});
 		}
 
-		m_platforms[0].setPosition({ 0.0f, -0.125f });
+		m_platforms[0].setPosition({0.0f, -0.125f});
+		m_platforms[0].setActive(true);
 		m_currentSpawnIndex = 1;
 	}
 
@@ -42,19 +45,40 @@ namespace jumper
 				* daedalusCore::maths::mat4::scale({ 1.0f, 1.0f, 0.0f })
 				* cameraCorners[i];
 
-			m_boundSquares.emplace_back(cameraCorners[i].x, cameraCorners[i].y);
+			//m_boundSquares.emplace_back(cameraCorners[i].x, cameraCorners[i].y);
+		}
+
+		// check if platforms are still in the spawn zone
+		for (auto& platform : m_platforms)
+		{
+			if (!platform.getActive())
+				continue;
+
+			if (!(platform.getPosition().x - platformDespawnPadding < cameraCorners[1].x &&
+				platform.getPosition().x + platform.getScale().x + platformDespawnPadding > cameraCorners[0].x &&
+				platform.getPosition().y - platformDespawnPadding < cameraCorners[2].y &&
+				platform.getPosition().y + platform.getScale().y + platformDespawnPadding > cameraCorners[0].y))
+			{
+				platform.setActive(false);
+				DD_LOG_TRACE("Platform despawned (No longer on screen)");
+			}
 		}
 	}
 
 	void LevelManager::renderLevel()
 	{
 		for (auto& platform : m_platforms)
-			platform.render();
+		{
+			if (!platform.getActive())
+				continue;
 
-		for (auto& camPnt : m_boundSquares)
+			platform.render();
+		}
+
+		/*for (auto& camPnt : m_boundSquares)
 			daedalusCore::graphics::Renderer2D::drawQuad({ { camPnt.x, camPnt.y, 0.5f }, {0.1f, 0.1f}, {1.0f, 0.0f, 0.0f, 1.0f} });
 
-		m_boundSquares.clear();
+		m_boundSquares.clear();*/
 	}
 
 	bool LevelManager::collisionCheck(const JumperMan& character)

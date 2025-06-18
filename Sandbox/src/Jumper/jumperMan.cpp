@@ -15,12 +15,15 @@ namespace jumper
 		m_currentJumpForce = jumpImpulse;
 	}
 
-	void JumperMan::update(const daedalusCore::application::DeltaTime& dt)
+	bool JumperMan::update(const daedalusCore::application::DeltaTime& dt)
 	{
 		if (m_currentMaxHeightReached < m_graphicsProps.position.y)
 			m_currentMaxHeightReached = m_graphicsProps.position.y;
 
-		DD_LOG_INFO("Score: {}", m_currentMaxHeightReached * 100.0f);
+		if (m_graphicsProps.position.y < -1.0f)
+			return true;
+
+		//DD_LOG_INFO("Score: {}", m_currentMaxHeightReached * 100.0f);
 
 		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_A))
 		{
@@ -44,6 +47,8 @@ namespace jumper
 		m_graphicsProps.position += (daedalusCore::maths::vec3(0.0f, m_currentJumpForce, 0.0f) * (float)dt);
 
 		m_currentJumpForce -= gravity * dt;
+
+		return false;
 	}
 
 	void JumperMan::render() const

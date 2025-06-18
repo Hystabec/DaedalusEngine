@@ -7,6 +7,8 @@
 
 namespace jumper
 {
+	static const float platformDespawnPadding = 2.0f;
+	static const uint32_t platfromPoolSize = 12;
 
 	class LevelManager
 	{
@@ -21,12 +23,12 @@ namespace jumper
 		inline static LevelManager* get() { return s_instance; };
 	private:
 		static LevelManager* s_instance;
-
-		static const uint32_t platfromPoolSize = 12;
+		
 		std::vector<Platform> m_platforms;
+
 		uint32_t m_currentSpawnIndex = 0;
 
-		std::vector<daedalusCore::maths::vec2> m_boundSquares;
+		//std::vector<daedalusCore::maths::vec2> m_boundSquares;
 	};
 
 }

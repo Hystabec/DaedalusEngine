@@ -30,7 +30,9 @@ namespace jumper {
 		daedalusCore::graphics::RenderCommands::clear();
 
 		// Update Logic
-		m_jumperCharacter.update(dt);
+		if (m_jumperCharacter.update(dt))
+			DD_LOG_INFO("Game end");
+
 		m_gameCamera.update(dt, m_jumperCharacter);
 		m_levelManager.update(m_jumperCharacter, m_gameCamera);
 
