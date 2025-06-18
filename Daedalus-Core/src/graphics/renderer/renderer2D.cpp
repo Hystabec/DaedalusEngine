@@ -112,6 +112,8 @@ namespace daedalusCore { namespace graphics {
 	void Renderer2D::shutdown()
 	{
 		DD_PROFILE_FUNCTION();
+
+		delete[] s_data.QuadVertexBufferBase;
 	}
 
 	void Renderer2D::begin(const OrthographicCamera& othoCamera)
@@ -135,10 +137,6 @@ namespace daedalusCore { namespace graphics {
 		DD_CORE_ASSERT((s_data.beginCalled), "Renderer2D::begin not called");
 		s_data.beginCalled = false;
 
-		//size of buffer in bytes
-		uint32_t dataSize = (uint32_t)((uint8_t*)s_data.QuadVertexBufferPtr - (uint8_t*)s_data.QuadVertexBufferBase);
-		s_data.quadVertexBuffer->setData(s_data.QuadVertexBufferBase, dataSize);
-
 		flush();
 	}
 
@@ -146,6 +144,11 @@ namespace daedalusCore { namespace graphics {
 	{
 		DD_PROFILE_FUNCTION();
 
+		//size of buffer in bytes
+		uint32_t dataSize = (uint32_t)((uint8_t*)s_data.QuadVertexBufferPtr - (uint8_t*)s_data.QuadVertexBufferBase);
+		s_data.quadVertexBuffer->setData(s_data.QuadVertexBufferBase, dataSize);
+
+		// bind textures
 		for (uint32_t i = 0; i < s_data.textureSlotIndex; i++)
 			s_data.textureSlots[i]->bind(i);
 
@@ -158,9 +161,6 @@ namespace daedalusCore { namespace graphics {
 
 	void Renderer2D::flushAndReset()
 	{
-		// from end()
-		uint32_t dataSize = (uint8_t*)s_data.QuadVertexBufferPtr - (uint8_t*)s_data.QuadVertexBufferBase;
-		s_data.quadVertexBuffer->setData(s_data.QuadVertexBufferBase, dataSize);
 		flush();
 
 		// from begin()
