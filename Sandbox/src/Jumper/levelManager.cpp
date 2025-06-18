@@ -52,9 +52,9 @@ namespace jumper
 				m_platforms[currPlatIndex].setGridCentre(daedalusCore::maths::vec2(xPos, yPos));
 
 				//ensure the centre is always under the player at the start
-				if (x == 2 && y == 2)
-					m_platforms[currPlatIndex].setPosition({ 0.0f, -0.125f });
-				else
+				//if (x == 2 && y == 2)
+				//	m_platforms[currPlatIndex].setPosition({ 0.0f, -0.125f });
+				//else
 				{
 					float xOff = RandomNumber::randomRangeFloat(m_spawnGridBlockSize.x - (m_platforms[currPlatIndex].getScale().x / 2.0f), m_spawnGridBlockSize.x + (m_platforms[currPlatIndex].getScale().x / 2.0f));
 					float yOff = RandomNumber::randomRangeFloat(m_spawnGridBlockSize.y - (m_platforms[currPlatIndex].getScale().y / 2.0f), m_spawnGridBlockSize.y + (m_platforms[currPlatIndex].getScale().y / 2.0f));
