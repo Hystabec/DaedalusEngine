@@ -1,6 +1,8 @@
 #pragma once
 #include <Daedalus.h>
 
+#include "particleSystem.h"
+
 namespace jumper {
 
 	class JumperMan
@@ -16,6 +18,8 @@ namespace jumper {
 		inline const daedalusCore::maths::vec3& getPosition() const { return m_graphicsProps.position; }
 		inline const daedalusCore::maths::vec2& getScale() const { return m_graphicsProps.size; }
 
+		inline float getScore() const { return m_currentMaxHeightReached * 10.0f; }
+
 	private:
 		void flipSprite(bool flipRight);
 
@@ -27,9 +31,16 @@ namespace jumper {
 		const float gravity = 0.5f;
 		const float jumpImpulse = 1.0f;
 		const float movementSpeed = 1.0f;
+		bool flipped = false;
 
 		float m_currentJumpForce = 0.0f;
 		float m_currentMaxHeightReached = 0.0f;
+
+		psystem::ParticleSysyem m_particleSystem;
+		psystem::PartProps m_jetpackPaticles;
+		float m_time = 0.0f;
+		float m_particleInterval = 0.05f;
+		float m_particleNextEmitTime = m_particleInterval;
 	};
 
 }

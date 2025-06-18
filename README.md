@@ -5,4 +5,6 @@ Planned to have both 2D and 3D rendering capabilities using at least two differe
 
 Using The Cherno's - "Game Engine" series (on youtube) for reference when developing the API and structure of the engine.
 
+The showcase game use the particle system from The Cherno's 1 hour game - https://github.com/TheCherno/Hazel1HourGame/blob/master/Sandbox/src/ParticleSystem.h
+
 Additional Libraries: Premake, GLFW, GLEW, stb, spdlog, Dear ImGui

@@ -55,6 +55,9 @@ namespace jumper {
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
 		ImGui::End();
 #endif
+		uint32_t playerScore = m_jumperCharacter.getScore();
+		std::string scoreStr = std::string("Score: ") + std::to_string(playerScore);
+		ImGui::GetForegroundDrawList()->AddText(ImGui::GetWindowPos(), 0xfffffffff, scoreStr.c_str());
 	}
 
 	void JumperLayer::onEvent(daedalusCore::event::Event& e)

@@ -61,7 +61,7 @@ namespace jumper
 
 					m_platforms[currPlatIndex].setPosition({ xPos + xOff, yPos + yOff });
 
-					DD_LOG_INFO("Platform spawned at x: {} y: {} [centre point x: {} y: {}]", xPos + xOff, yPos + yOff, xPos, yPos);
+					//DD_LOG_INFO("Platform spawned at x: {} y: {} [centre point x: {} y: {}]", xPos + xOff, yPos + yOff, xPos, yPos);
 				}
 
 				currPlatIndex++;
@@ -93,21 +93,21 @@ namespace jumper
 			if ((platform.getPosition().x < translatedCamCorners[0].x))
 			{
 				platform.setPosition({ translatedCamCorners[1].x, platform.getPosition().y});
-				DD_LOG_TRACE("Platform moved [{}] (From right of camera)", platform.getPosition());
+				//DD_LOG_TRACE("Platform moved [{}] (From right of camera)", platform.getPosition());
 			}
 
 			// Left of camera
 			if ((platform.getPosition().x > translatedCamCorners[1].x))
 			{
 				platform.setPosition({ translatedCamCorners[0].x, platform.getPosition().y });
-				DD_LOG_TRACE("Platform moved [{}] (From left of camera)", platform.getPosition());
+				//DD_LOG_TRACE("Platform moved [{}] (From left of camera)", platform.getPosition());
 			}
 
 			// Below the camera
 			if ((platform.getPosition().y < translatedCamCorners[0].y))
 			{
 				platform.setPosition({ platform.getPosition().x,  translatedCamCorners[2].y});
-				DD_LOG_TRACE("Platform moved [{}] (From below the camera)", platform.getPosition());
+				//DD_LOG_TRACE("Platform moved [{}] (From below the camera)", platform.getPosition());
 			}
 
 			/*
