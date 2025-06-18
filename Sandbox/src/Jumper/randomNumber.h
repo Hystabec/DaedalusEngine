@@ -9,4 +9,6 @@ namespace RandomNumber
 
 	/// @brief Generate a random number in the range min and max inclusive
 	int randomRange(int min, int max);
+
+	float randomRangeFloat(float min, float max);
 };

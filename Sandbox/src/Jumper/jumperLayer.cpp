@@ -6,7 +6,7 @@
 namespace jumper {
 
 	JumperLayer::JumperLayer()
-		: m_gameCamera(1280.0f / 720.0f, 0.5f, true)
+		: m_gameCamera(1280.0f / 720.0f, 0.5f, true), m_levelManager(m_gameCamera)
 	{
 		RandomNumber::init();
 	}
@@ -34,7 +34,7 @@ namespace jumper {
 			DD_LOG_INFO("Game end");
 
 		m_gameCamera.update(dt, m_jumperCharacter);
-		m_levelManager.update(m_jumperCharacter, m_gameCamera);
+		m_levelManager.update(m_jumperCharacter, m_gameCamera.getPosition());
 
 		// Render
 		daedalusCore::graphics::Renderer2D::begin(m_gameCamera.getCamera());

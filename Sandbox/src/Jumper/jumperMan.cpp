@@ -1,7 +1,7 @@
 #include "jumperMan.h"
 #include "levelManager.h"
 
-#define DISABLE_JUMP true
+#define DISABLE_JUMP false
 
 namespace jumper
 {
@@ -20,8 +20,8 @@ namespace jumper
 		if (m_currentMaxHeightReached < m_graphicsProps.position.y)
 			m_currentMaxHeightReached = m_graphicsProps.position.y;
 
-		if (m_graphicsProps.position.y < -1.0f)
-			return true;
+		/*if (m_graphicsProps.position.y < -1.0f)
+			return true;*/
 
 		//DD_LOG_INFO("Score: {}", m_currentMaxHeightReached * 100.0f);
 

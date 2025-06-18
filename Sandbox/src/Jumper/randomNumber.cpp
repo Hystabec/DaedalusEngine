@@ -22,3 +22,9 @@ int RandomNumber::randomRange(int min, int max)
 	// operator
 	return ((int)(getRandomFloat() * max)%(int)(max - min + 1)) + min;
 }
+
+float RandomNumber::randomRangeFloat(float min, float max)
+{
+	float diff = max - min;
+	return min + (getRandomFloat() * diff);
+}

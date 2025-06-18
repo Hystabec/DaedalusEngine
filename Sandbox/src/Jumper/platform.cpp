@@ -7,7 +7,7 @@ namespace jumper
 	{
 		m_renderProps.texture = platformTexture;
 		m_renderProps.position = { 0.0f, 0.0f, -0.1f };
-		m_renderProps.size = { 0.75f, 0.375f };
+		m_renderProps.size = { 0.5f, 0.25f };
 	}
 
 	void Platform::render() const
