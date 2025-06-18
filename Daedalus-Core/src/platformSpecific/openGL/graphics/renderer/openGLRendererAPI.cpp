@@ -30,7 +30,8 @@ namespace daedalusCore { namespace graphics {
 
 	void OpenGLRendererAPI::drawIndexed(const shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount)
 	{
-		uint32_t count = indexCount ? vertexArray->getIndexBuffer()->count() : indexCount;
+		vertexArray->bind();
+		uint32_t count = indexCount ? indexCount : vertexArray->getIndexBuffer()->count();
 
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 		glBindTexture(GL_TEXTURE_2D, 0);
