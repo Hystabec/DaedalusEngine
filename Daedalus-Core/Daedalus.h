@@ -29,6 +29,7 @@
 #include "src/graphics/shaders/shaderLibrary.h"
 #include "src/graphics/shaders/shader.h"
 #include "src/graphics/rendering/texture.h"
+#include "src/graphics/rendering/subTexture2D.h"
 
 #include "src/graphics/buffers/vertexBuffer.h"
 #include "src/graphics/buffers/indexBuffer.h"

@@ -13,6 +13,9 @@ void Layer2D::attach()
 
 	m_texture = daedalusCore::graphics::Texture2D::create("resources/DD_testImage.png");
 	m_texture2 = daedalusCore::graphics::Texture2D::create("resources/testImage.png");
+	m_fullSubTextureTesting = daedalusCore::graphics::Texture2D::create("resources/subTextureTesting.png");
+	m_subTexture = daedalusCore::graphics::SubTexture2D::createFromCoords(m_fullSubTextureTesting, { 24, 12 }, { 110, 240 });
+	m_subTexture2 = daedalusCore::graphics::SubTexture2D::createFromCoords(m_fullSubTextureTesting, { 300, 16 }, {194, 213});
 }
 
 void Layer2D::detach()
@@ -57,6 +60,8 @@ void Layer2D::update(const daedalusCore::application::DeltaTime& dt)
 		daedalusCore::graphics::Renderer2D::drawQuad({ { 2, 0 }, { 0.5f, 0.5f }, m_texture });
 		daedalusCore::graphics::Renderer2D::drawQuad({ { 2, 2 }, { 1.5f, 1.0f }, m_texture2 });
 		daedalusCore::graphics::Renderer2D::drawRotatedQuad({{0, 1},{0.25f, 0.25f}, rotation, m_texture2, {1.0f, 0.6f, 0.6f, 1.0f}});
+		daedalusCore::graphics::Renderer2D::drawQuad({ {-1, 0}, {0.5f, 0.5f}, m_subTexture });
+		daedalusCore::graphics::Renderer2D::drawQuad({ {-1, -0.5f }, {0.5f, 0.5f}, m_subTexture2 });
 
 		daedalusCore::graphics::Renderer2D::end();
 	}
