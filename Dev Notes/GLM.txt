@@ -1,0 +1,2 @@
+Consider changing the maths library to GLM from my custom library.
+It will probably be easier in the long run.
