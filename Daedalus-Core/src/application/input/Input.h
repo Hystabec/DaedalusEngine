@@ -12,10 +12,10 @@ namespace daedalus::application {
 		static bool getKeyUp(int keycode);
 		static bool getKeyDown(int keycode);
 
-		inline static bool getMouseButton(int button);
-		inline static maths::vec2 getMousePosition();
-		inline static float getMouseX();
-		inline static float getMouseY();
+		static bool getMouseButton(int button);
+		static maths::vec2 getMousePosition();
+		static float getMouseX();
+		static float getMouseY();
 	};
 
 }
