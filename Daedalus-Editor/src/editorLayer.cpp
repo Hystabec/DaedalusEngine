@@ -83,11 +83,22 @@ namespace daedalus
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
 		ImGui::End();
 
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
+
+		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+		daedalus::maths::vec2 viewportSizeAsVec2 = { viewportSize.x, viewportSize.y };
+		if (m_viewPortSize != viewportSizeAsVec2)
+		{
+			m_viewPortSize = viewportSizeAsVec2;
+			m_framebuffer->resize((uint32_t)m_viewPortSize.x, (uint32_t)m_viewPortSize.y);
+			m_camController.onResize(m_viewPortSize.x, m_viewPortSize.y);
+		}
 		uint32_t textureID = m_framebuffer->getColourAttachmentRendererID();
-		ImGui::Image(textureID, ImVec2{ 1280.0f, 720.0f });
-		//ImGui::Image(textureID, ImGui::GetWindowSize());
+		ImGui::Image(textureID, viewportSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
 		ImGui::End();
+		ImGui::PopStyleVar();
 	}
 
 	void EditorLayer::onEvent(event::Event& e)

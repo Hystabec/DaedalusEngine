@@ -25,6 +25,8 @@ namespace daedalus { namespace graphics {
 		void update(const application::DeltaTime& dt);
 		void onEvent(event::Event& e);
 
+		void onResize(float width, float height);
+
 		OrthographicCamera& getCamera() { return m_camera; }
 		const OrthographicCamera& getCamera() const { return m_camera; }
 

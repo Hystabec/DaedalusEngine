@@ -14,6 +14,8 @@ namespace daedalus { namespace graphics {
 			OpenGL = 1
 		};
 	public:
+		virtual ~RendererAPI() = default;
+
 		virtual void init() = 0;
 		virtual void shutdown() {};
 

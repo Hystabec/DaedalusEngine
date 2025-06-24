@@ -8,6 +8,8 @@ namespace daedalus { namespace application {
 	class Input
 	{
 	public:
+		virtual ~Input() = default;
+
 		//inline static bool GetKey(int keycode) { return m_instance->GetKeyBase(keycode); }
 		static bool getKeyUp(int keycode) { return s_instance->getKeyUpBase(keycode); }
 		static bool getKeyDown(int keycode) { return s_instance->getKeyDownBase(keycode); }

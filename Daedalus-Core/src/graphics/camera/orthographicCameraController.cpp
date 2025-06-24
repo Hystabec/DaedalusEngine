@@ -69,6 +69,13 @@ namespace daedalus { namespace graphics {
 		dispatcher.dispatch<event::WindowResizedEvent>(DD_BIND_EVENT_FUN(OrthographicCameraController::onWindowResize));
 	}
 
+	void OrthographicCameraController::onResize(float width, float height)
+	{
+		m_aspectRatio = width / height;
+		m_camera.setProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
+		m_bounds = { -m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel };
+	}
+
 	bool OrthographicCameraController::onMouseScrolled(event::MouseScrolledEvent& e)
 	{
 		DD_PROFILE_FUNCTION();
@@ -88,9 +95,7 @@ namespace daedalus { namespace graphics {
 	{
 		DD_PROFILE_FUNCTION();
 
-		m_aspectRatio = (float)e.getWidth() / (float)e.getHeight();
-		m_camera.setProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
-		m_bounds = { -m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel };
+		onResize((float)e.getWidth(), (float)e.getHeight());
 
 		return false;
 	}

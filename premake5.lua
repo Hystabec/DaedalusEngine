@@ -1,6 +1,6 @@
 workspace "DaedalusEngine"
 	architecture "x64"
-	startproject "Sandbox"
+	startproject "Daedalus-Editor"
 
 	configurations
 	{
