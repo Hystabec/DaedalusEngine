@@ -1,42 +1,40 @@
 #include "ddpch.h"
-#include "windowsInput.h"
+#include "application/input/Input.h"
 
 #include <glfw3.h>
 #include "application/applicationCore.h"
 
-namespace daedalus { namespace application {
+namespace daedalus::application {
 
-	Input* Input::s_instance = new windowsInput();
-
-	/*bool windowsInput::GetKeyBase(int keycode)
+	/*bool Input::getKey(int keycode)
 	{
-		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
+		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 		auto state = glfwGetKey(window, keycode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}*/
 
-	bool windowsInput::getKeyUpBase(int keycode)
+	bool Input::getKeyUp(int keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 		auto state = glfwGetKey(window, keycode);
 		return state == GLFW_RELEASE;
 	}
 
-	bool windowsInput::getKeyDownBase(int keycode)
+	bool Input::getKeyDown(int keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 		auto state = glfwGetKey(window, keycode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool windowsInput::getMouseButtonBase(int button)
+	bool Input::getMouseButton(int button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 		auto state = glfwGetMouseButton(window, button);
 		return state == GLFW_PRESS;
 	}
 
-	maths::vec2 windowsInput::getMousePositionBase()
+	maths::vec2 Input::getMousePosition()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 		double x, y;
@@ -44,16 +42,16 @@ namespace daedalus { namespace application {
 		return { (float)x, (float)y };
 	}
 
-	float windowsInput::getMouseXBase()
+	float Input::getMouseX()
 	{
-		auto[x,y] = getMousePositionBase();
+		auto[x,y] = getMousePosition();
 		return x;
 	}
 
-	float windowsInput::getMouseYBase()
+	float Input::getMouseY()
 	{
-		auto[x,y] = getMousePositionBase();
+		auto[x,y] = getMousePosition();
 		return y;
 	}
 
-} }
+}

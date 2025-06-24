@@ -66,7 +66,7 @@ void AlphaBlendingTestLayer::imGuiRender()
 
 	ImGui::Begin("Order settings");
 
-	ImGui::SetNextItemOpen(ImGuiTreeNodeFlags_DefaultOpen);
+	ImGui::SetNextItemOpen(true);
 	if (ImGui::TreeNode("Render order selection"))
 	{
 		static int selected = 0;
