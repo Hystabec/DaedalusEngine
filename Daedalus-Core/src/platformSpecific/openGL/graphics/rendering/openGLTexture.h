@@ -14,6 +14,7 @@ namespace daedalusCore { namespace graphics {
 
 		uint32_t getWdith() const override { return m_width; }
 		uint32_t getHeight() const  override {return m_height; }
+		uint32_t getRendererID() const override { return m_rendererID; }
 
 		void setData(void* data, uint32_t size) override;
 

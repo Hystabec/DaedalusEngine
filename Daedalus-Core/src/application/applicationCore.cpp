@@ -89,6 +89,11 @@ namespace daedalusCore {
 		layer->attach();
 	}
 
+	void Application::close()
+	{
+		m_running = false;
+	}
+
 	Application::Application(std::string title, unsigned int width, unsigned int height, bool vsync)
 	{
 		DD_PROFILE_FUNCTION();
@@ -108,7 +113,7 @@ namespace daedalusCore {
 
 	bool Application::onWindowClose(event::WindowClosedEvent& e)
 	{
-		m_running = false;
+		close();
 		return true;
 	}
 

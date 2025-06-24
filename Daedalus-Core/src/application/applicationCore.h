@@ -27,6 +27,8 @@ namespace daedalusCore {
 
 		inline application::Window* getWindow() { return m_window.get(); }
 
+		void close();
+
 	protected:
 		Application(std::string title = "Daedalus Window", unsigned int width = 960, unsigned int height = 540, bool vsync = false);
 
