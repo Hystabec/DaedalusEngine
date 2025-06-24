@@ -3,7 +3,7 @@
 #include "../../core.h"
 #include "../../maths/vec2.h"
 
-namespace daedalusCore { namespace application {
+namespace daedalus { namespace application {
 
 	class Input
 	{

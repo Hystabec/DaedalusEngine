@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 
-namespace daedalusCore::graphics {
+namespace daedalus::graphics {
 
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& specification)
 		: m_specification(specification)

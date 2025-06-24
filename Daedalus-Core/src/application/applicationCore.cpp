@@ -7,7 +7,7 @@
 
 #include "graphics/renderer/renderer.h"
 
-namespace daedalusCore {
+namespace daedalus {
 
 	Application* Application::s_instance = nullptr;
 

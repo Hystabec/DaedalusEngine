@@ -1,6 +1,6 @@
 #pragma once
 
-namespace daedalusCore::graphics {
+namespace daedalus::graphics {
 
 	struct FramebufferSpecification
 	{

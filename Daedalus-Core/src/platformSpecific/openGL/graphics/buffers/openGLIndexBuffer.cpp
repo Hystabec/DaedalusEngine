@@ -3,7 +3,7 @@
 
 #include "GL/glew.h"
 
-namespace daedalusCore { namespace graphics { namespace buffers {
+namespace daedalus { namespace graphics { namespace buffers {
 
 	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
 		: m_count(count)

@@ -9,12 +9,12 @@ EditorLayer::EditorLayer()
 void EditorLayer::attach()
 {
 	DD_PROFILE_FUNCTION();
-	m_texture = daedalusCore::graphics::Texture2D::create("resources/testImage.png");
+	m_texture = daedalus::graphics::Texture2D::create("resources/testImage.png");
 
-	daedalusCore::graphics::FramebufferSpecification fbSpec;
+	daedalus::graphics::FramebufferSpecification fbSpec;
 	fbSpec.width = 1280;
 	fbSpec.height = 720;
-	m_framebuffer = daedalusCore::graphics::Framebuffer::create(fbSpec);
+	m_framebuffer = daedalus::graphics::Framebuffer::create(fbSpec);
 }
 
 void EditorLayer::detach()
@@ -22,37 +22,37 @@ void EditorLayer::detach()
 	DD_PROFILE_FUNCTION();
 }
 
-void EditorLayer::update(const daedalusCore::application::DeltaTime& dt)
+void EditorLayer::update(const daedalus::application::DeltaTime& dt)
 {
 	DD_PROFILE_FUNCTION();
 	m_camController.update(dt);
 
-	daedalusCore::graphics::Renderer2D::resetStats();
+	daedalus::graphics::Renderer2D::resetStats();
 
 	{
 		DD_PROFILE_SCOPE("renderer prep");
 		m_framebuffer->bind();
-		daedalusCore::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
-		daedalusCore::graphics::RenderCommands::clear();
+		daedalus::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
+		daedalus::graphics::RenderCommands::clear();
 	}
 
 	{
 		DD_PROFILE_SCOPE("renderer draw");
 
-		daedalusCore::graphics::Renderer2D::begin(m_camController.getCamera());
+		daedalus::graphics::Renderer2D::begin(m_camController.getCamera());
 
 		for (float y = -5.0f; y < 5.0f; y += 0.05f)
 		{
 			for (float x = -5.0f; x < 5.0f; x += 0.05f)
 			{
-				daedalusCore::maths::vec4 colour = { (x + 5.0f) / 10.0f , 0.2f, (y + 5.0f) / 10.0f, 0.5f };
-				daedalusCore::graphics::Renderer2D::drawQuad({ {x, y, -0.1f}, { 0.2f }, colour });
+				daedalus::maths::vec4 colour = { (x + 5.0f) / 10.0f , 0.2f, (y + 5.0f) / 10.0f, 0.5f };
+				daedalus::graphics::Renderer2D::drawQuad({ {x, y, -0.1f}, { 0.2f }, colour });
 			}
 		}
 
-		daedalusCore::graphics::Renderer2D::drawQuad({ { 2, 0 }, { 0.5f, 0.5f }, m_texture });
+		daedalus::graphics::Renderer2D::drawQuad({ { 2, 0 }, { 0.5f, 0.5f }, m_texture });
 
-		daedalusCore::graphics::Renderer2D::end();
+		daedalus::graphics::Renderer2D::end();
 		m_framebuffer->unbind();
 	}
 }
@@ -67,7 +67,7 @@ void EditorLayer::imGuiRender()
 		if (ImGui::BeginMenu("File"))
 		{
 			if (ImGui::MenuItem("Exit"))
-				daedalusCore::Application::get().close();
+				daedalus::Application::get().close();
 
 			ImGui::EndMenu();
 		}
@@ -75,7 +75,7 @@ void EditorLayer::imGuiRender()
 	}
 
 	ImGui::Begin("Settings");
-	auto stats = daedalusCore::graphics::Renderer2D::getStats();
+	auto stats = daedalus::graphics::Renderer2D::getStats();
 	ImGui::Text("Renderer2D Stats:");
 	ImGui::Text("Draw calls: %d", stats.drawCalls);
 	ImGui::Text("Quads: %d", stats.quadCount);
@@ -90,7 +90,7 @@ void EditorLayer::imGuiRender()
 	ImGui::End();
 }
 
-void EditorLayer::onEvent(daedalusCore::event::Event& e)
+void EditorLayer::onEvent(daedalus::event::Event& e)
 {
 	DD_PROFILE_FUNCTION();
 	m_camController.onEvent(e);

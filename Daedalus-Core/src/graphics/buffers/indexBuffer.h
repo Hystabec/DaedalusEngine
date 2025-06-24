@@ -1,6 +1,6 @@
 #pragma once
 
-namespace daedalusCore {namespace graphics { namespace buffers {
+namespace daedalus {namespace graphics { namespace buffers {
 
 	// Only supports 32-bit index buffers
 	class IndexBuffer

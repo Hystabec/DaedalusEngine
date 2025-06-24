@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	void OpenGLRendererAPI::init()
 	{

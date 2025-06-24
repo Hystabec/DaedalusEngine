@@ -4,7 +4,7 @@
 #include "stb_image.h"
 #include <GL/glew.h>
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 		: m_width(width), m_height(height)

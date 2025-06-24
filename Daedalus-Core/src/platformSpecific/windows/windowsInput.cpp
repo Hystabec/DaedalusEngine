@@ -4,7 +4,7 @@
 #include <glfw3.h>
 #include "application/applicationCore.h"
 
-namespace daedalusCore { namespace application {
+namespace daedalus { namespace application {
 
 	Input* Input::s_instance = new windowsInput();
 

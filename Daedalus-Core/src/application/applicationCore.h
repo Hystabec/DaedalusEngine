@@ -9,7 +9,7 @@
 #include "application/layers/layerStack.h"
 #include "application/layers/imGuiLayer.h"
 
-namespace daedalusCore {
+namespace daedalus {
 
 	class  Application
 	{

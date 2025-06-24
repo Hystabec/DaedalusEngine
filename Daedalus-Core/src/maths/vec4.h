@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace daedalusCore { namespace maths {
+namespace daedalus { namespace maths {
 
 	struct vec4
 	{
@@ -34,4 +34,4 @@ namespace daedalusCore { namespace maths {
 
 } }
 
-LOG_CREATE_FORMAT(daedalusCore::maths::vec4, "x: {}, y: {}, z: {}, w: {}", vec, vec.x, vec.y, vec.z, vec.w);
+LOG_CREATE_FORMAT(daedalus::maths::vec4, "x: {}, y: {}, z: {}, w: {}", vec, vec.x, vec.y, vec.z, vec.w);

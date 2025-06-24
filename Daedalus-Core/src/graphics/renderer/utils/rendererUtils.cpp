@@ -3,7 +3,7 @@
 
 #include <filesystem>
 
-namespace daedalusCore::graphics {
+namespace daedalus::graphics {
 namespace renderer2DUtils {
 
 	/// TO DO: I could add a post build command to premake that copies the "default2DShader.glsl"

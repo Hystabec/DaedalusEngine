@@ -1,6 +1,6 @@
 #pragma once
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	class Texture
 	{

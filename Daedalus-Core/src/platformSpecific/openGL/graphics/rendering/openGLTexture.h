@@ -3,7 +3,7 @@
 #include "graphics/rendering/texture.h"
 #include <GL/glew.h>
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	class OpenGLTexture2D : public Texture2D
 	{

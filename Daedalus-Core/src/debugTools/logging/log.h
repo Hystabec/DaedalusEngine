@@ -18,7 +18,7 @@ if no format is made for a type, std::formatter will call a static_assert.
 
 */
 
-namespace daedalusCore { namespace debug {
+namespace daedalus { namespace debug {
 
 	class  Log
 	{
@@ -101,19 +101,19 @@ namespace daedalusCore { namespace debug {
 
 //core macros
 
-#define DD_CORE_LOG_TRACE(...)       daedalusCore::debug::Log::log(daedalusCore::debug::Log::Caller::Core, daedalusCore::debug::Log::Type::trace,  __VA_ARGS__)
-#define DD_CORE_LOG_INFO(...)        daedalusCore::debug::Log::log(daedalusCore::debug::Log::Caller::Core, daedalusCore::debug::Log::Type::info, __VA_ARGS__)
-#define DD_CORE_LOG_WARN(...)        daedalusCore::debug::Log::log(daedalusCore::debug::Log::Caller::Core, daedalusCore::debug::Log::Type::warn, __VA_ARGS__)
-#define DD_CORE_LOG_ERROR(...)       daedalusCore::debug::Log::log(daedalusCore::debug::Log::Caller::Core, daedalusCore::debug::Log::Type::error, __VA_ARGS__)
-#define DD_CORE_LOG_CRITICAL(...)    daedalusCore::debug::Log::log(daedalusCore::debug::Log::Caller::Core, daedalusCore::debug::Log::Type::critical, __VA_ARGS__)
+#define DD_CORE_LOG_TRACE(...)       daedalus::debug::Log::log(daedalus::debug::Log::Caller::Core, daedalus::debug::Log::Type::trace,  __VA_ARGS__)
+#define DD_CORE_LOG_INFO(...)        daedalus::debug::Log::log(daedalus::debug::Log::Caller::Core, daedalus::debug::Log::Type::info, __VA_ARGS__)
+#define DD_CORE_LOG_WARN(...)        daedalus::debug::Log::log(daedalus::debug::Log::Caller::Core, daedalus::debug::Log::Type::warn, __VA_ARGS__)
+#define DD_CORE_LOG_ERROR(...)       daedalus::debug::Log::log(daedalus::debug::Log::Caller::Core, daedalus::debug::Log::Type::error, __VA_ARGS__)
+#define DD_CORE_LOG_CRITICAL(...)    daedalus::debug::Log::log(daedalus::debug::Log::Caller::Core, daedalus::debug::Log::Type::critical, __VA_ARGS__)
 
 //client macros
 
-#define DD_LOG_TRACE(...)       daedalusCore::debug::Log::log(daedalusCore::debug::Log::Caller::Client, daedalusCore::debug::Log::Type::trace, __VA_ARGS__)
-#define DD_LOG_INFO(...)        daedalusCore::debug::Log::log(daedalusCore::debug::Log::Caller::Client, daedalusCore::debug::Log::Type::info, __VA_ARGS__)
-#define DD_LOG_WARN(...)        daedalusCore::debug::Log::log(daedalusCore::debug::Log::Caller::Client, daedalusCore::debug::Log::Type::warn, __VA_ARGS__)
-#define DD_LOG_ERROR(...)       daedalusCore::debug::Log::log(daedalusCore::debug::Log::Caller::Client, daedalusCore::debug::Log::Type::error,  __VA_ARGS__)
-#define DD_LOG_CRITICAL(...)    daedalusCore::debug::Log::log(daedalusCore::debug::Log::Caller::Client, daedalusCore::debug::Log::Type::critical, __VA_ARGS__)
+#define DD_LOG_TRACE(...)       daedalus::debug::Log::log(daedalus::debug::Log::Caller::Client, daedalus::debug::Log::Type::trace, __VA_ARGS__)
+#define DD_LOG_INFO(...)        daedalus::debug::Log::log(daedalus::debug::Log::Caller::Client, daedalus::debug::Log::Type::info, __VA_ARGS__)
+#define DD_LOG_WARN(...)        daedalus::debug::Log::log(daedalus::debug::Log::Caller::Client, daedalus::debug::Log::Type::warn, __VA_ARGS__)
+#define DD_LOG_ERROR(...)       daedalus::debug::Log::log(daedalus::debug::Log::Caller::Client, daedalus::debug::Log::Type::error,  __VA_ARGS__)
+#define DD_LOG_CRITICAL(...)    daedalus::debug::Log::log(daedalus::debug::Log::Caller::Client, daedalus::debug::Log::Type::critical, __VA_ARGS__)
 
 #else
 

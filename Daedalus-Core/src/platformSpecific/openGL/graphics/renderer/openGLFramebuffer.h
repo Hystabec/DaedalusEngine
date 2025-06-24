@@ -2,7 +2,7 @@
 
 #include "graphics/renderer/framebuffer.h"
 
-namespace daedalusCore::graphics {
+namespace daedalus::graphics {
 
 	class OpenGLFramebuffer : public Framebuffer
 	{

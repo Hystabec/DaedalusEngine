@@ -3,13 +3,13 @@
 #include <Daedalus.h>
 #include "imgui.h"
 
-class generalLayer : public daedalusCore::application::Layer
+class generalLayer : public daedalus::application::Layer
 {
 public:
 	generalLayer()
 		: m_camController(1280.0f / 720.0f), m_triPos(0)
 	{
-		using namespace daedalusCore;
+		using namespace daedalus;
 
 		//triangle
 		m_vertexArray = graphics::buffers::VertexArray::Create();
@@ -116,59 +116,59 @@ public:
 
 		m_shaderLib.load("texSha", "resources/shaders/textureShader.glsl");
 
-		m_texture = daedalusCore::graphics::Texture2D::create("resources/testImage.png");
-		m_DDTestImage = daedalusCore::graphics::Texture2D::create("resources/DD_testImage.png");
+		m_texture = daedalus::graphics::Texture2D::create("resources/testImage.png");
+		m_DDTestImage = daedalus::graphics::Texture2D::create("resources/DD_testImage.png");
 
 		m_shaderLib.get("texSha")->setUniform1i(0, "u_texture");
 	}
 
-	void update(const daedalusCore::application::DeltaTime& dt) override
+	void update(const daedalus::application::DeltaTime& dt) override
 	{
 		m_camController.update(dt);
 
-		daedalusCore::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
-		daedalusCore::graphics::RenderCommands::clear();
+		daedalus::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
+		daedalus::graphics::RenderCommands::clear();
 
-		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_I))
-			m_triPos += daedalusCore::maths::vec3(0.0f, 1.0f, 0.0f) * (float)dt;
-		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_L))
-			m_triPos += daedalusCore::maths::vec3(1.0f, 0.0f, 0.0f) * (float)dt;
-		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_K))
-			m_triPos += daedalusCore::maths::vec3(0.0f, -1.0f, 0.0f) * (float)dt;
-		if (daedalusCore::application::Input::getKeyDown(DD_INPUT_KEY_J))
-			m_triPos += daedalusCore::maths::vec3(-1.0f, 0.0f, 0.0f) * (float)dt;
+		if (daedalus::application::Input::getKeyDown(DD_INPUT_KEY_I))
+			m_triPos += daedalus::maths::vec3(0.0f, 1.0f, 0.0f) * (float)dt;
+		if (daedalus::application::Input::getKeyDown(DD_INPUT_KEY_L))
+			m_triPos += daedalus::maths::vec3(1.0f, 0.0f, 0.0f) * (float)dt;
+		if (daedalus::application::Input::getKeyDown(DD_INPUT_KEY_K))
+			m_triPos += daedalus::maths::vec3(0.0f, -1.0f, 0.0f) * (float)dt;
+		if (daedalus::application::Input::getKeyDown(DD_INPUT_KEY_J))
+			m_triPos += daedalus::maths::vec3(-1.0f, 0.0f, 0.0f) * (float)dt;
 
-		daedalusCore::maths::mat4 triangleTransform = daedalusCore::maths::mat4::translate(m_triPos) * daedalusCore::maths::mat4::rotate(0.0f, { 0,0,1 }) * daedalusCore::maths::mat4::scale({ 0.1f });
+		daedalus::maths::mat4 triangleTransform = daedalus::maths::mat4::translate(m_triPos) * daedalus::maths::mat4::rotate(0.0f, { 0,0,1 }) * daedalus::maths::mat4::scale({ 0.1f });
 
-		daedalusCore::maths::vec4 redCol(0.8f, 0.2f, 0.3f, 1.0f);
-		daedalusCore::maths::vec4 greenCol(0.2f, 0.8f, 0.3f, 1.0f);
-		daedalusCore::maths::vec4 blueCol(0.2f, 0.3f, 0.8f, 1.0f);
+		daedalus::maths::vec4 redCol(0.8f, 0.2f, 0.3f, 1.0f);
+		daedalus::maths::vec4 greenCol(0.2f, 0.8f, 0.3f, 1.0f);
+		daedalus::maths::vec4 blueCol(0.2f, 0.3f, 0.8f, 1.0f);
 
-		daedalusCore::graphics::Renderer::begin(m_camController.getCamera());
+		daedalus::graphics::Renderer::begin(m_camController.getCamera());
 
 		for (int y = 0; y < 10; y++)
 		{
 			for (int x = 0; x < 10; x++)
 			{
-				daedalusCore::maths::mat4 squareTransform = daedalusCore::maths::mat4::translate(daedalusCore::maths::vec3(x * 0.2f, y * 0.2f, 0.0f)) * daedalusCore::maths::mat4::scale({ 0.1f });
+				daedalus::maths::mat4 squareTransform = daedalus::maths::mat4::translate(daedalus::maths::vec3(x * 0.2f, y * 0.2f, 0.0f)) * daedalus::maths::mat4::scale({ 0.1f });
 
 				auto flatShader = m_shaderLib.get("flatShader");
 				flatShader->enable();
 				x % 2 == 0 ? flatShader->setUniform4f(redCol, "u_colour") : flatShader->setUniform4f(greenCol, "u_colour");
 
-				daedalusCore::graphics::Renderer::submit(m_squareVertexArray, flatShader, squareTransform);
+				daedalus::graphics::Renderer::submit(m_squareVertexArray, flatShader, squareTransform);
 			}
 		}
 
 		auto textureShader = m_shaderLib.get("texSha");
 		m_texture->bind();
-		daedalusCore::graphics::Renderer::submit(m_texuterVerexArray, textureShader, daedalusCore::maths::mat4::translate(daedalusCore::maths::vec3(-1, 0, 0)) * daedalusCore::maths::mat4::scale({ 1.5f }));
+		daedalus::graphics::Renderer::submit(m_texuterVerexArray, textureShader, daedalus::maths::mat4::translate(daedalus::maths::vec3(-1, 0, 0)) * daedalus::maths::mat4::scale({ 1.5f }));
 		m_DDTestImage->bind();
-		daedalusCore::graphics::Renderer::submit(m_texuterVerexArray, textureShader, daedalusCore::maths::mat4::translate(daedalusCore::maths::vec3(-1, 0, 0)) * daedalusCore::maths::mat4::scale({ 1.5f }));
+		daedalus::graphics::Renderer::submit(m_texuterVerexArray, textureShader, daedalus::maths::mat4::translate(daedalus::maths::vec3(-1, 0, 0)) * daedalus::maths::mat4::scale({ 1.5f }));
 
-		daedalusCore::graphics::Renderer::submit(m_vertexArray, m_shaderLib.get("TriangleShader"), triangleTransform);
+		daedalus::graphics::Renderer::submit(m_vertexArray, m_shaderLib.get("TriangleShader"), triangleTransform);
 
-		daedalusCore::graphics::Renderer::end();
+		daedalus::graphics::Renderer::end();
 
 		frames++;
 
@@ -183,33 +183,33 @@ public:
 	void imGuiRender() override
 	{
 		ImGui::Begin("Camera Control");
-		daedalusCore::maths::vec3 camPos = m_camController.getPosition();
+		daedalus::maths::vec3 camPos = m_camController.getPosition();
 		float pos[3] = { camPos.x, camPos.y, camPos.z };
 		if (ImGui::InputFloat3("Position", (float*)pos, "%.1f"))
 			m_camController.setPosition({ pos[0], pos[1], pos[2] });
 
-		float zRot = daedalusCore::maths::degrees_to_radians(m_camController.getRotation());
+		float zRot = daedalus::maths::degrees_to_radians(m_camController.getRotation());
 		if (ImGui::SliderAngle("Z Rotation", &zRot))
-			m_camController.setRotation(daedalusCore::maths::radians_to_degrees(zRot));
+			m_camController.setRotation(daedalus::maths::radians_to_degrees(zRot));
 
 		ImGui::End();
 	}
 
-	void onEvent(daedalusCore::event::Event& e) override
+	void onEvent(daedalus::event::Event& e) override
 	{
 		m_camController.onEvent(e);
 	}
 
 private:
-	daedalusCore::utils::Timer time;
+	daedalus::utils::Timer time;
 	int frames = 0;
 
-	daedalusCore::graphics::ShaderLibrary m_shaderLib;
+	daedalus::graphics::ShaderLibrary m_shaderLib;
 
-	daedalusCore::shr_ptr<daedalusCore::graphics::buffers::VertexArray> m_vertexArray, m_squareVertexArray, m_texuterVerexArray;
-	daedalusCore::shr_ptr<daedalusCore::graphics::Texture2D> m_texture, m_DDTestImage;
+	daedalus::shr_ptr<daedalus::graphics::buffers::VertexArray> m_vertexArray, m_squareVertexArray, m_texuterVerexArray;
+	daedalus::shr_ptr<daedalus::graphics::Texture2D> m_texture, m_DDTestImage;
 
-	daedalusCore::graphics::OrthographicCameraController m_camController;
+	daedalus::graphics::OrthographicCameraController m_camController;
 
-	daedalusCore::maths::vec3 m_triPos;
+	daedalus::maths::vec3 m_triPos;
 };

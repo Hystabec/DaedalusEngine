@@ -2,7 +2,7 @@
 
 #include "graphics/buffers/vertexArray.h"
 
-namespace daedalusCore { namespace graphics { namespace buffers {
+namespace daedalus { namespace graphics { namespace buffers {
 	
 	class OpenGLVertexArray : public VertexArray
 	{

@@ -2,7 +2,7 @@
 
 #include "../core.h"
 
-namespace daedalusCore { namespace utils {
+namespace daedalus { namespace utils {
 
 	class  Timer
 	{

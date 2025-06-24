@@ -6,7 +6,7 @@
 #include "platformSpecific/openGL/graphics/rendering/openGLTexture.h"
 #endif
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	shr_ptr<Texture2D> Texture2D::create(uint32_t width, uint32_t height)
 	{

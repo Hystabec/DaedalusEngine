@@ -3,7 +3,7 @@
 
 #include "GL/glew.h"
 
-namespace daedalusCore { namespace graphics { namespace buffers {
+namespace daedalus { namespace graphics { namespace buffers {
 
 	OpenGlVertexBuffer::OpenGlVertexBuffer(uint32_t size)
 		: m_count(size)

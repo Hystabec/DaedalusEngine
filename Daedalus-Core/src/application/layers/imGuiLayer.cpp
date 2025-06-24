@@ -11,7 +11,7 @@
 //temp
 #include <glfw3.h>
 
-namespace daedalusCore { namespace application {
+namespace daedalus { namespace application {
 
 	ImGuiLayer::ImGuiLayer()
 	{

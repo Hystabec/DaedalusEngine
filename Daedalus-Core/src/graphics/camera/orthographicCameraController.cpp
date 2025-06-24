@@ -5,7 +5,7 @@
 #include "application/input/inputKeyCodes.h"
 #include "application/applicationCore.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	OrthographicCameraController::OrthographicCameraController(float aspectRatio, bool allowRotation)
 		: m_aspectRatio(aspectRatio), m_bounds({ -aspectRatio * m_zoomLevel, aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel }), m_camera(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top), m_useRotation(allowRotation)

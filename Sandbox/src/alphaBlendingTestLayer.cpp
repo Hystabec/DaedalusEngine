@@ -11,8 +11,8 @@ void AlphaBlendingTestLayer::attach()
 {
 	DD_PROFILE_FUNCTION();
 
-	m_texture = daedalusCore::graphics::Texture2D::create("resources/alphaTesting_1.png");
-	m_texture2 = daedalusCore::graphics::Texture2D::create("resources/alphaTesting_2.png");
+	m_texture = daedalus::graphics::Texture2D::create("resources/alphaTesting_1.png");
+	m_texture2 = daedalus::graphics::Texture2D::create("resources/alphaTesting_2.png");
 
 	ro1 = { {-1.0f,0.0f, -0.1f},{1.0f}, m_texture };
 	ro2 = { {1.0f,0.0f, -0.1f},{1.0f}, m_texture2 };
@@ -24,19 +24,19 @@ void AlphaBlendingTestLayer::detach()
 	DD_PROFILE_FUNCTION();
 }
 
-void AlphaBlendingTestLayer::update(const daedalusCore::application::DeltaTime& dt)
+void AlphaBlendingTestLayer::update(const daedalus::application::DeltaTime& dt)
 {
 	DD_PROFILE_FUNCTION();
 
 	m_camController.update(dt);
 
 #ifndef DD_DISTRO
-	daedalusCore::graphics::Renderer2D::resetStats();
+	daedalus::graphics::Renderer2D::resetStats();
 #endif
 	{
 		DD_PROFILE_SCOPE("renderer prep");
-		daedalusCore::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
-		daedalusCore::graphics::RenderCommands::clear();
+		daedalus::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
+		daedalus::graphics::RenderCommands::clear();
 	}
 
 	{
@@ -45,18 +45,18 @@ void AlphaBlendingTestLayer::update(const daedalusCore::application::DeltaTime& 
 		static float rotation = 0.0f;
 		rotation += dt * 50.0f;
 
-		daedalusCore::graphics::Renderer2D::begin(m_camController.getCamera());
+		daedalus::graphics::Renderer2D::begin(m_camController.getCamera());
 
 		// in all variations the alpha wall is always closer to the camera (should be renderer on top)
 
-		daedalusCore::graphics::Renderer2D::drawQuad(ro1);
-		daedalusCore::graphics::Renderer2D::drawQuad(ro2);
-		daedalusCore::graphics::Renderer2D::drawQuad(ro3);
+		daedalus::graphics::Renderer2D::drawQuad(ro1);
+		daedalus::graphics::Renderer2D::drawQuad(ro2);
+		daedalus::graphics::Renderer2D::drawQuad(ro3);
 
-		daedalusCore::graphics::Renderer2D::drawQuad({ {0.0f, -0.4f,0.1f}, {2.5f, 1.0f}, {0.0f,0.0f,0.0f,0.5f} });
+		daedalus::graphics::Renderer2D::drawQuad({ {0.0f, -0.4f,0.1f}, {2.5f, 1.0f}, {0.0f,0.0f,0.0f,0.5f} });
 
 
-		daedalusCore::graphics::Renderer2D::end();
+		daedalus::graphics::Renderer2D::end();
 	}
 }
 
@@ -104,7 +104,7 @@ void AlphaBlendingTestLayer::imGuiRender()
 	ImGui::End();
 }
 
-void AlphaBlendingTestLayer::onEvent(daedalusCore::event::Event& e)
+void AlphaBlendingTestLayer::onEvent(daedalus::event::Event& e)
 {
 	m_camController.onEvent(e);
 }

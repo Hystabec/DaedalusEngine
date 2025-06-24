@@ -1,7 +1,7 @@
 #include "ddpch.h"
 #include "shaderLibrary.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	void ShaderLibrary::add(const std::string& name, const shr_ptr<Shader>& shader)
 	{

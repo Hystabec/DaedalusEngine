@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-namespace daedalusCore { namespace utils {
+namespace daedalus { namespace utils {
 
 	static std::string read_file(const std::string& filePath, bool* checkBool = nullptr)
 	{

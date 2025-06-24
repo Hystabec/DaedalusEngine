@@ -3,7 +3,7 @@
 #include "vertexBuffer.h"
 #include "indexBuffer.h"
 
-namespace daedalusCore { namespace graphics { namespace buffers {
+namespace daedalus { namespace graphics { namespace buffers {
 
 	class VertexArray
 	{

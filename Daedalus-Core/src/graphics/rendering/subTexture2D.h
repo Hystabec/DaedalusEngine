@@ -3,7 +3,7 @@
 #include "maths/vec2.h"
 #include "texture.h"
 
-namespace daedalusCore::graphics {
+namespace daedalus::graphics {
 
 	class SubTexture2D
 	{

@@ -2,20 +2,20 @@
 
 #include <Daedalus.h>
 
-class AlphaBlendingTestLayer : public daedalusCore::application::Layer
+class AlphaBlendingTestLayer : public daedalus::application::Layer
 {
 public:
 	AlphaBlendingTestLayer();
 
 	void attach() override;
 	void detach() override;
-	void update(const daedalusCore::application::DeltaTime& dt) override;
+	void update(const daedalus::application::DeltaTime& dt) override;
 	void imGuiRender() override;
-	void onEvent(daedalusCore::event::Event& e) override;
+	void onEvent(daedalus::event::Event& e) override;
 
 private:
-	daedalusCore::graphics::OrthographicCameraController m_camController;
+	daedalus::graphics::OrthographicCameraController m_camController;
 
-	daedalusCore::shr_ptr<daedalusCore::graphics::Texture2D> m_texture, m_texture2;
-	daedalusCore::graphics::primatives2D::QuadProperties ro1, ro2, ro3;
+	daedalus::shr_ptr<daedalus::graphics::Texture2D> m_texture, m_texture2;
+	daedalus::graphics::primatives2D::QuadProperties ro1, ro2, ro3;
 };

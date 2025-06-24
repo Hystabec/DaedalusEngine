@@ -4,7 +4,7 @@
 
 struct GLFWwindow;
 
-namespace daedalusCore {
+namespace daedalus {
 	namespace graphics {
 		class RenderingContext;
 	}

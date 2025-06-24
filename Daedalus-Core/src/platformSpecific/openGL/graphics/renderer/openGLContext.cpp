@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <glfw3.h>
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	static bool s_GLEWInitialized = false;
 

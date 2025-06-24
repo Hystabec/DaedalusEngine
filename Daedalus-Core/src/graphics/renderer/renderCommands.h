@@ -1,7 +1,7 @@
 #pragma once
 #include "rendererAPI.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	class RenderCommands
 	{

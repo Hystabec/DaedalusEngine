@@ -1,7 +1,7 @@
 #include "ddpch.h"
 #include "orthographicCamera.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top, float zNear, float zFar)
 		: m_projectionMatrix(maths::mat4::orthographic(left, right, bottom, top, zNear, zFar)), m_viewMatrix(1)

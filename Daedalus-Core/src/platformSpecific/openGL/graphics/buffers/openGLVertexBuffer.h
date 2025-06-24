@@ -2,7 +2,7 @@
 
 #include "graphics/buffers/vertexBuffer.h"
 
-namespace daedalusCore { namespace graphics { namespace buffers {
+namespace daedalus { namespace graphics { namespace buffers {
 
 	class OpenGlVertexBuffer : public VertexBuffer
 	{

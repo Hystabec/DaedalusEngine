@@ -9,7 +9,7 @@
 
 #include "platformSpecific/openGL/graphics/renderer/openGLContext.h"
 
-namespace daedalusCore { namespace application {
+namespace daedalus { namespace application {
 
 	static bool s_GLFWInitialized = false;
 

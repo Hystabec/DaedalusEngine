@@ -5,7 +5,7 @@
 #ifdef DD_RENDER_USING_OPENGL
 #include <GL/glew.h>
 
-namespace daedalusCore { namespace graphics { namespace buffers {
+namespace daedalus { namespace graphics { namespace buffers {
 
 	static GLenum shader_data_type_to_Open_GL_base_type(dataTypes::BaseDataType baseDataType)
 	{

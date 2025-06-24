@@ -6,7 +6,7 @@
 #include "platformSpecific/openGL/graphics/buffers/openGLVertexArray.h"
 #endif
 
-namespace daedalusCore { namespace graphics { namespace buffers {
+namespace daedalus { namespace graphics { namespace buffers {
 
     shr_ptr<VertexArray> VertexArray::Create()
     {

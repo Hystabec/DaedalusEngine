@@ -1,6 +1,6 @@
 #pragma once
 
-namespace daedalusCore { namespace application {
+namespace daedalus { namespace application {
 
 	/// @brief DeltaTime by default will give time as seconds
 	class DeltaTime

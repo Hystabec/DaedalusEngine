@@ -1,7 +1,7 @@
 #include "ddpch.h"
 #include "vec2.h"
 
-namespace daedalusCore { namespace maths {
+namespace daedalus { namespace maths {
 
 	vec2::vec2() { x = 0; y = 0; }
 

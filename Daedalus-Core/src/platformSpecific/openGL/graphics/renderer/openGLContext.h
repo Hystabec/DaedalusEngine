@@ -3,7 +3,7 @@
 
 struct GLFWwindow;
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	class OpenGlContext : public RenderingContext
 	{

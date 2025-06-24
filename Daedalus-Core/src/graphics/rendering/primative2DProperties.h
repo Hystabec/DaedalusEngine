@@ -4,7 +4,7 @@
 #include "graphics/rendering/texture.h"
 #include "graphics/rendering/subTexture2D.h"
 
-namespace daedalusCore { namespace graphics { namespace primatives2D {
+namespace daedalus { namespace graphics { namespace primatives2D {
 
 	/// @brief Struct used to store the properties of Quads used in renderer2D::drawQuad
 	struct QuadProperties

@@ -3,7 +3,7 @@
 #include "events/event.h"
 #include "application/time/deltaTime.h"
 
-namespace daedalusCore { namespace application {
+namespace daedalus { namespace application {
 
 	class Layer
 	{

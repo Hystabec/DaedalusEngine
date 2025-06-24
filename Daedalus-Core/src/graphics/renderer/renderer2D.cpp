@@ -7,7 +7,7 @@
 
 #include "utils/rendererUtils.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	struct QuadVertex
 	{

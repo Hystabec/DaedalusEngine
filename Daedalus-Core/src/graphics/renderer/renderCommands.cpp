@@ -5,7 +5,7 @@
 #include "platformSpecific/openGL/graphics/renderer/openGLRendererAPI.h"
 #endif
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 #ifdef DD_RENDER_USING_OPENGL
 	RendererAPI* RenderCommands::s_rendererAPI = new OpenGLRendererAPI();

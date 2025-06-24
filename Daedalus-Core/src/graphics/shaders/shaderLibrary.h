@@ -2,7 +2,7 @@
 
 #include "shader.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	class ShaderLibrary
 	{

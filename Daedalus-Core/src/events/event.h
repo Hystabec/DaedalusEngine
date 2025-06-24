@@ -4,7 +4,7 @@
 
 #include "debugTools/logging/logFormatMacro.h"
 
-namespace daedalusCore { namespace event {
+namespace daedalus { namespace event {
 
 	enum class EventType
 	{
@@ -78,7 +78,7 @@ namespace daedalusCore { namespace event {
 
 } }
 
-LOG_CREATE_FORMAT(daedalusCore::event::Event, "Event: {}", e, e.getName())
+LOG_CREATE_FORMAT(daedalus::event::Event, "Event: {}", e, e.getName())
 
 /// @brief Use this macro to bind a member function when passing to event dispatcher
 #define DD_BIND_EVENT_FUN(fun) std::bind(&fun, this, std::placeholders::_1)

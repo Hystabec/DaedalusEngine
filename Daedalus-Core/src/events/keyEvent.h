@@ -2,7 +2,7 @@
 
 #include "event.h"
 
-namespace daedalusCore { namespace event {
+namespace daedalus { namespace event {
 
 	class  KeyEvent : public Event
 	{

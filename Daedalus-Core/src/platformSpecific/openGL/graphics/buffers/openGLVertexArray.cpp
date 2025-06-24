@@ -5,7 +5,7 @@
 #include "graphics/buffers/utils/shaderDataTypeConversion.h"
 #include <vector>
 
-namespace daedalusCore { namespace graphics { namespace buffers {
+namespace daedalus { namespace graphics { namespace buffers {
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{

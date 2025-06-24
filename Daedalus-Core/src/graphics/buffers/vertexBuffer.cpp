@@ -6,7 +6,7 @@
 #include "platformSpecific/openGL/graphics/buffers/openGLVertexBuffer.h"
 #endif
 
-namespace daedalusCore { namespace graphics { namespace buffers {
+namespace daedalus { namespace graphics { namespace buffers {
 
 	shr_ptr<VertexBuffer> VertexBuffer::create(uint32_t size)
 	{

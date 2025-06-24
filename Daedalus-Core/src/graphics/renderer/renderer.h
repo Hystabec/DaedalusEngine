@@ -4,7 +4,7 @@
 #include "graphics/camera/orthographicCamera.h"
 #include "graphics/shaders/shader.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	class Renderer
 	{

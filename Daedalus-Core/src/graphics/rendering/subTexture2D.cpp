@@ -1,7 +1,7 @@
 #include "ddpch.h"
 #include "subTexture2D.h"
 
-namespace daedalusCore::graphics {
+namespace daedalus::graphics {
 
 	SubTexture2D::SubTexture2D(const shr_ptr<Texture2D>& texture, const maths::vec2& min, const maths::vec2& max)
 		: m_texture(texture)

@@ -5,7 +5,7 @@
 
 #include "entryPoint.h"
 
-namespace daedalusCore
+namespace daedalus
 {
 
 	class Editor : public Application

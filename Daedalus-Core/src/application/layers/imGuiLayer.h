@@ -6,7 +6,7 @@
 #include "events/mouseEvent.h"
 #include "events/windowEvent.h"
 
-namespace daedalusCore { namespace application {
+namespace daedalus { namespace application {
 
 	class ImGuiLayer : public Layer
 	{

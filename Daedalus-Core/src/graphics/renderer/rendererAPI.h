@@ -3,7 +3,7 @@
 #include "maths/vec4.h"
 #include "graphics/buffers/vertexArray.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	class RendererAPI
 	{

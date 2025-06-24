@@ -2,7 +2,7 @@
 
 #include "graphics/buffers/indexBuffer.h"
 
-namespace daedalusCore { namespace graphics { namespace buffers {
+namespace daedalus { namespace graphics { namespace buffers {
 
 	class OpenGLIndexBuffer : public IndexBuffer
 	{

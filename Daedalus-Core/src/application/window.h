@@ -3,7 +3,7 @@
 #include "ddpch.h"
 #include "events/event.h"
 
-namespace daedalusCore { namespace application {
+namespace daedalus { namespace application {
 
 	struct WindowProperties
 	{
@@ -20,7 +20,7 @@ namespace daedalusCore { namespace application {
 	class  Window
 	{
 	public:
-		using EventCallbackFn = std::function<void(daedalusCore::event::Event&)>;
+		using EventCallbackFn = std::function<void(daedalus::event::Event&)>;
 
 		virtual ~Window() {}
 		

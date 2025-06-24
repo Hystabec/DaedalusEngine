@@ -1,7 +1,7 @@
 #pragma once
 #include "Daedalus.h"
 
-namespace daedalusCore
+namespace daedalus
 {
 
 	class EditorLayer : public application::Layer

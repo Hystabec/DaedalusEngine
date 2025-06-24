@@ -6,7 +6,7 @@
 #include "platformSpecific/openGL/graphics/buffers/openGLIndexBuffer.h"
 #endif
 
-namespace daedalusCore { namespace graphics { namespace buffers {
+namespace daedalus { namespace graphics { namespace buffers {
 
 	shr_ptr<IndexBuffer> buffers::IndexBuffer::create(uint32_t* indices, uint32_t count)
 	{

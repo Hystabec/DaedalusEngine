@@ -1,7 +1,7 @@
 #pragma once
 #include "graphics/renderer/rendererAPI.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	class OpenGLRendererAPI : public RendererAPI
 	{

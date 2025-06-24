@@ -3,7 +3,7 @@
 
 #include "renderer2D.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	Renderer::sceneData* Renderer::m_sceneData = new Renderer::sceneData;
 	

@@ -1,7 +1,7 @@
 #include "EditorLayer.h"
 #include <imgui.h>
 
-namespace daedalusCore
+namespace daedalus
 {
 
 	EditorLayer::EditorLayer()

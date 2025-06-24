@@ -13,7 +13,7 @@
 #include <mutex>
 #include <sstream>
 
-namespace daedalusCore { namespace debug {
+namespace daedalus { namespace debug {
 
 	using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
 
@@ -223,11 +223,11 @@ namespace daedalusCore { namespace debug {
 		#define DD_FUNC_SIG "DD_FUNC_SIG unknown!"
 	#endif
 
-	#define DD_PROFILE_BEGIN_SESSION(name, filepath)	daedalusCore::debug::Instrumentor::get().beginSession(name, filepath)
-	#define DD_PROFILE_END_SESSION()					daedalusCore::debug::Instrumentor::get().endSession()
+	#define DD_PROFILE_BEGIN_SESSION(name, filepath)	daedalus::debug::Instrumentor::get().beginSession(name, filepath)
+	#define DD_PROFILE_END_SESSION()					daedalus::debug::Instrumentor::get().endSession()
 
-	#define DD_PROFILE_SCOPE_LINE2(name, line)			constexpr auto fixedName##line = daedalusCore::debug::InstrumentorUtils::cleanup_output_string(name, "__cdecl ");\
-														daedalusCore::debug::InstrumentationTimer timer##line(fixedName##line.Data)
+	#define DD_PROFILE_SCOPE_LINE2(name, line)			constexpr auto fixedName##line = daedalus::debug::InstrumentorUtils::cleanup_output_string(name, "__cdecl ");\
+														daedalus::debug::InstrumentationTimer timer##line(fixedName##line.Data)
 
 	#define DD_PROFILE_SCOPE_LINE(name, line)			DD_PROFILE_SCOPE_LINE2(name, line)
 	#define DD_PROFILE_SCOPE(name)						DD_PROFILE_SCOPE_LINE(name, __LINE__)

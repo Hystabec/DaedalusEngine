@@ -4,7 +4,7 @@
 #include "graphics/rendering/texture.h"
 #include "graphics/rendering/primative2DProperties.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	class Renderer2D
 	{

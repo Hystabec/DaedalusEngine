@@ -3,7 +3,7 @@
 
 #include "maths.h"
 
-namespace daedalusCore { namespace maths {
+namespace daedalus { namespace maths {
 
 		mat4::mat4()
 		{

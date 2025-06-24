@@ -8,7 +8,7 @@
 #include "platformSpecific/openGL/graphics/shaders/openGLShader.h"
 #endif
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	shr_ptr<Shader> Shader::create(const std::string& filePath)
 	{

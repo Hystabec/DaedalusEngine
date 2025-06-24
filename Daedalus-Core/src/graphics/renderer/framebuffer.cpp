@@ -6,7 +6,7 @@
 #include "platformSpecific/openGL/graphics/renderer/openGLFramebuffer.h"
 #endif
 
-namespace daedalusCore::graphics {
+namespace daedalus::graphics {
 
     shr_ptr<Framebuffer> Framebuffer::create(const FramebufferSpecification& specification)
     {

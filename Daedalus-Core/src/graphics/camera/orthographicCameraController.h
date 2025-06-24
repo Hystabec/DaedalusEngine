@@ -6,7 +6,7 @@
 #include "events/mouseEvent.h"
 #include "events/windowEvent.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	struct OrthgraphicCameraBounds
 	{

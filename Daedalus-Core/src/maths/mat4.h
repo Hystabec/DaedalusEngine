@@ -3,7 +3,7 @@
 #include "vec3.h"
 #include "vec4.h"
 
-namespace daedalusCore { namespace maths {
+namespace daedalus { namespace maths {
 
 	struct mat4
 	{
@@ -48,7 +48,7 @@ namespace daedalusCore { namespace maths {
 
 } }
 
-LOG_CREATE_FORMAT(daedalusCore::maths::mat4, "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}", 
+LOG_CREATE_FORMAT(daedalus::maths::mat4, "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}", 
 	thisMat4, 
 	thisMat4.elements[0], thisMat4.elements[1], thisMat4.elements[2], thisMat4.elements[3], 
 	thisMat4.elements[4], thisMat4.elements[5], thisMat4.elements[6], thisMat4.elements[7],

@@ -2,7 +2,7 @@
 
 #include "layer.h"
 
-namespace daedalusCore { namespace application {
+namespace daedalus { namespace application {
 
 	class LayerStack
 	{

@@ -5,7 +5,7 @@
 #include "../../maths/vec4.h"
 #include "../../maths/mat4.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	class Shader
 	{

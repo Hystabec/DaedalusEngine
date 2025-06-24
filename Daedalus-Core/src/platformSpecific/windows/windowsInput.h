@@ -2,7 +2,7 @@
 
 #include "application/input/Input.h"
 
-namespace daedalusCore { namespace application {
+namespace daedalus { namespace application {
 
 	class windowsInput : public Input
 	{

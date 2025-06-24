@@ -11,7 +11,7 @@
 #ifdef DD_USING_ASSERTS
 	#define DD_CORE_ASSERT(condition, ...) { if(!(condition)) { DD_CORE_LOG_ERROR("Assertion Failed: {}", __VA_ARGS__); __debugbreak(); } }
 	#define DD_ASSERT(condition, ...) { if(!(condition)) { DD_LOG_ERROR("Assertion Failed: {}", __VA_ARGS__); __debugbreak(); } }
-	#define DD_ASSERT_FORMAT_MESSAGE(fmt, ...) daedalusCore::debug::Log::formatLogMessage(fmt, __VA_ARGS__)
+	#define DD_ASSERT_FORMAT_MESSAGE(fmt, ...) daedalus::debug::Log::formatLogMessage(fmt, __VA_ARGS__)
 #else
 	#define DD_CORE_ASSERT(condition, ...)
 	#define DD_ASSERT(condition, ...)
@@ -20,7 +20,7 @@
 
 #define BIT(x) (1 << x)
 
-namespace daedalusCore {
+namespace daedalus {
 
 	template<typename T>
 	using uni_ptr = std::unique_ptr<T>;

@@ -1,7 +1,7 @@
 #pragma once
 #include "bufferLayout.h"
 
-namespace daedalusCore { namespace graphics { namespace buffers {
+namespace daedalus { namespace graphics { namespace buffers {
 
 	class VertexBuffer
 	{

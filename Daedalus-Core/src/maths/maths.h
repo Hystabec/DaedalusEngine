@@ -8,7 +8,7 @@
 #include "vec4.h"
 #include "mat4.h"
 
-namespace daedalusCore { namespace maths {
+namespace daedalus { namespace maths {
 
 	inline float degrees_to_radians(float degrees)
 	{

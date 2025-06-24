@@ -4,12 +4,12 @@
 
 #ifdef DD_PLATFORM_WINDOWS
 
-extern daedalusCore::Application* daedalusCore::createApplication();
+extern daedalus::Application* daedalus::createApplication();
 
 int main(int argc, char** argv)
 {
 	DD_PROFILE_BEGIN_SESSION("Start up", "Daedalus-Startup");
-	auto app = daedalusCore::createApplication();
+	auto app = daedalus::createApplication();
 	app->init();
 	DD_PROFILE_END_SESSION();
 

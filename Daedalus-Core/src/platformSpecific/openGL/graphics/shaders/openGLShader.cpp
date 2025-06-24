@@ -4,7 +4,7 @@
 #include "utils/fileUtils.h"
 #include "maths/maths.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 	static GLenum shaderTypeFromString(const std::string& type)
 	{

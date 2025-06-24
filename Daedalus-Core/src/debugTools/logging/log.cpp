@@ -7,7 +7,7 @@
 
 #include "application/applicationCore.h"
 
-namespace daedalusCore { namespace debug {
+namespace daedalus { namespace debug {
 
 	static std::shared_ptr<spdlog::logger> s_coreLogger;
 	static std::shared_ptr<spdlog::logger> s_clientLogger;

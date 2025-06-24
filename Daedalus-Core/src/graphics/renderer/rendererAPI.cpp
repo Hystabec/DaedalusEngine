@@ -1,7 +1,7 @@
 #include "ddpch.h"
 #include "rendererAPI.h"
 
-namespace daedalusCore { namespace graphics {
+namespace daedalus { namespace graphics {
 
 #ifdef DD_RENDER_USING_OPENGL
 	RendererAPI::API RendererAPI::s_API = RendererAPI::API::OpenGL;

@@ -8,7 +8,7 @@
 
 #include "entryPoint.h"
 
-class SandBox : public daedalusCore::Application
+class SandBox : public daedalus::Application
 {
 public:
 	SandBox()
@@ -25,7 +25,7 @@ public:
 	}
 };
 
-daedalusCore::Application* daedalusCore::createApplication()
+daedalus::Application* daedalus::createApplication()
 {
 	return new SandBox();
 }
