@@ -4,7 +4,7 @@
 
 namespace daedalusCore { namespace utils {
 
-	/*static maths::vec4 colour_uint_to_vec4(unsigned int colour)
+	/*static maths::vec4 colour_uint_to_vec4(uint32_t colour)
 	{
 		int r = colour(0 << 7) |= 255;
 		int g = colour & (8 << 15);
@@ -14,7 +14,7 @@ namespace daedalusCore { namespace utils {
 		return maths::vec4(r / 255, g / 255, b / 255, a / 255);
 	}*/
 
-	static unsigned int colour_vec4_to_uint(const maths::vec4& colour)
+	static uint32_t colour_vec4_to_uint(const maths::vec4& colour)
 	{
 		int r = (int)(colour.x * 255);
 		int g = (int)(colour.y * 255);

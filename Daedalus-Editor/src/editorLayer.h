@@ -1,18 +1,23 @@
 #pragma once
 #include "Daedalus.h"
 
-class EditorLayer : public daedalusCore::application::Layer
+namespace daedalusCore
 {
-public:
-	EditorLayer();
 
-	void attach() override;
-	void detach() override;
-	void update(const daedalusCore::application::DeltaTime& dt) override;
-	void imGuiRender() override;
-	void onEvent(daedalusCore::event::Event& e) override;
+	class EditorLayer : public application::Layer
+	{
+	public:
+		EditorLayer();
 
-private:
-	daedalusCore::graphics::OrthographicCameraController m_camController;
-	daedalusCore::shr_ptr<daedalusCore::graphics::Framebuffer> m_framebuffer;
-};
+		void attach() override;
+		void detach() override;
+		void update(const application::DeltaTime& dt) override;
+		void imGuiRender() override;
+		void onEvent(event::Event& e) override;
+
+	private:
+		graphics::OrthographicCameraController m_camController;
+		shr_ptr<graphics::Framebuffer> m_framebuffer;
+	};
+
+}

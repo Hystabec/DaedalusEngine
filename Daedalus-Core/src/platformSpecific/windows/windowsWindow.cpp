@@ -100,7 +100,7 @@ namespace daedalusCore { namespace application {
 				}
 			});
 
-		glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode)
+		glfwSetCharCallback(m_window, [](GLFWwindow* window, uint32_t keycode)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 

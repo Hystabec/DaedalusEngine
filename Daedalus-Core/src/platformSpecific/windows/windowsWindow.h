@@ -18,8 +18,8 @@ namespace daedalusCore {
 
 		void update() override;
 
-		inline unsigned int getWidth() const override { return m_data.Width; }
-		inline unsigned int getHeight() const override { return m_data.Height; }
+		inline uint32_t getWidth() const override { return m_data.Width; }
+		inline uint32_t getHeight() const override { return m_data.Height; }
 
 		inline void setEventCallback(const EventCallbackFn& callback) override { m_data.EventCallBack = callback; }
 		void setVSync(bool enabled) override;
@@ -37,7 +37,7 @@ namespace daedalusCore {
 		struct WindowData
 		{
 			std::string Title;
-			unsigned int Width, Height;
+			uint32_t Width, Height;
 			bool Vsync;
 
 			EventCallbackFn EventCallBack;

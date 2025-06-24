@@ -5,21 +5,26 @@
 
 #include "entryPoint.h"
 
-class Editor : public daedalusCore::Application
+namespace daedalusCore
 {
-public:
-	Editor()
-		: Application("Editor", 1280, 720, true)
+
+	class Editor : public Application
 	{
-		this->pushLayer(new EditorLayer());
+	public:
+		Editor()
+			: Application("Editor", 1280, 720, true)
+		{
+			this->pushLayer(new EditorLayer());
+		}
+
+		~Editor()
+		{
+		}
+	};
+
+	Application* createApplication()
+	{
+		return new Editor();
 	}
 
-	~Editor()
-	{
-	}
-};
-
-daedalusCore::Application* daedalusCore::createApplication()
-{
-	return new Editor();
 }

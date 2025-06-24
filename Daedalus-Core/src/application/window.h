@@ -8,10 +8,10 @@ namespace daedalusCore { namespace application {
 	struct WindowProperties
 	{
 		std::string Title;
-		unsigned int Width, Height;
+		uint32_t Width, Height;
 		bool VSync;
 
-		WindowProperties(const std::string& title = "Daedalus", unsigned int width = 960, unsigned int height = 540, bool vsync = false)
+		WindowProperties(const std::string& title = "Daedalus", uint32_t width = 960, uint32_t height = 540, bool vsync = false)
 			: Title(title), Width(width), Height(height), VSync(vsync)
 		{
 		}
@@ -26,8 +26,8 @@ namespace daedalusCore { namespace application {
 		
 		virtual void update() = 0;
 
-		virtual unsigned int getWidth() const = 0;
-		virtual unsigned int getHeight() const = 0;
+		virtual uint32_t getWidth() const = 0;
+		virtual uint32_t getHeight() const = 0;
 
 		virtual void setEventCallback(const EventCallbackFn& callback) = 0;
 		virtual void setVSync(bool enabled) = 0;

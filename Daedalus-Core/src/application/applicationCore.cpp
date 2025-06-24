@@ -94,7 +94,7 @@ namespace daedalusCore {
 		m_running = false;
 	}
 
-	Application::Application(std::string title, unsigned int width, unsigned int height, bool vsync)
+	Application::Application(std::string title, uint32_t width, uint32_t height, bool vsync)
 	{
 		DD_PROFILE_FUNCTION();
 
