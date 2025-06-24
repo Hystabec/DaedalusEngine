@@ -19,7 +19,9 @@ dependDir["spdlog"] = dependFol .. "/spdlog"
 dependDir["ImGui"] = dependFol .. "/ImGui"
 dependDir["stb_image"] = dependFol .. "/stb_image"
 
-include "Daedalus-Core/Dependencies/ImGui"
+group "Dependecies"
+	include "Daedalus-Core/Dependencies/ImGui"
+group ""
 
 project "Daedalus-Core"
 	location "Daedalus-Core"
@@ -142,9 +144,64 @@ project "Sandbox"
 	filter "system:windows"
 		systemversion "latest"
 
+	filter "configurations:Debug"
+		defines 
+		{
+			"DD_DEBUG",
+			"DD_USING_ASSERTS",
+			"DD_USING_PROFILING"
+		}
+		symbols "on"
+
+	filter "configurations:Realease"
 		defines
 		{
-		}
+			"DD_RELEASE",
+			"DD_USING_ASSERTS",
+			"DD_USING_PROFILING"
+		} 
+		optimize "on"
+
+	filter "configurations:Distro"
+		defines "DD_DISTRO"
+		optimize "on"
+
+
+project "Daedalus-Editor"
+	location "Daedalus-Editor"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++20"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin/intermediate/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/src/**.hpp"
+	}
+
+	includedirs
+	{
+		"Daedalus-Core",
+		"Daedalus-Core/src",
+		"%{dependDir.ImGui}/include"
+	}
+
+	links
+	{
+		"Daedalus-Core"
+	}
+
+	postbuildcommands
+	{
+	}
+
+	filter "system:windows"
+		systemversion "latest"
 
 	filter "configurations:Debug"
 		defines 
