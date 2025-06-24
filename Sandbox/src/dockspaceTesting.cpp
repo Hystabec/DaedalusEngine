@@ -1,23 +1,28 @@
 #include "dockspaceTesting.h"
 #include <imgui.h>
 
-DockspaceTesting::DockspaceTesting()
+EditorLayer::EditorLayer()
 	: m_camController(1280.0f / 720.0f)
 {
 }
 
-void DockspaceTesting::attach()
+void EditorLayer::attach()
 {
 	DD_PROFILE_FUNCTION();
-	m_texture = daedalusCore::graphics::Texture2D::create("resources/DD_testImage.png");
+	m_texture = daedalusCore::graphics::Texture2D::create("resources/testImage.png");
+
+	daedalusCore::graphics::FramebufferSpecification fbSpec;
+	fbSpec.width = 1280;
+	fbSpec.height = 720;
+	m_framebuffer = daedalusCore::graphics::Framebuffer::create(fbSpec);
 }
 
-void DockspaceTesting::detach()
+void EditorLayer::detach()
 {
 	DD_PROFILE_FUNCTION();
 }
 
-void DockspaceTesting::update(const daedalusCore::application::DeltaTime& dt)
+void EditorLayer::update(const daedalusCore::application::DeltaTime& dt)
 {
 	DD_PROFILE_FUNCTION();
 	m_camController.update(dt);
@@ -26,6 +31,7 @@ void DockspaceTesting::update(const daedalusCore::application::DeltaTime& dt)
 
 	{
 		DD_PROFILE_SCOPE("renderer prep");
+		m_framebuffer->bind();
 		daedalusCore::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
 		daedalusCore::graphics::RenderCommands::clear();
 	}
@@ -47,10 +53,11 @@ void DockspaceTesting::update(const daedalusCore::application::DeltaTime& dt)
 		daedalusCore::graphics::Renderer2D::drawQuad({ { 2, 0 }, { 0.5f, 0.5f }, m_texture });
 
 		daedalusCore::graphics::Renderer2D::end();
+		m_framebuffer->unbind();
 	}
 }
 
-void DockspaceTesting::imGuiRender()
+void EditorLayer::imGuiRender()
 {
 	DD_PROFILE_FUNCTION();
 	ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
@@ -77,12 +84,14 @@ void DockspaceTesting::imGuiRender()
 	ImGui::End();
 
 	ImGui::Begin("Viewport");
-	uint32_t textureID = m_texture->getRendererID();
-	ImGui::Image(textureID, ImVec2{256.0f, 256.0f});
+	uint32_t textureID = m_framebuffer->getColourAttachmentRendererID();
+	ImGui::Image(textureID, ImVec2{1280.0f, 720.0f});
+	//ImGui::Image(textureID, ImGui::GetWindowSize());
 	ImGui::End();
 }
 
-void DockspaceTesting::onEvent(daedalusCore::event::Event& e)
+void EditorLayer::onEvent(daedalusCore::event::Event& e)
 {
 	DD_PROFILE_FUNCTION();
+	m_camController.onEvent(e);
 }

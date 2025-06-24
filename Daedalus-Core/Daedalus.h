@@ -26,6 +26,8 @@
 #include "src/graphics/renderer/renderer2D.h"
 #include "src/graphics/renderer/renderCommands.h"
 
+#include "src/graphics/renderer/framebuffer.h"
+
 #include "src/graphics/shaders/shaderLibrary.h"
 #include "src/graphics/shaders/shader.h"
 #include "src/graphics/rendering/texture.h"

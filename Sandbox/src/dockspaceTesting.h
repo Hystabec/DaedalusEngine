@@ -1,10 +1,10 @@
 #pragma once
 #include "Daedalus.h"
 
-class DockspaceTesting : public daedalusCore::application::Layer
+class EditorLayer : public daedalusCore::application::Layer
 {
 public:
-	DockspaceTesting();
+	EditorLayer();
 
 	void attach() override;
 	void detach() override;
@@ -15,4 +15,6 @@ public:
 private:
 	daedalusCore::graphics::OrthographicCameraController m_camController;
 	daedalusCore::shr_ptr<daedalusCore::graphics::Texture2D> m_texture;
+
+	daedalusCore::shr_ptr<daedalusCore::graphics::Framebuffer> m_framebuffer;
 };

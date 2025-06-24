@@ -15,9 +15,9 @@ public:
 		: Application("SandBox", 1280, 720, true)
 	{
 		//this->pushLayer(new generalLayer());
-		//this->pushLayer(new Layer2D());
+		this->pushLayer(new Layer2D());
 		//this->pushLayer(new AlphaBlendingTestLayer());
-		this->pushLayer(new DockspaceTesting());
+		//this->pushLayer(new DockspaceTesting());
 	}
 
 	~SandBox()
