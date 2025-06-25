@@ -10,6 +10,7 @@ namespace daedalus { namespace maths {
 		vec4();
 		vec4(const float& x);
 		vec4(const float& x, const float& y, const float& z, const float& w);
+		vec4(const vec4& other);
 
 		vec4& add(const vec4& other);
 		vec4& subtract(const vec4& other);

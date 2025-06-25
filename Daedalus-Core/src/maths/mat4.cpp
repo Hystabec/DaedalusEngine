@@ -33,6 +33,11 @@ namespace daedalus { namespace maths {
 			columns[3] = column3;
 		}
 
+		mat4::mat4(const mat4& other)
+		{
+			memcpy(this->elements, other.elements, sizeof(float) * 16);
+		}
+
 		mat4 mat4::identity()
 		{
 			return mat4(1.0f);

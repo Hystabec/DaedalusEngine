@@ -17,6 +17,12 @@ namespace daedalus { namespace maths {
 		this->y = y;
 	}
 
+	vec2::vec2(const vec2& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+	}
+
 	vec2& vec2::add(const vec2& other)
 	{
 		x += other.x;

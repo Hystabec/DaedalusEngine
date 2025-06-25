@@ -19,6 +19,7 @@ namespace daedalus { namespace maths {
 		mat4(float diagonal);
 		mat4(float* elements);
 		mat4(const vec4& column0, const vec4& column1, const vec4& column2, const vec4& column3);
+		mat4(const mat4& other);
 
 		static mat4 identity();
 		mat4& multiply(const mat4& other);
