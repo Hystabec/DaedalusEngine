@@ -1,0 +1,4 @@
+The engine uses 'Entt' for the entity component system.
+
+It could be interesting to try and write my own ECS instead of using a third party lib,
+once the engine is more complete I will consider making my own.

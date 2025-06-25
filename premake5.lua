@@ -18,6 +18,7 @@ dependDir["GLEW"] = dependFol .. "/GLEW"
 dependDir["spdlog"] = dependFol .. "/spdlog"
 dependDir["ImGui"] = dependFol .. "/ImGui"
 dependDir["stb_image"] = dependFol .. "/stb_image"
+dependDir["entt"] = dependFol .. "/Entt"
 
 group "Dependecies"
 	include "Daedalus-Core/Dependencies/ImGui"
@@ -58,13 +59,14 @@ project "Daedalus-Core"
 		"%{dependDir.GLEW}/include",
 		"%{dependDir.spdlog}/include",
 		"%{dependDir.ImGui}/include",
-		"%{dependDir.stb_image}"
+		"%{dependDir.stb_image}",
+		"%{dependDir.entt}/include"
 	}
 
 	libdirs
 	{
 		"%{dependDir.GLFW}/lib-vc2022",
-		"%{dependDir.GLEW}/lib",
+		"%{dependDir.GLEW}/lib"
 	}
 
 	links
@@ -131,6 +133,7 @@ project "Sandbox"
 		"Daedalus-Core",
 		"Daedalus-Core/src",
 		"%{dependDir.ImGui}/include"
+		--"%{dependDir.entt}/include"
 	}
 
 	links
@@ -194,6 +197,7 @@ project "Daedalus-Editor"
 		"Daedalus-Core",
 		"Daedalus-Core/src",
 		"%{dependDir.ImGui}/include"
+		--"%{dependDir.entt}/include"
 	}
 
 	links
