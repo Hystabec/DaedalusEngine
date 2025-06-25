@@ -6,7 +6,7 @@
 #include "backends/imgui_impl_opengl3.h"
 
 #include "application/applicationCore.h"
-#include "application/input/inputKeyCodes.h"
+#include "application/input/inputCodes.h"
 
 //temp
 #include <glfw3.h>

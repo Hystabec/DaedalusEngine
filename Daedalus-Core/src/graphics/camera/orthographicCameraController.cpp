@@ -1,8 +1,8 @@
 #include "ddpch.h"
 #include "orthographicCameraController.h"
 
-#include "application/input/Input.h"
-#include "application/input/inputKeyCodes.h"
+#include "application/input/input.h"
+#include "application/input/inputCodes.h"
 #include "application/applicationCore.h"
 
 namespace daedalus { namespace graphics {
@@ -16,23 +16,23 @@ namespace daedalus { namespace graphics {
 	{
 		DD_PROFILE_FUNCTION();
 
-		if (application::Input::getKeyDown(DD_INPUT_KEY_W))
+		if (application::Input::getKeyDown(InputCode::Key_W))
 			m_cameraPosition.y += m_cameraTranslationSpeed * dt;
-		if (application::Input::getKeyDown(DD_INPUT_KEY_S))
+		if (application::Input::getKeyDown(InputCode::Key_S))
 			m_cameraPosition.y -= m_cameraTranslationSpeed * dt;
 
-		if (application::Input::getKeyDown(DD_INPUT_KEY_A))
+		if (application::Input::getKeyDown(InputCode::Key_A))
 			m_cameraPosition.x -= m_cameraTranslationSpeed * dt;
-		if (application::Input::getKeyDown(DD_INPUT_KEY_D))
+		if (application::Input::getKeyDown(InputCode::Key_D))
 			m_cameraPosition.x += m_cameraTranslationSpeed * dt;
 
 		m_camera.setPosition(m_cameraPosition);
 
 		if (m_useRotation)
 		{
-			if (application::Input::getKeyDown(DD_INPUT_KEY_Q))
+			if (application::Input::getKeyDown(InputCode::Key_Q))
 				m_cameraRotation += m_cameraRotationSpeed * dt;
-			if (application::Input::getKeyDown(DD_INPUT_KEY_E))
+			if (application::Input::getKeyDown(InputCode::Key_E))
 				m_cameraRotation -= m_cameraRotationSpeed * dt;
 
 			m_camera.setRotation(m_cameraRotation);

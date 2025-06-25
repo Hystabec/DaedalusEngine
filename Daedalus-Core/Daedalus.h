@@ -12,9 +12,8 @@
 #include "src/application/layers/layer.h"
 #include "src/application/layers/imGuiLayer.h"
 
-#include "src/application/input/Input.h"
-#include "src/application/input/inputKeyCodes.h"
-#include "src/application/input/inputMouseCodes.h"
+#include "src/application/input/input.h"
+#include "src/application/input/inputCodes.h"
 
 // ---events
 #include "src/events/keyEvent.h"

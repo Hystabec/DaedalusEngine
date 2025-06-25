@@ -2,6 +2,7 @@
 
 #include "../../core.h"
 #include "../../maths/vec2.h"
+#include "inputCodes.h"
 
 namespace daedalus::application {
 
@@ -9,10 +10,10 @@ namespace daedalus::application {
 	{
 	public:
 		/*static bool getKey(int keycode);*/
-		static bool getKeyUp(int keycode);
-		static bool getKeyDown(int keycode);
+		static bool getKeyUp(InputCode keycode);
+		static bool getKeyDown(InputCode keycode);
 
-		static bool getMouseButton(int button);
+		static bool getMouseButton(InputCode button);
 		static maths::vec2 getMousePosition();
 		static float getMouseX();
 		static float getMouseY();

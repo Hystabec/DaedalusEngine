@@ -1,5 +1,5 @@
 #include "ddpch.h"
-#include "application/input/Input.h"
+#include "application/input/input.h"
 
 #include <glfw3.h>
 #include "application/applicationCore.h"
@@ -13,24 +13,24 @@ namespace daedalus::application {
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}*/
 
-	bool Input::getKeyUp(int keycode)
+	bool Input::getKeyUp(InputCode keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
-		auto state = glfwGetKey(window, keycode);
+		auto state = glfwGetKey(window, (int)keycode);
 		return state == GLFW_RELEASE;
 	}
 
-	bool Input::getKeyDown(int keycode)
+	bool Input::getKeyDown(InputCode keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
-		auto state = glfwGetKey(window, keycode);
+		auto state = glfwGetKey(window, (int)keycode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool Input::getMouseButton(int button)
+	bool Input::getMouseButton(InputCode button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
-		auto state = glfwGetMouseButton(window, button);
+		auto state = glfwGetMouseButton(window, (int)button);
 		return state == GLFW_PRESS;
 	}
 
