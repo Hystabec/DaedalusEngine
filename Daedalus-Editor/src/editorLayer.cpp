@@ -17,6 +17,10 @@ namespace daedalus
 		fbSpec.width = 1280;
 		fbSpec.height = 720;
 		m_framebuffer = graphics::Framebuffer::create(fbSpec);
+
+		m_activeScene = create_shr_ptr<scene::Scene>();
+		auto square = m_activeScene->createEntity("Square");
+		square.addComponent<scene::SpriteRendererComponent>(maths::vec4{ 0.8f, 0.2f, 0.2f, 1.0f });
 	}
 
 	void EditorLayer::detach()
@@ -31,20 +35,21 @@ namespace daedalus
 		if(m_viewportFocused)
 			m_camController.update(dt);
 
+		
+
 		graphics::Renderer2D::resetStats();
 
-		{
-			DD_PROFILE_SCOPE("renderer prep");
-			m_framebuffer->bind();
-			graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
-			graphics::RenderCommands::clear();
-		}
+		m_framebuffer->bind();
+		graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
+		graphics::RenderCommands::clear();
 
-		{
-			DD_PROFILE_SCOPE("renderer draw");
 
-			graphics::Renderer2D::begin(m_camController.getCamera());
+		graphics::Renderer2D::begin(m_camController.getCamera());
 
+		// update scene
+		m_activeScene->update(dt);
+
+#if 0
 			for (float y = -5.0f; y < 5.0f; y += 0.05f)
 			{
 				for (float x = -5.0f; x < 5.0f; x += 0.05f)
@@ -53,10 +58,10 @@ namespace daedalus
 					graphics::Renderer2D::drawQuad({ {x, y, -0.1f}, { 0.2f }, colour });
 				}
 			}
+#endif
 
-			graphics::Renderer2D::end();
-			m_framebuffer->unbind();
-		}
+		graphics::Renderer2D::end();
+		m_framebuffer->unbind();
 	}
 
 	void EditorLayer::imGuiRender()

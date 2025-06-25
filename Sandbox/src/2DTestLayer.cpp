@@ -84,10 +84,10 @@ void Layer2D::imGuiRender()
 #endif
 
 	ImGui::ColorEdit4("Colour", &(m_squareProps.colour.x));
-	ImGui::InputFloat3("position", &(m_squareProps.position.x));
-	ImGui::InputFloat2("scale", &(m_squareProps.size.x));
+	//ImGui::InputFloat3("position", &(m_squareProps.position.x));
+	//ImGui::InputFloat2("scale", &(m_squareProps.size.x));
 
-	ImGui::SliderAngle("Z Rotation", &m_squareProps.rotation);
+	//ImGui::SliderAngle("Z Rotation", &m_squareProps.rotation);
 
 	ImGui::End();
 }

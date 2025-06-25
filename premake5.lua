@@ -132,8 +132,8 @@ project "Sandbox"
 	{
 		"Daedalus-Core",
 		"Daedalus-Core/src",
-		"%{dependDir.ImGui}/include"
-		--"%{dependDir.entt}/include"
+		"%{dependDir.ImGui}/include",
+		"%{dependDir.entt}/include"
 	}
 
 	links
@@ -196,8 +196,8 @@ project "Daedalus-Editor"
 	{
 		"Daedalus-Core",
 		"Daedalus-Core/src",
-		"%{dependDir.ImGui}/include"
-		--"%{dependDir.entt}/include"
+		"%{dependDir.ImGui}/include",
+		"%{dependDir.entt}/include"
 	}
 
 	links

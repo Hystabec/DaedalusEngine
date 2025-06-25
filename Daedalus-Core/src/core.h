@@ -48,4 +48,6 @@ namespace daedalus {
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
 
+	// TO DO: Add weak ptr
+
 }

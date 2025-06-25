@@ -40,7 +40,12 @@
 #include "src/graphics/camera/orthographicCameraController.h"
 
 // ---maths
-#include "maths/maths.h"
+#include "src/maths/maths.h"
+
+// ---Scene
+#include "src/scene/scene.h"
+#include "src/scene/components.h"
+#include "src/scene/entity.h"
 
 // ---utils
 #include "src/utils/timer.h"

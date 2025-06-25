@@ -231,31 +231,31 @@ namespace daedalus { namespace graphics {
 			texCoords[3] = subTexCoords[3];
 		}
 
-		maths::mat4 transform = maths::mat4::translate(quadProps.position)
-			* maths::mat4::scale({ quadProps.size.x, quadProps.size.y, 1 });
+		/*maths::mat4 transform = maths::mat4::translate(quadProps.position)
+			* maths::mat4::scale({ quadProps.size.x, quadProps.size.y, 1 });*/
 
-		s_data.QuadVertexBufferPtr->position = transform * s_data.quadVertexPositions[0];
+		s_data.QuadVertexBufferPtr->position = quadProps.transform * s_data.quadVertexPositions[0];
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[0];
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = quadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
 		s_data.QuadVertexBufferPtr++;
 
-		s_data.QuadVertexBufferPtr->position = transform * s_data.quadVertexPositions[1];
+		s_data.QuadVertexBufferPtr->position = quadProps.transform * s_data.quadVertexPositions[1];
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[1];
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = quadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
 		s_data.QuadVertexBufferPtr++;
 
-		s_data.QuadVertexBufferPtr->position = transform * s_data.quadVertexPositions[2];
+		s_data.QuadVertexBufferPtr->position = quadProps.transform * s_data.quadVertexPositions[2];
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[2];
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = quadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
 		s_data.QuadVertexBufferPtr++;
 
-		s_data.QuadVertexBufferPtr->position = transform * s_data.quadVertexPositions[3];
+		s_data.QuadVertexBufferPtr->position = quadProps.transform * s_data.quadVertexPositions[3];
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[3];
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = quadProps.tilingFactor;
@@ -331,32 +331,32 @@ namespace daedalus { namespace graphics {
 			texCoords[3] = subTexCoords[3];
 		}
 
-		maths::mat4 transform = maths::mat4::translate(rotQuadProps.position)
+		/*maths::mat4 transform = maths::mat4::translate(rotQuadProps.position)
 			* maths::mat4::rotate(rotQuadProps.rotation, { 0,0,1 }, true)
-			* maths::mat4::scale({ rotQuadProps.size.x, rotQuadProps.size.y, 1 });
+			* maths::mat4::scale({ rotQuadProps.size.x, rotQuadProps.size.y, 1 });*/
 
-		s_data.QuadVertexBufferPtr->position = transform * s_data.quadVertexPositions[0];
+		s_data.QuadVertexBufferPtr->position = rotQuadProps.transform * s_data.quadVertexPositions[0];
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[0];
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = rotQuadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = rotQuadProps.colour;
 		s_data.QuadVertexBufferPtr++;
 
-		s_data.QuadVertexBufferPtr->position = transform * s_data.quadVertexPositions[1];
+		s_data.QuadVertexBufferPtr->position = rotQuadProps.transform * s_data.quadVertexPositions[1];
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[1];
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = rotQuadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = rotQuadProps.colour;
 		s_data.QuadVertexBufferPtr++;
 
-		s_data.QuadVertexBufferPtr->position = transform * s_data.quadVertexPositions[2];
+		s_data.QuadVertexBufferPtr->position = rotQuadProps.transform * s_data.quadVertexPositions[2];
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[2];
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = rotQuadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = rotQuadProps.colour;
 		s_data.QuadVertexBufferPtr++;
 
-		s_data.QuadVertexBufferPtr->position = transform * s_data.quadVertexPositions[3];
+		s_data.QuadVertexBufferPtr->position = rotQuadProps.transform * s_data.quadVertexPositions[3];
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[3];
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = rotQuadProps.tilingFactor;
