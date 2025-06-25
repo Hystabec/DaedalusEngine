@@ -82,6 +82,7 @@ project "Daedalus-Core"
 
 		defines
 		{
+			"DD_PLATFORM_WINDOWS",
 			"DD_RENDER_USING_OPENGL",
 			"GLEW_STATIC"
 		}
@@ -143,6 +144,10 @@ project "Sandbox"
 
 	filter "system:windows"
 		systemversion "latest"
+		defines
+		{
+			"DD_PLATFORM_WINDOWS"
+		}
 
 	filter "configurations:Debug"
 		defines 
@@ -202,6 +207,11 @@ project "Daedalus-Editor"
 
 	filter "system:windows"
 		systemversion "latest"
+		defines
+		{
+			"DD_PLATFORM_WINDOWS"
+		}
+
 
 	filter "configurations:Debug"
 		defines 

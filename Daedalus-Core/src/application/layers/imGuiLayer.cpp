@@ -68,6 +68,16 @@ namespace daedalus { namespace application {
 	{
 	}
 
+	void ImGuiLayer::onEvent(event::Event& event)
+	{
+		if (!m_allowEvents)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+
+			event.setHandled((event.isInCategory(event::EventCategory::Mouse) && io.WantCaptureMouse) || (event.isInCategory(event::EventCategory::Keyboard) && io.WantCaptureMouse));
+		}
+	}
+
 	void ImGuiLayer::begin()
 	{
 		DD_PROFILE_FUNCTION();

@@ -8,8 +8,8 @@ namespace daedalus { namespace application {
 	class Layer
 	{
 	public:
-		Layer();
-		virtual ~Layer();
+		Layer() {};
+		virtual ~Layer() {};
 
 		virtual void attach() {}
 		virtual void detach() {}

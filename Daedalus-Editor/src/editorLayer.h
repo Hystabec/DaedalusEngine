@@ -17,8 +17,11 @@ namespace daedalus
 
 	private:
 		graphics::OrthographicCameraController m_camController;
+
 		shr_ptr<graphics::Framebuffer> m_framebuffer;
-		maths::vec2 m_viewPortSize;
+
+		bool m_viewportFocused = false, m_viewportHovered = false;
+		maths::vec2 m_viewportSize;
 	};
 
 }

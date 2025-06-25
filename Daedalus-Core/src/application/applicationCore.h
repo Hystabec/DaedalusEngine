@@ -29,6 +29,8 @@ namespace daedalus {
 
 		void close();
 
+		inline application::ImGuiLayer* getImGuiLayer() { return m_ImGuiLayer; }
+
 	protected:
 		Application(std::string title = "Daedalus Window", uint32_t width = 960, uint32_t height = 540, bool vsync = false);
 

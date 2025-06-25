@@ -50,6 +50,7 @@ namespace daedalus { namespace event {
 		}
 
 		inline bool handled() const { return m_handled; }
+		inline void setHandled(bool handled) { m_handled = handled; }
 
 	protected:
 		bool m_handled = false;

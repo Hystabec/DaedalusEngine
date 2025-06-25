@@ -2,10 +2,6 @@
 
 #include "layer.h"
 
-#include "events/keyEvent.h"
-#include "events/mouseEvent.h"
-#include "events/windowEvent.h"
-
 namespace daedalus { namespace application {
 
 	class ImGuiLayer : public Layer
@@ -19,10 +15,14 @@ namespace daedalus { namespace application {
 
 		void imGuiRender() override;
 
+		void onEvent(event::Event& event) override;
+
 		void begin();
 		void end();
 
+		inline void setAllowEvents(bool allow) { m_allowEvents = allow; }
 	private:
+		bool m_allowEvents = true;
 		float m_time = 0.0f;
 	};
 

@@ -27,7 +27,9 @@ namespace daedalus
 	void EditorLayer::update(const application::DeltaTime& dt)
 	{
 		DD_PROFILE_FUNCTION();
-		m_camController.update(dt);
+
+		if(m_viewportFocused)
+			m_camController.update(dt);
 
 		graphics::Renderer2D::resetStats();
 
@@ -86,13 +88,17 @@ namespace daedalus
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
 
+		m_viewportFocused = ImGui::IsWindowFocused();
+		m_viewportHovered = ImGui::IsWindowHovered();
+		Application::get().getImGuiLayer()->setAllowEvents(m_viewportFocused && m_viewportHovered);
+
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 		daedalus::maths::vec2 viewportSizeAsVec2 = { viewportSize.x, viewportSize.y };
-		if (m_viewPortSize != viewportSizeAsVec2)
+		if (m_viewportSize != viewportSizeAsVec2)
 		{
-			m_viewPortSize = viewportSizeAsVec2;
-			m_framebuffer->resize((uint32_t)m_viewPortSize.x, (uint32_t)m_viewPortSize.y);
-			m_camController.onResize(m_viewPortSize.x, m_viewPortSize.y);
+			m_viewportSize = viewportSizeAsVec2;
+			m_framebuffer->resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+			m_camController.onResize(m_viewportSize.x, m_viewportSize.y);
 		}
 		uint32_t textureID = m_framebuffer->getColourAttachmentRendererID();
 		ImGui::Image(textureID, viewportSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
