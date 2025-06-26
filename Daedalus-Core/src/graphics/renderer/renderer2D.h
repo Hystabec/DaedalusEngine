@@ -1,5 +1,6 @@
 #pragma once
 
+#include "graphics/camera/camera.h"
 #include "graphics/camera/orthographicCamera.h"
 #include "graphics/rendering/texture.h"
 #include "graphics/rendering/primative2DProperties.h"
@@ -12,7 +13,8 @@ namespace daedalus { namespace graphics {
 		static void init();
 		static void shutdown();
 
-		static void begin(const OrthographicCamera& othoCamera);
+		static void begin(const Camera& camera, const maths::mat4& transform);
+		static void begin(const OrthographicCamera& othoCamera); // TO DO: Remove
 		static void end();
 		static void flush();
 

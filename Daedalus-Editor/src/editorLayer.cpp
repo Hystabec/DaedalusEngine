@@ -19,6 +19,9 @@ namespace daedalus
 		m_framebuffer = graphics::Framebuffer::create(fbSpec);
 
 		m_activeScene = create_shr_ptr<scene::Scene>();
+		m_cameraEntity = m_activeScene->createEntity("Camera Entity");
+		m_cameraEntity.addComponent<scene::CameraComponent>(maths::mat4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+
 		auto square = m_activeScene->createEntity("Square");
 		square.addComponent<scene::SpriteRendererComponent>(maths::vec4{ 0.8f, 0.2f, 0.2f, 1.0f });
 	}
@@ -35,16 +38,13 @@ namespace daedalus
 		if(m_viewportFocused)
 			m_camController.update(dt);
 
-		
-
 		graphics::Renderer2D::resetStats();
 
 		m_framebuffer->bind();
 		graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
 		graphics::RenderCommands::clear();
 
-
-		graphics::Renderer2D::begin(m_camController.getCamera());
+		//graphics::Renderer2D::begin(m_camController.getCamera());
 
 		// update scene
 		m_activeScene->update(dt);
@@ -60,7 +60,7 @@ namespace daedalus
 			}
 #endif
 
-		graphics::Renderer2D::end();
+		//graphics::Renderer2D::end();
 		m_framebuffer->unbind();
 	}
 

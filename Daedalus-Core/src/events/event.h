@@ -84,7 +84,7 @@ namespace daedalus { namespace event {
 LOG_CREATE_FORMAT(daedalus::event::Event, "Event: {}", e, e.getName())
 
 /// @brief Use this macro to bind a member function when passing to event dispatcher
-#define DD_BIND_EVENT_FUN(fun) std::bind(&fun, this, std::placeholders::_1)
+#define DD_BIND_EVENT_FUN(fun) [this](auto&&... args) -> decltype(auto) { return this->fun(std::forward<decltype(args)>(args)...); }
 
 /// @brief Use of this macro is unnecessary however it mimics using the member function macro
 #define DD_BIND_EVENT_LAMBDA_FUN(fun) fun

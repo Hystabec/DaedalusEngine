@@ -2,6 +2,7 @@
 
 #include "maths/mat4.h"
 #include "maths/vec4.h"
+#include "graphics/camera/camera.h"
 
 // if this file gets too big, should seperate into individual files.
 
@@ -31,6 +32,19 @@ namespace daedalus::scene {
 
 		operator maths::mat4& () { return Transform; }
 		operator const maths::mat4& () const { return Transform; }
+	};
+
+	struct CameraComponent
+	{
+		graphics::Camera Camera;
+		bool Primary = true; // TO DO: Think about moving to scene
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
+		CameraComponent(const maths::mat4& projection)
+			: Camera(projection)
+		{
+		}
 	};
 
 	struct SpriteRendererComponent

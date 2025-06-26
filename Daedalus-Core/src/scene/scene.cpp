@@ -16,12 +16,37 @@ namespace daedalus::scene {
 
 	void Scene::update(const application::DeltaTime& dt)
 	{
-		auto group = m_registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-		for (auto entity : group)
+		// Render2D sprites
+		graphics::Camera* mainCamera = nullptr;
+		maths::mat4* mainCameraTransform = nullptr;
 		{
-			const auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			
-			graphics::Renderer2D::drawQuad({ transform.Transform, sprite.Colour });
+			auto view = m_registry.view<TransformComponent, CameraComponent>();
+			for (auto entity : view)
+			{
+				const auto& [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
+
+				if (camera.Primary)
+				{
+					mainCamera = &camera.Camera;
+					mainCameraTransform = &transform.Transform;
+					break;
+				}
+			}
+		}
+
+		if (mainCamera && mainCameraTransform)
+		{
+			graphics::Renderer2D::begin(*mainCamera, *mainCameraTransform);
+
+			auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
+			for (auto entity : group)
+			{
+				const auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
+				graphics::Renderer2D::drawQuad({ transform.Transform, sprite.Colour });
+			}
+
+			graphics::Renderer2D::end();
 		}
 	}
 

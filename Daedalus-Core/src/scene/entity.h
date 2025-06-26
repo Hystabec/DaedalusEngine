@@ -41,7 +41,7 @@ namespace daedalus::scene {
 		}
 
 		/// @brief Remove a specified component from the entity. 
-		/// @brief Trying to remove TransformComponent or TagComponent will cause a compilation error
+		/// @brief Trying to remove TransformComponent or TagComponent will cause a compilation error (E0304 / C2672)
 		template<typename T>
 		void removeComponent() requires(!std::is_same<T, TransformComponent>::value && !std::is_same<T, TagComponent>::value)
 		{
@@ -53,12 +53,13 @@ namespace daedalus::scene {
 
 	public:
 		// this idea of being able to call entity.Transform seems good but i dont know how i would do it
+		// would be easier to just do it as a function that retrieves a reference to the transform
 
 		//maths::mat4& Transform = getComponent<TransformComponent>().Transform;
 		//std::string& Tag = getComponent<TagComponent>().Tag;
 
 	private:
-		entt::entity m_handle{0};
+		entt::entity m_handle{ entt::null };
 		Scene* m_scene = nullptr;
 	};
 

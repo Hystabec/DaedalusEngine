@@ -24,6 +24,7 @@ namespace daedalus
 		maths::vec2 m_viewportSize;
 
 		shr_ptr<scene::Scene> m_activeScene;
+		scene::Entity m_cameraEntity;
 	};
 
 }
