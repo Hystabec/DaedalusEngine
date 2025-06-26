@@ -17,7 +17,7 @@ namespace daedalus { namespace graphics {
 		static void begin(OrthographicCamera& othoCamera);
 		static void end();
 
-		static void submit(const shr_ptr<graphics::buffers::VertexArray>& vertexArray, const shr_ptr<graphics::Shader>& shader, const maths::mat4& transform = maths::mat4(1.0f));
+		static void submit(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, const Shr_ptr<graphics::Shader>& shader, const maths::Mat4& transform = maths::Mat4(1.0f));
 
 		static inline RendererAPI::API getCurrentAPI() { return RendererAPI::getAPI(); }
 
@@ -25,7 +25,7 @@ namespace daedalus { namespace graphics {
 		struct sceneData
 		{
 			bool inUse = false;
-			maths::mat4 projectionViewMatrix;
+			maths::Mat4 projectionViewMatrix;
 		};
 
 		static sceneData* m_sceneData;

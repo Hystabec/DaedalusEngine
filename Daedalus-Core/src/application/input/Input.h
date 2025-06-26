@@ -14,7 +14,7 @@ namespace daedalus::application {
 		static bool getKeyDown(InputCode keycode);
 
 		static bool getMouseButton(InputCode button);
-		static maths::vec2 getMousePosition();
+		static maths::Vec2 getMousePosition();
 		static float getMouseX();
 		static float getMouseY();
 	};

@@ -12,7 +12,7 @@ namespace daedalus {namespace graphics { namespace buffers {
 		virtual void unbind() const = 0;
 		virtual uint32_t count() const = 0;
 
-		static shr_ptr<IndexBuffer> create(uint32_t* indices, uint32_t count);
+		static Shr_ptr<IndexBuffer> create(uint32_t* indices, uint32_t count);
 	};
 
 } } }

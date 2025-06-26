@@ -11,11 +11,11 @@ namespace daedalus { namespace graphics {
 
 	struct QuadVertex
 	{
-		maths::vec3 position;
-		maths::vec2 texCoord;
+		maths::Vec3 position;
+		maths::Vec2 texCoord;
 		float texIndex;
 		float tilingFactor;
-		maths::vec4 colour;
+		maths::Vec4 colour;
 	};
 
 	struct Renderer2DData
@@ -26,19 +26,19 @@ namespace daedalus { namespace graphics {
 		static const uint32_t maxTextureSlots = 32; // TO DO: RenderCaps
 
 		bool beginCalled = false;
-		shr_ptr<buffers::VertexArray> quadVertexArray;
-		shr_ptr<buffers::VertexBuffer> quadVertexBuffer;
-		shr_ptr<Shader> defaultShader;
-		shr_ptr<Texture2D> whiteTexture;
+		Shr_ptr<buffers::VertexArray> quadVertexArray;
+		Shr_ptr<buffers::VertexBuffer> quadVertexBuffer;
+		Shr_ptr<Shader> defaultShader;
+		Shr_ptr<Texture2D> whiteTexture;
 
 		uint32_t quadIndexCount = 0;
 		QuadVertex* QuadVertexBufferBase = nullptr;
 		QuadVertex* QuadVertexBufferPtr = nullptr;
 
-		std::array<shr_ptr<Texture2D>, maxTextureSlots> textureSlots;
+		std::array<Shr_ptr<Texture2D>, maxTextureSlots> textureSlots;
 		uint32_t textureSlotIndex = 1; // 0 = white texture
 
-		maths::vec3 quadVertexPositions[4];
+		maths::Vec3 quadVertexPositions[4];
 
 #ifndef DD_DISTRO
 		Renderer2D::Statistics stats;
@@ -81,7 +81,7 @@ namespace daedalus { namespace graphics {
 			offset += 4;
 		}
 
-		shr_ptr<buffers::IndexBuffer> quadIndexBuff(buffers::IndexBuffer::create(quadIndices, s_data.maxIndices));
+		Shr_ptr<buffers::IndexBuffer> quadIndexBuff(buffers::IndexBuffer::create(quadIndices, s_data.maxIndices));
 		s_data.quadVertexArray->setIndexBuffer(quadIndexBuff);
 		delete[] quadIndices;
 
@@ -116,13 +116,13 @@ namespace daedalus { namespace graphics {
 		delete[] s_data.QuadVertexBufferBase;
 	}
 
-	void Renderer2D::begin(const Camera& camera, const maths::mat4& transform)
+	void Renderer2D::begin(const Camera& camera, const maths::Mat4& transform)
 	{
 		DD_PROFILE_FUNCTION();
 		DD_CORE_ASSERT(!(s_data.beginCalled), "Renderer2D::end not called");
 		s_data.beginCalled = true;
 
-		maths::mat4 viewProj = camera.getProjection() * maths::mat4::invert(transform);
+		maths::Mat4 viewProj = camera.getProjection() * maths::Mat4::invert(transform);
 
 		s_data.defaultShader->enable();
 		s_data.defaultShader->setUniformMat4(viewProj, "u_projView");
@@ -197,7 +197,7 @@ namespace daedalus { namespace graphics {
 		if (s_data.quadIndexCount >= Renderer2DData::maxIndices)
 			flushAndReset();
 
-		maths::vec2 texCoords[4] = {
+		maths::Vec2 texCoords[4] = {
 			{0.0f, 0.0f},
 			{1.0f, 0.0f},
 			{1.0f, 1.0f},
@@ -248,8 +248,8 @@ namespace daedalus { namespace graphics {
 			texCoords[3] = subTexCoords[3];
 		}
 
-		/*maths::mat4 transform = maths::mat4::translate(quadProps.position)
-			* maths::mat4::scale({ quadProps.size.x, quadProps.size.y, 1 });*/
+		/*maths::Mat4 transform = maths::Mat4::translate(quadProps.position)
+			* maths::Mat4::scale({ quadProps.size.x, quadProps.size.y, 1 });*/
 
 		s_data.QuadVertexBufferPtr->position = quadProps.transform * s_data.quadVertexPositions[0];
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[0];
@@ -297,7 +297,7 @@ namespace daedalus { namespace graphics {
 		if (s_data.quadIndexCount >= Renderer2DData::maxIndices)
 			flushAndReset();
 
-		maths::vec2 texCoords[4] = {
+		maths::Vec2 texCoords[4] = {
 			{0.0f, 0.0f},
 			{1.0f, 0.0f},
 			{1.0f, 1.0f},
@@ -348,9 +348,9 @@ namespace daedalus { namespace graphics {
 			texCoords[3] = subTexCoords[3];
 		}
 
-		/*maths::mat4 transform = maths::mat4::translate(rotQuadProps.position)
-			* maths::mat4::rotate(rotQuadProps.rotation, { 0,0,1 }, true)
-			* maths::mat4::scale({ rotQuadProps.size.x, rotQuadProps.size.y, 1 });*/
+		/*maths::Mat4 transform = maths::Mat4::translate(rotQuadProps.position)
+			* maths::Mat4::rotate(rotQuadProps.rotation, { 0,0,1 }, true)
+			* maths::Mat4::scale({ rotQuadProps.size.x, rotQuadProps.size.y, 1 });*/
 
 		s_data.QuadVertexBufferPtr->position = rotQuadProps.transform * s_data.quadVertexPositions[0];
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[0];

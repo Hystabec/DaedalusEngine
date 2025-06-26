@@ -20,10 +20,10 @@ namespace daedalus
 
 		m_activeScene = create_shr_ptr<scene::Scene>();
 		m_cameraEntity = m_activeScene->createEntity("Camera Entity");
-		m_cameraEntity.addComponent<scene::CameraComponent>(maths::mat4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+		m_cameraEntity.addComponent<scene::CameraComponent>(maths::Mat4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
 
 		auto square = m_activeScene->createEntity("Square");
-		square.addComponent<scene::SpriteRendererComponent>(maths::vec4{ 0.8f, 0.2f, 0.2f, 1.0f });
+		square.addComponent<scene::SpriteRendererComponent>(maths::Vec4{ 0.8f, 0.2f, 0.2f, 1.0f });
 	}
 
 	void EditorLayer::detach()
@@ -98,7 +98,7 @@ namespace daedalus
 		Application::get().getImGuiLayer()->setAllowEvents(m_viewportFocused && m_viewportHovered);
 
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-		daedalus::maths::vec2 viewportSizeAsVec2 = { viewportSize.x, viewportSize.y };
+		daedalus::maths::Vec2 viewportSizeAsVec2 = { viewportSize.x, viewportSize.y };
 		if (m_viewportSize != viewportSizeAsVec2)
 		{
 			m_viewportSize = viewportSizeAsVec2;

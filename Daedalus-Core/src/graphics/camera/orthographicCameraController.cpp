@@ -49,7 +49,7 @@ namespace daedalus { namespace graphics {
 		m_cameraTranslationSpeed = m_zoomLevel;
 	}
 
-	maths::vec2 OrthographicCameraController::mouseToWorldPosition(maths::vec2 mousePos) const
+	maths::Vec2 OrthographicCameraController::mouseToWorldPosition(maths::Vec2 mousePos) const
 	{
 		auto width = Application::get().getWindow()->getWidth();
 		auto height = Application::get().getWindow()->getHeight();

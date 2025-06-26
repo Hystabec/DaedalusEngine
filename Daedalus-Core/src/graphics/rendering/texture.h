@@ -21,8 +21,8 @@ namespace daedalus { namespace graphics {
 	class Texture2D : public Texture
 	{
 	public:
-		static shr_ptr<Texture2D> create(uint32_t width, uint32_t height);
-		static shr_ptr<Texture2D> create(const std::string& filePath);
+		static Shr_ptr<Texture2D> create(uint32_t width, uint32_t height);
+		static Shr_ptr<Texture2D> create(const std::string& filePath);
 	};
 
 } }

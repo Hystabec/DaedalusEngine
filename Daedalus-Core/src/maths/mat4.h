@@ -5,51 +5,51 @@
 
 namespace daedalus { namespace maths {
 
-	struct mat4
+	struct Mat4
 	{
 		//column-major
 
 		union 
 		{
 			float elements[16];
-			vec4 columns[4];
+			Vec4 columns[4];
 		};
 
-		mat4();
-		mat4(float diagonal);
-		mat4(float* elements);
-		mat4(const vec4& column0, const vec4& column1, const vec4& column2, const vec4& column3);
-		mat4(const mat4& other);
+		Mat4();
+		Mat4(float diagonal);
+		Mat4(float* elements);
+		Mat4(const Vec4& column0, const Vec4& column1, const Vec4& column2, const Vec4& column3);
+		Mat4(const Mat4& other);
 
-		static mat4 identity();
-		mat4& multiply(const mat4& other);
-		friend mat4 operator*(mat4 left, const mat4& right);
-		mat4& operator*=(const mat4& other);
+		static Mat4 identity();
+		Mat4& multiply(const Mat4& other);
+		friend Mat4 operator*(Mat4 left, const Mat4& right);
+		Mat4& operator*=(const Mat4& other);
 
-		vec3 multiply(const vec3& other) const;
-		friend vec3 operator*(const mat4& left, const vec3& right);
+		Vec3 multiply(const Vec3& other) const;
+		friend Vec3 operator*(const Mat4& left, const Vec3& right);
 
-		vec4 multiply(const vec4& other) const;
-		friend vec4 operator*(const mat4& left, const vec4& right);
+		Vec4 multiply(const Vec4& other) const;
+		friend Vec4 operator*(const Mat4& left, const Vec4& right);
 
-		mat4& invert();
-		static mat4 invert(const mat4& matrix);
+		Mat4& invert();
+		static Mat4 invert(const Mat4& matrix);
 
-		static mat4 orthographic(float left, float right, float botton, float top, float nearPlane, float farPlane);
-		static mat4 perspective(float fov, float aspectRatio, float nearPlane, float farPlane);
+		static Mat4 orthographic(float left, float right, float botton, float top, float nearPlane, float farPlane);
+		static Mat4 perspective(float fov, float aspectRatio, float nearPlane, float farPlane);
 
-		static mat4 translate(const vec3& translation);
+		static Mat4 translate(const Vec3& translation);
 
 		/// @brief Returns an indenty matrix rotated by the specified angle and axis. 
 		/// A bool can be passed in as the final peramiter to pass angle as radians.
-		static mat4 rotate(float angle, const vec3& axis, bool inRadians = false);
+		static Mat4 rotate(float angle, const Vec3& axis, bool inRadians = false);
 
-		static mat4 scale(const vec3& scale);
+		static Mat4 scale(const Vec3& scale);
 	};
 
 } }
 
-LOG_CREATE_FORMAT(daedalus::maths::mat4, "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}", 
+LOG_CREATE_FORMAT(daedalus::maths::Mat4, "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}", 
 	thisMat4, 
 	thisMat4.elements[0], thisMat4.elements[1], thisMat4.elements[2], thisMat4.elements[3], 
 	thisMat4.elements[4], thisMat4.elements[5], thisMat4.elements[6], thisMat4.elements[7],

@@ -60,7 +60,7 @@ namespace daedalus { namespace graphics {
 		glDeleteProgram(m_shaderID);
 	}
 
-	void OpenGLShader::setUniformMat4(const maths::mat4& matrix, const std::string& name)
+	void OpenGLShader::setUniformMat4(const maths::Mat4& matrix, const std::string& name)
 	{
 		DD_PROFILE_FUNCTION();
 
@@ -91,21 +91,21 @@ namespace daedalus { namespace graphics {
 		glUniform1fv(getUniformLocation(name), count, values);
 	}
 
-	void OpenGLShader::setUniform2f(const maths::vec2& vector, const std::string& name)
+	void OpenGLShader::setUniform2f(const maths::Vec2& vector, const std::string& name)
 	{
 		DD_PROFILE_FUNCTION();
 
 		glUniform2f(getUniformLocation(name), vector.x, vector.y);
 	}
 
-	void OpenGLShader::setUniform3f(const maths::vec3& vector, const std::string& name)
+	void OpenGLShader::setUniform3f(const maths::Vec3& vector, const std::string& name)
 	{
 		DD_PROFILE_FUNCTION();
 
 		glUniform3f(getUniformLocation(name), vector.x, vector.y, vector.z);
 	}
 
-	void OpenGLShader::setUniform4f(const maths::vec4& vector, const std::string& name)
+	void OpenGLShader::setUniform4f(const maths::Vec4& vector, const std::string& name)
 	{
 		DD_PROFILE_FUNCTION();
 

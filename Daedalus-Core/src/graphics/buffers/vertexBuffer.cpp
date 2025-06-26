@@ -8,7 +8,7 @@
 
 namespace daedalus { namespace graphics { namespace buffers {
 
-	shr_ptr<VertexBuffer> VertexBuffer::create(uint32_t size)
+	Shr_ptr<VertexBuffer> VertexBuffer::create(uint32_t size)
 	{
 		switch (Renderer::getCurrentAPI())
 		{
@@ -24,7 +24,7 @@ namespace daedalus { namespace graphics { namespace buffers {
 		return nullptr;
 	}
 
-	shr_ptr<VertexBuffer> buffers::VertexBuffer::create(float* verticies, uint32_t size)
+	Shr_ptr<VertexBuffer> buffers::VertexBuffer::create(float* verticies, uint32_t size)
 	{
 		switch (Renderer::getCurrentAPI())
 		{

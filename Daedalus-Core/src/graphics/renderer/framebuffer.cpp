@@ -8,7 +8,7 @@
 
 namespace daedalus::graphics {
 
-    shr_ptr<Framebuffer> Framebuffer::create(const FramebufferSpecification& specification)
+    Shr_ptr<Framebuffer> Framebuffer::create(const FramebufferSpecification& specification)
     {
 		switch (Renderer::getCurrentAPI())
 		{

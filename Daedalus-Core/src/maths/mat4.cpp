@@ -5,12 +5,12 @@
 
 namespace daedalus { namespace maths {
 
-		mat4::mat4()
+		Mat4::Mat4()
 		{
 			memset(elements, 0, sizeof(float) * 16);
 		}
 
-		mat4::mat4(float diaganol)
+		Mat4::Mat4(float diaganol)
 		{
 			memset(elements, 0, sizeof(float) * 16);
 
@@ -20,12 +20,12 @@ namespace daedalus { namespace maths {
 			elements[3 + 3 * 4] = diaganol;
 		}
 
-		mat4::mat4(float* elements)
+		Mat4::Mat4(float* elements)
 		{
 			memcpy(this->elements, elements, sizeof(float) * 16);
 		}
 
-		mat4::mat4(const vec4& column0, const vec4& column1, const vec4& column2, const vec4& column3)
+		Mat4::Mat4(const Vec4& column0, const Vec4& column1, const Vec4& column2, const Vec4& column3)
 		{
 			columns[0] = column0;
 			columns[1] = column1;
@@ -33,17 +33,17 @@ namespace daedalus { namespace maths {
 			columns[3] = column3;
 		}
 
-		mat4::mat4(const mat4& other)
+		Mat4::Mat4(const Mat4& other)
 		{
 			memcpy(this->elements, other.elements, sizeof(float) * 16);
 		}
 
-		mat4 mat4::identity()
+		Mat4 Mat4::identity()
 		{
-			return mat4(1.0f);
+			return Mat4(1.0f);
 		}
 
-		mat4& mat4::multiply(const mat4& other)
+		Mat4& Mat4::multiply(const Mat4& other)
 		{
 			float data[16];
 			for (int col = 0; col < 4; col++)
@@ -64,29 +64,29 @@ namespace daedalus { namespace maths {
 			return *this;
 		}
 
-		mat4 operator*(mat4 left, const mat4& right)
+		Mat4 operator*(Mat4 left, const Mat4& right)
 		{
 			return left.multiply(right);
 		}
 
-		vec3 operator*(const mat4& left, const vec3& right)
+		Vec3 operator*(const Mat4& left, const Vec3& right)
 		{
 			return left.multiply(right);
 		}
 
-		vec4 operator*(const mat4& left, const vec4& right)
+		Vec4 operator*(const Mat4& left, const Vec4& right)
 		{
 			return left.multiply(right);
 		}
 
-		mat4& mat4::operator*=(const mat4& other)
+		Mat4& Mat4::operator*=(const Mat4& other)
 		{
 			return this->multiply(other);
 		}
 
-		vec3 mat4::multiply(const vec3& other) const
+		Vec3 Mat4::multiply(const Vec3& other) const
 		{
-			return vec3
+			return Vec3
 			(
 				elements[0 + 0 * 4] * other.x + elements[0 + 1 * 4] * other.y + elements[0 + 2 * 4] * other.z + elements[0 + 3 * 4],
 				elements[1 + 0 * 4] * other.x + elements[1 + 1 * 4] * other.y + elements[1 + 2 * 4] * other.z + elements[1 + 3 * 4],
@@ -94,9 +94,9 @@ namespace daedalus { namespace maths {
 			);
 		}
 
-		vec4 mat4::multiply(const vec4& other) const
+		Vec4 Mat4::multiply(const Vec4& other) const
 		{
-			return vec4
+			return Vec4
 			(
 				elements[0 + 0 * 4] * other.x + elements[0 + 1 * 4] * other.y + elements[0 + 2 * 4] * other.z + elements[0 + 3 * 4] * other.w,
 				elements[1 + 0 * 4] * other.x + elements[1 + 1 * 4] * other.y + elements[1 + 2 * 4] * other.z + elements[1 + 3 * 4] * other.w,
@@ -105,7 +105,7 @@ namespace daedalus { namespace maths {
 			);
 		}
 
-		mat4& mat4::invert()
+		Mat4& Mat4::invert()
 		{
 			float temp[16];
 			memset(temp, 1, sizeof(temp));
@@ -231,9 +231,9 @@ namespace daedalus { namespace maths {
 			return *this;
 		}
 
-		mat4 mat4::invert(const mat4& matrix)
+		Mat4 Mat4::invert(const Mat4& matrix)
 		{
-			mat4 result(1.0f);
+			Mat4 result(1.0f);
 
 			result.elements[0] = matrix.elements[5] * matrix.elements[10] * matrix.elements[15] -
 				matrix.elements[5] * matrix.elements[11] * matrix.elements[14] -
@@ -356,9 +356,9 @@ namespace daedalus { namespace maths {
 			return result;
 		}
 
-		mat4 mat4::orthographic(float left, float right, float botton, float top, float nearPlane, float farPlane)
+		Mat4 Mat4::orthographic(float left, float right, float botton, float top, float nearPlane, float farPlane)
 		{
-			mat4 result(1.0f);
+			Mat4 result(1.0f);
 
 			result.elements[0 + 0 * 4] = 2.0f / (right - left);
 			result.elements[1 + 1 * 4] = 2.0f / (top - botton);
@@ -371,9 +371,9 @@ namespace daedalus { namespace maths {
 			return result;
 		}
 
-		mat4 mat4::perspective(float fov, float aspectRatio, float nearPlane, float farPlane)
+		Mat4 Mat4::perspective(float fov, float aspectRatio, float nearPlane, float farPlane)
 		{
-			mat4 result(1.0f);
+			Mat4 result(1.0f);
 			
 			float q = 1.0f / tan(degrees_to_radians(fov / 2));
 			float a = q / aspectRatio;
@@ -387,9 +387,9 @@ namespace daedalus { namespace maths {
 			return result;
 		}
 
-		mat4 mat4::translate(const vec3& translation)
+		Mat4 Mat4::translate(const Vec3& translation)
 		{
-			mat4 result(1.0f);
+			Mat4 result(1.0f);
 
 			result.elements[0 + 3 * 4] = translation.x;
 			result.elements[1 + 3 * 4] = translation.y;
@@ -398,9 +398,9 @@ namespace daedalus { namespace maths {
 			return result;
 		}
 
-		mat4 mat4::rotate(float angle, const vec3& axis, bool inRadians)
+		Mat4 Mat4::rotate(float angle, const Vec3& axis, bool inRadians)
 		{
-			mat4 result(1.0f);
+			Mat4 result(1.0f);
 
 			//-angle is used so that rotation is applied clockwise - i dont think i should have to do that
 			//TO DO: when i have a basic 3D scene test rotaion in other axis / multiple axis to see if the same is true
@@ -424,9 +424,9 @@ namespace daedalus { namespace maths {
 			return result;
 		}
 
-		mat4 mat4::scale(const vec3& scale)
+		Mat4 Mat4::scale(const Vec3& scale)
 		{
-			mat4 result(1.0f);
+			Mat4 result(1.0f);
 
 			result.elements[0 + 0 * 4] = scale.x;
 			result.elements[1 + 1 * 4] = scale.y;

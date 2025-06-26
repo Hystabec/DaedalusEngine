@@ -22,16 +22,16 @@ namespace daedalus::scene {
 	
 	struct TransformComponent
 	{
-		maths::mat4 Transform;
+		maths::Mat4 Transform;
 
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent&) = default;
-		TransformComponent(const maths::mat4& transform)
+		TransformComponent(const maths::Mat4& transform)
 			: Transform(transform)
 		{ }
 
-		operator maths::mat4& () { return Transform; }
-		operator const maths::mat4& () const { return Transform; }
+		operator maths::Mat4& () { return Transform; }
+		operator const maths::Mat4& () const { return Transform; }
 	};
 
 	struct CameraComponent
@@ -41,7 +41,7 @@ namespace daedalus::scene {
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
-		CameraComponent(const maths::mat4& projection)
+		CameraComponent(const maths::Mat4& projection)
 			: Camera(projection)
 		{
 		}
@@ -49,11 +49,11 @@ namespace daedalus::scene {
 
 	struct SpriteRendererComponent
 	{
-		maths::vec4 Colour;
+		maths::Vec4 Colour;
 
 		SpriteRendererComponent() = default;
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;
-		SpriteRendererComponent(const maths::vec4& colour)
+		SpriteRendererComponent(const maths::Vec4& colour)
 			: Colour(colour)
 		{ }
 	};

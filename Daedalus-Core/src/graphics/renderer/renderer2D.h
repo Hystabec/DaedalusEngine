@@ -13,7 +13,7 @@ namespace daedalus { namespace graphics {
 		static void init();
 		static void shutdown();
 
-		static void begin(const Camera& camera, const maths::mat4& transform);
+		static void begin(const Camera& camera, const maths::Mat4& transform);
 		static void begin(const OrthographicCamera& othoCamera); // TO DO: Remove
 		static void end();
 		static void flush();

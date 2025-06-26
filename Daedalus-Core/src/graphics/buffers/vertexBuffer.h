@@ -17,8 +17,8 @@ namespace daedalus { namespace graphics { namespace buffers {
 		
 		virtual void setData(const void* data, uint32_t size) = 0;
 
-		static shr_ptr<VertexBuffer> create(uint32_t size);
-		static shr_ptr<VertexBuffer> create(float* verticies, uint32_t size);
+		static Shr_ptr<VertexBuffer> create(uint32_t size);
+		static Shr_ptr<VertexBuffer> create(float* verticies, uint32_t size);
 	};
 
 } } }

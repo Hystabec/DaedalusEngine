@@ -3,7 +3,7 @@
 
 namespace daedalus::graphics {
 
-	SubTexture2D::SubTexture2D(const shr_ptr<Texture2D>& texture, const maths::vec2& min, const maths::vec2& max)
+	SubTexture2D::SubTexture2D(const Shr_ptr<Texture2D>& texture, const maths::Vec2& min, const maths::Vec2& max)
 		: m_texture(texture)
 	{
 		m_texCoords[0] = { min.x, min.y };
@@ -12,10 +12,10 @@ namespace daedalus::graphics {
 		m_texCoords[3] = { min.x, max.y };
 	}
 
-	shr_ptr<SubTexture2D> SubTexture2D::createFromCoords(const shr_ptr<Texture2D>& texture, const maths::vec2& coords, const maths::vec2& spriteSize)
+	Shr_ptr<SubTexture2D> SubTexture2D::createFromCoords(const Shr_ptr<Texture2D>& texture, const maths::Vec2& coords, const maths::Vec2& spriteSize)
 	{
-		maths::vec2 min = { coords.x / texture->getWdith(), coords.y / texture->getHeight() };
-		maths::vec2 max = { (coords.x + spriteSize.x) / texture->getWdith(), (coords.y + spriteSize.y) / texture->getHeight() };
+		maths::Vec2 min = { coords.x / texture->getWdith(), coords.y / texture->getHeight() };
+		maths::Vec2 max = { (coords.x + spriteSize.x) / texture->getWdith(), (coords.y + spriteSize.y) / texture->getHeight() };
 		return  create_shr_ptr<SubTexture2D>(texture, min, max);
 	}
 

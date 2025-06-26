@@ -41,7 +41,7 @@ namespace daedalus {
 	private:
 		static Application* s_instance;
 		
-		uni_ptr<application::Window> m_window;
+		Uni_ptr<application::Window> m_window;
 		application::ImGuiLayer* m_ImGuiLayer;
 		bool m_running = true;
 		bool m_minimized = false;

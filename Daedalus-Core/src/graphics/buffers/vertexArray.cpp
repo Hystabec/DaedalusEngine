@@ -8,7 +8,7 @@
 
 namespace daedalus { namespace graphics { namespace buffers {
 
-    shr_ptr<VertexArray> VertexArray::Create()
+    Shr_ptr<VertexArray> VertexArray::Create()
     {
 		switch (Renderer::getCurrentAPI())
 		{

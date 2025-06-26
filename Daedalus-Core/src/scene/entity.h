@@ -55,7 +55,7 @@ namespace daedalus::scene {
 		// this idea of being able to call entity.Transform seems good but i dont know how i would do it
 		// would be easier to just do it as a function that retrieves a reference to the transform
 
-		//maths::mat4& Transform = getComponent<TransformComponent>().Transform;
+		//maths::Mat4& Transform = getComponent<TransformComponent>().Transform;
 		//std::string& Tag = getComponent<TagComponent>().Tag;
 
 	private:

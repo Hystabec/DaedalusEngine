@@ -6,18 +6,18 @@ namespace daedalus::graphics {
 	class Camera
 	{
 	public:
-		Camera(const maths::mat4& projection)
+		Camera(const maths::Mat4& projection)
 			: m_projection(projection)
 		{
 		}
 
-		const maths::mat4& getProjection() const { return m_projection; }
+		const maths::Mat4& getProjection() const { return m_projection; }
 
 		// TO DO:
 		// void setPerspective
 		// void setOtho
 	private:
-		maths::mat4 m_projection;
+		maths::Mat4 m_projection;
 	};
 
 }

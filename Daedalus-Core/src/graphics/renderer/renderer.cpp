@@ -38,7 +38,7 @@ namespace daedalus { namespace graphics {
 		m_sceneData->inUse = false;
 	}
 
-	void Renderer::submit(const shr_ptr<graphics::buffers::VertexArray>& vertexArray, const shr_ptr<graphics::Shader>& shader, const maths::mat4& transform)
+	void Renderer::submit(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, const Shr_ptr<graphics::Shader>& shader, const maths::Mat4& transform)
 	{
 		shader->enable();
 		shader->setUniformMat4(m_sceneData->projectionViewMatrix, "u_projView");

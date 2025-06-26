@@ -18,7 +18,7 @@ namespace daedalus::scene {
 	{
 		// Render2D sprites
 		graphics::Camera* mainCamera = nullptr;
-		maths::mat4* mainCameraTransform = nullptr;
+		maths::Mat4* mainCameraTransform = nullptr;
 		{
 			auto view = m_registry.view<TransformComponent, CameraComponent>();
 			for (auto entity : view)
@@ -53,7 +53,7 @@ namespace daedalus::scene {
 	Entity Scene::createEntity(const std::string& name)
 	{
 		Entity entity = { m_registry.create(), this };
-		entity.addComponent<TransformComponent>(maths::mat4::identity());
+		entity.addComponent<TransformComponent>(maths::Mat4::identity());
 
 		auto& tag = entity.addComponent<TagComponent>();
 		tag.Tag = name.empty() ? "Entity" : name;

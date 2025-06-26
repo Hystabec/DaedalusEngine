@@ -14,7 +14,7 @@ public:
 
 private:
 	daedalus::graphics::OrthographicCameraController m_camController;
-	daedalus::shr_ptr<daedalus::graphics::Texture2D> m_texture;
+	daedalus::Shr_ptr<daedalus::graphics::Texture2D> m_texture;
 
-	daedalus::shr_ptr<daedalus::graphics::Framebuffer> m_framebuffer;
+	daedalus::Shr_ptr<daedalus::graphics::Framebuffer> m_framebuffer;
 };

@@ -14,10 +14,10 @@ namespace daedalus { namespace graphics {
 			s_rendererAPI->setViewport(x, y, width, height);
 		}
 
-		inline static void setClearColour(const maths::vec4& colour) { s_rendererAPI->setClearColour(colour); }
+		inline static void setClearColour(const maths::Vec4& colour) { s_rendererAPI->setClearColour(colour); }
 		inline static void clear() { s_rendererAPI->clear(); }
 
-		inline static void drawIndexed(const shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount = 0) { s_rendererAPI->drawIndexed(vertexArray, indexCount); }
+		inline static void drawIndexed(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount = 0) { s_rendererAPI->drawIndexed(vertexArray, indexCount); }
 
 	private:
 		static RendererAPI* s_rendererAPI;

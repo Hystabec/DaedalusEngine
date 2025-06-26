@@ -50,7 +50,7 @@ void Layer2D::update(const daedalus::application::DeltaTime& dt)
 		{
 			for (float x = -5.0f; x < 5.0f; x += 0.05f)
 			{
-				daedalus::maths::vec4 colour = { (x + 5.0f) / 10.0f , 0.2f, (y + 5.0f) / 10.0f, 0.5f };
+				daedalus::maths::Vec4 colour = { (x + 5.0f) / 10.0f , 0.2f, (y + 5.0f) / 10.0f, 0.5f };
 				daedalus::graphics::Renderer2D::drawQuad({ {x, y, -0.1f}, { 0.2f }, colour });
 			}
 		}

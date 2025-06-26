@@ -10,10 +10,10 @@ namespace daedalus { namespace graphics {
 
 		void setViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) override;
 
-		void setClearColour(const maths::vec4& colour) override;
+		void setClearColour(const maths::Vec4& colour) override;
 		void clear() override;
 
-		void drawIndexed(const shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount = 0) override;
+		void drawIndexed(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount = 0) override;
 	};
 
 } }

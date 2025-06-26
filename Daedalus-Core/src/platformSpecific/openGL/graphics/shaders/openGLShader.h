@@ -13,14 +13,14 @@ namespace daedalus { namespace graphics {
 
 		virtual ~OpenGLShader();
 
-		void setUniformMat4(const maths::mat4& matrix, const std::string& name) override;
+		void setUniformMat4(const maths::Mat4& matrix, const std::string& name) override;
 		void setUniform1i(int value, const std::string& name) override;
 		void setUniformia(int* values, uint32_t count, const std::string& name) override;
 		void setUniform1f(float value, const std::string& name) override;
 		void setUniformfa(float* values, uint32_t count, const std::string& name) override;
-		void setUniform2f(const maths::vec2& vector, const std::string& name) override;
-		void setUniform3f(const maths::vec3& vector, const std::string& name) override;
-		void setUniform4f(const maths::vec4& vector, const std::string& name) override;
+		void setUniform2f(const maths::Vec2& vector, const std::string& name) override;
+		void setUniform3f(const maths::Vec3& vector, const std::string& name) override;
+		void setUniform4f(const maths::Vec4& vector, const std::string& name) override;
 
 		void enable() const override;
 		void disable() const override;

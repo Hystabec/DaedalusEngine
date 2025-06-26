@@ -8,7 +8,7 @@
 
 namespace daedalus { namespace graphics { namespace buffers {
 
-	shr_ptr<IndexBuffer> buffers::IndexBuffer::create(uint32_t* indices, uint32_t count)
+	Shr_ptr<IndexBuffer> buffers::IndexBuffer::create(uint32_t* indices, uint32_t count)
 	{
 		switch (Renderer::getCurrentAPI())
 		{

@@ -19,7 +19,7 @@ public:
 			0.0f, 0.5f, 0.0f, 0.4f, 0.7f, 0.0f, 1.0f
 		};
 
-		shr_ptr<graphics::buffers::VertexBuffer> verBuff(graphics::buffers::VertexBuffer::create(vertcies, sizeof(vertcies)));
+		Shr_ptr<graphics::buffers::VertexBuffer> verBuff(graphics::buffers::VertexBuffer::create(vertcies, sizeof(vertcies)));
 
 		graphics::buffers::BufferLayout layout =
 		{
@@ -31,7 +31,7 @@ public:
 		m_vertexArray->addVertexBuffer(verBuff);
 
 		uint32_t indices[3] = { 0, 1, 2 };
-		shr_ptr<graphics::buffers::IndexBuffer> indexBuff(graphics::buffers::IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t)));
+		Shr_ptr<graphics::buffers::IndexBuffer> indexBuff(graphics::buffers::IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_vertexArray->setIndexBuffer(indexBuff);
 		//triangle end
 
@@ -48,11 +48,11 @@ public:
 			{ DD_BUFFERS_VEC3, "a_position" }
 		};
 
-		shr_ptr<graphics::buffers::VertexBuffer> sqrVertBuff(graphics::buffers::VertexBuffer::create(sqrVerts, sizeof(sqrVerts)));
+		Shr_ptr<graphics::buffers::VertexBuffer> sqrVertBuff(graphics::buffers::VertexBuffer::create(sqrVerts, sizeof(sqrVerts)));
 		sqrVertBuff->setLayout(sqrLayout);
 		m_squareVertexArray->addVertexBuffer(sqrVertBuff);
 		uint32_t sqrIndices[3 * 2] = { 0, 1, 2, 2, 3, 0 };
-		shr_ptr<graphics::buffers::IndexBuffer> sqrIndexBuff(graphics::buffers::IndexBuffer::create(sqrIndices, sizeof(sqrIndices) / sizeof(uint32_t)));
+		Shr_ptr<graphics::buffers::IndexBuffer> sqrIndexBuff(graphics::buffers::IndexBuffer::create(sqrIndices, sizeof(sqrIndices) / sizeof(uint32_t)));
 		m_squareVertexArray->setIndexBuffer(sqrIndexBuff);
 
 		std::string triangleVertexSrc = R"(
@@ -108,10 +108,10 @@ public:
 		};
 
 		m_texuterVerexArray = graphics::buffers::VertexArray::Create();
-		shr_ptr<graphics::buffers::VertexBuffer> textureVerBuff(graphics::buffers::VertexBuffer::create(textureVerts, sizeof(textureVerts)));
+		Shr_ptr<graphics::buffers::VertexBuffer> textureVerBuff(graphics::buffers::VertexBuffer::create(textureVerts, sizeof(textureVerts)));
 		textureVerBuff->setLayout(textureLayout);
 		m_texuterVerexArray->addVertexBuffer(textureVerBuff);
-		shr_ptr<graphics::buffers::IndexBuffer> textureIndexBuff(graphics::buffers::IndexBuffer::create(sqrIndices, sizeof(sqrIndices) / sizeof(uint32_t)));
+		Shr_ptr<graphics::buffers::IndexBuffer> textureIndexBuff(graphics::buffers::IndexBuffer::create(sqrIndices, sizeof(sqrIndices) / sizeof(uint32_t)));
 		m_texuterVerexArray->setIndexBuffer(textureIndexBuff);
 
 		m_shaderLib.load("texSha", "resources/shaders/textureShader.glsl");
@@ -130,19 +130,19 @@ public:
 		daedalus::graphics::RenderCommands::clear();
 
 		if (daedalus::application::Input::getKeyDown(InputCode::Key_I))
-			m_triPos += daedalus::maths::vec3(0.0f, 1.0f, 0.0f) * (float)dt;
+			m_triPos += daedalus::maths::Vec3(0.0f, 1.0f, 0.0f) * (float)dt;
 		if (daedalus::application::Input::getKeyDown(InputCode::Key_L))
-			m_triPos += daedalus::maths::vec3(1.0f, 0.0f, 0.0f) * (float)dt;
+			m_triPos += daedalus::maths::Vec3(1.0f, 0.0f, 0.0f) * (float)dt;
 		if (daedalus::application::Input::getKeyDown(InputCode::Key_K))
-			m_triPos += daedalus::maths::vec3(0.0f, -1.0f, 0.0f) * (float)dt;
+			m_triPos += daedalus::maths::Vec3(0.0f, -1.0f, 0.0f) * (float)dt;
 		if (daedalus::application::Input::getKeyDown(InputCode::Key_J))
-			m_triPos += daedalus::maths::vec3(-1.0f, 0.0f, 0.0f) * (float)dt;
+			m_triPos += daedalus::maths::Vec3(-1.0f, 0.0f, 0.0f) * (float)dt;
 
-		daedalus::maths::mat4 triangleTransform = daedalus::maths::mat4::translate(m_triPos) * daedalus::maths::mat4::rotate(0.0f, { 0,0,1 }) * daedalus::maths::mat4::scale({ 0.1f });
+		daedalus::maths::Mat4 triangleTransform = daedalus::maths::Mat4::translate(m_triPos) * daedalus::maths::Mat4::rotate(0.0f, { 0,0,1 }) * daedalus::maths::Mat4::scale({ 0.1f });
 
-		daedalus::maths::vec4 redCol(0.8f, 0.2f, 0.3f, 1.0f);
-		daedalus::maths::vec4 greenCol(0.2f, 0.8f, 0.3f, 1.0f);
-		daedalus::maths::vec4 blueCol(0.2f, 0.3f, 0.8f, 1.0f);
+		daedalus::maths::Vec4 redCol(0.8f, 0.2f, 0.3f, 1.0f);
+		daedalus::maths::Vec4 greenCol(0.2f, 0.8f, 0.3f, 1.0f);
+		daedalus::maths::Vec4 blueCol(0.2f, 0.3f, 0.8f, 1.0f);
 
 		daedalus::graphics::Renderer::begin(m_camController.getCamera());
 
@@ -150,7 +150,7 @@ public:
 		{
 			for (int x = 0; x < 10; x++)
 			{
-				daedalus::maths::mat4 squareTransform = daedalus::maths::mat4::translate(daedalus::maths::vec3(x * 0.2f, y * 0.2f, 0.0f)) * daedalus::maths::mat4::scale({ 0.1f });
+				daedalus::maths::Mat4 squareTransform = daedalus::maths::Mat4::translate(daedalus::maths::Vec3(x * 0.2f, y * 0.2f, 0.0f)) * daedalus::maths::Mat4::scale({ 0.1f });
 
 				auto flatShader = m_shaderLib.get("flatShader");
 				flatShader->enable();
@@ -162,9 +162,9 @@ public:
 
 		auto textureShader = m_shaderLib.get("texSha");
 		m_texture->bind();
-		daedalus::graphics::Renderer::submit(m_texuterVerexArray, textureShader, daedalus::maths::mat4::translate(daedalus::maths::vec3(-1, 0, 0)) * daedalus::maths::mat4::scale({ 1.5f }));
+		daedalus::graphics::Renderer::submit(m_texuterVerexArray, textureShader, daedalus::maths::Mat4::translate(daedalus::maths::Vec3(-1, 0, 0)) * daedalus::maths::Mat4::scale({ 1.5f }));
 		m_DDTestImage->bind();
-		daedalus::graphics::Renderer::submit(m_texuterVerexArray, textureShader, daedalus::maths::mat4::translate(daedalus::maths::vec3(-1, 0, 0)) * daedalus::maths::mat4::scale({ 1.5f }));
+		daedalus::graphics::Renderer::submit(m_texuterVerexArray, textureShader, daedalus::maths::Mat4::translate(daedalus::maths::Vec3(-1, 0, 0)) * daedalus::maths::Mat4::scale({ 1.5f }));
 
 		daedalus::graphics::Renderer::submit(m_vertexArray, m_shaderLib.get("TriangleShader"), triangleTransform);
 
@@ -183,7 +183,7 @@ public:
 	void imGuiRender() override
 	{
 		ImGui::Begin("Camera Control");
-		daedalus::maths::vec3 camPos = m_camController.getPosition();
+		daedalus::maths::Vec3 camPos = m_camController.getPosition();
 		float pos[3] = { camPos.x, camPos.y, camPos.z };
 		if (ImGui::InputFloat3("Position", (float*)pos, "%.1f"))
 			m_camController.setPosition({ pos[0], pos[1], pos[2] });
@@ -206,10 +206,10 @@ private:
 
 	daedalus::graphics::ShaderLibrary m_shaderLib;
 
-	daedalus::shr_ptr<daedalus::graphics::buffers::VertexArray> m_vertexArray, m_squareVertexArray, m_texuterVerexArray;
-	daedalus::shr_ptr<daedalus::graphics::Texture2D> m_texture, m_DDTestImage;
+	daedalus::Shr_ptr<daedalus::graphics::buffers::VertexArray> m_vertexArray, m_squareVertexArray, m_texuterVerexArray;
+	daedalus::Shr_ptr<daedalus::graphics::Texture2D> m_texture, m_DDTestImage;
 
 	daedalus::graphics::OrthographicCameraController m_camController;
 
-	daedalus::maths::vec3 m_triPos;
+	daedalus::maths::Vec3 m_triPos;
 };

@@ -30,16 +30,16 @@ namespace daedalus { namespace graphics {
 		OrthographicCamera& getCamera() { return m_camera; }
 		const OrthographicCamera& getCamera() const { return m_camera; }
 
-		void setPosition(const maths::vec3& position) { m_cameraPosition = position; m_camera.setPosition(m_cameraPosition); }
+		void setPosition(const maths::Vec3& position) { m_cameraPosition = position; m_camera.setPosition(m_cameraPosition); }
 		void setRotation(float zRotation) { m_cameraRotation = zRotation; m_camera.setRotation(m_cameraRotation); }
-		const maths::vec3& getPosition() const { return m_cameraPosition; }
+		const maths::Vec3& getPosition() const { return m_cameraPosition; }
 		const float& getRotation() const { return m_cameraRotation; }
 
 		const float& getZoomLevel() const { return m_zoomLevel; }
 		void setZoomLevel(float level);
 
 		const OrthgraphicCameraBounds& getBounds() const { return m_bounds; }
-		maths::vec2 mouseToWorldPosition(maths::vec2 mousePos) const;
+		maths::Vec2 mouseToWorldPosition(maths::Vec2 mousePos) const;
 	private:
 		bool onMouseScrolled(event::MouseScrolledEvent& e);
 		bool onWindowResize(event::WindowResizedEvent& e);
@@ -53,7 +53,7 @@ namespace daedalus { namespace graphics {
 
 		bool m_useRotation;
 
-		maths::vec3 m_cameraPosition = { 0.0f,0.0f,0.0f };
+		maths::Vec3 m_cameraPosition = { 0.0f,0.0f,0.0f };
 		float m_cameraRotation = 0.0f;
 		float m_cameraTranslationSpeed = 5.0f;
 		float m_cameraRotationSpeed = 90.0f;

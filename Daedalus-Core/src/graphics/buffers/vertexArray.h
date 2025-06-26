@@ -13,13 +13,13 @@ namespace daedalus { namespace graphics { namespace buffers {
 		virtual void bind() const = 0;
 		virtual void unbind() const = 0;
 
-		virtual void addVertexBuffer(const shr_ptr<VertexBuffer>& vertexBuffer) = 0;
-		virtual void setIndexBuffer(const shr_ptr<IndexBuffer>& indexBuffer) = 0;
+		virtual void addVertexBuffer(const Shr_ptr<VertexBuffer>& vertexBuffer) = 0;
+		virtual void setIndexBuffer(const Shr_ptr<IndexBuffer>& indexBuffer) = 0;
 
-		virtual const std::vector<shr_ptr<VertexBuffer>>& getVertexBuffers() const = 0;
-		virtual const shr_ptr<IndexBuffer>& getIndexBuffer() const = 0;
+		virtual const std::vector<Shr_ptr<VertexBuffer>>& getVertexBuffers() const = 0;
+		virtual const Shr_ptr<IndexBuffer>& getIndexBuffer() const = 0;
 
-		static shr_ptr<VertexArray> Create();
+		static Shr_ptr<VertexArray> Create();
 	};
 
 } } }

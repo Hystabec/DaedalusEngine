@@ -24,7 +24,7 @@ namespace daedalus::graphics {
 
 		virtual const FramebufferSpecification& getSpecification() const = 0;
 
-		static shr_ptr<Framebuffer> create(const FramebufferSpecification& specification);
+		static Shr_ptr<Framebuffer> create(const FramebufferSpecification& specification);
 	};
 
 }

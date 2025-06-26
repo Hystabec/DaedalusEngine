@@ -2,36 +2,34 @@
 
 namespace daedalus { namespace maths {
 
-	struct vec3
+	struct Vec3
 	{
 		float x, y, z;
 
-		vec3();
-		vec3(const float& x);
-		vec3(const float& x, const float& y, const float& z);
-		vec3(const vec3& other);
+		Vec3();
+		Vec3(const float& x);
+		Vec3(const float& x, const float& y, const float& z);
+		Vec3(const Vec3& other);
 
-		vec3& add(const vec3& other);
-		vec3& subtract(const vec3& other);
-		vec3& multiply(const vec3& other);
-		vec3& divide(const vec3& other);
+		Vec3& add(const Vec3& other);
+		Vec3& subtract(const Vec3& other);
+		Vec3& multiply(const Vec3& other);
+		Vec3& divide(const Vec3& other);
 
-		friend vec3 operator +(vec3 left, const vec3& right);
-		friend vec3 operator -(vec3 left, const vec3& right);
-		friend vec3 operator *(vec3 left, const vec3& right);
-		friend vec3 operator /(vec3 left, const vec3& right);
+		friend Vec3 operator +(Vec3 left, const Vec3& right);
+		friend Vec3 operator -(Vec3 left, const Vec3& right);
+		friend Vec3 operator *(Vec3 left, const Vec3& right);
+		friend Vec3 operator /(Vec3 left, const Vec3& right);
 		
-		bool operator==(const vec3& other);
-		bool operator!=(const vec3& other);
+		bool operator==(const Vec3& other);
+		bool operator!=(const Vec3& other);
 
-		vec3& operator +=(const vec3& other);
-		vec3& operator -=(const vec3& other);
-		vec3& operator *=(const vec3& other);
-		vec3& operator /=(const vec3& other);
-
-		friend std::ostream& operator<<(std::ostream& stream, const vec3& vector);
+		Vec3& operator +=(const Vec3& other);
+		Vec3& operator -=(const Vec3& other);
+		Vec3& operator *=(const Vec3& other);
+		Vec3& operator /=(const Vec3& other);
 	};
 
 } }
 
-LOG_CREATE_FORMAT(daedalus::maths::vec3, "x: {}, y: {}, z: {}", vec, vec.x, vec.y, vec.z);
+LOG_CREATE_FORMAT(daedalus::maths::Vec3, "x: {}, y: {}, z: {}", vec, vec.x, vec.y, vec.z);

@@ -4,7 +4,7 @@
 namespace daedalus { namespace graphics {
 
 	OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top, float zNear, float zFar)
-		: m_projectionMatrix(maths::mat4::orthographic(left, right, bottom, top, zNear, zFar)), m_viewMatrix(1)
+		: m_projectionMatrix(maths::Mat4::orthographic(left, right, bottom, top, zNear, zFar)), m_viewMatrix(1)
 	{
 		DD_PROFILE_FUNCTION();
 
@@ -15,7 +15,7 @@ namespace daedalus { namespace graphics {
 	{
 		DD_PROFILE_FUNCTION();
 
-		m_projectionMatrix = (maths::mat4::orthographic(left, right, bottom, top, zNear, zFar));
+		m_projectionMatrix = (maths::Mat4::orthographic(left, right, bottom, top, zNear, zFar));
 		m_ProjectionviewMatrix = m_projectionMatrix * m_viewMatrix;
 	}
 
@@ -23,7 +23,7 @@ namespace daedalus { namespace graphics {
 	{
 		DD_PROFILE_FUNCTION();
 
-		m_viewMatrix = maths::mat4::invert(maths::mat4::translate(m_position) * maths::mat4::rotate(m_zRotation, maths::vec3(0, 0, 1)));
+		m_viewMatrix = maths::Mat4::invert(maths::Mat4::translate(m_position) * maths::Mat4::rotate(m_zRotation, maths::Vec3(0, 0, 1)));
 		m_ProjectionviewMatrix = m_projectionMatrix * m_viewMatrix;
 	}
 

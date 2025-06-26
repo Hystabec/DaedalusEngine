@@ -18,7 +18,7 @@ namespace daedalus { namespace application {
 		DD_CORE_LOG_ERROR("GLFW Error ({}): {}", error, description);
 	}
 
-	uni_ptr<Window> Window::Create(const WindowProperties& props)
+	Uni_ptr<Window> Window::Create(const WindowProperties& props)
 	{
 		return create_uni_ptr<WindowsWindow>(props);
 	}

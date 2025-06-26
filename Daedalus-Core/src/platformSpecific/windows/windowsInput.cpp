@@ -34,7 +34,7 @@ namespace daedalus::application {
 		return state == GLFW_PRESS;
 	}
 
-	maths::vec2 Input::getMousePosition()
+	maths::Vec2 Input::getMousePosition()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 		double x, y;

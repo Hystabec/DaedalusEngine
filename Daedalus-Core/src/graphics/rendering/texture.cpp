@@ -8,7 +8,7 @@
 
 namespace daedalus { namespace graphics {
 
-	shr_ptr<Texture2D> Texture2D::create(uint32_t width, uint32_t height)
+	Shr_ptr<Texture2D> Texture2D::create(uint32_t width, uint32_t height)
 	{
 		switch (Renderer::getCurrentAPI())
 		{
@@ -24,7 +24,7 @@ namespace daedalus { namespace graphics {
 		return nullptr;
 	}
 
-	shr_ptr<Texture2D> Texture2D::create(const std::string& filePath)
+	Shr_ptr<Texture2D> Texture2D::create(const std::string& filePath)
     {
 		switch (Renderer::getCurrentAPI())
 		{

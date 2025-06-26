@@ -16,8 +16,8 @@ public:
 private:
 	daedalus::graphics::OrthographicCameraController m_camController;
 
-	daedalus::shr_ptr<daedalus::graphics::Texture2D> m_texture, m_texture2, m_fullSubTextureTesting;
-	daedalus::shr_ptr<daedalus::graphics::SubTexture2D> m_subTexture, m_subTexture2;
+	daedalus::Shr_ptr<daedalus::graphics::Texture2D> m_texture, m_texture2, m_fullSubTextureTesting;
+	daedalus::Shr_ptr<daedalus::graphics::SubTexture2D> m_subTexture, m_subTexture2;
 
 	daedalus::graphics::primatives2D::RotatedQuadProperties m_squareProps = { {0.0f, 0.0f, 0.0f}, {0.5f}, 0, {0.8f, 0.2f, 0.3f, 1.0f} };
 };

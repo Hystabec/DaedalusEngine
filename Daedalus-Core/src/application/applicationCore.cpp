@@ -102,7 +102,7 @@ namespace daedalus {
 		s_instance = this;
 
 		debug::Log::init();
-		m_window = uni_ptr<application::Window>(application::Window::Create(application::WindowProperties(title, width, height, vsync)));
+		m_window = Uni_ptr<application::Window>(application::Window::Create(application::WindowProperties(title, width, height, vsync)));
 		m_window->setEventCallback(DD_BIND_EVENT_FUN(Application::onEvent));
 
 		graphics::Renderer::init();
