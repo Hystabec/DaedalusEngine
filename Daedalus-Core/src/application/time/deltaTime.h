@@ -21,3 +21,5 @@ namespace daedalus { namespace application {
 	};
 
 } }
+	
+LOG_CREATE_FORMAT(daedalus::application::DeltaTime, "{}", dt, (float)dt);

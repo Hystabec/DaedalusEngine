@@ -3,6 +3,8 @@
 #include "maths/mat4.h"
 #include "maths/vec4.h"
 #include "sceneCamera.h"
+#include "scriptableEntity.h"
+#include "application/time/deltaTime.h"
 
 // if this file gets too big, should seperate into individual files.
 
@@ -53,6 +55,21 @@ namespace daedalus::scene {
 		SpriteRendererComponent(const maths::Vec4& colour)
 			: Colour(colour)
 		{ }
+	};
+
+	struct NativeScriptComponent
+	{
+		ScriptableEntity* Instance = nullptr;
+
+		ScriptableEntity*(*InstantiateScript)();
+		void (*DestroyScript)(NativeScriptComponent*);
+
+		template<typename T>
+		void bind()
+		{
+			InstantiateScript = []() { return static_cast<ScriptableEntity*>(new T()); };
+			DestroyScript = [](NativeScriptComponent* nsc) { delete nsc->Instance; nsc->Instance = nullptr; };
+		}
 	};
 
 }

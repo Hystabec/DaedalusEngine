@@ -16,23 +16,23 @@ namespace daedalus { namespace graphics {
 	{
 		DD_PROFILE_FUNCTION();
 
-		if (application::Input::getKeyDown(InputCode::Key_W))
+		if (application::Input::getKeyDown(application::InputCode::Key_W))
 			m_cameraPosition.y += m_cameraTranslationSpeed * dt;
-		if (application::Input::getKeyDown(InputCode::Key_S))
+		if (application::Input::getKeyDown(application::InputCode::Key_S))
 			m_cameraPosition.y -= m_cameraTranslationSpeed * dt;
 
-		if (application::Input::getKeyDown(InputCode::Key_A))
+		if (application::Input::getKeyDown(application::InputCode::Key_A))
 			m_cameraPosition.x -= m_cameraTranslationSpeed * dt;
-		if (application::Input::getKeyDown(InputCode::Key_D))
+		if (application::Input::getKeyDown(application::InputCode::Key_D))
 			m_cameraPosition.x += m_cameraTranslationSpeed * dt;
 
 		m_camera.setPosition(m_cameraPosition);
 
 		if (m_useRotation)
 		{
-			if (application::Input::getKeyDown(InputCode::Key_Q))
+			if (application::Input::getKeyDown(application::InputCode::Key_Q))
 				m_cameraRotation += m_cameraRotationSpeed * dt;
-			if (application::Input::getKeyDown(InputCode::Key_E))
+			if (application::Input::getKeyDown(application::InputCode::Key_E))
 				m_cameraRotation -= m_cameraRotationSpeed * dt;
 
 			m_camera.setRotation(m_cameraRotation);

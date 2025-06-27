@@ -3,6 +3,7 @@
 
 #include "graphics/renderer/renderer2D.h"
 #include "entity.h"
+#include "components.h"
 
 namespace daedalus::scene {
 
@@ -16,6 +17,23 @@ namespace daedalus::scene {
 
 	void Scene::update(const application::DeltaTime& dt)
 	{
+		// update scripts
+		{
+			m_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
+				{
+					// TO DO: Moveto Scene::onScenePlay
+					if (!nsc.Instance)
+					{
+						nsc.Instance = nsc.InstantiateScript();
+						nsc.Instance->m_entity = Entity{ entity, this };
+						nsc.Instance->onCreate();
+					}
+
+					nsc.Instance->onUpdate(dt);
+				});
+		}
+
+
 		// Render2D sprites
 		graphics::Camera* mainCamera = nullptr;
 		maths::Mat4* mainCameraTransform = nullptr;
@@ -23,7 +41,7 @@ namespace daedalus::scene {
 			auto view = m_registry.view<TransformComponent, CameraComponent>();
 			for (auto entity : view)
 			{
-				const auto& [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
+				auto [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
 
 				if (camera.Primary)
 				{
@@ -41,7 +59,7 @@ namespace daedalus::scene {
 			auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
 			for (auto entity : group)
 			{
-				const auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
 				graphics::Renderer2D::drawQuad({ transform.Transform, sprite.Colour });
 			}

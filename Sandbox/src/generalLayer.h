@@ -129,13 +129,13 @@ public:
 		daedalus::graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
 		daedalus::graphics::RenderCommands::clear();
 
-		if (daedalus::application::Input::getKeyDown(InputCode::Key_I))
+		if (daedalus::application::Input::getKeyDown(daedalus::application::InputCode::Key_I))
 			m_triPos += daedalus::maths::Vec3(0.0f, 1.0f, 0.0f) * (float)dt;
-		if (daedalus::application::Input::getKeyDown(InputCode::Key_L))
+		if (daedalus::application::Input::getKeyDown(daedalus::application::InputCode::Key_L))
 			m_triPos += daedalus::maths::Vec3(1.0f, 0.0f, 0.0f) * (float)dt;
-		if (daedalus::application::Input::getKeyDown(InputCode::Key_K))
+		if (daedalus::application::Input::getKeyDown(daedalus::application::InputCode::Key_K))
 			m_triPos += daedalus::maths::Vec3(0.0f, -1.0f, 0.0f) * (float)dt;
-		if (daedalus::application::Input::getKeyDown(InputCode::Key_J))
+		if (daedalus::application::Input::getKeyDown(daedalus::application::InputCode::Key_J))
 			m_triPos += daedalus::maths::Vec3(-1.0f, 0.0f, 0.0f) * (float)dt;
 
 		daedalus::maths::Mat4 triangleTransform = daedalus::maths::Mat4::translate(m_triPos) * daedalus::maths::Mat4::rotate(0.0f, { 0,0,1 }) * daedalus::maths::Mat4::scale({ 0.1f });

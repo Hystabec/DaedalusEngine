@@ -3,7 +3,6 @@
 #include <entt.hpp>
 
 #include "application/time/deltaTime.h"
-#include "components.h"
 
 namespace daedalus::scene {
 

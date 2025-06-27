@@ -26,6 +26,36 @@ namespace daedalus
 		m_secondCameraEntity = m_activeScene->createEntity("Second Camera Entity");
 		m_secondCameraEntity.addComponent<scene::CameraComponent>().Primary = false;
 
+		class CameraController : public scene::ScriptableEntity
+		{
+		public:
+			void onCreate()
+			{
+			}
+
+			void onDestroy()
+			{
+			}
+
+			void onUpdate(const application::DeltaTime& dt)
+			{
+				auto& transform = getComponent<scene::TransformComponent>().Transform;
+				float speed = 5.0f;
+
+				if (application::Input::getKeyDown(application::InputCode::Key_W))
+					transform.columns[3].y += speed * dt;
+				if (application::Input::getKeyDown(application::InputCode::Key_S))
+					transform.columns[3].y -= speed * dt;
+
+				if (application::Input::getKeyDown(application::InputCode::Key_A))
+					transform.columns[3].x -= speed * dt;
+				if (application::Input::getKeyDown(application::InputCode::Key_D))
+					transform.columns[3].x += speed * dt;
+			}
+		};
+
+		m_secondCameraEntity.addComponent<scene::NativeScriptComponent>().bind<CameraController>();
+
 		auto square = m_activeScene->createEntity("Square");
 		square.addComponent<scene::SpriteRendererComponent>(maths::Vec4{ 0.8f, 0.2f, 0.2f, 1.0f });
 	}
@@ -118,6 +148,7 @@ namespace daedalus
 			if (ImGui::DragFloat("Second camera ortho size", &orthoSize))
 				camera.setOrthographicSize(orthoSize);
 		}
+
 
 		ImGui::End();
 

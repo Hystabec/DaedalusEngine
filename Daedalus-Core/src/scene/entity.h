@@ -5,6 +5,10 @@
 
 namespace daedalus::scene {
 
+	// foward declared components for requires args
+	struct TransformComponent;
+	struct TagComponent;
+
 	class Entity
 	{
 	public:
