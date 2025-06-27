@@ -19,8 +19,12 @@ namespace daedalus
 		m_framebuffer = graphics::Framebuffer::create(fbSpec);
 
 		m_activeScene = create_shr_ptr<scene::Scene>();
+
 		m_cameraEntity = m_activeScene->createEntity("Camera Entity");
-		m_cameraEntity.addComponent<scene::CameraComponent>(maths::Mat4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+		m_cameraEntity.addComponent<scene::CameraComponent>();
+
+		m_secondCameraEntity = m_activeScene->createEntity("Second Camera Entity");
+		m_secondCameraEntity.addComponent<scene::CameraComponent>().Primary = false;
 
 		auto square = m_activeScene->createEntity("Square");
 		square.addComponent<scene::SpriteRendererComponent>(maths::Vec4{ 0.8f, 0.2f, 0.2f, 1.0f });
@@ -34,6 +38,16 @@ namespace daedalus
 	void EditorLayer::update(const application::DeltaTime& dt)
 	{
 		DD_PROFILE_FUNCTION();
+
+		// Resize
+		if (graphics::FramebufferSpecification spec = m_framebuffer->getSpecification();
+			m_viewportSize.x > 0.0f && m_viewportSize.y > 0.0f &&	// zero sized framebuffer is invalid
+			(spec.width != m_viewportSize.x || spec.height != m_viewportSize.y))
+		{
+			m_framebuffer->resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+			m_camController.onResize(m_viewportSize.x, m_viewportSize.y);
+			m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+		}
 
 		if(m_viewportFocused)
 			m_camController.update(dt);
@@ -88,6 +102,23 @@ namespace daedalus
 		ImGui::Text("Quads: %d", stats.quadCount);
 		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
+
+		ImGui::Separator();
+
+		static bool primaryCameraA = true;
+		if (ImGui::Checkbox("Camera A", &primaryCameraA))
+		{
+			m_cameraEntity.getComponent<scene::CameraComponent>().Primary = primaryCameraA;
+			m_secondCameraEntity.getComponent<scene::CameraComponent>().Primary = !primaryCameraA;
+		}
+
+		{
+			auto& camera = m_secondCameraEntity.getComponent<scene::CameraComponent>().Camera;
+			float orthoSize = camera.getOrthographicSize();
+			if (ImGui::DragFloat("Second camera ortho size", &orthoSize))
+				camera.setOrthographicSize(orthoSize);
+		}
+
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
@@ -102,8 +133,6 @@ namespace daedalus
 		if (m_viewportSize != viewportSizeAsVec2)
 		{
 			m_viewportSize = viewportSizeAsVec2;
-			m_framebuffer->resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
-			m_camController.onResize(m_viewportSize.x, m_viewportSize.y);
 		}
 		uint32_t textureID = m_framebuffer->getColourAttachmentRendererID();
 		ImGui::Image(textureID, viewportSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });

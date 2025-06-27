@@ -44,6 +44,6 @@ namespace math
 	}
 }
 
-TestFormatMacro(Vec2, "x: {}, y:{}, z: {}", vec, vec.x, vec.y, vec.GetZ())
+TestFormatMacro(math::Vec2, "x: {}, y:{}, z: {}", vec, vec.x, vec.y, vec.GetZ())
 
 */

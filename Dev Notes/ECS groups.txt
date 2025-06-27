@@ -1,0 +1,7 @@
+Create groups of components when the registry is created
+
+
+(Transform - Camera) : Might not group, as Transform will be grouped to spriteRenderer, so always use view to get
+
+Transform - SpriteRenderer : group together as they will both always be needed for the rendering
+

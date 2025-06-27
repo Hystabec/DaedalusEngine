@@ -25,6 +25,7 @@ namespace daedalus
 
 		Shr_ptr<scene::Scene> m_activeScene;
 		scene::Entity m_cameraEntity;
+		scene::Entity m_secondCameraEntity;
 	};
 
 }

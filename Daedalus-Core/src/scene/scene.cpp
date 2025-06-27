@@ -61,4 +61,19 @@ namespace daedalus::scene {
 		return entity;
 	}
 
+	void Scene::onViewportResize(uint32_t width, uint32_t hegiht)
+	{
+		m_viewportWidth = width;
+		m_viewportHeight = hegiht;
+
+		// resize non-fixed aspect ratio cameras
+		auto view = m_registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			auto& cameraComp = view.get<CameraComponent>(entity);
+			if (!cameraComp.FixedAspectRatio)
+				cameraComp.Camera.setViewportSize(width, hegiht);
+		}
+	}
+
 }
