@@ -1,7 +1,8 @@
+#include "editorpch.h"
 #include "EditorLayer.h"
 #include <imgui.h>
 
-namespace daedalus
+namespace daedalus::editor
 {
 
 	EditorLayer::EditorLayer()
@@ -58,6 +59,8 @@ namespace daedalus
 
 		auto square = m_activeScene->createEntity("Square");
 		square.addComponent<scene::SpriteRendererComponent>(maths::Vec4{ 0.8f, 0.2f, 0.2f, 1.0f });
+
+		m_sceneHierarchyPanel.setContext(m_activeScene);
 	}
 
 	void EditorLayer::detach()
@@ -124,6 +127,8 @@ namespace daedalus
 			}
 			ImGui::EndMainMenuBar();
 		}
+
+		m_sceneHierarchyPanel.onImGuiRender();
 
 		ImGui::Begin("Settings");
 		auto stats = graphics::Renderer2D::getStats();

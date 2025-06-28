@@ -55,4 +55,5 @@
 
 // ---debug
 #include "src/debugTools/logging/log.h"
+#include "src/debugTools/logging/logFormatMacro.h"
 #include "src/debugTools/profiling/instrumentor.h"

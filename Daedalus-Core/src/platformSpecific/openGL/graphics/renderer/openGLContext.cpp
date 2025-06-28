@@ -31,6 +31,10 @@ namespace daedalus { namespace graphics {
 		DD_CORE_ASSERT(versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5), "OpenGL version 4.5 or greater required");
 #endif // DD_USING_ASSERTS
 
+		DD_CORE_LOG_INFO("OpenGL Info:");
+		DD_CORE_LOG_INFO("Vendor:   {}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+		DD_CORE_LOG_INFO("Renderer: {}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+		DD_CORE_LOG_INFO("Version:  {}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 	}
 
 	void OpenGlContext::swapBuffers()

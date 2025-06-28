@@ -4,6 +4,12 @@
 
 #include "application/time/deltaTime.h"
 
+// foward declared for use in editor
+namespace daedalus::editor
+{
+	class SceneHierarchyPanel;
+}
+
 namespace daedalus::scene {
 
 	class Entity;
@@ -23,6 +29,7 @@ namespace daedalus::scene {
 		uint32_t m_viewportWidth = 0, m_viewportHeight = 0;
 
 		friend class Entity;
+		friend class editor::SceneHierarchyPanel;
 	};
 
 }

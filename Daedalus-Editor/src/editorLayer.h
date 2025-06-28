@@ -1,7 +1,7 @@
 #pragma once
-#include "Daedalus.h"
+#include "panels/sceneHierarchyPanel.h"
 
-namespace daedalus
+namespace daedalus::editor
 {
 
 	class EditorLayer : public application::Layer
@@ -26,6 +26,8 @@ namespace daedalus
 		Shr_ptr<scene::Scene> m_activeScene;
 		scene::Entity m_cameraEntity;
 		scene::Entity m_secondCameraEntity;
+
+		SceneHierarchyPanel m_sceneHierarchyPanel;
 	};
 
 }

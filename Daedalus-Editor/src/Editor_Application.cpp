@@ -1,9 +1,7 @@
-#include <Daedalus.h>
-#include "imgui.h"
-
-#include "editorLayer.h"
+#include "editorpch.h"
 
 #include "entryPoint.h"
+#include "editorLayer.h"
 
 namespace daedalus
 {
@@ -14,7 +12,7 @@ namespace daedalus
 		Editor()
 			: Application("Editor", 1280, 720, true)
 		{
-			this->pushLayer(new EditorLayer());
+			this->pushLayer(new editor::EditorLayer());
 		}
 
 		~Editor()

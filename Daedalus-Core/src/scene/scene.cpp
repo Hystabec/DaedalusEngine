@@ -21,6 +21,12 @@ namespace daedalus::scene {
 		{
 			m_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
 				{
+					if (!nsc.ScriptBound)
+					{
+						DD_CORE_LOG_WARN("No Script bound to NativeScriptComponent");
+						return;
+					}
+
 					// TO DO: Moveto Scene::onScenePlay
 					if (!nsc.Instance)
 					{

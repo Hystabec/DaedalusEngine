@@ -111,6 +111,79 @@ project "Daedalus-Core"
 		defines "DD_DISTRO"
 		optimize "on"
 
+
+--- Editor -----------------------------------------------------------------------------------------------------
+
+project "Daedalus-Editor"
+	location "Daedalus-Editor"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++20"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin/intermediate/" .. outputdir .. "/%{prj.name}")
+
+	pchheader "editorpch.h"
+	pchsource "Daedalus-Editor/src/editorpch.cpp"
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/src/**.hpp"
+	}
+
+	includedirs
+	{
+		"%{prj.name}/src",
+		"Daedalus-Core",
+		"Daedalus-Core/src",
+		"%{dependDir.ImGui}/include",
+		"%{dependDir.entt}/include"
+	}
+
+	links
+	{
+		"Daedalus-Core"
+	}
+
+	postbuildcommands
+	{
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+		defines
+		{
+			"DD_PLATFORM_WINDOWS"
+		}
+
+
+	filter "configurations:Debug"
+		defines 
+		{
+			"DD_DEBUG",
+			"DD_USING_ASSERTS",
+			"DD_USING_PROFILING"
+		}
+		symbols "on"
+
+	filter "configurations:Realease"
+		defines
+		{
+			"DD_RELEASE",
+			"DD_USING_ASSERTS",
+			"DD_USING_PROFILING"
+		} 
+		optimize "on"
+
+	filter "configurations:Distro"
+		defines "DD_DISTRO"
+		optimize "on"
+
+--- Sandbox (Runtime) -----------------------------------------------------------------------------------------------------
+
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
@@ -151,71 +224,6 @@ project "Sandbox"
 		{
 			"DD_PLATFORM_WINDOWS"
 		}
-
-	filter "configurations:Debug"
-		defines 
-		{
-			"DD_DEBUG",
-			"DD_USING_ASSERTS",
-			"DD_USING_PROFILING"
-		}
-		symbols "on"
-
-	filter "configurations:Realease"
-		defines
-		{
-			"DD_RELEASE",
-			"DD_USING_ASSERTS",
-			"DD_USING_PROFILING"
-		} 
-		optimize "on"
-
-	filter "configurations:Distro"
-		defines "DD_DISTRO"
-		optimize "on"
-
-
-project "Daedalus-Editor"
-	location "Daedalus-Editor"
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++20"
-	staticruntime "on"
-
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin/intermediate/" .. outputdir .. "/%{prj.name}")
-
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		"%{prj.name}/src/**.hpp"
-	}
-
-	includedirs
-	{
-		"Daedalus-Core",
-		"Daedalus-Core/src",
-		"%{dependDir.ImGui}/include",
-		"%{dependDir.entt}/include"
-	}
-
-	links
-	{
-		"Daedalus-Core"
-	}
-
-	postbuildcommands
-	{
-	}
-
-	filter "system:windows"
-		systemversion "latest"
-		defines
-		{
-			"DD_PLATFORM_WINDOWS"
-		}
-
 
 	filter "configurations:Debug"
 		defines 

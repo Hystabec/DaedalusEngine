@@ -54,7 +54,10 @@ namespace daedalus::scene {
 		}
 
 		operator bool() const { return (uint32_t)m_handle != 0; }
+		operator uint32_t() const { return (uint32_t)m_handle; }
 
+		bool operator==(const Entity& other) const { return m_handle == other.m_handle && m_scene == other.m_scene; }
+		bool operator!=(const Entity& other) const { return !(*this == other); }
 	public:
 		// this idea of being able to call entity.Transform seems good but i dont know how i would do it
 		// would be easier to just do it as a function that retrieves a reference to the transform
