@@ -53,7 +53,7 @@ namespace daedalus::scene {
 			m_scene->m_registry.remove<T>(m_handle);
 		}
 
-		operator bool() const { return (uint32_t)m_handle != 0; }
+		operator bool() const { return m_handle != entt::null; }
 		operator uint32_t() const { return (uint32_t)m_handle; }
 
 		bool operator==(const Entity& other) const { return m_handle == other.m_handle && m_scene == other.m_scene; }

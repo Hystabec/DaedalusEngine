@@ -45,6 +45,8 @@ namespace daedalus { namespace maths {
 		static Mat4 rotate(float angle, const Vec3& axis, bool inRadians = false);
 
 		static Mat4 scale(const Vec3& scale);
+
+		operator float* () { return elements; }
 	};
 
 } }

@@ -29,6 +29,8 @@ namespace daedalus { namespace maths {
 		Vec4& operator -=(const Vec4& other);
 		Vec4& operator *=(const Vec4& other);
 		Vec4& operator /=(const Vec4& other);
+
+		operator float* () { return &x; }
 	};
 
 } }
