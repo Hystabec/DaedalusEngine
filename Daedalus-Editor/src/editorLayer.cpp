@@ -21,10 +21,10 @@ namespace daedalus::editor
 
 		m_activeScene = create_shr_ptr<scene::Scene>();
 
-		m_cameraEntity = m_activeScene->createEntity("Camera Entity");
+		m_cameraEntity = m_activeScene->createEntity("Camera A");
 		m_cameraEntity.addComponent<scene::CameraComponent>();
 
-		m_secondCameraEntity = m_activeScene->createEntity("Second Camera Entity");
+		m_secondCameraEntity = m_activeScene->createEntity("Camera B");
 		m_secondCameraEntity.addComponent<scene::CameraComponent>().Primary = false;
 
 		class CameraController : public scene::ScriptableEntity
@@ -40,27 +40,27 @@ namespace daedalus::editor
 
 			void onUpdate(const application::DeltaTime& dt)
 			{
-				auto& transform = getComponent<scene::TransformComponent>().Transform;
+				auto& position = getComponent<scene::TransformComponent>().Position;
 				float speed = 5.0f;
 
 				if (application::Input::getKeyDown(application::InputCode::Key_W))
-					transform.columns[3].y += speed * dt;
+					position.y += speed * dt;
 				if (application::Input::getKeyDown(application::InputCode::Key_S))
-					transform.columns[3].y -= speed * dt;
+					position.y -= speed * dt;
 
 				if (application::Input::getKeyDown(application::InputCode::Key_A))
-					transform.columns[3].x -= speed * dt;
+					position.x -= speed * dt;
 				if (application::Input::getKeyDown(application::InputCode::Key_D))
-					transform.columns[3].x += speed * dt;
+					position.x += speed * dt;
 			}
 		};
 
 		m_secondCameraEntity.addComponent<scene::NativeScriptComponent>().bind<CameraController>();
 
-		auto redSquare = m_activeScene->createEntity("Square");
+		auto redSquare = m_activeScene->createEntity("Red Square");
 		redSquare.addComponent<scene::SpriteRendererComponent>(maths::Vec4{ 0.8f, 0.2f, 0.2f, 1.0f });
 
-		auto greenSquare = m_activeScene->createEntity("Square");
+		auto greenSquare = m_activeScene->createEntity("Green Square");
 		greenSquare.addComponent<scene::SpriteRendererComponent>(maths::Vec4{ 0.2f, 0.8f, 0.2f, 1.0f });
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
@@ -94,23 +94,9 @@ namespace daedalus::editor
 		graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
 		graphics::RenderCommands::clear();
 
-		//graphics::Renderer2D::begin(m_camController.getCamera());
-
 		// update scene
 		m_activeScene->update(dt);
 
-#if 0
-			for (float y = -5.0f; y < 5.0f; y += 0.05f)
-			{
-				for (float x = -5.0f; x < 5.0f; x += 0.05f)
-				{
-					maths::vec4 colour = { (x + 5.0f) / 10.0f , 0.2f, (y + 5.0f) / 10.0f, 0.5f };
-					graphics::Renderer2D::drawQuad({ {x, y, -0.1f}, { 0.2f }, colour });
-				}
-			}
-#endif
-
-		//graphics::Renderer2D::end();
 		m_framebuffer->unbind();
 	}
 
@@ -133,29 +119,14 @@ namespace daedalus::editor
 
 		m_sceneHierarchyPanel.onImGuiRender();
 
-		ImGui::Begin("Settings");
+		ImGui::Begin("Stats");
+
 		auto stats = graphics::Renderer2D::getStats();
 		ImGui::Text("Renderer2D Stats:");
 		ImGui::Text("Draw calls: %d", stats.drawCalls);
 		ImGui::Text("Quads: %d", stats.quadCount);
 		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
-
-		ImGui::Separator();
-
-		static bool primaryCameraA = true;
-		if (ImGui::Checkbox("Camera A", &primaryCameraA))
-		{
-			m_cameraEntity.getComponent<scene::CameraComponent>().Primary = primaryCameraA;
-			m_secondCameraEntity.getComponent<scene::CameraComponent>().Primary = !primaryCameraA;
-		}
-
-		{
-			auto& camera = m_secondCameraEntity.getComponent<scene::CameraComponent>().Camera;
-			float orthoSize = camera.getOrthographicSize();
-			if (ImGui::DragFloat("Second camera ortho size", &orthoSize))
-				camera.setOrthographicSize(orthoSize);
-		}
 
 
 		ImGui::End();

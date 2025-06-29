@@ -2,6 +2,7 @@
 #include "sceneHierarchyPanel.h"
 
 #include <imgui.h> 
+#include <imgui_internal.h>
 //#include "scene/components.h"
 
 namespace daedalus::editor
@@ -34,7 +35,7 @@ namespace daedalus::editor
 
 		ImGui::End();
 
-		// TODO: move into own class
+		// TO DO: move into own class
 		ImGui::Begin("Properties");
 
 		if (m_selectionContext)
@@ -60,6 +61,97 @@ namespace daedalus::editor
 		}
 	}
 
+	/// @brief This will draw the data for a specified component using a lambda function
+	/// @brief Taking entity as a ref for both this func and the lambda as i didnt want to make 3 different copies,
+	/// even though it is a single uint32_t
+	template<typename T>
+	static void draw_component(const std::string& label, void(*func)(scene::Entity&), scene::Entity& entity)
+	{
+		if (!entity.hasComponent<T>())
+			return;
+
+		if (ImGui::TreeNodeEx((void*)typeid(T).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, label.c_str()))
+		{
+			func(entity);
+			ImGui::TreePop();
+		}
+	}
+
+	// TO DO: Move into UI libary
+	static bool draw_vec3_control(const std::string& label, maths::Vec3& values, float dragSensitivity = 0.1f, float resetValue = 0.0f, float columnWidth = 100.0f)
+	{
+		bool itemChange = false;
+
+		ImGui::PushID(label.c_str());
+
+		ImGui::Columns(2);
+
+		ImGui::SetColumnWidth(0, columnWidth);
+		ImGui::Text(label.c_str());
+		ImGui::NextColumn();
+
+		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0,0 });
+		
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.1f, 1.0f));
+		if (ImGui::Button("X", buttonSize))
+		{
+			values.x = resetValue;
+			itemChange = true;
+		}
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+		if (ImGui::DragFloat("##X", &values.x, dragSensitivity, 0.0f, 0.0f, "%.1f"))
+			itemChange = true;
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.7f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.8f, 0.2f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.7f, 0.1f, 1.0f));
+		if (ImGui::Button("Y", buttonSize))
+		{
+			values.y = resetValue;
+			itemChange = true;
+		}
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+		if (ImGui::DragFloat("##Y", &values.y, dragSensitivity, 0.0f, 0.0f, "%.1f"))
+			itemChange = true;
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.1f, 0.7f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.8f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.1f, 0.7f, 1.0f));
+		if (ImGui::Button("Z", buttonSize))
+		{
+			values.z = resetValue;
+			itemChange = true;
+		}
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+		if (ImGui::DragFloat("##Z", &values.z, dragSensitivity, 0.0f, 0.0f, "%.1f"))
+			itemChange = true;
+		ImGui::PopItemWidth();
+
+		ImGui::PopStyleVar();
+
+		ImGui::Columns(1);
+
+		ImGui::PopID();
+
+		return itemChange;
+	}
+
 	void SceneHierarchyPanel::drawComponents(scene::Entity entity)
 	{
 		if (entity.hasComponent<scene::TagComponent>())
@@ -75,20 +167,21 @@ namespace daedalus::editor
 			}
 		}
 
-		if (entity.hasComponent<scene::TransformComponent>())
-		{
-			if (ImGui::TreeNodeEx((void*)typeid(scene::TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
+		draw_component<scene::TransformComponent>("Transform",
+			[](scene::Entity& entity)
 			{
-				auto& transform = entity.getComponent<scene::TransformComponent>().Transform;
-				ImGui::DragFloat3("Position", transform.columns[3], 0.25f);
+				auto& tc = entity.getComponent<scene::TransformComponent>();
+				draw_vec3_control("Position", tc.Position);
 
-				ImGui::TreePop();
-			}
-		}
+				maths::Vec3 rotation = maths::radians_to_degrees(tc.Rotation);
+				if(draw_vec3_control("Rotation", rotation, 1.0f))
+					tc.Rotation = maths::degrees_to_radians(rotation);
 
-		if (entity.hasComponent<scene::CameraComponent>())
-		{
-			if (ImGui::TreeNodeEx((void*)typeid(scene::CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Camera"))
+				draw_vec3_control("Scale", tc.Scale, 0.1f, 1.0f);
+			}, entity);
+		
+		draw_component<scene::CameraComponent>("Camera",
+			[](scene::Entity& entity)
 			{
 				auto& cameraComp = entity.getComponent<scene::CameraComponent>();
 				auto& camera = cameraComp.Camera;
@@ -139,17 +232,21 @@ namespace daedalus::editor
 					float orthoNear = camera.getOrthographicNearClip();
 					if (ImGui::DragFloat("Near", &orthoNear))
 						camera.setOrthographicNearClip(orthoNear);
-					
+
 					float orthoFar = camera.getOrthographicFarClip();
 					if (ImGui::DragFloat("Far", &orthoFar))
 						camera.setOrthographicFarClip(orthoFar);
 
 					ImGui::Checkbox("Fixed aspect ratio", &cameraComp.FixedAspectRatio);
 				}
-
-				ImGui::TreePop();
-			}
-		}
+			}, entity);
+		
+		draw_component<scene::SpriteRendererComponent>("Sprite Renderer",
+			[](scene::Entity& entity)
+			{
+				auto& colour = entity.getComponent<scene::SpriteRendererComponent>().Colour;
+				ImGui::ColorEdit4("Colour", colour);
+			}, entity);
 	}
 
 }

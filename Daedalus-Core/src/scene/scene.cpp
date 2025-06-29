@@ -42,7 +42,7 @@ namespace daedalus::scene {
 
 		// Render2D sprites
 		graphics::Camera* mainCamera = nullptr;
-		maths::Mat4* mainCameraTransform = nullptr;
+		maths::Mat4 mainCameraTransform;
 		{
 			auto view = m_registry.view<TransformComponent, CameraComponent>();
 			for (auto entity : view)
@@ -52,7 +52,7 @@ namespace daedalus::scene {
 				if (camera.Primary)
 				{
 					mainCamera = &camera.Camera;
-					mainCameraTransform = &transform.Transform;
+					mainCameraTransform = transform.getTransform();
 					break;
 				}
 			}
@@ -60,14 +60,14 @@ namespace daedalus::scene {
 
 		if (mainCamera && mainCameraTransform)
 		{
-			graphics::Renderer2D::begin(*mainCamera, *mainCameraTransform);
+			graphics::Renderer2D::begin(*mainCamera, mainCameraTransform);
 
 			auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
 			for (auto entity : group)
 			{
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-				graphics::Renderer2D::drawQuad({ transform.Transform, sprite.Colour });
+				graphics::Renderer2D::drawQuad({ transform.getTransform(), sprite.Colour});
 			}
 
 			graphics::Renderer2D::end();
@@ -77,7 +77,7 @@ namespace daedalus::scene {
 	Entity Scene::createEntity(const std::string& name)
 	{
 		Entity entity = { m_registry.create(), this };
-		entity.addComponent<TransformComponent>(maths::Mat4::identity());
+		entity.addComponent<TransformComponent>();
 
 		auto& tag = entity.addComponent<TagComponent>();
 		tag.Tag = name.empty() ? "Entity" : name;

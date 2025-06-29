@@ -24,16 +24,26 @@ namespace daedalus::scene {
 	
 	struct TransformComponent
 	{
-		maths::Mat4 Transform;
+		maths::Vec3 Position = { 0.0f };
+		maths::Vec3 Rotation = { 0.0f };
+		maths::Vec3 Scale = { 1.0f };
 
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent&) = default;
-		TransformComponent(const maths::Mat4& transform)
-			: Transform(transform)
+		TransformComponent(const maths::Vec3& position)
+			: Position(position)
 		{ }
 
-		operator maths::Mat4& () { return Transform; }
-		operator const maths::Mat4& () const { return Transform; }
+		maths::Mat4 getTransform() const
+		{
+			maths::Mat4 rotationMat = maths::Mat4::rotate(Rotation.x, { 1, 0, 0 })
+				* maths::Mat4::rotate(Rotation.y, { 0, 1, 0 })
+				* maths::Mat4::rotate(Rotation.z, { 0, 0, 1 });
+
+			return maths::Mat4::translate(Position)
+				* rotationMat
+				* maths::Mat4::scale(Scale);
+		}
 	};
 
 	struct CameraComponent
