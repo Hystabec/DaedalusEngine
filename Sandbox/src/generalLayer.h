@@ -138,7 +138,7 @@ public:
 		if (daedalus::application::Input::getKeyDown(daedalus::application::InputCode::Key_J))
 			m_triPos += daedalus::maths::Vec3(-1.0f, 0.0f, 0.0f) * (float)dt;
 
-		daedalus::maths::Mat4 triangleTransform = daedalus::maths::Mat4::translate(m_triPos) * daedalus::maths::Mat4::rotate(0.0f, { 0,0,1 }) * daedalus::maths::Mat4::scale({ 0.1f });
+		daedalus::maths::Mat4 triangleTransform = daedalus::maths::Mat4::translate(m_triPos) * daedalus::maths::Mat4::rotate(0.0f, { 0,0,1 }, false) * daedalus::maths::Mat4::scale({ 0.1f });
 
 		daedalus::maths::Vec4 redCol(0.8f, 0.2f, 0.3f, 1.0f);
 		daedalus::maths::Vec4 greenCol(0.2f, 0.8f, 0.3f, 1.0f);

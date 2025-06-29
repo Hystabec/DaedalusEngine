@@ -36,13 +36,15 @@ namespace daedalus { namespace maths {
 		static Mat4 invert(const Mat4& matrix);
 
 		static Mat4 orthographic(float left, float right, float botton, float top, float nearPlane, float farPlane);
+
+		/// @param fov - in radians
 		static Mat4 perspective(float fov, float aspectRatio, float nearPlane, float farPlane);
 
 		static Mat4 translate(const Vec3& translation);
 
 		/// @brief Returns an indenty matrix rotated by the specified angle and axis. 
-		/// A bool can be passed in as the final peramiter to pass angle as radians.
-		static Mat4 rotate(float angle, const Vec3& axis, bool inRadians = false);
+		/// A bool can be passed in as the final peramiter to pass angle as degrees.
+		static Mat4 rotate(float angle, const Vec3& axis, bool inRadians = true);
 
 		static Mat4 scale(const Vec3& scale);
 

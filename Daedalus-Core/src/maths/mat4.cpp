@@ -375,7 +375,7 @@ namespace daedalus { namespace maths {
 		{
 			Mat4 result(1.0f);
 			
-			float q = 1.0f / tan(degrees_to_radians(fov / 2));
+			float q = 1.0f / tan(fov / 2);
 			float a = q / aspectRatio;
 			
 			result.elements[0 + 0 * 4] = a;

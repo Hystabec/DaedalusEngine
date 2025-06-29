@@ -57,8 +57,11 @@ namespace daedalus::editor
 
 		m_secondCameraEntity.addComponent<scene::NativeScriptComponent>().bind<CameraController>();
 
-		auto square = m_activeScene->createEntity("Square");
-		square.addComponent<scene::SpriteRendererComponent>(maths::Vec4{ 0.8f, 0.2f, 0.2f, 1.0f });
+		auto redSquare = m_activeScene->createEntity("Square");
+		redSquare.addComponent<scene::SpriteRendererComponent>(maths::Vec4{ 0.8f, 0.2f, 0.2f, 1.0f });
+
+		auto greenSquare = m_activeScene->createEntity("Square");
+		greenSquare.addComponent<scene::SpriteRendererComponent>(maths::Vec4{ 0.2f, 0.8f, 0.2f, 1.0f });
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
 	}

@@ -10,9 +10,22 @@ namespace daedalus::scene {
 
 	void SceneCamera::setOrthographic(float size, float nearClip, float farClip)
 	{
+		m_projectionType = ProjectionType::Othographic;
+
 		m_orthoSize = size;
 		m_orthoNear = nearClip;
 		m_orthoFar = farClip;
+
+		recalculateProjection();
+	}
+
+	void SceneCamera::setPerspective(float verticalFOV, float nearClip, float farClip)
+	{
+		m_projectionType = ProjectionType::Perspective;
+
+		m_perspecFOV = verticalFOV;
+		m_perspecNear = nearClip;
+		m_perspecFar = farClip;
 
 		recalculateProjection();
 	}
@@ -26,12 +39,19 @@ namespace daedalus::scene {
 
 	void SceneCamera::recalculateProjection()
 	{
-		float orthoLeft = -m_orthoSize * m_aspectRatio * 0.5f;
-		float orthoRight = m_orthoSize * m_aspectRatio * 0.5f;
-		float orthoBottom = -m_orthoSize * 0.5f;
-		float orthoTop = m_orthoSize * 0.5f;
+		if (m_projectionType == ProjectionType::Perspective)
+		{
+			m_projection = maths::Mat4::perspective(m_perspecFOV, m_aspectRatio, m_perspecNear, m_perspecFar);
+		}
+		else
+		{
+			float orthoLeft = -m_orthoSize * m_aspectRatio * 0.5f;
+			float orthoRight = m_orthoSize * m_aspectRatio * 0.5f;
+			float orthoBottom = -m_orthoSize * 0.5f;
+			float orthoTop = m_orthoSize * 0.5f;
 
-		m_projection = maths::Mat4::orthographic(orthoLeft, orthoRight, orthoBottom, orthoTop, m_orthoNear, m_orthoFar);
+			m_projection = maths::Mat4::orthographic(orthoLeft, orthoRight, orthoBottom, orthoTop, m_orthoNear, m_orthoFar);
+		}
 	}
 
 }
