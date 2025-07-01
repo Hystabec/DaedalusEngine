@@ -4,10 +4,10 @@
 
 #include "application/time/deltaTime.h"
 
-// foward declared for use in editor
 namespace daedalus::editor
 {
-	class SceneHierarchyPanel;
+	class SceneHierarchyPanel; 
+	// foward declared for use in editor
 }
 
 namespace daedalus::scene {
@@ -23,7 +23,13 @@ namespace daedalus::scene {
 		void update(const application::DeltaTime& dt);
 
 		Entity createEntity(const std::string& name = std::string());
+		void destroyEntity(Entity entity);
+
 		void onViewportResize(uint32_t width, uint32_t hegiht);
+	private:
+		template<typename T>
+		void onComponentAdded(Entity entity, T& component);
+
 	private:
 		entt::registry m_registry;
 		uint32_t m_viewportWidth = 0, m_viewportHeight = 0;

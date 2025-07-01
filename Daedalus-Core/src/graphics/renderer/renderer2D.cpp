@@ -169,11 +169,14 @@ namespace daedalus { namespace graphics {
 		for (uint32_t i = 0; i < s_data.textureSlotIndex; i++)
 			s_data.textureSlots[i]->bind(i);
 
-		RenderCommands::drawIndexed(s_data.quadVertexArray, s_data.quadIndexCount);
-
+		// if there is nothing to render skip this
+		if (dataSize != 0)
+		{
+			RenderCommands::drawIndexed(s_data.quadVertexArray, s_data.quadIndexCount);
 #ifndef DD_DISTRO
-		s_data.stats.drawCalls++;
+			s_data.stats.drawCalls++;
 #endif 
+		}
 	}
 
 	void Renderer2D::flushAndReset()

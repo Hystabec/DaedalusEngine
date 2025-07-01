@@ -85,6 +85,11 @@ namespace daedalus::scene {
 		return entity;
 	}
 
+	void Scene::destroyEntity(Entity entity)
+	{
+		m_registry.destroy(entity);
+	}
+
 	void Scene::onViewportResize(uint32_t width, uint32_t hegiht)
 	{
 		m_viewportWidth = width;
@@ -98,6 +103,38 @@ namespace daedalus::scene {
 			if (!cameraComp.FixedAspectRatio)
 				cameraComp.Camera.setViewportSize(width, hegiht);
 		}
+	}
+
+	template<typename T>
+	void scene::Scene::onComponentAdded(Entity entity, T& component)
+	{
+		static_assert(false);
+	}
+
+	template<>
+	void scene::Scene::onComponentAdded<scene::TagComponent>(Entity entity, scene::TagComponent& component)
+	{
+	}
+
+	template<>
+	void scene::Scene::onComponentAdded<scene::TransformComponent>(Entity entity, scene::TransformComponent& component)
+	{
+	}
+
+	template<>
+	void scene::Scene::onComponentAdded<scene::CameraComponent>(Entity entity, scene::CameraComponent& component)
+	{
+		component.Camera.setViewportSize(m_viewportWidth, m_viewportHeight);
+	}
+
+	template<>
+	void scene::Scene::onComponentAdded<scene::SpriteRendererComponent>(Entity entity, scene::SpriteRendererComponent& component)
+	{
+	}
+
+	template<>
+	void scene::Scene::onComponentAdded<scene::NativeScriptComponent>(Entity entity, scene::NativeScriptComponent& component)
+	{
 	}
 
 }

@@ -33,13 +33,44 @@ namespace daedalus::editor
 		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
 			m_selectionContext = {};
 
+		// Open context menu on black space
+		if (ImGui::BeginPopupContextWindow(0, 1 | ImGuiPopupFlags_NoOpenOverItems))
+		{
+			if (ImGui::MenuItem("Create Empty Entity"))
+				m_sceneContext->createEntity("Entity");
+
+			ImGui::EndPopup();
+		}
+
 		ImGui::End();
 
 		// TO DO: move into own class
 		ImGui::Begin("Properties");
 
 		if (m_selectionContext)
+		{
 			drawComponents(m_selectionContext);
+
+			if (ImGui::Button("Add Component"))
+				ImGui::OpenPopup("AddComponent");
+
+			if (ImGui::BeginPopup("AddComponent"))
+			{
+				if (ImGui::MenuItem("Camera"))
+				{
+					m_selectionContext.addComponent<CameraComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Sprite Renderer"))
+				{
+					m_selectionContext.addComponent<SpriteRendererComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::EndPopup();
+			}
+		}
 
 		ImGui::End();
 	}
@@ -55,9 +86,25 @@ namespace daedalus::editor
 			m_selectionContext = entity;
 		}
 
+		bool entityDeleted = false;
+		if (ImGui::BeginPopupContextItem())
+		{
+			if (ImGui::MenuItem("Delete Entity"))
+				entityDeleted = true;
+
+			ImGui::EndPopup();
+		}
+
 		if (opened)
 		{
 			ImGui::TreePop();
+		}
+
+		if (entityDeleted)
+		{
+			m_sceneContext->destroyEntity(entity);
+			if (m_selectionContext == entity)
+				m_selectionContext = {};
 		}
 	}
 
@@ -65,16 +112,42 @@ namespace daedalus::editor
 	/// @brief Taking entity as a ref for both this func and the lambda as i didnt want to make 3 different copies,
 	/// even though it is a single uint32_t
 	template<typename T>
-	static void draw_component(const std::string& label, void(*func)(scene::Entity&), scene::Entity& entity)
+	static void draw_component(const std::string& label, void(*func)(scene::Entity&), scene::Entity& entity, bool componentIsRemovable = true)
 	{
 		if (!entity.hasComponent<T>())
 			return;
 
-		if (ImGui::TreeNodeEx((void*)typeid(T).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, label.c_str()))
+		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+
+		bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, label.c_str());
+		bool removeComponent = false;
+		if (componentIsRemovable)
+		{
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
+			if (ImGui::Button("+", ImVec2{20, 20}))
+			{
+				ImGui::OpenPopup("ComponentSettings");
+			}
+			ImGui::PopStyleVar();
+
+			if (ImGui::BeginPopup("ComponentSettings"))
+			{
+				if (ImGui::MenuItem("Remove component"))
+					removeComponent = true;
+
+				ImGui::EndPopup();
+			}
+		}
+
+		if (open)
 		{
 			func(entity);
 			ImGui::TreePop();
 		}
+
+		if (removeComponent)
+			entity.removeComponent<T>();
 	}
 
 	// TO DO: Move into UI libary
@@ -178,7 +251,7 @@ namespace daedalus::editor
 					tc.Rotation = maths::degrees_to_radians(rotation);
 
 				draw_vec3_control("Scale", tc.Scale, 0.1f, 1.0f);
-			}, entity);
+			}, entity, false);
 		
 		draw_component<scene::CameraComponent>("Camera",
 			[](scene::Entity& entity)
