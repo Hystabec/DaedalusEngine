@@ -1,0 +1,3 @@
+[submodule "Daedalus-Core/Dependencies/yaml-cpp"]
+	path = Daedalus-Core/Dependencies/yaml-cpp
+	url = https://github.com/Hystabec/yaml-cpp

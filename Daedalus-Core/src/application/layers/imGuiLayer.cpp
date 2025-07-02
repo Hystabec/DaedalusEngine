@@ -36,8 +36,6 @@ namespace daedalus { namespace application {
 		//io.ConfigViewportsNoAutoMerge = true;
 		//io.ConfigViewportsNoTaskBarIcon = true;
 
-		
-
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
 		//ImGui::StyleColorsLight();
@@ -145,7 +143,7 @@ namespace daedalus { namespace application {
 		colours[ImGuiCol_TitleBgActive] =		ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f };
 		colours[ImGuiCol_TitleBgCollapsed] =	ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f };
 
-		colours[ImGuiCol_CheckMark] =			ImVec4{ 0.76f, 0.00f, 0.10f, 1.0f };
+		colours[ImGuiCol_CheckMark] =			ImVec4{ 0.10f, 0.80f, 0.10f, 1.0f };
 	}
 
 } }
