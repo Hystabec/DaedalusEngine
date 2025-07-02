@@ -16,7 +16,7 @@ namespace daedalus::editor
 		void onEvent(event::Event& e) override;
 
 	private:
-		graphics::OrthographicCameraController m_camController;
+		//graphics::OrthographicCameraController m_camController;
 
 		Shr_ptr<graphics::Framebuffer> m_framebuffer;
 
@@ -24,8 +24,8 @@ namespace daedalus::editor
 		maths::Vec2 m_viewportSize;
 
 		Shr_ptr<scene::Scene> m_activeScene;
-		scene::Entity m_cameraEntity;
-		scene::Entity m_secondCameraEntity;
+		//scene::Entity m_cameraEntity;
+		//scene::Entity m_secondCameraEntity;
 
 		SceneHierarchyPanel m_sceneHierarchyPanel;
 	};

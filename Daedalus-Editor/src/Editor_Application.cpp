@@ -10,7 +10,7 @@ namespace daedalus
 	{
 	public:
 		Editor()
-			: Application("Editor", 1280, 720, true)
+			: Application("Editor", 1600, 900, true)
 		{
 			this->pushLayer(new editor::EditorLayer());
 		}

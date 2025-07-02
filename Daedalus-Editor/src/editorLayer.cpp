@@ -6,7 +6,7 @@ namespace daedalus::editor
 {
 
 	EditorLayer::EditorLayer()
-		: m_camController(1280.0f / 720.0f)
+		//: m_camController(1600.0f / 900.0f)
 	{
 	}
 
@@ -15,17 +15,20 @@ namespace daedalus::editor
 		DD_PROFILE_FUNCTION();
 
 		graphics::FramebufferSpecification fbSpec;
-		fbSpec.width = 1280;
-		fbSpec.height = 720;
+		fbSpec.width = 1600;
+		fbSpec.height = 900;
 		m_framebuffer = graphics::Framebuffer::create(fbSpec);
 
 		m_activeScene = create_shr_ptr<scene::Scene>();
 
-		m_cameraEntity = m_activeScene->createEntity("Camera A");
-		m_cameraEntity.addComponent<scene::CameraComponent>();
+		//m_cameraEntity = m_activeScene->createEntity("Camera A");
+		//m_cameraEntity.addComponent<scene::CameraComponent>();
+		m_activeScene->createEntity("Camera A").addComponent<scene::CameraComponent>();
 
-		m_secondCameraEntity = m_activeScene->createEntity("Camera B");
-		m_secondCameraEntity.addComponent<scene::CameraComponent>().Primary = false;
+		//m_secondCameraEntity = m_activeScene->createEntity("Camera B");
+		//m_secondCameraEntity.addComponent<scene::CameraComponent>().Primary = false;
+		auto scriptCamera = m_activeScene->createEntity("Camera B");
+		scriptCamera.addComponent<scene::CameraComponent>().Primary = false;
 
 		class CameraController : public scene::ScriptableEntity
 		{
@@ -55,7 +58,7 @@ namespace daedalus::editor
 			}
 		};
 
-		m_secondCameraEntity.addComponent<scene::NativeScriptComponent>().bind<CameraController>();
+		scriptCamera.addComponent<scene::NativeScriptComponent>().bind<CameraController>();
 
 		auto redSquare = m_activeScene->createEntity("Red Square");
 		redSquare.addComponent<scene::SpriteRendererComponent>(maths::Vec4{ 0.8f, 0.2f, 0.2f, 1.0f });
@@ -81,12 +84,12 @@ namespace daedalus::editor
 			(spec.width != m_viewportSize.x || spec.height != m_viewportSize.y))
 		{
 			m_framebuffer->resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
-			m_camController.onResize(m_viewportSize.x, m_viewportSize.y);
+			//m_camController.onResize(m_viewportSize.x, m_viewportSize.y);
 			m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
 
-		if(m_viewportFocused)
-			m_camController.update(dt);
+		//if(m_viewportFocused)
+		//	m_camController.update(dt);
 
 		graphics::Renderer2D::resetStats();
 
@@ -103,7 +106,11 @@ namespace daedalus::editor
 	void EditorLayer::imGuiRender()
 	{
 		DD_PROFILE_FUNCTION();
+		ImGuiStyle& style = ImGui::GetStyle();
+		float minWinSizeX = style.WindowMinSize.x;
+		style.WindowMinSize.x = 370.0f;
 		ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
+		style.WindowMinSize.x = minWinSizeX;
 
 		if (ImGui::BeginMainMenuBar())
 		{
@@ -154,7 +161,7 @@ namespace daedalus::editor
 	void EditorLayer::onEvent(event::Event& e)
 	{
 		DD_PROFILE_FUNCTION();
-		m_camController.onEvent(e);
+		//m_camController.onEvent(e);
 	}
 
 }

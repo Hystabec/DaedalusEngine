@@ -50,26 +50,6 @@ namespace daedalus::editor
 		if (m_selectionContext)
 		{
 			drawComponents(m_selectionContext);
-
-			if (ImGui::Button("Add Component"))
-				ImGui::OpenPopup("AddComponent");
-
-			if (ImGui::BeginPopup("AddComponent"))
-			{
-				if (ImGui::MenuItem("Camera"))
-				{
-					m_selectionContext.addComponent<CameraComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Sprite Renderer"))
-				{
-					m_selectionContext.addComponent<SpriteRendererComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-
-				ImGui::EndPopup();
-			}
 		}
 
 		ImGui::End();
@@ -79,7 +59,9 @@ namespace daedalus::editor
 	{
 		auto& tag = entity.getComponent<scene::TagComponent>().Tag;
 		
-		ImGuiTreeNodeFlags flags = ((m_selectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
+		static const ImGuiTreeNodeFlags flags = ((m_selectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow
+			| ImGuiTreeNodeFlags_SpanAvailWidth;
+
 		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
 		if (ImGui::IsItemClicked())
 		{
@@ -112,24 +94,30 @@ namespace daedalus::editor
 	/// @brief Taking entity as a ref for both this func and the lambda as i didnt want to make 3 different copies,
 	/// even though it is a single uint32_t
 	template<typename T>
-	static void draw_component(const std::string& label, void(*func)(scene::Entity&), scene::Entity& entity, bool componentIsRemovable = true)
+	static void draw_component(const std::string& label, void(*func)(T&), scene::Entity& entity, bool componentIsRemovable = true)
 	{
 		if (!entity.hasComponent<T>())
 			return;
 
-		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+		static const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap 
+			| ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_FramePadding;
 
+		ImVec2 contentRegionAvalible = ImGui::GetContentRegionAvail();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImGui::Separator();
 		bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, label.c_str());
+		ImGui::PopStyleVar();
+
 		bool removeComponent = false;
 		if (componentIsRemovable)
 		{
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
-			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
-			if (ImGui::Button("+", ImVec2{20, 20}))
+			ImGui::SameLine(contentRegionAvalible.x - lineHeight * 0.5f);
+			if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight }))
 			{
 				ImGui::OpenPopup("ComponentSettings");
 			}
-			ImGui::PopStyleVar();
 
 			if (ImGui::BeginPopup("ComponentSettings"))
 			{
@@ -142,7 +130,7 @@ namespace daedalus::editor
 
 		if (open)
 		{
-			func(entity);
+			func(entity.getComponent<T>());
 			ImGui::TreePop();
 		}
 
@@ -153,6 +141,9 @@ namespace daedalus::editor
 	// TO DO: Move into UI libary
 	static bool draw_vec3_control(const std::string& label, maths::Vec3& values, float dragSensitivity = 0.1f, float resetValue = 0.0f, float columnWidth = 100.0f)
 	{
+		ImGuiIO& io = ImGui::GetIO();
+		auto boldFont = io.Fonts->Fonts[0];
+
 		bool itemChange = false;
 
 		ImGui::PushID(label.c_str());
@@ -172,11 +163,13 @@ namespace daedalus::editor
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.1f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.1f, 1.0f));
+		ImGui::PushFont(boldFont);
 		if (ImGui::Button("X", buttonSize))
 		{
 			values.x = resetValue;
 			itemChange = true;
 		}
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
@@ -188,11 +181,13 @@ namespace daedalus::editor
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.7f, 0.1f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.8f, 0.2f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.7f, 0.1f, 1.0f));
+		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Y", buttonSize))
 		{
 			values.y = resetValue;
 			itemChange = true;
 		}
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
@@ -204,11 +199,13 @@ namespace daedalus::editor
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.1f, 0.7f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.8f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.1f, 0.7f, 1.0f));
+		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Z", buttonSize))
 		{
 			values.z = resetValue;
 			itemChange = true;
 		}
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
@@ -227,6 +224,7 @@ namespace daedalus::editor
 
 	void SceneHierarchyPanel::drawComponents(scene::Entity entity)
 	{
+		// This check is kind of pointless as all entities should have a Tag
 		if (entity.hasComponent<scene::TagComponent>())
 		{
 			auto& tag = entity.getComponent<scene::TagComponent>().Tag;
@@ -234,16 +232,40 @@ namespace daedalus::editor
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
 			strcpy_s(buffer, sizeof(buffer), tag.c_str());
-			if (ImGui::InputText("Tag", buffer, sizeof(buffer)))
+			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
 			{
 				tag = std::string(buffer);
 			}
 		}
 
-		draw_component<scene::TransformComponent>("Transform",
-			[](scene::Entity& entity)
+		ImGui::SameLine();
+		ImGui::PushItemWidth(-1);
+
+		if (ImGui::Button("Add Component"))
+			ImGui::OpenPopup("AddComponent");
+
+		if (ImGui::BeginPopup("AddComponent"))
+		{
+			if (ImGui::MenuItem("Camera"))
 			{
-				auto& tc = entity.getComponent<scene::TransformComponent>();
+				m_selectionContext.addComponent<scene::CameraComponent>();
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::MenuItem("Sprite Renderer"))
+			{
+				m_selectionContext.addComponent<scene::SpriteRendererComponent>();
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+
+		ImGui::PopItemWidth();
+
+		draw_component<scene::TransformComponent>("Transform",
+			[](scene::TransformComponent& tc)
+			{
 				draw_vec3_control("Position", tc.Position);
 
 				maths::Vec3 rotation = maths::radians_to_degrees(tc.Rotation);
@@ -254,9 +276,8 @@ namespace daedalus::editor
 			}, entity, false);
 		
 		draw_component<scene::CameraComponent>("Camera",
-			[](scene::Entity& entity)
+			[](scene::CameraComponent& cameraComp)
 			{
-				auto& cameraComp = entity.getComponent<scene::CameraComponent>();
 				auto& camera = cameraComp.Camera;
 
 				ImGui::Checkbox("Primary", &cameraComp.Primary);
@@ -315,9 +336,9 @@ namespace daedalus::editor
 			}, entity);
 		
 		draw_component<scene::SpriteRendererComponent>("Sprite Renderer",
-			[](scene::Entity& entity)
+			[](scene::SpriteRendererComponent& spriteRenderer)
 			{
-				auto& colour = entity.getComponent<scene::SpriteRendererComponent>().Colour;
+				auto& colour = spriteRenderer.Colour;
 				ImGui::ColorEdit4("Colour", colour);
 			}, entity);
 	}

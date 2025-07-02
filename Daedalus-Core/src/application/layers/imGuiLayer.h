@@ -21,6 +21,8 @@ namespace daedalus { namespace application {
 		void end();
 
 		inline void setAllowEvents(bool allow) { m_allowEvents = allow; }
+		
+		void setDarkThemeColours();
 	private:
 		bool m_allowEvents = true;
 		float m_time = 0.0f;

@@ -36,6 +36,8 @@ namespace daedalus { namespace application {
 		//io.ConfigViewportsNoAutoMerge = true;
 		//io.ConfigViewportsNoTaskBarIcon = true;
 
+		
+
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
 		//ImGui::StyleColorsLight();
@@ -47,6 +49,11 @@ namespace daedalus { namespace application {
 			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
+
+		// Sets custom ImGui styling
+		io.Fonts->AddFontFromFileTTF("resources/fonts/Noto_Sans/NotoSans-Bold.ttf", 18.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("resources/fonts/Noto_Sans/NotoSans-Medium.ttf", 18.0f);
+		setDarkThemeColours();
 
 		GLFWwindow* wind = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 
@@ -105,6 +112,40 @@ namespace daedalus { namespace application {
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
 		}
+	}
+
+	void ImGuiLayer::setDarkThemeColours()
+	{
+		auto& colours = ImGui::GetStyle().Colors;
+		ImVec4 pink = { 1.0f, 0.0f, 1.0f, 1.0f };
+
+		colours[ImGuiCol_WindowBg] =			ImVec4{ 0.10f, 0.10f, 0.10f, 1.0f };
+		
+		colours[ImGuiCol_Header] =				ImVec4{ 0.25f, 0.25f, 0.25f, 1.0f };
+		colours[ImGuiCol_HeaderHovered] =		ImVec4{ 0.35f, 0.35f, 0.35f, 1.0f };
+		colours[ImGuiCol_HeaderActive] =		ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f };
+
+		colours[ImGuiCol_Button] =				ImVec4{ 0.25f, 0.25f, 0.25f, 1.0f };
+		colours[ImGuiCol_ButtonHovered] =		ImVec4{ 0.35f, 0.35f, 0.35f, 1.0f };
+		colours[ImGuiCol_ButtonActive] =		ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f };
+
+		colours[ImGuiCol_FrameBg] =				ImVec4{ 0.25f, 0.25f, 0.25f, 1.0f };
+		colours[ImGuiCol_FrameBgHovered] =		ImVec4{ 0.35f, 0.35f, 0.35f, 1.0f };
+		colours[ImGuiCol_FrameBgActive] =		ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f };
+
+		colours[ImGuiCol_Tab] =					ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f };
+		colours[ImGuiCol_TabHovered] =			ImVec4{ 0.86f, 0.10f, 0.20f, 1.0f };
+		colours[ImGuiCol_TabActive] =			ImVec4{ 0.76f, 0.00f, 0.10f, 1.0f };
+		colours[ImGuiCol_TabUnfocused] =		ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f };
+		colours[ImGuiCol_TabUnfocusedActive] =	ImVec4{ 0.20f, 0.20f, 0.20f, 1.0f };
+
+		colours[ImGuiCol_TabSelectedOverline] = ImVec4{ 0.76f, 0.00f, 0.10f, 1.0f };
+
+		colours[ImGuiCol_TitleBg] =				ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f };
+		colours[ImGuiCol_TitleBgActive] =		ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f };
+		colours[ImGuiCol_TitleBgCollapsed] =	ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f };
+
+		colours[ImGuiCol_CheckMark] =			ImVec4{ 0.76f, 0.00f, 0.10f, 1.0f };
 	}
 
 } }
