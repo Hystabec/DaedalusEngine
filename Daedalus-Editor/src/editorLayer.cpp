@@ -2,6 +2,8 @@
 #include "EditorLayer.h"
 #include <imgui.h>
 
+#include "scene/sceneSerializer.h"
+
 namespace daedalus::editor
 {
 
@@ -21,6 +23,7 @@ namespace daedalus::editor
 
 		m_activeScene = create_shr_ptr<scene::Scene>();
 
+#if 0
 		//m_cameraEntity = m_activeScene->createEntity("Camera A");
 		//m_cameraEntity.addComponent<scene::CameraComponent>();
 		m_activeScene->createEntity("Camera A").addComponent<scene::CameraComponent>();
@@ -65,8 +68,13 @@ namespace daedalus::editor
 
 		auto greenSquare = m_activeScene->createEntity("Green Square");
 		greenSquare.addComponent<scene::SpriteRendererComponent>(maths::Vec4{ 0.2f, 0.8f, 0.2f, 1.0f });
+#endif
+
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
+
+		//scene::SceneSerializer serializer(m_activeScene);
+		//serializer.deserialize("Example.Daedalus");
 	}
 
 	void EditorLayer::detach()
@@ -116,6 +124,21 @@ namespace daedalus::editor
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				if (ImGui::MenuItem("Serialize"))
+				{
+					scene::SceneSerializer serializer(m_activeScene);
+					serializer.serialize("Example.Daedalus");
+				}
+
+				if (ImGui::MenuItem("Deserialize"))
+				{
+					scene::SceneSerializer serializer(m_activeScene);
+					serializer.deserialize("Example.Daedalus");
+					// Temporary fix - when deserializing the camera viewports are set to 0, 0
+					// so sending a reize event through fixs the issue 
+					m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y); // TO DO: find a better way - set viewport size while deserializing
+				}
+
 				if (ImGui::MenuItem("Exit"))
 					Application::get().close();
 

@@ -17,6 +17,11 @@ project "Daedalus-Editor"
 		"src/**.hpp"
 	}
 
+	defines
+	{
+		"YAML_CPP_STATIC_DEFINE"
+	}
+
 	includedirs
 	{
 		"src",

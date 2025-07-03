@@ -36,6 +36,7 @@ namespace daedalus::scene {
 
 		friend class Entity;
 		friend class editor::SceneHierarchyPanel;
+		friend class SceneSerializer;
 	};
 
 }

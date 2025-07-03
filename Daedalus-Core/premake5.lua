@@ -22,7 +22,8 @@ project "Daedalus-Core"
 
 	defines
 	{
-		"_CRT_SECURE_NO_WARNINGS"
+		"_CRT_SECURE_NO_WARNINGS",
+		"YAML_CPP_STATIC_DEFINE"
 	}
 
 	includedirs
@@ -34,7 +35,7 @@ project "Daedalus-Core"
 		"%{dependDir.ImGui}/include",
 		"%{dependDir.stb_image}",
 		"%{dependDir.entt}/include",
-		"%{dependDir.yaml_cpp}"
+		"%{dependDir.yaml_cpp}/include"
 	}
 
 	libdirs
