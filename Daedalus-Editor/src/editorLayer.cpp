@@ -24,6 +24,42 @@ namespace daedalus::editor
 		m_activeScene = create_shr_ptr<scene::Scene>();
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
+
+		/*
+		class CameraController : public scene::ScriptableEntity
+		{
+		public:
+			void onCreate()
+			{
+			}
+
+			void onDestroy()
+			{
+			}
+
+			void onUpdate(const application::DeltaTime& dt)
+			{
+				auto& position = getComponent<scene::TransformComponent>().Position;
+				float speed = 5.0f;
+
+				if (application::Input::getKeyDown(application::InputCode::Key_W))
+					position.y += speed * dt;
+				if (application::Input::getKeyDown(application::InputCode::Key_S))
+					position.y -= speed * dt;
+
+				if (application::Input::getKeyDown(application::InputCode::Key_A))
+					position.x -= speed * dt;
+				if (application::Input::getKeyDown(application::InputCode::Key_D))
+					position.x += speed * dt;
+			}
+		};
+
+		m_activeScene->createEntity("Square").addComponent<scene::SpriteRendererComponent>();
+
+		auto scriptCamera = m_activeScene->createEntity("Script Camera");
+		scriptCamera.addComponent<scene::CameraComponent>();
+		scriptCamera.addComponent<scene::NativeScriptComponent>().bind<CameraController>();
+		*/
 	}
 
 	void EditorLayer::detach()
@@ -122,7 +158,7 @@ namespace daedalus::editor
 
 		m_viewportFocused = ImGui::IsWindowFocused();
 		m_viewportHovered = ImGui::IsWindowHovered();
-		Application::get().getImGuiLayer()->setAllowEvents(m_viewportFocused && m_viewportHovered);
+		//Application::get().getImGuiLayer()->setAllowEvents(m_viewportFocused && m_viewportHovered);
 
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 		daedalus::maths::Vec2 viewportSizeAsVec2 = { viewportSize.x, viewportSize.y };
@@ -140,8 +176,17 @@ namespace daedalus::editor
 	void EditorLayer::onEvent(event::Event& e)
 	{
 		DD_PROFILE_FUNCTION();
+
+		// Shortcut events
 		event::EventDispatcher dispatcher(e);
 		dispatcher.dispatch<event::KeyPressedEvent>(DD_BIND_EVENT_FUN(EditorLayer::onKeyPressed));
+
+		// Blocking functionality from ImGuiLayer
+		if (!(m_viewportFocused && m_viewportHovered))
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			e.setHandled((e.isInCategory(event::EventCategory::Mouse) && io.WantCaptureMouse) || (e.isInCategory(event::EventCategory::Keyboard) && io.WantCaptureMouse));
+		}
 	}
 
 	bool EditorLayer::onKeyPressed(event::KeyPressedEvent& e)
