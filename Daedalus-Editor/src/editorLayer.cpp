@@ -118,10 +118,7 @@ namespace daedalus::editor
 				// TO DO: add save
 				if (ImGui::MenuItem("Save", "Ctrl+S"))
 				{
-					if (!m_currentSceneFilepath.empty())
-						saveScene();
-					else
-						saveSceneAs();
+					saveScene();
 				}
 
 				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
@@ -216,13 +213,7 @@ namespace daedalus::editor
 			if (ctrl && shift)
 				saveSceneAs();
 			else if (ctrl)
-			{
-				if (!m_currentSceneFilepath.empty())
-					saveScene();
-				else
-					saveSceneAs();
-			}
-				
+				saveScene();
 
 			break;
 		}
@@ -257,6 +248,14 @@ namespace daedalus::editor
 
 	void EditorLayer::saveScene()
 	{
+		// If the current scene wasnt opened/saved from/to a file, open the
+		// saveAs dialog
+		if (m_currentSceneFilepath.empty())
+		{
+			saveSceneAs();
+			return;
+		}
+
 		scene::SceneSerializer serializer(m_activeScene);
 		serializer.serialize(m_currentSceneFilepath);
 		DD_LOG_INFO("Scene saved [{}]", m_currentSceneFilepath);
