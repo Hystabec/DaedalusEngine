@@ -125,10 +125,10 @@ namespace daedalus::application {
 		Key_Left_Control = 341,
 		Key_Left_Alt = 342,
 		Key_Left_Super = 343,
-		Key_RIGHT_Shift = 344,
-		Key_RIGHT_Control = 345,
-		Key_RIGHT_Alt = 346,
-		Key_RIGHT_Super = 347,
+		Key_Right_Shift = 344,
+		Key_Right_Control = 345,
+		Key_Right_Alt = 346,
+		Key_Right_Super = 347,
 		Key_Menu = 348,
 
 		/* Mouse buttons */

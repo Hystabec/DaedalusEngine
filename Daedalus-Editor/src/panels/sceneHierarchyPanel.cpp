@@ -16,6 +16,7 @@ namespace daedalus::editor
 	void SceneHierarchyPanel::setContext(const Shr_ptr<scene::Scene>& scene)
 	{
 		m_sceneContext = scene;
+		m_selectionContext = {};
 	}
 
 	void SceneHierarchyPanel::onImGuiRender()

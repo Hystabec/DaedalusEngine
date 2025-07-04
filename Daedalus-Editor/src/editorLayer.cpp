@@ -3,12 +3,12 @@
 #include <imgui.h>
 
 #include "scene/sceneSerializer.h"
+#include "utils/platformUtils.h"
 
 namespace daedalus::editor
 {
 
 	EditorLayer::EditorLayer()
-		//: m_camController(1600.0f / 900.0f)
 	{
 	}
 
@@ -23,58 +23,7 @@ namespace daedalus::editor
 
 		m_activeScene = create_shr_ptr<scene::Scene>();
 
-#if 0
-		//m_cameraEntity = m_activeScene->createEntity("Camera A");
-		//m_cameraEntity.addComponent<scene::CameraComponent>();
-		m_activeScene->createEntity("Camera A").addComponent<scene::CameraComponent>();
-
-		//m_secondCameraEntity = m_activeScene->createEntity("Camera B");
-		//m_secondCameraEntity.addComponent<scene::CameraComponent>().Primary = false;
-		auto scriptCamera = m_activeScene->createEntity("Camera B");
-		scriptCamera.addComponent<scene::CameraComponent>().Primary = false;
-
-		class CameraController : public scene::ScriptableEntity
-		{
-		public:
-			void onCreate()
-			{
-			}
-
-			void onDestroy()
-			{
-			}
-
-			void onUpdate(const application::DeltaTime& dt)
-			{
-				auto& position = getComponent<scene::TransformComponent>().Position;
-				float speed = 5.0f;
-
-				if (application::Input::getKeyDown(application::InputCode::Key_W))
-					position.y += speed * dt;
-				if (application::Input::getKeyDown(application::InputCode::Key_S))
-					position.y -= speed * dt;
-
-				if (application::Input::getKeyDown(application::InputCode::Key_A))
-					position.x -= speed * dt;
-				if (application::Input::getKeyDown(application::InputCode::Key_D))
-					position.x += speed * dt;
-			}
-		};
-
-		scriptCamera.addComponent<scene::NativeScriptComponent>().bind<CameraController>();
-
-		auto redSquare = m_activeScene->createEntity("Red Square");
-		redSquare.addComponent<scene::SpriteRendererComponent>(maths::Vec4{ 0.8f, 0.2f, 0.2f, 1.0f });
-
-		auto greenSquare = m_activeScene->createEntity("Green Square");
-		greenSquare.addComponent<scene::SpriteRendererComponent>(maths::Vec4{ 0.2f, 0.8f, 0.2f, 1.0f });
-#endif
-
-
 		m_sceneHierarchyPanel.setContext(m_activeScene);
-
-		//scene::SceneSerializer serializer(m_activeScene);
-		//serializer.deserialize("Example.Daedalus");
 	}
 
 	void EditorLayer::detach()
@@ -92,12 +41,8 @@ namespace daedalus::editor
 			(spec.width != m_viewportSize.x || spec.height != m_viewportSize.y))
 		{
 			m_framebuffer->resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
-			//m_camController.onResize(m_viewportSize.x, m_viewportSize.y);
 			m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
-
-		//if(m_viewportFocused)
-		//	m_camController.update(dt);
 
 		graphics::Renderer2D::resetStats();
 
@@ -124,22 +69,33 @@ namespace daedalus::editor
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("Serialize"))
+				if (ImGui::MenuItem("New", "Ctrl+N"))
 				{
-					scene::SceneSerializer serializer(m_activeScene);
-					serializer.serialize("Example.Daedalus");
+					newScene();
 				}
 
-				if (ImGui::MenuItem("Deserialize"))
+				if (ImGui::MenuItem("Open...", "Ctrl+O"))
 				{
-					scene::SceneSerializer serializer(m_activeScene);
-					serializer.deserialize("Example.Daedalus");
-					// Temporary fix - when deserializing the camera viewports are set to 0, 0
-					// so sending a reize event through fixs the issue 
-					m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y); // TO DO: find a better way - set viewport size while deserializing
+					openScene();
 				}
 
-				if (ImGui::MenuItem("Exit"))
+				// TO DO: add save
+				if (ImGui::MenuItem("Save", "Ctrl+S"))
+				{
+					if (!m_currentSceneFilepath.empty())
+						saveScene();
+					else
+						saveSceneAs();
+				}
+
+				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+				{
+					saveSceneAs();
+				}
+
+				ImGui::Separator();
+
+				if (ImGui::MenuItem("Exit", "Alt+F4"))
 					Application::get().close();
 
 				ImGui::EndMenu();
@@ -184,7 +140,92 @@ namespace daedalus::editor
 	void EditorLayer::onEvent(event::Event& e)
 	{
 		DD_PROFILE_FUNCTION();
-		//m_camController.onEvent(e);
+		event::EventDispatcher dispatcher(e);
+		dispatcher.dispatch<event::KeyPressedEvent>(DD_BIND_EVENT_FUN(EditorLayer::onKeyPressed));
+	}
+
+	bool EditorLayer::onKeyPressed(event::KeyPressedEvent& e)
+	{
+		using namespace application;
+
+		bool ctrl = Input::getKeyDown(InputCode::Key_Left_Control) || Input::getKeyDown(InputCode::Key_Right_Control);
+		bool shift = Input::getKeyDown(InputCode::Key_Left_Shift) || Input::getKeyDown(InputCode::Key_Right_Shift);
+		switch ((InputCode)e.getKeyCode())
+		{
+		case InputCode::Key_N:
+		{
+			if (ctrl)
+				newScene();
+
+			break;
+		}
+		case InputCode::Key_O:
+		{
+			if (ctrl)
+				openScene();
+
+			break;
+		}
+		case InputCode::Key_S:
+		{
+			if (ctrl && shift)
+				saveSceneAs();
+			else if (ctrl)
+			{
+				if (!m_currentSceneFilepath.empty())
+					saveScene();
+				else
+					saveSceneAs();
+			}
+				
+
+			break;
+		}
+		}
+
+		return false;
+	}
+
+	void EditorLayer::newScene()
+	{
+		m_activeScene = create_shr_ptr<scene::Scene>();
+		m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+		m_sceneHierarchyPanel.setContext(m_activeScene);
+		m_currentSceneFilepath = std::string();
+	}
+
+	void EditorLayer::openScene()
+	{
+		std::string filepath = utils::FileDialog::openFile("Daedalus Scene (*.daedalus)\0*.daedalus\0");
+		if (!filepath.empty())
+		{
+			m_activeScene = create_shr_ptr<scene::Scene>();
+
+			scene::SceneSerializer serializer(m_activeScene);
+			serializer.deserialize(filepath);
+
+			m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+			m_sceneHierarchyPanel.setContext(m_activeScene);
+			m_currentSceneFilepath = filepath;
+		}
+	}
+
+	void EditorLayer::saveScene()
+	{
+		scene::SceneSerializer serializer(m_activeScene);
+		serializer.serialize(m_currentSceneFilepath);
+		DD_LOG_INFO("Scene saved [{}]", m_currentSceneFilepath);
+	}
+
+	void EditorLayer::saveSceneAs()
+	{
+		std::string filepath = utils::FileDialog::saveFile("Daedalus Scene (*.daedalus)\0*.daedalus\0");
+		if (!filepath.empty())
+		{
+			scene::SceneSerializer serializer(m_activeScene);
+			serializer.serialize(filepath);
+			m_currentSceneFilepath = filepath;
+		}
 	}
 
 }
