@@ -2,6 +2,9 @@
 
 namespace daedalus { namespace maths {
 
+	struct Vec2;
+	struct Vec4;
+
 	struct Vec3
 	{
 		float x, y, z;
@@ -11,10 +14,15 @@ namespace daedalus { namespace maths {
 		Vec3(const float& x, const float& y, const float& z);
 		Vec3(const Vec3& other);
 
+		Vec3(const Vec2& other, float z = 0.0f);
+		Vec3(const Vec4& other);
+
 		Vec3& add(const Vec3& other);
 		Vec3& subtract(const Vec3& other);
 		Vec3& multiply(const Vec3& other);
 		Vec3& divide(const Vec3& other);
+
+		static float dot(const Vec3& left, const Vec3& right);
 
 		friend Vec3 operator +(Vec3 left, const Vec3& right);
 		friend Vec3 operator -(Vec3 left, const Vec3& right);

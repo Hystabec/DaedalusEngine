@@ -1,6 +1,9 @@
 #include "ddpch.h"
 #include "vec3.h"
 
+#include "vec2.h"
+#include "vec4.h"
+
 namespace daedalus { namespace maths {
 
 	Vec3::Vec3() { x = 0; y = 0; z = 0; }
@@ -20,6 +23,20 @@ namespace daedalus { namespace maths {
 	}
 
 	Vec3::Vec3(const Vec3& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+		this->z = other.z;
+	}
+
+	Vec3::Vec3(const Vec2& other, float z)
+	{
+		this->x = other.x;
+		this->y = other.y;
+		this->z = z;
+	}
+
+	Vec3::Vec3(const Vec4& other)
 	{
 		this->x = other.x;
 		this->y = other.y;
@@ -56,6 +73,11 @@ namespace daedalus { namespace maths {
 		y /= other.y;
 		z /= other.z;
 		return *this;
+	}
+
+	float Vec3::dot(const Vec3& left, const Vec3& right)
+	{
+		return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
 	}
 
 	Vec3 operator+(Vec3 left, const Vec3& right)

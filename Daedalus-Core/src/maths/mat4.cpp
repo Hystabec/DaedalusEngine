@@ -2,6 +2,7 @@
 #include "mat4.h"
 
 #include "maths.h"
+#include <limits>
 
 namespace daedalus { namespace maths {
 
@@ -433,6 +434,84 @@ namespace daedalus { namespace maths {
 			result.elements[2 + 2 * 4] = scale.z;
 
 			return result;
+		}
+
+		static bool epsilon_equal(float const& x, float const& y)
+		{
+			return abs(x - y) < std::numeric_limits<float>::epsilon();
+		}
+
+		static bool epsilon_not_equal(float const& x, float const& y)
+		{
+			return abs(x - y) >= std::numeric_limits<float>::epsilon();
+		}
+
+		static float length_Vec3(const Vec3& vec)
+		{
+			return sqrt(Vec3::dot(vec, vec));
+		}
+
+		static Vec3 scale_Vec3(const Vec3& vec, float desiredLenght)
+		{
+			return vec * desiredLenght / length_Vec3(vec);
+		}
+
+		bool Mat4::decomposeTransform(const Mat4& transform, Vec3& outPosition, Vec3& outRotation, Vec3& outScale)
+		{
+			Mat4 localMatix(transform);
+
+			if (epsilon_equal(localMatix.columns[3][3], 0.0f))
+			{
+				DD_CORE_LOG_ERROR("Could not decompose transform from [{}]", transform); 
+				return false;
+			}
+
+			// first, isolate perspective.
+			if (
+				epsilon_not_equal(localMatix.columns[0][3], 0.0f) ||
+				epsilon_not_equal(localMatix.columns[1][3], 0.0f) ||
+				epsilon_not_equal(localMatix.columns[2][3], 0.0f))
+			{
+				localMatix.columns[0][3] = localMatix.columns[1][3] = localMatix.columns[2][3] = 0.0f;
+				localMatix.columns[3][3] = 1.0f;
+			}
+
+			// Next take care of translation
+			outPosition = localMatix.columns[3];
+			localMatix.columns[3] = Vec4(0, 0, 0, localMatix.columns[3].w);
+
+			Vec3 Row[3];
+
+			// Now get scale and shear
+			for (int i = 0; i < 3; ++i)
+			{
+				for (int j = 0; j < 3; ++j)
+				{
+					Row[i][j] = localMatix.columns[i][j];
+				}
+			}
+
+			// Compute X scale factor and normalize first row.
+			outScale.x = length_Vec3(Row[0]);
+			Row[0] = scale_Vec3(Row[0], 1.0f);
+			outScale.y = length_Vec3(Row[1]);
+			Row[1] = scale_Vec3(Row[1], 1.0f);
+			outScale.z = length_Vec3(Row[2]);
+			Row[2] = scale_Vec3(Row[2], 1.0f);
+
+			// Issue somewhere in here - maybe a conflic in rads and degrees?
+
+			outRotation.y = asin(Row[0][2]);
+			if (cos(outRotation.y) != 0) {
+				outRotation.x = atan2(Row[1][2], Row[2][2]);
+				outRotation.z = atan2(Row[0][1], Row[0][0]);
+			}
+			else {
+				outRotation.x = atan2(-Row[2][0], Row[1][1]);
+				outRotation.z = 0;
+			}
+
+			return true;
 		}
 
 } }

@@ -50,7 +50,7 @@ void EditorLayer::update(const daedalus::application::DeltaTime& dt)
 			}
 		}
 
-		daedalus::graphics::Renderer2D::drawQuad({ { 2, 0 }, { 0.5f, 0.5f }, m_texture });
+		daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{ 2, 0 }, { 0.5f, 0.5f }, m_texture });
 
 		daedalus::graphics::Renderer2D::end();
 		m_framebuffer->unbind();

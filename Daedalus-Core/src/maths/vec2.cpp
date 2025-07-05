@@ -1,6 +1,9 @@
 #include "ddpch.h"
 #include "vec2.h"
 
+#include "vec3.h"
+#include "vec4.h"
+
 namespace daedalus { namespace maths {
 
 	Vec2::Vec2() { x = 0; y = 0; }
@@ -18,6 +21,18 @@ namespace daedalus { namespace maths {
 	}
 
 	Vec2::Vec2(const Vec2& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+	}
+
+	Vec2::Vec2(const Vec3& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+	}
+
+	Vec2::Vec2(const Vec4& other)
 	{
 		this->x = other.x;
 		this->y = other.y;

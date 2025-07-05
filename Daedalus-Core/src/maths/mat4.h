@@ -48,7 +48,11 @@ namespace daedalus { namespace maths {
 
 		static Mat4 scale(const Vec3& scale);
 
+		static bool decomposeTransform(const Mat4& transform, Vec3& outPosition, Vec3& outRotation, Vec3& outScale);
+
 		operator float* () { return elements; }
+
+		operator const float* () const { return elements; }
 	};
 
 } }

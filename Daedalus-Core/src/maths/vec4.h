@@ -1,7 +1,9 @@
 #pragma once
 
-
 namespace daedalus { namespace maths {
+
+	struct Vec2;
+	struct Vec3;
 
 	struct Vec4
 	{
@@ -11,6 +13,9 @@ namespace daedalus { namespace maths {
 		Vec4(const float& x);
 		Vec4(const float& x, const float& y, const float& z, const float& w);
 		Vec4(const Vec4& other);
+
+		Vec4(const Vec2& other, float z = 0.0f, float w = 0.0f);
+		Vec4(const Vec3& other, float w = 0.0f);
 
 		Vec4& add(const Vec4& other);
 		Vec4& subtract(const Vec4& other);

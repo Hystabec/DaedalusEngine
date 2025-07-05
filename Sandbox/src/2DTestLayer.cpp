@@ -56,12 +56,12 @@ void Layer2D::update(const daedalus::application::DeltaTime& dt)
 		}
 
 		daedalus::graphics::Renderer2D::drawRotatedQuad(m_squareProps);
-		daedalus::graphics::Renderer2D::drawQuad({ { -2, 0 }, { 0.75f, 0.75f }, { 0.3f, 0.8f, 0.2f, 1.0f } });
-		daedalus::graphics::Renderer2D::drawQuad({ { 2, 0 }, { 0.5f, 0.5f }, m_texture });
-		daedalus::graphics::Renderer2D::drawQuad({ { 2, 2 }, { 1.5f, 1.0f }, m_texture2 });
-		daedalus::graphics::Renderer2D::drawRotatedQuad({{0, 1},{0.25f, 0.25f}, rotation, m_texture2, {1.0f, 0.6f, 0.6f, 1.0f}});
-		daedalus::graphics::Renderer2D::drawQuad({ {-1, 0}, {0.5f, 0.5f}, m_subTexture });
-		daedalus::graphics::Renderer2D::drawQuad({ {-1, -0.5f }, {0.5f, 0.5f}, m_subTexture2 });
+		daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{ -2, 0 }, { 0.75f, 0.75f }, { 0.3f, 0.8f, 0.2f, 1.0f } });
+		daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{ 2, 0 }, { 0.5f, 0.5f }, m_texture });
+		daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{ 2, 2 }, { 1.5f, 1.0f }, m_texture2 });
+		daedalus::graphics::Renderer2D::drawRotatedQuad({ daedalus::maths::Vec2{0, 1},{0.25f, 0.25f}, rotation, m_texture2, {1.0f, 0.6f, 0.6f, 1.0f}});
+		daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{-1, 0}, {0.5f, 0.5f}, m_subTexture });
+		daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{-1, -0.5f }, {0.5f, 0.5f}, m_subTexture2 });
 
 		daedalus::graphics::Renderer2D::end();
 	}
