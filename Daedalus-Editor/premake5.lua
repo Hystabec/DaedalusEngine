@@ -28,7 +28,8 @@ project "Daedalus-Editor"
 		"../Daedalus-Core",
 		"../Daedalus-Core/src",
 		"%{dependDir.ImGui}/include",
-		"%{dependDir.entt}/include"
+		"%{dependDir.entt}/include",
+		"%{dependDir.ImGuizmo}"
 	}
 
 	links

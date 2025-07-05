@@ -16,8 +16,11 @@ project "Daedalus-Core"
 		"entryPoint.h",
 		"src/**.h",
 		"src/**.cpp",
+
 		"Dependencies/stb_image/**.h",
-		"Dependencies/stb_image/**.cpp"
+		"Dependencies/stb_image/**.cpp",
+		"Dependencies/ImGuizmo/ImGuizmo.h",
+		"Dependencies/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	defines
@@ -35,7 +38,8 @@ project "Daedalus-Core"
 		"%{dependDir.ImGui}/include",
 		"%{dependDir.stb_image}",
 		"%{dependDir.entt}/include",
-		"%{dependDir.yaml_cpp}/include"
+		"%{dependDir.yaml_cpp}/include",
+		"%{dependDir.ImGuizmo}"
 	}
 
 	libdirs
@@ -54,6 +58,9 @@ project "Daedalus-Core"
 	}
 
 	buildoptions "/utf-8"
+
+	filter "files:Dependencies/ImGuizmo/**.cpp"
+		flags { "NoPCH" }
 
 	filter "system:windows"
 		systemversion "latest"

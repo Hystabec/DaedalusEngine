@@ -58,7 +58,7 @@ namespace daedalus::scene {
 			}
 		}
 
-		if (mainCamera && mainCameraTransform)
+		if (mainCamera)
 		{
 			graphics::Renderer2D::begin(*mainCamera, mainCameraTransform);
 
@@ -103,6 +103,19 @@ namespace daedalus::scene {
 			if (!cameraComp.FixedAspectRatio)
 				cameraComp.Camera.setViewportSize(width, hegiht);
 		}
+	}
+
+	Entity Scene::getPrimaryCameraEntity()
+	{
+		auto view = m_registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			const auto& cc = view.get<CameraComponent>(entity);
+			if (cc.Primary)
+				return Entity{ entity, this };
+		}
+
+		return {};
 	}
 
 	template<typename T>

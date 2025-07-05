@@ -1,6 +1,8 @@
 #include "editorpch.h"
 #include "EditorLayer.h"
+
 #include <imgui.h>
+#include <ImGuizmo.h>
 
 #include "scene/sceneSerializer.h"
 #include "utils/platformUtils.h"
@@ -25,7 +27,7 @@ namespace daedalus::editor
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
 
-		/*
+		
 		class CameraController : public scene::ScriptableEntity
 		{
 		public:
@@ -54,12 +56,13 @@ namespace daedalus::editor
 			}
 		};
 
-		m_activeScene->createEntity("Square").addComponent<scene::SpriteRendererComponent>();
+		m_square = m_activeScene->createEntity("Square");
+		m_square.addComponent<scene::SpriteRendererComponent>();
 
 		auto scriptCamera = m_activeScene->createEntity("Script Camera");
 		scriptCamera.addComponent<scene::CameraComponent>();
 		scriptCamera.addComponent<scene::NativeScriptComponent>().bind<CameraController>();
-		*/
+		
 	}
 
 	void EditorLayer::detach()
@@ -80,10 +83,21 @@ namespace daedalus::editor
 			m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
 
+		maths::Mat4 transform = m_square.getComponent<scene::TransformComponent>().getTransform();
+		maths::Vec3 position, rotation, scale;
+		if (maths::Mat4::decomposeTransform(transform, position, rotation, scale))
+		{
+			DD_LOG_TRACE("Position: {}", position);
+			DD_LOG_TRACE("Rotation: {}", maths::radians_to_degrees(rotation));
+			DD_LOG_TRACE("Scale: {}", scale);
+		}
+
 		graphics::Renderer2D::resetStats();
 
 		m_framebuffer->bind();
-		graphics::RenderCommands::setClearColour({ 0.5f, 0.5f, 0.5f, 1.0f });
+
+		maths::Vec4 colourVec = maths::Vec4(0.5f, 0.5f, 0.5f, 1.0f);
+		graphics::RenderCommands::setClearColour(colourVec);
 		graphics::RenderCommands::clear();
 
 		// update scene
@@ -165,6 +179,46 @@ namespace daedalus::editor
 		}
 		uint32_t textureID = m_framebuffer->getColourAttachmentRendererID();
 		ImGui::Image(textureID, viewportSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+		m_gizmoType = ImGuizmo::OPERATION::ROTATE;
+
+		scene::Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
+		if (selectedEntity && m_gizmoType != -1)
+		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeigth = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeigth);
+
+			auto cameraEntity = m_activeScene->getPrimaryCameraEntity();
+			if (cameraEntity)
+			{
+				const auto& cc = cameraEntity.getComponent<scene::CameraComponent>();
+
+				const maths::Mat4& cameraProjection = cc.Camera.getProjection();
+				maths::Mat4 cameraView = maths::Mat4::invert(cameraEntity.getComponent<scene::TransformComponent>().getTransform());
+
+				auto& tc = selectedEntity.getComponent<scene::TransformComponent>();
+				maths::Mat4 transform = tc.getTransform();
+
+				ImGuizmo::Manipulate(cameraView, cameraProjection,
+					(ImGuizmo::OPERATION)m_gizmoType, ImGuizmo::LOCAL, transform);
+
+				if (ImGuizmo::IsUsing())
+				{
+					maths::Vec3 position, rotation, scale;
+					if (maths::Mat4::decomposeTransform(transform, position, rotation, scale))
+					{
+						maths::Vec3 deltaRotation = rotation - tc.Rotation;
+
+						tc.Position = position;
+						tc.Rotation += deltaRotation;
+						tc.Scale = scale;
+					}
+				}
+			}
+		}
 
 		ImGui::End();
 		ImGui::PopStyleVar();

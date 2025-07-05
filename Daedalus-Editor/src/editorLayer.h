@@ -32,6 +32,9 @@ namespace daedalus::editor
 		std::string m_currentSceneFilepath = std::string();
 
 		SceneHierarchyPanel m_sceneHierarchyPanel;
+		int m_gizmoType = -1;
+
+		scene::Entity m_square;
 	};
 
 }

@@ -44,14 +44,14 @@ namespace daedalus::application {
 
 	float Input::getMouseX()
 	{
-		auto[x,y] = getMousePosition();
-		return x;
+		auto vec = getMousePosition();
+		return vec.x;
 	}
 
 	float Input::getMouseY()
 	{
-		auto[x,y] = getMousePosition();
-		return y;
+		auto vec = getMousePosition();
+		return vec.y;
 	}
 
 }

@@ -12,6 +12,8 @@ namespace daedalus::editor
 		void setContext(const Shr_ptr<scene::Scene>& scene);
 
 		void onImGuiRender();
+
+		scene::Entity getSelectedEntity() const { return m_selectionContext; }
 	private:
 		void drawEntityNode(scene::Entity entity);
 		void drawComponents(scene::Entity entity);

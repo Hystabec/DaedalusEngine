@@ -26,6 +26,8 @@ namespace daedalus::scene {
 		void destroyEntity(Entity entity);
 
 		void onViewportResize(uint32_t width, uint32_t hegiht);
+
+		Entity getPrimaryCameraEntity();
 	private:
 		template<typename T>
 		void onComponentAdded(Entity entity, T& component);
