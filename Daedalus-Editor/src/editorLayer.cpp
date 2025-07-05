@@ -55,13 +55,6 @@ namespace daedalus::editor
 					position.x += speed * dt;
 			}
 		};
-
-		m_square = m_activeScene->createEntity("Square");
-		m_square.addComponent<scene::SpriteRendererComponent>();
-
-		auto scriptCamera = m_activeScene->createEntity("Script Camera");
-		scriptCamera.addComponent<scene::CameraComponent>();
-		scriptCamera.addComponent<scene::NativeScriptComponent>().bind<CameraController>();
 		
 	}
 
@@ -81,15 +74,6 @@ namespace daedalus::editor
 		{
 			m_framebuffer->resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 			m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
-		}
-
-		maths::Mat4 transform = m_square.getComponent<scene::TransformComponent>().getTransform();
-		maths::Vec3 position, rotation, scale;
-		if (maths::Mat4::decomposeTransform(transform, position, rotation, scale))
-		{
-			DD_LOG_TRACE("Position: {}", position);
-			DD_LOG_TRACE("Rotation: {}", maths::radians_to_degrees(rotation));
-			DD_LOG_TRACE("Scale: {}", scale);
 		}
 
 		graphics::Renderer2D::resetStats();
