@@ -28,7 +28,7 @@ namespace daedalus::editor
 		m_sceneHierarchyPanel.setContext(m_activeScene);
 
 		
-		class CameraController : public scene::ScriptableEntity
+		/*class CameraController : public scene::ScriptableEntity
 		{
 		public:
 			void onCreate()
@@ -54,8 +54,25 @@ namespace daedalus::editor
 				if (application::Input::getKeyDown(application::InputCode::Key_D))
 					position.x += speed * dt;
 			}
-		};
-		
+		};*/
+
+		maths::Mat4 rotMat = maths::Mat4::rotate(maths::degrees_to_radians(271.0f), {1, 0 ,0})
+			* maths::Mat4::rotate(maths::degrees_to_radians(73.0f), { 0, 1 ,0 })
+			* maths::Mat4::rotate(maths::degrees_to_radians(-29.0f), { 0, 0 ,1 });
+
+		rotMat *= maths::Mat4::rotate(maths::degrees_to_radians(0.4f), { 1, 0 ,0 })
+			* maths::Mat4::rotate(maths::degrees_to_radians(2.0f), { 0, 1 ,0 });
+
+		rotMat *= maths::Mat4::rotate(maths::degrees_to_radians(61.4f), { 0, 0 ,1 })
+			* maths::Mat4::rotate(maths::degrees_to_radians(172.0f), { 0, 1 ,0 });
+
+		DD_LOG_INFO(rotMat);
+
+		maths::Vec3 position, rotaion, scale;
+		maths::Mat4::decomposeTransform(rotMat, position, rotaion, scale);
+		DD_LOG_INFO(position);
+		DD_LOG_INFO(rotaion);
+		DD_LOG_INFO(scale);
 	}
 
 	void EditorLayer::detach()
@@ -148,12 +165,21 @@ namespace daedalus::editor
 
 		ImGui::End();
 
+		ImGui::Begin("Debug");
+
+		ImGui::Text("Position:(%f, %f, %f)", RFGPosition.x, RFGPosition.y, RFGPosition.z);
+		ImGui::Text("Rotation (Rad):(%f, %f, %f)", RFGRotation.x, RFGRotation.y, RFGRotation.z);
+		ImGui::Text("Rotation (Deg):(%f, %f, %f)", maths::radians_to_degrees(RFGRotation.x), maths::radians_to_degrees(RFGRotation.y), maths::radians_to_degrees(RFGRotation.z));
+		ImGui::Text("Scale:(%f, %f, %f)", RFGScale.x, RFGScale.y, RFGScale.z);
+
+		ImGui::End();
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
 
 		m_viewportFocused = ImGui::IsWindowFocused();
 		m_viewportHovered = ImGui::IsWindowHovered();
-		//Application::get().getImGuiLayer()->setAllowEvents(m_viewportFocused && m_viewportHovered);
+		Application::get().getImGuiLayer()->setAllowEvents(m_viewportFocused || m_viewportHovered);
 
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 		daedalus::maths::Vec2 viewportSizeAsVec2 = { viewportSize.x, viewportSize.y };
@@ -163,8 +189,6 @@ namespace daedalus::editor
 		}
 		uint32_t textureID = m_framebuffer->getColourAttachmentRendererID();
 		ImGui::Image(textureID, viewportSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-
-		m_gizmoType = ImGuizmo::OPERATION::ROTATE;
 
 		scene::Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
 		if (selectedEntity && m_gizmoType != -1)
@@ -186,16 +210,27 @@ namespace daedalus::editor
 				auto& tc = selectedEntity.getComponent<scene::TransformComponent>();
 				maths::Mat4 transform = tc.getTransform();
 
+				bool snap = application::Input::getKeyDown(application::InputCode::Key_Left_Control);
+				float snapValue = 0.5f; // Snap to 0.5 for translate/scale
+				if (m_gizmoType == ImGuizmo::OPERATION::ROTATE)	// snap to 45 degrees for rotation
+					snapValue = 45.0f;
+
+				float snapValues[3] = { snapValue, snapValue, snapValue };
+
 				ImGuizmo::Manipulate(cameraView, cameraProjection,
-					(ImGuizmo::OPERATION)m_gizmoType, ImGuizmo::LOCAL, transform);
+					(ImGuizmo::OPERATION)m_gizmoType, ImGuizmo::LOCAL, transform,
+					nullptr, snap ? snapValues : nullptr);
 
 				if (ImGuizmo::IsUsing())
 				{
 					maths::Vec3 position, rotation, scale;
 					if (maths::Mat4::decomposeTransform(transform, position, rotation, scale))
 					{
-						maths::Vec3 deltaRotation = rotation - tc.Rotation;
+						RFGPosition = position;
+						RFGRotation = rotation;
+						RFGScale = scale;
 
+						maths::Vec3 deltaRotation = rotation - tc.Rotation;
 						tc.Position = position;
 						tc.Rotation += deltaRotation;
 						tc.Scale = scale;
@@ -216,12 +251,12 @@ namespace daedalus::editor
 		event::EventDispatcher dispatcher(e);
 		dispatcher.dispatch<event::KeyPressedEvent>(DD_BIND_EVENT_FUN(EditorLayer::onKeyPressed));
 
-		// Blocking functionality from ImGuiLayer
-		if (!(m_viewportFocused && m_viewportHovered))
-		{
-			ImGuiIO& io = ImGui::GetIO();
-			e.setHandled((e.isInCategory(event::EventCategory::Mouse) && io.WantCaptureMouse) || (e.isInCategory(event::EventCategory::Keyboard) && io.WantCaptureMouse));
-		}
+		//// Blocking functionality from ImGuiLayer
+		//if (!(m_viewportFocused && m_viewportHovered))
+		//{
+		//	ImGuiIO& io = ImGui::GetIO();
+		//	e.setHandled((e.isInCategory(event::EventCategory::Mouse) && io.WantCaptureMouse) || (e.isInCategory(event::EventCategory::Keyboard) && io.WantCaptureMouse));
+		//}
 	}
 
 	bool EditorLayer::onKeyPressed(event::KeyPressedEvent& e)
@@ -255,6 +290,20 @@ namespace daedalus::editor
 
 			break;
 		}
+
+		// Gizmos
+		case InputCode::Key_Q:
+			m_gizmoType = -1;
+			break;
+		case InputCode::Key_W:
+			m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
+			break;
+		case InputCode::Key_E:
+			m_gizmoType = ImGuizmo::OPERATION::ROTATE;
+			break;
+		case InputCode::Key_R:
+			m_gizmoType = ImGuizmo::OPERATION::SCALE;
+			break;
 		}
 
 		return false;

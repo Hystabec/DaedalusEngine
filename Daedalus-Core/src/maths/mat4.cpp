@@ -499,7 +499,7 @@ namespace daedalus { namespace maths {
 
 			// Issue somewhere in here - maybe a conflic in rads and degrees?
 
-			outRotation.y = asin(Row[0][2]);
+			outRotation.y = asin(-Row[0][2]);
 			if (cos(outRotation.y) != 0) {
 				outRotation.x = atan2(Row[1][2], Row[2][2]);
 				outRotation.z = atan2(Row[0][1], Row[0][0]);
