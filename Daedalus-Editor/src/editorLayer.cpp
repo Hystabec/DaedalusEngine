@@ -55,24 +55,6 @@ namespace daedalus::editor
 					position.x += speed * dt;
 			}
 		};*/
-
-		maths::Mat4 rotMat = maths::Mat4::rotate(maths::degrees_to_radians(271.0f), {1, 0 ,0})
-			* maths::Mat4::rotate(maths::degrees_to_radians(73.0f), { 0, 1 ,0 })
-			* maths::Mat4::rotate(maths::degrees_to_radians(-29.0f), { 0, 0 ,1 });
-
-		rotMat *= maths::Mat4::rotate(maths::degrees_to_radians(0.4f), { 1, 0 ,0 })
-			* maths::Mat4::rotate(maths::degrees_to_radians(2.0f), { 0, 1 ,0 });
-
-		rotMat *= maths::Mat4::rotate(maths::degrees_to_radians(61.4f), { 0, 0 ,1 })
-			* maths::Mat4::rotate(maths::degrees_to_radians(172.0f), { 0, 1 ,0 });
-
-		DD_LOG_INFO(rotMat);
-
-		maths::Vec3 position, rotaion, scale;
-		maths::Mat4::decomposeTransform(rotMat, position, rotaion, scale);
-		DD_LOG_INFO(position);
-		DD_LOG_INFO(rotaion);
-		DD_LOG_INFO(scale);
 	}
 
 	void EditorLayer::detach()
