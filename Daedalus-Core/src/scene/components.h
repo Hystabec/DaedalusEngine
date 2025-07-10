@@ -6,6 +6,8 @@
 #include "scriptableEntity.h"
 #include "application/time/deltaTime.h"
 
+#include "../maths/quaterion.h"
+
 // if this file gets too big, should seperate into individual files.
 
 namespace daedalus::scene {
@@ -36,9 +38,7 @@ namespace daedalus::scene {
 
 		maths::Mat4 getTransform() const
 		{
-			maths::Mat4 rotationMat = maths::Mat4::rotate(Rotation.x, { 1, 0, 0 })
-				* maths::Mat4::rotate(Rotation.y, { 0, 1, 0 })
-				* maths::Mat4::rotate(Rotation.z, { 0, 0, 1 });
+			maths::Mat4 rotationMat = maths::experimental::quaterion_to_mat4(maths::experimental::Quaterion(Rotation));
 
 			return maths::Mat4::translate(Position)
 				* rotationMat
