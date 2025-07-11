@@ -6,6 +6,7 @@
 
 #include "scene/sceneSerializer.h"
 #include "utils/platformUtils.h"
+#include <limits>
 
 namespace daedalus::editor
 {
@@ -89,6 +90,25 @@ namespace daedalus::editor
 		m_framebuffer->unbind();
 	}
 
+	// this function is used to check if the difference between two vec3's is meaningful
+	// used to remove any small floating point percition loss.
+	// This is mainly used so that the scale doesnt slow decrease overtime when using the gizmos
+	static bool is_meaningful_difference(const maths::Vec3& oVal, const maths::Vec3& nVal)
+	{
+		bool result = false;
+
+		if (abs(oVal.x - nVal.x) > std::numeric_limits<float>::epsilon())
+			result = true;
+
+		if (abs(oVal.y - nVal.y) > std::numeric_limits<float>::epsilon())
+			result = true;
+
+		if (abs(oVal.z - nVal.z) > std::numeric_limits<float>::epsilon())
+			result = true;
+
+		return result;
+	}
+
 	void EditorLayer::imGuiRender()
 	{
 		DD_PROFILE_FUNCTION();
@@ -147,15 +167,6 @@ namespace daedalus::editor
 
 		ImGui::End();
 
-		ImGui::Begin("Debug");
-
-		ImGui::Text("Position:(%f, %f, %f)", RFGPosition.x, RFGPosition.y, RFGPosition.z);
-		ImGui::Text("Rotation (Rad):(%f, %f, %f)", RFGRotation.x, RFGRotation.y, RFGRotation.z);
-		ImGui::Text("Rotation (Deg):(%f, %f, %f)", maths::radians_to_degrees(RFGRotation.x), maths::radians_to_degrees(RFGRotation.y), maths::radians_to_degrees(RFGRotation.z));
-		ImGui::Text("Scale:(%f, %f, %f)", RFGScale.x, RFGScale.y, RFGScale.z);
-
-		ImGui::End();
-
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
 
@@ -208,14 +219,17 @@ namespace daedalus::editor
 					maths::Vec3 position, rotation, scale;
 					if (maths::Mat4::decomposeTransform(transform, position, rotation, scale))
 					{
-						RFGPosition = position;
-						RFGRotation = rotation;
-						RFGScale = scale;
+						if(is_meaningful_difference(tc.Position, position))
+							tc.Position = position;
 
-						maths::Vec3 deltaRotation = rotation - tc.Rotation;
-						tc.Position = position;
-						tc.Rotation += deltaRotation;
-						tc.Scale = scale;
+						if (is_meaningful_difference(tc.Rotation, rotation))
+						{
+							maths::Vec3 deltaRotation = rotation - tc.Rotation;
+							tc.Rotation += deltaRotation;
+						}
+
+						if(is_meaningful_difference(tc.Scale, scale))
+							tc.Scale = scale;
 					}
 				}
 			}

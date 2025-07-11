@@ -35,8 +35,6 @@ namespace daedalus::editor
 		int m_gizmoType = -1;
 
 		scene::Entity m_square;
-
-		maths::Vec3 RFGPosition, RFGScale, RFGRotation;
 	};
 
 }
