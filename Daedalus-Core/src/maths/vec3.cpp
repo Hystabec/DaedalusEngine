@@ -80,6 +80,15 @@ namespace daedalus { namespace maths {
 		return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
 	}
 
+	Vec3 Vec3::cross(const Vec3& left, const Vec3& right)
+	{
+		return {
+			left.y * right.z - right.y * left.z,
+			left.z * right.x - right.z * left.x,
+			left.x * right.y - right.x * left.y
+		};
+	}
+
 	Vec3 operator+(Vec3 left, const Vec3& right)
 	{
 		return left.add(right);
@@ -132,6 +141,11 @@ namespace daedalus { namespace maths {
 	{
 		this->divide(other);
 		return *this;
+	}
+
+	Vec3 Vec3::operator-()
+	{
+		return Vec3(-(this->x), -(this->y), -(this->z));
 	}
 
 } }

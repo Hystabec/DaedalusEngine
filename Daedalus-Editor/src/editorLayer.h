@@ -23,6 +23,7 @@ namespace daedalus::editor
 		void saveScene();
 		void saveSceneAs();
 	private:
+		graphics::EditorCamera m_editorCamera;
 		Shr_ptr<graphics::Framebuffer> m_framebuffer;
 
 		bool m_viewportFocused = false, m_viewportHovered = false;

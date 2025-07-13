@@ -15,7 +15,7 @@ namespace daedalus::scene {
 	{
 	}
 
-	void Scene::update(const application::DeltaTime& dt)
+	void Scene::updateRuntime(const application::DeltaTime& dt)
 	{
 		// update scripts
 		{
@@ -67,11 +67,26 @@ namespace daedalus::scene {
 			{
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-				graphics::Renderer2D::drawQuad({ transform.getTransform(), sprite.Colour});
+				graphics::Renderer2D::drawQuad({ transform.getTransform(), sprite.Colour });
 			}
 
 			graphics::Renderer2D::end();
 		}
+	}
+
+	void Scene::updateEditor(const application::DeltaTime& dt, graphics::EditorCamera& camera)
+	{
+		graphics::Renderer2D::begin(camera);
+
+		auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
+		for (auto entity : group)
+		{
+			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
+			graphics::Renderer2D::drawQuad({ transform.getTransform(), sprite.Colour });
+		}
+
+		graphics::Renderer2D::end();
 	}
 
 	Entity Scene::createEntity(const std::string& name)

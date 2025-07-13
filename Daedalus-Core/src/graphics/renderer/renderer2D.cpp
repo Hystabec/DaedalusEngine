@@ -133,6 +133,23 @@ namespace daedalus { namespace graphics {
 		s_data.textureSlotIndex = 1;
 	}
 
+	void Renderer2D::begin(const graphics::EditorCamera& editorCamera)
+	{
+		DD_PROFILE_FUNCTION();
+		DD_CORE_ASSERT(!(s_data.beginCalled), "Renderer2D::end not called");
+		s_data.beginCalled = true;
+
+		maths::Mat4 viewProj = editorCamera.getViewProjection();
+
+		s_data.defaultShader->enable();
+		s_data.defaultShader->setUniformMat4(viewProj, "u_projView");
+
+		s_data.quadIndexCount = 0;
+		s_data.QuadVertexBufferPtr = s_data.QuadVertexBufferBase;
+
+		s_data.textureSlotIndex = 1;
+	}
+
 	void Renderer2D::begin(const OrthographicCamera& othoCamera)
 	{
 		DD_PROFILE_FUNCTION();

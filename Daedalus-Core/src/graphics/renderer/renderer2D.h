@@ -2,6 +2,8 @@
 
 #include "graphics/camera/camera.h"
 #include "graphics/camera/orthographicCamera.h"
+#include "graphics/camera/editorCamera.h"
+
 #include "graphics/rendering/texture.h"
 #include "graphics/rendering/primative2DProperties.h"
 
@@ -14,6 +16,7 @@ namespace daedalus { namespace graphics {
 		static void shutdown();
 
 		static void begin(const Camera& camera, const maths::Mat4& transform);
+		static void begin(const graphics::EditorCamera& editorCamera);
 		static void begin(const OrthographicCamera& othoCamera); // TO DO: Remove
 		static void end();
 		static void flush();

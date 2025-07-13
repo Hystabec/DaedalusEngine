@@ -3,6 +3,7 @@
 #include <entt.hpp>
 
 #include "application/time/deltaTime.h"
+#include "graphics/camera/editorCamera.h"
 
 namespace daedalus::editor
 {
@@ -20,7 +21,8 @@ namespace daedalus::scene {
 		Scene();
 		~Scene();
 
-		void update(const application::DeltaTime& dt);
+		void updateRuntime(const application::DeltaTime& dt);
+		void updateEditor(const application::DeltaTime& dt, graphics::EditorCamera& camera);
 
 		Entity createEntity(const std::string& name = std::string());
 		void destroyEntity(Entity entity);

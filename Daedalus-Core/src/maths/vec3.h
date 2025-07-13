@@ -23,6 +23,7 @@ namespace daedalus { namespace maths {
 		Vec3& divide(const Vec3& other);
 
 		static float dot(const Vec3& left, const Vec3& right);
+		static Vec3 cross(const Vec3& left, const Vec3& right);
 
 		friend Vec3 operator +(Vec3 left, const Vec3& right);
 		friend Vec3 operator -(Vec3 left, const Vec3& right);
@@ -36,6 +37,8 @@ namespace daedalus { namespace maths {
 		Vec3& operator -=(const Vec3& other);
 		Vec3& operator *=(const Vec3& other);
 		Vec3& operator /=(const Vec3& other);
+
+		Vec3 operator -();
 
 		operator float* () { return &x; }
 	};

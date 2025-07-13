@@ -19,6 +19,8 @@ namespace daedalus::editor
 	{
 		DD_PROFILE_FUNCTION();
 
+		m_editorCamera = graphics::EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+
 		graphics::FramebufferSpecification fbSpec;
 		fbSpec.width = 1600;
 		fbSpec.height = 900;
@@ -56,6 +58,11 @@ namespace daedalus::editor
 					position.x += speed * dt;
 			}
 		};*/
+
+		maths::experimental::Quaternion quat(maths::Vec3(-0.67920023f, 0.29760006f, 0.0f));
+		DD_CORE_LOG_INFO("{}", quat);
+		maths::Mat4 quatMat = maths::experimental::quaterion_to_mat4(quat);
+		DD_CORE_LOG_INFO("{}", quatMat);
 	}
 
 	void EditorLayer::detach()
@@ -72,20 +79,24 @@ namespace daedalus::editor
 			m_viewportSize.x > 0.0f && m_viewportSize.y > 0.0f &&	// zero sized framebuffer is invalid
 			(spec.width != m_viewportSize.x || spec.height != m_viewportSize.y))
 		{
+			m_editorCamera.setViewportSize(m_viewportSize.x, m_viewportSize.y);
 			m_framebuffer->resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 			m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
+
+		if(m_viewportFocused)
+			m_editorCamera.update(dt);
 
 		graphics::Renderer2D::resetStats();
 
 		m_framebuffer->bind();
 
-		maths::Vec4 colourVec = maths::Vec4(0.5f, 0.5f, 0.5f, 1.0f);
+		maths::Vec4 colourVec = maths::Vec4(25.0f/255.0f, 25.0f / 255.0f, 25.0f / 255.0f, 1.0f);
 		graphics::RenderCommands::setClearColour(colourVec);
 		graphics::RenderCommands::clear();
 
 		// update scene
-		m_activeScene->update(dt);
+		m_activeScene->updateEditor(dt, m_editorCamera);
 
 		m_framebuffer->unbind();
 	}
@@ -184,6 +195,13 @@ namespace daedalus::editor
 		ImGui::Image(textureID, viewportSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 		scene::Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
+
+		// runtime camera from entity
+		//auto cameraEntity = m_activeScene->getPrimaryCameraEntity();
+		//const auto& cc = cameraEntity.getComponent<scene::CameraComponent>();
+		//const maths::Mat4& cameraProjection = cc.Camera.getProjection();
+		//maths::Mat4 cameraView = maths::Mat4::invert(cameraEntity.getComponent<scene::TransformComponent>().getTransform())
+
 		if (selectedEntity && m_gizmoType != -1)
 		{
 			ImGuizmo::SetOrthographic(false);
@@ -192,45 +210,39 @@ namespace daedalus::editor
 			float windowHeigth = (float)ImGui::GetWindowHeight();
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeigth);
 
-			auto cameraEntity = m_activeScene->getPrimaryCameraEntity();
-			if (cameraEntity)
+			const maths::Mat4& cameraProjection = m_editorCamera.getProjection();
+			maths::Mat4 cameraView = m_editorCamera.getViewMatrix();
+
+			auto& tc = selectedEntity.getComponent<scene::TransformComponent>();
+			maths::Mat4 transform = tc.getTransform();
+
+			bool snap = application::Input::getKeyDown(application::InputCode::Key_Left_Control);
+			float snapValue = 0.5f; // Snap to 0.5 for translate/scale
+			if (m_gizmoType == ImGuizmo::OPERATION::ROTATE)	// snap to 45 degrees for rotation
+				snapValue = 45.0f;
+
+			float snapValues[3] = { snapValue, snapValue, snapValue };
+
+			ImGuizmo::Manipulate(cameraView, cameraProjection,
+				(ImGuizmo::OPERATION)m_gizmoType, ImGuizmo::LOCAL, transform,
+				nullptr, snap ? snapValues : nullptr);
+
+			if (ImGuizmo::IsUsing())
 			{
-				const auto& cc = cameraEntity.getComponent<scene::CameraComponent>();
-
-				const maths::Mat4& cameraProjection = cc.Camera.getProjection();
-				maths::Mat4 cameraView = maths::Mat4::invert(cameraEntity.getComponent<scene::TransformComponent>().getTransform());
-
-				auto& tc = selectedEntity.getComponent<scene::TransformComponent>();
-				maths::Mat4 transform = tc.getTransform();
-
-				bool snap = application::Input::getKeyDown(application::InputCode::Key_Left_Control);
-				float snapValue = 0.5f; // Snap to 0.5 for translate/scale
-				if (m_gizmoType == ImGuizmo::OPERATION::ROTATE)	// snap to 45 degrees for rotation
-					snapValue = 45.0f;
-
-				float snapValues[3] = { snapValue, snapValue, snapValue };
-
-				ImGuizmo::Manipulate(cameraView, cameraProjection,
-					(ImGuizmo::OPERATION)m_gizmoType, ImGuizmo::LOCAL, transform,
-					nullptr, snap ? snapValues : nullptr);
-
-				if (ImGuizmo::IsUsing())
+				maths::Vec3 position, rotation, scale;
+				if (maths::Mat4::decomposeTransform(transform, position, rotation, scale))
 				{
-					maths::Vec3 position, rotation, scale;
-					if (maths::Mat4::decomposeTransform(transform, position, rotation, scale))
+					if(is_meaningful_difference(tc.Position, position))
+						tc.Position = position;
+
+					if (is_meaningful_difference(tc.Rotation, rotation))
 					{
-						if(is_meaningful_difference(tc.Position, position))
-							tc.Position = position;
-
-						if (is_meaningful_difference(tc.Rotation, rotation))
-						{
-							maths::Vec3 deltaRotation = rotation - tc.Rotation;
-							tc.Rotation += deltaRotation;
-						}
-
-						if(is_meaningful_difference(tc.Scale, scale))
-							tc.Scale = scale;
+						maths::Vec3 deltaRotation = rotation - tc.Rotation;
+						tc.Rotation += deltaRotation;
 					}
+
+					if(is_meaningful_difference(tc.Scale, scale))
+						tc.Scale = scale;
 				}
 			}
 		}
@@ -242,6 +254,8 @@ namespace daedalus::editor
 	void EditorLayer::onEvent(event::Event& e)
 	{
 		DD_PROFILE_FUNCTION();
+
+		m_editorCamera.onEvent(e);
 
 		// Shortcut events
 		event::EventDispatcher dispatcher(e);

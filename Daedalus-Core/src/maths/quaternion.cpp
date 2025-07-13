@@ -1,9 +1,9 @@
 #include "ddpch.h"
-#include "quaterion.h"
+#include "quaternion.h"
 
 namespace daedalus::maths::experimental {
 
-	Quaterion::Quaterion(const Vec3& euler)
+	Quaternion::Quaternion(const Vec3& euler)
 	{
 		Vec3 c = { cos(euler.x * 0.5f), cos(euler.y * 0.5f), cos(euler.z * 0.5f) };
 		Vec3 s = { sin(euler.x * 0.5f), sin(euler.y * 0.5f), sin(euler.z * 0.5f) };
@@ -14,7 +14,7 @@ namespace daedalus::maths::experimental {
 		this->z = c.x * c.y * s.z - s.x * s.y * c.z;
 	}
 
-	Mat4 quaterion_to_mat4(const Quaterion& quat)
+	Mat4 quaterion_to_mat4(const Quaternion& quat)
 	{
 		Mat4 result(1.0f);
 
@@ -42,6 +42,15 @@ namespace daedalus::maths::experimental {
 		result.columns[2][2] = 1.0f - 2.0f * (qxx + qyy);
 
 		return result;
+	}
+
+	Vec3 rotate_vec3_by_quaternion(const Quaternion& quat, const Vec3& vec)
+	{
+		const Vec3 quatVec(quat.x, quat.y, quat.z);
+		const Vec3 uv(Vec3::cross(quatVec, vec));
+		const Vec3 uuv(Vec3::cross(quatVec, uv));
+
+		return vec + ((uv * quat.w) * 2.0f);
 	}
 
 }

@@ -10,13 +10,17 @@
 
 namespace daedalus::maths::experimental{
 
-	struct Quaterion
+	struct Quaternion
 	{
 		float x = 0.0f, y = 0.0f, z = 0.0f, w = 1.0f;
 
-		Quaterion() = default;
-		Quaterion(const Vec3& euler);
+		Quaternion() = default;
+		Quaternion(const Vec3& euler);
 	};
 
-	Mat4 quaterion_to_mat4(const Quaterion& quat);
+	Mat4 quaterion_to_mat4(const Quaternion& quat);
+
+	Vec3 rotate_vec3_by_quaternion(const Quaternion& quat, const Vec3& vec);
 }
+
+LOG_CREATE_FORMAT(daedalus::maths::experimental::Quaternion, "x: {} y: {} z: {} w: {}", quat, quat.x, quat.y, quat.z, quat.w);
