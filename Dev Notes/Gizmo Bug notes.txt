@@ -1,8 +1,0 @@
-When tested against glm - mat4 rotate and decompose gave the same results.
-
-Some times the scale will be decrease by a very small amount which can add up over time.
-
-When looking at the deltaRotation from ImGuizmo::manipulate it appears to be generally correct however it is hard to tell once the bug start to occur.
-
-Rotating in a single axis seems to work as planned.
-but as soon as another axis is taken into account the rotation bugs out.

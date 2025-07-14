@@ -42,6 +42,8 @@ namespace daedalus::graphics {
 				somethingHappened = true;
 			}
 
+			// This is here so the the matrix maths is only done when
+			// a value has changed
 			if(somethingHappened)
 				updateView();
 		}
