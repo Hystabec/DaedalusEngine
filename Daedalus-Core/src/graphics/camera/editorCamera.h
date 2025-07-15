@@ -45,6 +45,7 @@ namespace daedalus::graphics {
 		bool onMouseScroll(event::MouseScrolledEvent& e);
 
 		void mousePan(const maths::Vec2& delta);
+		void mousePanZ(const maths::Vec2& delta);
 		void mouseRotate(const maths::Vec2& delta);
 		void mouseZoom(float delta);
 

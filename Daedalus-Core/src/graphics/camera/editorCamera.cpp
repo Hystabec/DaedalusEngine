@@ -24,11 +24,17 @@ namespace daedalus::graphics {
 			maths::Vec2 delta = (mouse - m_initialMousePosition) * 0.003f;
 			m_initialMousePosition = mouse;
 
-			bool somethingHappened = false;
+			bool middlePress = Input::getMouseButton(InputCode::Mouse_Button_Middle);
 
-			if (Input::getMouseButton(InputCode::Mouse_Button_Middle))
+			bool somethingHappened = false;
+			if (middlePress && Input::getKeyDown(InputCode::Key_Left_Shift))
 			{
-				mousePan(delta); 
+				mousePanZ(delta);
+				somethingHappened = true;
+			}
+			else if (middlePress)
+			{
+				mousePan(delta);
 				somethingHappened = true;
 			}
 			else if (Input::getMouseButton(InputCode::Mouse_Button_Left))
@@ -104,6 +110,13 @@ namespace daedalus::graphics {
 		auto [xSpeed, ySpeed] = panSpeed();
 		m_focalPoint += -getRightDirection() * delta.x * xSpeed * m_distance;
 		m_focalPoint += getUpDirection() * delta.y * ySpeed * m_distance;
+	}
+
+	void EditorCamera::mousePanZ(const maths::Vec2& delta)
+	{
+		auto [xSpeed, zSpeed] = panSpeed();
+		m_focalPoint += -getRightDirection() * delta.x * xSpeed * m_distance;
+		m_focalPoint += -getFowardDirection() * delta.y * zSpeed * m_distance * 1.5f;
 	}
 
 	void EditorCamera::mouseRotate(const maths::Vec2& delta)
