@@ -17,30 +17,49 @@ namespace daedalus { namespace maths {
 		Vec3(const Vec2& other, float z = 0.0f);
 		Vec3(const Vec4& other);
 
+		// Locical Operators
+		bool operator ==(const Vec3& other);
+		bool operator !=(const Vec3& other);
+
+		// Binary Arithmetic Operators
+
+		/// @brief Modifies caller and returns result
 		Vec3& add(const Vec3& other);
+		/// @brief Modifies caller and returns result
 		Vec3& subtract(const Vec3& other);
+		/// @brief Modifies caller and returns result
 		Vec3& multiply(const Vec3& other);
+		/// @brief Modifies caller and returns result
+		Vec3& multiply(float scalar);
+		/// @brief Modifies caller and returns result
 		Vec3& divide(const Vec3& other);
+		/// @brief Modifies caller and returns result
+		Vec3& divide(float scalar);
 
-		static float dot(const Vec3& left, const Vec3& right);
-		static Vec3 cross(const Vec3& left, const Vec3& right);
-
-		friend Vec3 operator +(Vec3 left, const Vec3& right);
-		friend Vec3 operator -(Vec3 left, const Vec3& right);
-		friend Vec3 operator *(Vec3 left, const Vec3& right);
-		friend Vec3 operator /(Vec3 left, const Vec3& right);
-		
-		bool operator==(const Vec3& other);
-		bool operator!=(const Vec3& other);
+		friend Vec3 operator +(const Vec3& left, const Vec3& right);
+		friend Vec3 operator -(const Vec3& left, const Vec3& right);
+		friend Vec3 operator *(const Vec3& left, const Vec3& right);
+		friend Vec3 operator *(const Vec3& left, float scalar);
+		friend Vec3 operator /(const Vec3& left, const Vec3& right);
+		friend Vec3 operator /(const Vec3& left, float scalar);
 
 		Vec3& operator +=(const Vec3& other);
 		Vec3& operator -=(const Vec3& other);
 		Vec3& operator *=(const Vec3& other);
+		Vec3& operator *=(float scalar);
 		Vec3& operator /=(const Vec3& other);
+		Vec3& operator /=(float scalar);
 
-		Vec3 operator -();
+		// Unary Operators
+		Vec3 operator +() const;
+		Vec3 operator -() const;
+
+		// Extras / Helpers
+		static float dot(const Vec3& left, const Vec3& right);
+		static Vec3 cross(const Vec3& left, const Vec3& right);
 
 		operator float* () { return &x; }
+		operator const float* () const { return &x; }
 	};
 
 } }

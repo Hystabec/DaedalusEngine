@@ -58,11 +58,6 @@ namespace daedalus::editor
 					position.x += speed * dt;
 			}
 		};*/
-
-		maths::experimental::Quaternion quat(maths::Vec3(-0.67920023f, 0.29760006f, 0.0f));
-		DD_CORE_LOG_INFO("{}", quat);
-		maths::Mat4 quatMat = maths::experimental::quaterion_to_mat4(quat);
-		DD_CORE_LOG_INFO("{}", quatMat);
 	}
 
 	void EditorLayer::detach()

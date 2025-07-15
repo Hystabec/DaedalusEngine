@@ -38,6 +38,16 @@ namespace daedalus { namespace maths {
 		this->y = other.y;
 	}
 
+	bool Vec2::operator==(const Vec2& other)
+	{
+		return x == other.x && y == other.y;
+	}
+
+	bool Vec2::operator!=(const Vec2& other)
+	{
+		return !(x == other.x && y == other.y);
+	}
+
 	Vec2& Vec2::add(const Vec2& other)
 	{
 		x += other.x;
@@ -59,6 +69,13 @@ namespace daedalus { namespace maths {
 		return *this;
 	}
 
+	Vec2& Vec2::multiply(float scalar)
+	{
+		x *= scalar;
+		y *= scalar;
+		return *this;
+	}
+
 	Vec2& Vec2::divide(const Vec2& other)
 	{
 		x /= other.x;
@@ -66,34 +83,59 @@ namespace daedalus { namespace maths {
 		return *this;
 	}
 
-	Vec2 operator+(Vec2 left, const Vec2& right)
+	Vec2& Vec2::divide(float scalar)
 	{
-		return left.add(right);
+		x /= scalar;
+		y /= scalar;
+		return *this;
 	}
 
-	Vec2 operator-(Vec2 left, const Vec2& right)
+	Vec2 operator+(const Vec2& left, const Vec2& right)
 	{
-		return left.subtract(right);
+		return {
+			left.x + right.x,
+			left.y + right.y
+		};
 	}
 
-	Vec2 operator*(Vec2 left, const Vec2& right)
+	Vec2 operator-(const Vec2& left, const Vec2& right)
 	{
-		return left.multiply(right);
+		return {
+			left.x - right.x,
+			left.y - right.y
+		};
 	}
 
-	Vec2 operator/(Vec2 left, const Vec2& right)
+	Vec2 operator*(const Vec2& left, const Vec2& right)
 	{
-		return left.divide(right);
+		return {
+			left.x * right.x,
+			left.y * right.y
+		};
 	}
 
-	bool Vec2::operator==(const Vec2& other)
+	Vec2 operator*(const Vec2& left, float scalar)
 	{
-		return x == other.x && y == other.y;
+		return {
+			left.x * scalar,
+			left.y * scalar
+		};
 	}
 
-	bool Vec2::operator!=(const Vec2& other)
+	Vec2 operator/(const Vec2& left, const Vec2& right)
 	{
-		return !(x == other.x && y == other.y);
+		return {
+			left.x / right.x,
+			left.y / right.y
+		};
+	}
+
+	Vec2 operator/(const Vec2& left, float scalar)
+	{
+		return {
+			left.x / scalar,
+			left.y / scalar
+		};
 	}
 
 	Vec2& Vec2::operator +=(const Vec2& other)
@@ -114,10 +156,37 @@ namespace daedalus { namespace maths {
 		return *this;
 	}
 
+	Vec2& Vec2::operator*=(float scalar)
+	{
+		this->multiply(scalar);
+		return *this;
+	}
+
 	Vec2& Vec2::operator /=(const Vec2& other)
 	{
 		this->divide(other);
 		return *this;
+	}
+
+	Vec2& Vec2::operator/=(float scalar)
+	{
+		this->divide(scalar);
+		return *this;
+	}
+
+	Vec2 Vec2::operator+() const
+	{
+		return Vec2(+(this->x), +(this->y));
+	}
+
+	Vec2 Vec2::operator-() const
+	{
+		return Vec2(-(this->x), -(this->y));
+	}
+
+	float Vec2::dot(const Vec2& left, const Vec2& right)
+	{
+		return (left.x * right.x) + (left.y * right.y);
 	}
 
 } }

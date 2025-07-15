@@ -17,25 +17,48 @@ namespace daedalus { namespace maths {
 		Vec4(const Vec2& other, float z = 0.0f, float w = 0.0f);
 		Vec4(const Vec3& other, float w = 0.0f);
 
-		Vec4& add(const Vec4& other);
-		Vec4& subtract(const Vec4& other);
-		Vec4& multiply(const Vec4& other);
-		Vec4& divide(const Vec4& other);
+		// Locical Operators
+		bool operator ==(const Vec4& other);
+		bool operator !=(const Vec4& other);
 
-		friend Vec4 operator +(Vec4 left, const Vec4& right);
-		friend Vec4 operator -(Vec4 left, const Vec4& right);
-		friend Vec4 operator *(Vec4 left, const Vec4& right);
-		friend Vec4 operator /(Vec4 left, const Vec4& right);
-		
-		bool operator==(const Vec4& other);
-		bool operator!=(const Vec4& other);
+		// Binary Arithmetic Operators
+
+		/// @brief Modifies caller and returns result
+		Vec4& add(const Vec4& other);
+		/// @brief Modifies caller and returns result
+		Vec4& subtract(const Vec4& other);
+		/// @brief Modifies caller and returns result
+		Vec4& multiply(const Vec4& other);
+		/// @brief Modifies caller and returns result
+		Vec4& multiply(float scalar);
+		/// @brief Modifies caller and returns result
+		Vec4& divide(const Vec4& other);
+		/// @brief Modifies caller and returns result
+		Vec4& divide(float scalar);
+
+		friend Vec4 operator +(const Vec4& left, const Vec4& right);
+		friend Vec4 operator -(const Vec4& left, const Vec4& right);
+		friend Vec4 operator *(const Vec4& left, const Vec4& right);
+		friend Vec4 operator *(const Vec4& left, float scalar);
+		friend Vec4 operator /(const Vec4& left, const Vec4& right);
+		friend Vec4 operator /(const Vec4& left, float scalar);
 
 		Vec4& operator +=(const Vec4& other);
 		Vec4& operator -=(const Vec4& other);
 		Vec4& operator *=(const Vec4& other);
+		Vec4& operator *=(float scalar);
 		Vec4& operator /=(const Vec4& other);
+		Vec4& operator /=(float scalar);
+
+		// Unary Operators
+		Vec4 operator +() const;
+		Vec4 operator -() const;
+
+		// Extras / Helpers
+		static float dot(const Vec4& left, const Vec4& right);
 
 		operator float* () { return &x; }
+		operator const float* () const { return &x; }
 	};
 
 } }

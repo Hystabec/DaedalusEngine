@@ -18,25 +18,48 @@ namespace daedalus { namespace maths {
 		Vec2(const Vec3& other);
 		Vec2(const Vec4& other);
 
-		Vec2& add(const Vec2& other);
-		Vec2& subtract(const Vec2& other);
-		Vec2& multiply(const Vec2& other);
-		Vec2& divide(const Vec2& other);
+		// Locical Operators
+		bool operator ==(const Vec2& other);
+		bool operator !=(const Vec2& other);
 
-		friend Vec2 operator +(Vec2 left, const Vec2& right);
-		friend Vec2 operator -(Vec2 left, const Vec2& right);
-		friend Vec2 operator *(Vec2 left, const Vec2& right);
-		friend Vec2 operator /(Vec2 left, const Vec2& right);
+		// Binary Arithmetic Operators
 		
-		bool operator==(const Vec2& other);
-		bool operator!=(const Vec2& other);
+		/// @brief Modifies caller and returns result
+		Vec2& add(const Vec2& other);
+		/// @brief Modifies caller and returns result
+		Vec2& subtract(const Vec2& other);
+		/// @brief Modifies caller and returns result
+		Vec2& multiply(const Vec2& other);
+		/// @brief Modifies caller and returns result
+		Vec2& multiply(float scalar);
+		/// @brief Modifies caller and returns result
+		Vec2& divide(const Vec2& other);
+		/// @brief Modifies caller and returns result
+		Vec2& divide(float scalar);
+
+		friend Vec2 operator +(const Vec2& left, const Vec2& right);
+		friend Vec2 operator -(const Vec2& left, const Vec2& right);
+		friend Vec2 operator *(const Vec2& left, const Vec2& right);
+		friend Vec2 operator *(const Vec2& left, float scalar);
+		friend Vec2 operator /(const Vec2& left, const Vec2& right);
+		friend Vec2 operator /(const Vec2& left, float scalar);
 
 		Vec2& operator +=(const Vec2& other);
 		Vec2& operator -=(const Vec2& other);
 		Vec2& operator *=(const Vec2& other);
+		Vec2& operator *=(float scalar);
 		Vec2& operator /=(const Vec2& other);
+		Vec2& operator /=(float scalar);
+
+		// Unary Operators
+		Vec2 operator +() const;
+		Vec2 operator -() const;
+
+		// Extras / Helpers
+		static float dot(const Vec2& left, const Vec2& right);
 
 		operator float* () { return &x; }
+		operator const float* () const { return &x; }
 	};
 
 } }

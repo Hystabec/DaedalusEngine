@@ -83,8 +83,6 @@ namespace daedalus::graphics {
 
 	void EditorCamera::updateView()
 	{
-		DD_LOG_INFO("EditorCamera::updateView");
-
 		//m_yaw = m_pitch = 0.0f; // Lock the camera's rotation
 		m_position = calculatePosition();
 

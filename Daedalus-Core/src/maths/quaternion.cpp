@@ -50,7 +50,7 @@ namespace daedalus::maths::experimental {
 		const Vec3 uv(Vec3::cross(quatVec, vec));
 		const Vec3 uuv(Vec3::cross(quatVec, uv));
 
-		return vec + ((uv * quat.w) * 2.0f);
+		return vec + (((uv * quat.w) + uuv) * 2.0f);
 	}
 
 }

@@ -67,6 +67,14 @@ namespace daedalus { namespace maths {
 		return *this;
 	}
 
+	Vec3& Vec3::multiply(float scalar)
+	{
+		x *= scalar;
+		y *= scalar;
+		z *= scalar;
+		return *this;
+	}
+
 	Vec3& Vec3::divide(const Vec3& other)
 	{
 		x /= other.x;
@@ -75,38 +83,66 @@ namespace daedalus { namespace maths {
 		return *this;
 	}
 
-	float Vec3::dot(const Vec3& left, const Vec3& right)
+	Vec3& Vec3::divide(float scalar)
 	{
-		return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
+		x /= scalar;
+		y /= scalar;
+		z /= scalar;
+		return *this;
 	}
 
-	Vec3 Vec3::cross(const Vec3& left, const Vec3& right)
+	Vec3 operator+(const Vec3& left, const Vec3& right)
 	{
 		return {
-			left.y * right.z - right.y * left.z,
-			left.z * right.x - right.z * left.x,
-			left.x * right.y - right.x * left.y
+			left.x + right.x,
+			left.y + right.y,
+			left.z + right.z
 		};
 	}
 
-	Vec3 operator+(Vec3 left, const Vec3& right)
+	Vec3 operator-(const Vec3& left, const Vec3& right)
 	{
-		return left.add(right);
+		return {
+			left.x - right.x,
+			left.y - right.y,
+			left.z - right.z
+		};
 	}
 
-	Vec3 operator-(Vec3 left, const Vec3& right)
+	Vec3 operator*(const Vec3& left, const Vec3& right)
 	{
-		return left.subtract(right);
+		return {
+			left.x * right.x,
+			left.y * right.y,
+			left.z * right.z
+		};
 	}
 
-	Vec3 operator*(Vec3 left, const Vec3& right)
+	Vec3 operator*(const Vec3& left, float scalar)
 	{
-		return left.multiply(right);
+		return {
+			left.x * scalar,
+			left.y * scalar,
+			left.z * scalar
+		};
 	}
 
-	Vec3 operator/(Vec3 left, const Vec3& right)
+	Vec3 operator/(const Vec3& left, const Vec3& right)
 	{
-		return left.divide(right);
+		return {
+			left.x / right.x,
+			left.y / right.y,
+			left.z / right.z
+		};
+	}
+
+	Vec3 operator/(const Vec3& left, float scalar)
+	{
+		return {
+			left.x / scalar,
+			left.y / scalar,
+			left.z / scalar
+		};
 	}
 
 	bool Vec3::operator==(const Vec3& other)
@@ -137,15 +173,46 @@ namespace daedalus { namespace maths {
 		return *this;
 	}
 
+	Vec3& Vec3::operator *=(float scalar)
+	{
+		this->multiply(scalar);
+		return *this;
+	}
+
 	Vec3& Vec3::operator /=(const Vec3& other)
 	{
 		this->divide(other);
 		return *this;
 	}
 
-	Vec3 Vec3::operator-()
+	Vec3& Vec3::operator /=(float scalar)
+	{
+		this->divide(scalar);
+		return *this;
+	}
+
+	Vec3 Vec3::operator+() const
+	{
+		return Vec3(+(this->x), +(this->y), +(this->z));
+	}
+
+	Vec3 Vec3::operator-() const
 	{
 		return Vec3(-(this->x), -(this->y), -(this->z));
+	}
+
+	float Vec3::dot(const Vec3& left, const Vec3& right)
+	{
+		return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
+	}
+
+	Vec3 Vec3::cross(const Vec3& left, const Vec3& right)
+	{
+		return {
+			left.y * right.z - right.y * left.z,
+			left.z * right.x - right.z * left.x,
+			left.x * right.y - right.x * left.y
+		};
 	}
 
 } }

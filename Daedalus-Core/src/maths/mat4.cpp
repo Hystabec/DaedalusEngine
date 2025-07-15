@@ -39,9 +39,22 @@ namespace daedalus { namespace maths {
 			memcpy(this->elements, other.elements, sizeof(float) * 16);
 		}
 
-		Mat4 Mat4::identity()
+		bool Mat4::operator==(const Mat4& other)
 		{
-			return Mat4(1.0f);
+			for (int i = 0; i < 4 * 4; i++)
+				if (this->elements[i] != other.elements[i])
+					return false;
+
+			return true;
+		}
+
+		bool Mat4::operator!=(const Mat4& other)
+		{
+			for (int i = 0; i < 4 * 4; i++)
+				if (this->elements[i] != other.elements[i])
+					return true;
+
+			return false;
 		}
 
 		Mat4& Mat4::multiply(const Mat4& other)
@@ -65,19 +78,63 @@ namespace daedalus { namespace maths {
 			return *this;
 		}
 
-		Mat4 operator*(Mat4 left, const Mat4& right)
+		Mat4& Mat4::multiply(float other)
 		{
-			return left.multiply(right);
+			float data[16];
+			for (int col = 0; col < 4; col++)
+			{
+				for (int row = 0; row < 4; row++)
+				{
+					float sum = 0.0f;
+					for (int elm = 0; elm < 4; elm++)
+					{
+						sum += elements[row + elm * 4] * other;
+					}
+					data[row + col * 4] = sum;
+				}
+			}
+
+			memcpy(elements, data, 4 * 4 * sizeof(float));
+
+			return *this;
+		}
+
+		Mat4 operator*(const Mat4& left, const Mat4& right)
+		{
+			Mat4 result(left);
+			result.multiply(right);
+			return result;
+		}
+
+		Mat4 operator*(const Mat4& left, float right)
+		{
+			return {
+				left.columns[0] * right,
+				left.columns[1] * right,
+				left.columns[2] * right,
+				left.columns[3] * right
+			};
 		}
 
 		Vec3 operator*(const Mat4& left, const Vec3& right)
 		{
-			return left.multiply(right);
+			return Vec3
+			(
+				left.elements[0 + 0 * 4] * right.x + left.elements[0 + 1 * 4] * right.y + left.elements[0 + 2 * 4] * right.z + left.elements[0 + 3 * 4],
+				left.elements[1 + 0 * 4] * right.x + left.elements[1 + 1 * 4] * right.y + left.elements[1 + 2 * 4] * right.z + left.elements[1 + 3 * 4],
+				left.elements[2 + 0 * 4] * right.x + left.elements[2 + 1 * 4] * right.y + left.elements[2 + 2 * 4] * right.z + left.elements[2 + 3 * 4]
+			);
 		}
 
 		Vec4 operator*(const Mat4& left, const Vec4& right)
 		{
-			return left.multiply(right);
+			return Vec4
+			(
+				left.elements[0 + 0 * 4] * right.x + left.elements[0 + 1 * 4] * right.y + left.elements[0 + 2 * 4] * right.z + left.elements[0 + 3 * 4] * right.w,
+				left.elements[1 + 0 * 4] * right.x + left.elements[1 + 1 * 4] * right.y + left.elements[1 + 2 * 4] * right.z + left.elements[1 + 3 * 4] * right.w,
+				left.elements[2 + 0 * 4] * right.x + left.elements[2 + 1 * 4] * right.y + left.elements[2 + 2 * 4] * right.z + left.elements[2 + 3 * 4] * right.w,
+				left.elements[3 + 0 * 4] * right.x + left.elements[3 + 1 * 4] * right.y + left.elements[3 + 2 * 4] * right.z + left.elements[3 + 3 * 4] * right.w
+			);
 		}
 
 		Mat4& Mat4::operator*=(const Mat4& other)
@@ -85,276 +142,137 @@ namespace daedalus { namespace maths {
 			return this->multiply(other);
 		}
 
-		Vec3 Mat4::multiply(const Vec3& other) const
+		Mat4& Mat4::operator*=(float other)
 		{
-			return Vec3
-			(
-				elements[0 + 0 * 4] * other.x + elements[0 + 1 * 4] * other.y + elements[0 + 2 * 4] * other.z + elements[0 + 3 * 4],
-				elements[1 + 0 * 4] * other.x + elements[1 + 1 * 4] * other.y + elements[1 + 2 * 4] * other.z + elements[1 + 3 * 4],
-				elements[2 + 0 * 4] * other.x + elements[2 + 1 * 4] * other.y + elements[2 + 2 * 4] * other.z + elements[2 + 3 * 4]
-			);
+			return this->multiply(other);
 		}
 
-		Vec4 Mat4::multiply(const Vec4& other) const
+		Mat4 Mat4::identity()
 		{
-			return Vec4
-			(
-				elements[0 + 0 * 4] * other.x + elements[0 + 1 * 4] * other.y + elements[0 + 2 * 4] * other.z + elements[0 + 3 * 4] * other.w,
-				elements[1 + 0 * 4] * other.x + elements[1 + 1 * 4] * other.y + elements[1 + 2 * 4] * other.z + elements[1 + 3 * 4] * other.w,
-				elements[2 + 0 * 4] * other.x + elements[2 + 1 * 4] * other.y + elements[2 + 2 * 4] * other.z + elements[2 + 3 * 4] * other.w,
-				elements[3 + 0 * 4] * other.x + elements[3 + 1 * 4] * other.y + elements[3 + 2 * 4] * other.z + elements[3 + 3 * 4] * other.w
-			);
+			return Mat4(1.0f);
 		}
 
 		Mat4& Mat4::invert()
 		{
-			float temp[16];
-			memset(temp, 1, sizeof(temp));
+			// Copied from GLM
 
-			temp[0] = elements[5] * elements[10] * elements[15] -
-				elements[5] * elements[11] * elements[14] -
-				elements[9] * elements[6] * elements[15] +
-				elements[9] * elements[7] * elements[14] +
-				elements[13] * elements[6] * elements[11] -
-				elements[13] * elements[7] * elements[10];
+			float coef00 = this->columns[2][2] * this->columns[3][3] - this->columns[3][2] * this->columns[2][3];
+			float coef02 = this->columns[1][2] * this->columns[3][3] - this->columns[3][2] * this->columns[1][3];
+			float coef03 = this->columns[1][2] * this->columns[2][3] - this->columns[2][2] * this->columns[1][3];
 
-			temp[4] = -elements[4] * elements[10] * elements[15] +
-				elements[4] * elements[11] * elements[14] +
-				elements[8] * elements[6] * elements[15] -
-				elements[8] * elements[7] * elements[14] -
-				elements[12] * elements[6] * elements[11] +
-				elements[12] * elements[7] * elements[10];
+			float coef04 = this->columns[2][1] * this->columns[3][3] - this->columns[3][1] * this->columns[2][3];
+			float coef06 = this->columns[1][1] * this->columns[3][3] - this->columns[3][1] * this->columns[1][3];
+			float coef07 = this->columns[1][1] * this->columns[2][3] - this->columns[2][1] * this->columns[1][3];
 
-			temp[8] = elements[4] * elements[9] * elements[15] -
-				elements[4] * elements[11] * elements[13] -
-				elements[8] * elements[5] * elements[15] +
-				elements[8] * elements[7] * elements[13] +
-				elements[12] * elements[5] * elements[11] -
-				elements[12] * elements[7] * elements[9];
+			// values go slight off in this block 
+			float coef08 = this->columns[2][1] * this->columns[3][2] - this->columns[3][1] * this->columns[2][2];
+			float coef10 = this->columns[1][1] * this->columns[3][2] - this->columns[3][1] * this->columns[1][2];
+			float coef11 = this->columns[1][1] * this->columns[2][2] - this->columns[2][1] * this->columns[1][2];
 
-			temp[12] = -elements[4] * elements[9] * elements[14] +
-				elements[4] * elements[10] * elements[13] +
-				elements[8] * elements[5] * elements[14] -
-				elements[8] * elements[6] * elements[13] -
-				elements[12] * elements[5] * elements[10] +
-				elements[12] * elements[6] * elements[9];
+			float coef12 = this->columns[2][0] * this->columns[3][3] - this->columns[3][0] * this->columns[2][3];
+			float coef14 = this->columns[1][0] * this->columns[3][3] - this->columns[3][0] * this->columns[1][3];
+			float coef15 = this->columns[1][0] * this->columns[2][3] - this->columns[2][0] * this->columns[1][3];
 
-			temp[1] = -elements[1] * elements[10] * elements[15] +
-				elements[1] * elements[11] * elements[14] +
-				elements[9] * elements[2] * elements[15] -
-				elements[9] * elements[3] * elements[14] -
-				elements[13] * elements[2] * elements[11] +
-				elements[13] * elements[3] * elements[10];
+			// values here go completly off in this block
+			float coef16 = this->columns[2][0] * this->columns[3][2] - this->columns[3][0] * this->columns[2][2];
+			float coef18 = this->columns[1][0] * this->columns[3][2] - this->columns[3][0] * this->columns[1][2];
+			float coef19 = this->columns[1][0] * this->columns[2][2] - this->columns[2][0] * this->columns[1][2];
 
-			temp[5] = elements[0] * elements[10] * elements[15] -
-				elements[0] * elements[11] * elements[14] -
-				elements[8] * elements[2] * elements[15] +
-				elements[8] * elements[3] * elements[14] +
-				elements[12] * elements[2] * elements[11] -
-				elements[12] * elements[3] * elements[10];
+			float coef20 = this->columns[2][0] * this->columns[3][1] - this->columns[3][0] * this->columns[2][1]; // this is very wrong
+			float coef22 = this->columns[1][0] * this->columns[3][1] - this->columns[3][0] * this->columns[1][1]; // this is slight wrong
+			float coef23 = this->columns[1][0] * this->columns[2][1] - this->columns[2][0] * this->columns[1][1];
 
-			temp[9] = -elements[0] * elements[9] * elements[15] +
-				elements[0] * elements[11] * elements[13] +
-				elements[8] * elements[1] * elements[15] -
-				elements[8] * elements[3] * elements[13] -
-				elements[12] * elements[1] * elements[11] +
-				elements[12] * elements[3] * elements[9];
+			Vec4 fac0(coef00, coef00, coef02, coef03);
+			Vec4 fac1(coef04, coef04, coef06, coef07);
+			Vec4 fac2(coef08, coef08, coef10, coef11);
+			Vec4 fac3(coef12, coef12, coef14, coef15);
+			Vec4 fac4(coef16, coef16, coef18, coef19);
+			Vec4 fac5(coef20, coef20, coef22, coef23);
 
-			temp[13] = elements[0] * elements[9] * elements[14] -
-				elements[0] * elements[10] * elements[13] -
-				elements[8] * elements[1] * elements[14] +
-				elements[8] * elements[2] * elements[13] +
-				elements[12] * elements[1] * elements[10] -
-				elements[12] * elements[2] * elements[9];
+			Vec4 vec0(this->columns[1][0], this->columns[0][0], this->columns[0][0], this->columns[0][0]);
+			Vec4 vec1(this->columns[1][1], this->columns[0][1], this->columns[0][1], this->columns[0][1]);
+			Vec4 vec2(this->columns[1][2], this->columns[0][2], this->columns[0][2], this->columns[0][2]);
+			Vec4 vec3(this->columns[1][3], this->columns[0][3], this->columns[0][3], this->columns[0][3]);
 
-			temp[2] = elements[1] * elements[6] * elements[15] -
-				elements[1] * elements[7] * elements[14] -
-				elements[5] * elements[2] * elements[15] +
-				elements[5] * elements[3] * elements[14] +
-				elements[13] * elements[2] * elements[7] -
-				elements[13] * elements[3] * elements[6];
+			Vec4 inv0(vec1 * fac0 - vec2 * fac1 + vec3 * fac2);
+			Vec4 inv1(vec0 * fac0 - vec2 * fac3 + vec3 * fac4);
+			Vec4 inv2(vec0 * fac1 - vec1 * fac3 + vec3 * fac5);
+			Vec4 inv3(vec0 * fac2 - vec1 * fac4 + vec2 * fac5);
 
-			temp[6] = -elements[0] * elements[6] * elements[15] +
-				elements[0] * elements[7] * elements[14] +
-				elements[4] * elements[2] * elements[15] -
-				elements[4] * elements[3] * elements[14] -
-				elements[12] * elements[2] * elements[7] +
-				elements[12] * elements[3] * elements[6];
+			Vec4 signA(+1, -1, +1, -1);
+			Vec4 signB(-1, +1, -1, +1);
+			Mat4 inverse(inv0 * signA, inv1 * signB, inv2 * signA, inv3 * signB);
 
-			temp[10] = elements[0] * elements[5] * elements[15] -
-				elements[0] * elements[7] * elements[13] -
-				elements[4] * elements[1] * elements[15] +
-				elements[4] * elements[3] * elements[13] +
-				elements[12] * elements[1] * elements[7] -
-				elements[12] * elements[3] * elements[5];
+			Vec4 row0(inverse.columns[0][0], inverse.columns[1][0], inverse.columns[2][0], inverse.columns[3][0]);
 
-			temp[14] = -elements[0] * elements[5] * elements[14] +
-				elements[0] * elements[6] * elements[13] +
-				elements[4] * elements[1] * elements[14] -
-				elements[4] * elements[2] * elements[13] -
-				elements[12] * elements[1] * elements[6] +
-				elements[12] * elements[2] * elements[5];
+			Vec4 dot0(this->columns[0] * row0);
+			float dot1 = (dot0.x + dot0.y) + (dot0.z + dot0.w);
 
-			temp[3] = -elements[1] * elements[6] * elements[11] +
-				elements[1] * elements[7] * elements[10] +
-				elements[5] * elements[2] * elements[11] -
-				elements[5] * elements[3] * elements[10] -
-				elements[9] * elements[2] * elements[7] +
-				elements[9] * elements[3] * elements[6];
+			float oneOverDeterminant = 1.0f / dot1;
 
-			temp[7] = elements[0] * elements[6] * elements[11] -
-				elements[0] * elements[7] * elements[10] -
-				elements[4] * elements[2] * elements[11] +
-				elements[4] * elements[3] * elements[10] +
-				elements[8] * elements[2] * elements[7] -
-				elements[8] * elements[3] * elements[6];
-
-			temp[11] = -elements[0] * elements[5] * elements[11] +
-				elements[0] * elements[7] * elements[9] +
-				elements[4] * elements[1] * elements[11] -
-				elements[4] * elements[3] * elements[9] -
-				elements[8] * elements[1] * elements[7] +
-				elements[8] * elements[3] * elements[5];
-
-			temp[15] = elements[0] * elements[5] * elements[10] -
-				elements[0] * elements[6] * elements[9] -
-				elements[4] * elements[1] * elements[10] +
-				elements[4] * elements[2] * elements[9] +
-				elements[8] * elements[1] * elements[6] -
-				elements[8] * elements[2] * elements[5];
-
-			float determinant = elements[0] * temp[0] + elements[1] * temp[4] + elements[2] * temp[8] + elements[3] * temp[12];
-			determinant = (float)(1.0 / determinant);
-
-			for (int i = 0; i < (4 * 4); i++)
-				elements[i] = temp[i] * determinant;
-
+			memcpy(elements, (inverse * oneOverDeterminant).elements, 4 * 4 * sizeof(float));
 			return *this;
 		}
 
 		Mat4 Mat4::invert(const Mat4& matrix)
 		{
-			Mat4 result(1.0f);
+			// Copied from GLM
 
-			result.elements[0] = matrix.elements[5] * matrix.elements[10] * matrix.elements[15] -
-				matrix.elements[5] * matrix.elements[11] * matrix.elements[14] -
-				matrix.elements[9] * matrix.elements[6] * matrix.elements[15] +
-				matrix.elements[9] * matrix.elements[7] * matrix.elements[14] +
-				matrix.elements[13] * matrix.elements[6] * matrix.elements[11] -
-				matrix.elements[13] * matrix.elements[7] * matrix.elements[10];
+			float coef00 = matrix.columns[2][2] * matrix.columns[3][3] - matrix.columns[3][2] * matrix.columns[2][3];
+			float coef02 = matrix.columns[1][2] * matrix.columns[3][3] - matrix.columns[3][2] * matrix.columns[1][3];
+			float coef03 = matrix.columns[1][2] * matrix.columns[2][3] - matrix.columns[2][2] * matrix.columns[1][3];
 
-			result.elements[4] = -matrix.elements[4] * matrix.elements[10] * matrix.elements[15] +
-				matrix.elements[4] * matrix.elements[11] * matrix.elements[14] +
-				matrix.elements[8] * matrix.elements[6] * matrix.elements[15] -
-				matrix.elements[8] * matrix.elements[7] * matrix.elements[14] -
-				matrix.elements[12] * matrix.elements[6] * matrix.elements[11] +
-				matrix.elements[12] * matrix.elements[7] * matrix.elements[10];
+			float coef04 = matrix.columns[2][1] * matrix.columns[3][3] - matrix.columns[3][1] * matrix.columns[2][3];
+			float coef06 = matrix.columns[1][1] * matrix.columns[3][3] - matrix.columns[3][1] * matrix.columns[1][3];
+			float coef07 = matrix.columns[1][1] * matrix.columns[2][3] - matrix.columns[2][1] * matrix.columns[1][3];
 
-			result.elements[8] = matrix.elements[4] * matrix.elements[9] * matrix.elements[15] -
-				matrix.elements[4] * matrix.elements[11] * matrix.elements[13] -
-				matrix.elements[8] * matrix.elements[5] * matrix.elements[15] +
-				matrix.elements[8] * matrix.elements[7] * matrix.elements[13] +
-				matrix.elements[12] * matrix.elements[5] * matrix.elements[11] -
-				matrix.elements[12] * matrix.elements[7] * matrix.elements[9];
+			// values go slight off in this block 
+			float coef08 = matrix.columns[2][1] * matrix.columns[3][2] - matrix.columns[3][1] * matrix.columns[2][2];
+			float coef10 = matrix.columns[1][1] * matrix.columns[3][2] - matrix.columns[3][1] * matrix.columns[1][2];
+			float coef11 = matrix.columns[1][1] * matrix.columns[2][2] - matrix.columns[2][1] * matrix.columns[1][2];
 
-			result.elements[12] = -matrix.elements[4] * matrix.elements[9] * matrix.elements[14] +
-				matrix.elements[4] * matrix.elements[10] * matrix.elements[13] +
-				matrix.elements[8] * matrix.elements[5] * matrix.elements[14] -
-				matrix.elements[8] * matrix.elements[6] * matrix.elements[13] -
-				matrix.elements[12] * matrix.elements[5] * matrix.elements[10] +
-				matrix.elements[12] * matrix.elements[6] * matrix.elements[9];
+			float coef12 = matrix.columns[2][0] * matrix.columns[3][3] - matrix.columns[3][0] * matrix.columns[2][3];
+			float coef14 = matrix.columns[1][0] * matrix.columns[3][3] - matrix.columns[3][0] * matrix.columns[1][3];
+			float coef15 = matrix.columns[1][0] * matrix.columns[2][3] - matrix.columns[2][0] * matrix.columns[1][3];
 
-			result.elements[1] = -matrix.elements[1] * matrix.elements[10] * matrix.elements[15] +
-				matrix.elements[1] * matrix.elements[11] * matrix.elements[14] +
-				matrix.elements[9] * matrix.elements[2] * matrix.elements[15] -
-				matrix.elements[9] * matrix.elements[3] * matrix.elements[14] -
-				matrix.elements[13] * matrix.elements[2] * matrix.elements[11] +
-				matrix.elements[13] * matrix.elements[3] * matrix.elements[10];
+			// values here go completly off in this block
+			float coef16 = matrix.columns[2][0] * matrix.columns[3][2] - matrix.columns[3][0] * matrix.columns[2][2];
+			float coef18 = matrix.columns[1][0] * matrix.columns[3][2] - matrix.columns[3][0] * matrix.columns[1][2];
+			float coef19 = matrix.columns[1][0] * matrix.columns[2][2] - matrix.columns[2][0] * matrix.columns[1][2];
 
-			result.elements[5] = matrix.elements[0] * matrix.elements[10] * matrix.elements[15] -
-				matrix.elements[0] * matrix.elements[11] * matrix.elements[14] -
-				matrix.elements[8] * matrix.elements[2] * matrix.elements[15] +
-				matrix.elements[8] * matrix.elements[3] * matrix.elements[14] +
-				matrix.elements[12] * matrix.elements[2] * matrix.elements[11] -
-				matrix.elements[12] * matrix.elements[3] * matrix.elements[10];
+			float coef20 = matrix.columns[2][0] * matrix.columns[3][1] - matrix.columns[3][0] * matrix.columns[2][1]; // this is very wrong
+			float coef22 = matrix.columns[1][0] * matrix.columns[3][1] - matrix.columns[3][0] * matrix.columns[1][1]; // this is slight wrong
+			float coef23 = matrix.columns[1][0] * matrix.columns[2][1] - matrix.columns[2][0] * matrix.columns[1][1];
 
-			result.elements[9] = -matrix.elements[0] * matrix.elements[9] * matrix.elements[15] +
-				matrix.elements[0] * matrix.elements[11] * matrix.elements[13] +
-				matrix.elements[8] * matrix.elements[1] * matrix.elements[15] -
-				matrix.elements[8] * matrix.elements[3] * matrix.elements[13] -
-				matrix.elements[12] * matrix.elements[1] * matrix.elements[11] +
-				matrix.elements[12] * matrix.elements[3] * matrix.elements[9];
+			Vec4 fac0(coef00, coef00, coef02, coef03);
+			Vec4 fac1(coef04, coef04, coef06, coef07);
+			Vec4 fac2(coef08, coef08, coef10, coef11);
+			Vec4 fac3(coef12, coef12, coef14, coef15);
+			Vec4 fac4(coef16, coef16, coef18, coef19);
+			Vec4 fac5(coef20, coef20, coef22, coef23);
 
-			result.elements[13] = matrix.elements[0] * matrix.elements[9] * matrix.elements[14] -
-				matrix.elements[0] * matrix.elements[10] * matrix.elements[13] -
-				matrix.elements[8] * matrix.elements[1] * matrix.elements[14] +
-				matrix.elements[8] * matrix.elements[2] * matrix.elements[13] +
-				matrix.elements[12] * matrix.elements[1] * matrix.elements[10] -
-				matrix.elements[12] * matrix.elements[2] * matrix.elements[9];
+			Vec4 vec0(matrix.columns[1][0], matrix.columns[0][0], matrix.columns[0][0], matrix.columns[0][0]);
+			Vec4 vec1(matrix.columns[1][1], matrix.columns[0][1], matrix.columns[0][1], matrix.columns[0][1]);
+			Vec4 vec2(matrix.columns[1][2], matrix.columns[0][2], matrix.columns[0][2], matrix.columns[0][2]);
+			Vec4 vec3(matrix.columns[1][3], matrix.columns[0][3], matrix.columns[0][3], matrix.columns[0][3]);
 
-			result.elements[2] = matrix.elements[1] * matrix.elements[6] * matrix.elements[15] -
-				matrix.elements[1] * matrix.elements[7] * matrix.elements[14] -
-				matrix.elements[5] * matrix.elements[2] * matrix.elements[15] +
-				matrix.elements[5] * matrix.elements[3] * matrix.elements[14] +
-				matrix.elements[13] * matrix.elements[2] * matrix.elements[7] -
-				matrix.elements[13] * matrix.elements[3] * matrix.elements[6];
+			Vec4 inv0(vec1 * fac0 - vec2 * fac1 + vec3 * fac2);
+			Vec4 inv1(vec0 * fac0 - vec2 * fac3 + vec3 * fac4);
+			Vec4 inv2(vec0 * fac1 - vec1 * fac3 + vec3 * fac5);
+			Vec4 inv3(vec0 * fac2 - vec1 * fac4 + vec2 * fac5);
 
-			result.elements[6] = -matrix.elements[0] * matrix.elements[6] * matrix.elements[15] +
-				matrix.elements[0] * matrix.elements[7] * matrix.elements[14] +
-				matrix.elements[4] * matrix.elements[2] * matrix.elements[15] -
-				matrix.elements[4] * matrix.elements[3] * matrix.elements[14] -
-				matrix.elements[12] * matrix.elements[2] * matrix.elements[7] +
-				matrix.elements[12] * matrix.elements[3] * matrix.elements[6];
+			Vec4 signA(+1, -1, +1, -1);
+			Vec4 signB(-1, +1, -1, +1);
+			Mat4 inverse(inv0 * signA, inv1 * signB, inv2 * signA, inv3 * signB);
 
-			result.elements[10] = matrix.elements[0] * matrix.elements[5] * matrix.elements[15] -
-				matrix.elements[0] * matrix.elements[7] * matrix.elements[13] -
-				matrix.elements[4] * matrix.elements[1] * matrix.elements[15] +
-				matrix.elements[4] * matrix.elements[3] * matrix.elements[13] +
-				matrix.elements[12] * matrix.elements[1] * matrix.elements[7] -
-				matrix.elements[12] * matrix.elements[3] * matrix.elements[5];
+			Vec4 row0(inverse.columns[0][0], inverse.columns[1][0], inverse.columns[2][0], inverse.columns[3][0]);
 
-			result.elements[14] = -matrix.elements[0] * matrix.elements[5] * matrix.elements[14] +
-				matrix.elements[0] * matrix.elements[6] * matrix.elements[13] +
-				matrix.elements[4] * matrix.elements[1] * matrix.elements[14] -
-				matrix.elements[4] * matrix.elements[2] * matrix.elements[13] -
-				matrix.elements[12] * matrix.elements[1] * matrix.elements[6] +
-				matrix.elements[12] * matrix.elements[2] * matrix.elements[5];
+			Vec4 dot0(matrix.columns[0] * row0);
+			float dot1 = (dot0.x + dot0.y) + (dot0.z + dot0.w);
 
-			result.elements[3] = -matrix.elements[1] * matrix.elements[6] * matrix.elements[11] +
-				matrix.elements[1] * matrix.elements[7] * matrix.elements[10] +
-				matrix.elements[5] * matrix.elements[2] * matrix.elements[11] -
-				matrix.elements[5] * matrix.elements[3] * matrix.elements[10] -
-				matrix.elements[9] * matrix.elements[2] * matrix.elements[7] +
-				matrix.elements[9] * matrix.elements[3] * matrix.elements[6];
+			float oneOverDeterminant = 1.0f / dot1;
 
-			result.elements[7] = matrix.elements[0] * matrix.elements[6] * matrix.elements[11] -
-				matrix.elements[0] * matrix.elements[7] * matrix.elements[10] -
-				matrix.elements[4] * matrix.elements[2] * matrix.elements[11] +
-				matrix.elements[4] * matrix.elements[3] * matrix.elements[10] +
-				matrix.elements[8] * matrix.elements[2] * matrix.elements[7] -
-				matrix.elements[8] * matrix.elements[3] * matrix.elements[6];
-
-			result.elements[11] = -matrix.elements[0] * matrix.elements[5] * matrix.elements[11] +
-				matrix.elements[0] * matrix.elements[7] * matrix.elements[9] +
-				matrix.elements[4] * matrix.elements[1] * matrix.elements[11] -
-				matrix.elements[4] * matrix.elements[3] * matrix.elements[9] -
-				matrix.elements[8] * matrix.elements[1] * matrix.elements[7] +
-				matrix.elements[8] * matrix.elements[3] * matrix.elements[5];
-
-			result.elements[15] = matrix.elements[0] * matrix.elements[5] * matrix.elements[10] -
-				matrix.elements[0] * matrix.elements[6] * matrix.elements[9] -
-				matrix.elements[4] * matrix.elements[1] * matrix.elements[10] +
-				matrix.elements[4] * matrix.elements[2] * matrix.elements[9] +
-				matrix.elements[8] * matrix.elements[1] * matrix.elements[6] -
-				matrix.elements[8] * matrix.elements[2] * matrix.elements[5];
-
-			float determinant = matrix.elements[0] * result.elements[0] + matrix.elements[1] * result.elements[4] + matrix.elements[2] * result.elements[8] + matrix.elements[3] * result.elements[12];
-			determinant = (float)(1.0 / determinant);
-
-			for (int i = 0; i < (4 * 4); i++)
-				result.elements[i] = result.elements[i] * determinant;
-
-			return result;
+			return inverse * oneOverDeterminant;
 		}
 
 		Mat4 Mat4::orthographic(float left, float right, float botton, float top, float nearPlane, float farPlane)

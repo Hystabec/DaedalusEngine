@@ -48,6 +48,16 @@ namespace daedalus { namespace maths {
 		this->w = w;
 	}
 
+	bool Vec4::operator==(const Vec4& other)
+	{
+		return x == other.x && y == other.y && z == other.z && w == other.w;
+	}
+
+	bool Vec4::operator!=(const Vec4& other)
+	{
+		return !(x == other.x && y == other.y && z == other.z && w == other.w);
+	}
+
 	Vec4& Vec4::add(const Vec4& other)
 	{
 		x += other.x;
@@ -75,6 +85,15 @@ namespace daedalus { namespace maths {
 		return *this;
 	}
 
+	Vec4& Vec4::multiply(float scalar)
+	{
+		x *= scalar;
+		y *= scalar;
+		z *= scalar;
+		w *= scalar;
+		return *this;
+	}
+
 	Vec4& Vec4::divide(const Vec4& other)
 	{
 		x /= other.x;
@@ -84,34 +103,73 @@ namespace daedalus { namespace maths {
 		return *this;
 	}
 
-	Vec4 operator+(Vec4 left, const Vec4& right)
+	Vec4& Vec4::divide(float scalar)
 	{
-		return left.add(right);
+		x /= scalar;
+		y /= scalar;
+		z /= scalar;
+		w /= scalar;
+		return *this;
 	}
 
-	Vec4 operator-(Vec4 left, const Vec4& right)
+	Vec4 operator+(const Vec4& left, const Vec4& right)
 	{
-		return left.subtract(right);
+		return {
+			left.x + right.x,
+			left.y + right.y,
+			left.z + right.z,
+			left.w + right.w
+		};
 	}
 
-	Vec4 operator*(Vec4 left, const Vec4& right)
+	Vec4 operator-(const Vec4& left, const Vec4& right)
 	{
-		return left.multiply(right);
+		return {
+			left.x - right.x,
+			left.y - right.y,
+			left.z - right.z,
+			left.w - right.w
+		};
 	}
 
-	Vec4 operator/(Vec4 left, const Vec4& right)
+	Vec4 operator*(const Vec4& left, const Vec4& right)
 	{
-		return left.divide(right);
+		return {
+			left.x * right.x,
+			left.y * right.y,
+			left.z * right.z,
+			left.w * right.w
+		};
 	}
 
-	bool Vec4::operator==(const Vec4& other)
+	Vec4 operator*(const Vec4& left, float scalar)
 	{
-		return x == other.x && y == other.y && z == other.z && w == other.w;
+		return {
+			left.x * scalar,
+			left.y * scalar,
+			left.z * scalar,
+			left.w * scalar
+		};
 	}
 
-	bool Vec4::operator!=(const Vec4& other)
+	Vec4 operator/(const Vec4& left, const Vec4& right)
 	{
-		return !(x == other.x && y == other.y && z == other.z && w == other.w);
+		return {
+			left.x / right.x,
+			left.y / right.y,
+			left.z / right.z,
+			left.w / right.w
+		};
+	}
+
+	Vec4 operator/(const Vec4& left, float scalar)
+	{
+		return {
+			left.x / scalar,
+			left.y / scalar,
+			left.z / scalar,
+			left.w / scalar
+		};
 	}
 
 	Vec4& Vec4::operator +=(const Vec4& other)
@@ -132,10 +190,37 @@ namespace daedalus { namespace maths {
 		return *this;
 	}
 
+	Vec4& Vec4::operator *=(float scalar)
+	{
+		this->multiply(scalar);
+		return *this;
+	}
+
 	Vec4& Vec4::operator /=(const Vec4& other)
 	{
 		this->divide(other);
 		return *this;
+	}
+
+	Vec4& Vec4::operator /=(float scalar)
+	{
+		this->divide(scalar);
+		return *this;
+	}
+
+	Vec4 Vec4::operator+() const
+	{
+		return Vec4(+(this->x), +(this->y), +(this->z), +(this->w));
+	}
+
+	Vec4 Vec4::operator-() const
+	{
+		return Vec4(-(this->x), -(this->y), -(this->z), -(this->w));
+	}
+
+	float Vec4::dot(const Vec4& left, const Vec4& right)
+	{
+		return (left.x * right.x) + (left.y * right.y) + (left.z * right.z) + (left.w * right.w);
 	}
 
 } }

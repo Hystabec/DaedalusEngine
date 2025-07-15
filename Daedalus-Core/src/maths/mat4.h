@@ -21,37 +21,44 @@ namespace daedalus { namespace maths {
 		Mat4(const Vec4& column0, const Vec4& column1, const Vec4& column2, const Vec4& column3);
 		Mat4(const Mat4& other);
 
-		static Mat4 identity();
+		// Locical Operators
+		bool operator ==(const Mat4& other);
+		bool operator !=(const Mat4& other);
+
+		// Binary Arithmetic Operators
+
+		/// @brief Modifies caller and returns result
 		Mat4& multiply(const Mat4& other);
-		friend Mat4 operator*(Mat4 left, const Mat4& right);
-		Mat4& operator*=(const Mat4& other);
+		/// @brief Modifies caller and returns result
+		Mat4& multiply(float other);
 
-		Vec3 multiply(const Vec3& other) const;
-		friend Vec3 operator*(const Mat4& left, const Vec3& right);
+		friend Mat4 operator *(const Mat4& left, const Mat4& right);
+		friend Mat4 operator *(const Mat4& left, float right);
+		friend Vec3 operator *(const Mat4& left, const Vec3& right);
+		friend Vec4 operator *(const Mat4& left, const Vec4& right);
 
-		Vec4 multiply(const Vec4& other) const;
-		friend Vec4 operator*(const Mat4& left, const Vec4& right);
+		Mat4& operator *=(const Mat4& other);
+		Mat4& operator *=(float other);
+
+		// Extras / Helpers
+		static Mat4 identity();
 
 		Mat4& invert();
 		static Mat4 invert(const Mat4& matrix);
 
 		static Mat4 orthographic(float left, float right, float botton, float top, float nearPlane, float farPlane);
-
 		/// @param fov - in radians
 		static Mat4 perspective(float fov, float aspectRatio, float nearPlane, float farPlane);
 
 		static Mat4 translate(const Vec3& translation);
-
 		/// @brief Returns an indenty matrix rotated by the specified angle and axis. 
 		/// A bool can be passed in as the final peramiter to pass angle as degrees.
 		static Mat4 rotate(float angle, const Vec3& axis, bool inRadians = true);
-
 		static Mat4 scale(const Vec3& scale);
 
 		static bool decomposeTransform(const Mat4& transform, Vec3& outPosition, Vec3& outRotation, Vec3& outScale);
 
 		operator float* () { return elements; }
-
 		operator const float* () const { return elements; }
 	};
 
