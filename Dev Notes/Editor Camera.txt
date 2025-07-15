@@ -1,4 +1,1 @@
-The Editor camera currently has a bug with the orbiting, maybe a sign is inverted somewhere?
-
-While the editor camera key is 'Ctrl', if the user tries to use the snapping of the gizmos the editor camera will also be changed.
-To fix this I can either change the snapping key (Move to 'shift' or 'S'?), or change the editor camera key (Move to 'shift' or 'alt'?)
+Could add a camera move mode, while active using WASD will move the camera in the scene

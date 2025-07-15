@@ -211,7 +211,7 @@ namespace daedalus::editor
 			auto& tc = selectedEntity.getComponent<scene::TransformComponent>();
 			maths::Mat4 transform = tc.getTransform();
 
-			bool snap = application::Input::getKeyDown(application::InputCode::Key_Left_Control);
+			bool snap = application::Input::getKeyDown(application::InputCode::Key_Left_Shift) || application::Input::getKeyDown(application::InputCode::Key_Right_Shift);
 			float snapValue = 0.5f; // Snap to 0.5 for translate/scale
 			if (m_gizmoType == ImGuizmo::OPERATION::ROTATE)	// snap to 45 degrees for rotation
 				snapValue = 45.0f;
@@ -296,19 +296,31 @@ namespace daedalus::editor
 			break;
 		}
 
-		// Gizmos
+			// Gizmos
 		case InputCode::Key_Q:
-			m_gizmoType = -1;
+		{
+			if(shift)
+				m_gizmoType = -1;
 			break;
+		}
 		case InputCode::Key_W:
-			m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
+		{
+			if(shift)
+				m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
 			break;
+		}
 		case InputCode::Key_E:
-			m_gizmoType = ImGuizmo::OPERATION::ROTATE;
+		{
+			if(shift)
+				m_gizmoType = ImGuizmo::OPERATION::ROTATE;
 			break;
+		}
 		case InputCode::Key_R:
-			m_gizmoType = ImGuizmo::OPERATION::SCALE;
+		{
+			if(shift)
+				m_gizmoType = ImGuizmo::OPERATION::SCALE;
 			break;
+		}
 		}
 
 		return false;

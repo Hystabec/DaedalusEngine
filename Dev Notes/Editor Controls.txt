@@ -1,0 +1,17 @@
+Editor camera:
+While holding 'Ctrl + Left Mouse' move mouse = Camera orbit
+While holding 'Ctrl + Middle Mouse' move mouse = Camera pan
+While holding 'Ctrl + Right Mouse' move mouse = Camera Zoom
+
+Gizmos:
+'Shift + Q' to hide the gizmo
+'Shift + W' switch to translate gizmo
+'Shift + E' switch to rotation gizmo
+'Shift + R' switch to scale gizmo
+Hold 'Shift' while manipulating a gizmo to enable snapping
+
+Shortcuts:
+'Ctrl + N' = new scene
+'Ctrl + O' = Opens the 'open scene' dialog
+'Ctrl + S' = Save the current scene, if the scene wasn't opened from a file will open the 'Save as' dialog
+'Ctrl + Shift + S' = Opens the 'Save as' dialog
