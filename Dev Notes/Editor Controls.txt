@@ -1,7 +1,8 @@
 Editor camera:
 While holding 'Ctrl + Left Mouse' move mouse = Camera orbit
-While holding 'Ctrl + Middle Mouse' move mouse = Camera pan
 While holding 'Ctrl + Right Mouse' move mouse = Camera Zoom
+While holding 'Ctrl + Middle Mouse' move mouse = Camera pan (X and Y axis)
+While holding 'Ctrl + Shift + Middle Mouse' move mouse = Camera pan (X and Z axis)
 
 Gizmos:
 'Shift + Q' to hide the gizmo
