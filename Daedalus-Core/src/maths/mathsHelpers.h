@@ -6,11 +6,11 @@
 
 namespace daedalus::maths {
 
-	constexpr double DD_MATHS_PI = 3.14159265358979323846;
+	constexpr double DD_PI = 3.14159265358979323846;
 
 	inline constexpr float degrees_to_radians(const float& degrees)
 	{
-		return (float)(degrees * (float)DD_MATHS_PI / 180.0f);
+		return (float)(degrees * (float)DD_PI / 180.0f);
 	}
 
 	inline static Vec2 degrees_to_radians(const Vec2& degrees)
@@ -30,7 +30,7 @@ namespace daedalus::maths {
 
 	inline constexpr float radians_to_degrees(const float& rads)
 	{
-		return (float)(rads * 180.0f / (float)DD_MATHS_PI);
+		return (float)(rads * 180.0f / (float)DD_PI);
 	}
 
 	inline static Vec2 radians_to_degrees(const Vec2& rads)

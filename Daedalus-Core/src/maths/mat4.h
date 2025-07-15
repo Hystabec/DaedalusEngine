@@ -22,6 +22,7 @@ namespace daedalus { namespace maths {
 		Mat4(const Mat4& other);
 
 		// Locical Operators
+
 		bool operator ==(const Mat4& other);
 		bool operator !=(const Mat4& other);
 
@@ -40,7 +41,13 @@ namespace daedalus { namespace maths {
 		Mat4& operator *=(const Mat4& other);
 		Mat4& operator *=(float other);
 
+		// Cast Operators
+
+		operator float* () { return elements; }
+		operator const float* () const { return elements; }
+
 		// Extras / Helpers
+
 		static Mat4 identity();
 
 		Mat4& invert();
@@ -57,9 +64,6 @@ namespace daedalus { namespace maths {
 		static Mat4 scale(const Vec3& scale);
 
 		static bool decomposeTransform(const Mat4& transform, Vec3& outPosition, Vec3& outRotation, Vec3& outScale);
-
-		operator float* () { return elements; }
-		operator const float* () const { return elements; }
 	};
 
 } }

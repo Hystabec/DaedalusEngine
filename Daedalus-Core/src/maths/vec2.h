@@ -19,6 +19,7 @@ namespace daedalus { namespace maths {
 		Vec2(const Vec4& other);
 
 		// Locical Operators
+
 		bool operator ==(const Vec2& other);
 		bool operator !=(const Vec2& other);
 
@@ -52,14 +53,18 @@ namespace daedalus { namespace maths {
 		Vec2& operator /=(float scalar);
 
 		// Unary Operators
+
 		Vec2 operator +() const;
 		Vec2 operator -() const;
 
-		// Extras / Helpers
-		static float dot(const Vec2& left, const Vec2& right);
+		// Cast Operators
 
 		operator float* () { return &x; }
 		operator const float* () const { return &x; }
+
+		// Extras / Helpers
+
+		static float dot(const Vec2& left, const Vec2& right);
 	};
 
 } }
