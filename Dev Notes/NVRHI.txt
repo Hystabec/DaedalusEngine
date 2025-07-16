@@ -1,0 +1,3 @@
+When expanding renderer / adding more render API's. I could use NVRHI to cover Direct3D 11, Direct3D 12, and Vulkan 1.2.
+
+https://github.com/NVIDIA-RTX/NVRHI?tab=readme-ov-file

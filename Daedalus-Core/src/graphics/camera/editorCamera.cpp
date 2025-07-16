@@ -157,6 +157,9 @@ namespace daedalus::graphics {
 #endif
 		float yFactor = 0.0366f * (y * y) - 0.1778f * y + 0.3021f;
 
+		// The 'magic numbers' used to calculate xFactor and yFactor form a
+		// quadratic function that results in a nice pan speed
+
 		return { xFactor, yFactor };
 	}
 
