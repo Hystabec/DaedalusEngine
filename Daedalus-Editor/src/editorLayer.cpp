@@ -22,6 +22,7 @@ namespace daedalus::editor
 		m_editorCamera = graphics::EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
 		graphics::FramebufferSpecification fbSpec;
+		fbSpec.attachments = { graphics::FramebufferTextureFormat::RGBA8, graphics::FramebufferTextureFormat::Depth };
 		fbSpec.width = 1600;
 		fbSpec.height = 900;
 		m_framebuffer = graphics::Framebuffer::create(fbSpec);

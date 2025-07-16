@@ -11,46 +11,6 @@ namespace daedalus { namespace graphics { namespace primatives2D {
 	{
 		QuadProperties() = default;
 
-		QuadProperties(const maths::Vec2& position)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-		}
-		QuadProperties(const maths::Vec2& position, const maths::Vec2& size)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
-		}
-		QuadProperties(const maths::Vec2& position, const maths::Vec2& size, const maths::Vec4& colourTint)
-			: colour(colourTint)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
-		}
-		QuadProperties(const maths::Vec2& position, const maths::Vec2& size, const Shr_ptr<Texture2D>& texture, const maths::Vec4& colourTint = { 1.0f })
-			: texture(texture), colour(colourTint)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
-		}
-		QuadProperties(const maths::Vec2& position, const maths::Vec2& size, const Shr_ptr<SubTexture2D>& subTexture, const maths::Vec4& colourTint = { 1.0f })
-			: subTexture(subTexture), colour(colourTint)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
-		}
-		QuadProperties(const maths::Vec2& position, const maths::Vec2& size, const Shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::Vec4& colourTint = { 1.0f })
-			: texture(texture), tilingFactor(tilingFactor), colour(colourTint)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
-		}
-		QuadProperties(const maths::Vec2& position, const maths::Vec2& size, const Shr_ptr<SubTexture2D>& subTexture, const float& tilingFactor, const maths::Vec4& colourTint = { 1.0f })
-			: subTexture(subTexture), tilingFactor(tilingFactor), colour(colourTint)
-		{
-			transform *= maths::Mat4::translate({position.x, position.y, 0.0f});
-			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
-		}
-
 		QuadProperties(const maths::Vec3& position)
 		{
 			transform *= maths::Mat4::translate(position);
@@ -122,57 +82,6 @@ namespace daedalus { namespace graphics { namespace primatives2D {
 	struct RotatedQuadProperties
 	{
 		RotatedQuadProperties() = default;
-
-		RotatedQuadProperties(const maths::Vec2& position)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-		}
-		RotatedQuadProperties(const maths::Vec2& position, const maths::Vec2& size)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
-		}
-		RotatedQuadProperties(const maths::Vec2& position, const maths::Vec2& size, const float& rotation)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-			transform *= maths::Mat4::rotate(rotation, { 0,0,1 }, true);
-			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
-		}
-		RotatedQuadProperties(const maths::Vec2& position, const maths::Vec2& size, const float& rotation, const maths::Vec4& colour)
-			: colour(colour)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-			transform *= maths::Mat4::rotate(rotation, { 0,0,1 }, true);
-			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
-		}
-		RotatedQuadProperties(const maths::Vec2& position, const maths::Vec2& size, const float& rotation, const Shr_ptr<Texture2D>& texture, const maths::Vec4& colourTint = { 1.0f })
-			: texture(texture), colour(colourTint)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-			transform *= maths::Mat4::rotate(rotation, { 0,0,1 }, true);
-			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
-		}
-		RotatedQuadProperties(const maths::Vec2& position, const maths::Vec2& size, const float& rotation, const Shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::Vec4& colourTint = { 1.0f })
-			: texture(texture), tilingFactor(tilingFactor), colour(colourTint)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-			transform *= maths::Mat4::rotate(rotation, { 0,0,1 }, true);
-			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
-		}
-		RotatedQuadProperties(const maths::Vec2& position, const maths::Vec2& size, const float& rotation, const Shr_ptr<SubTexture2D>& subTexture, const maths::Vec4& colourTint = { 1.0f })
-			: subTexture(subTexture), colour(colourTint)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-			transform *= maths::Mat4::rotate(rotation, { 0,0,1 }, true);
-			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
-		}
-		RotatedQuadProperties(const maths::Vec2& position, const maths::Vec2& size, const float& rotation, const Shr_ptr<SubTexture2D>& subTexture, const float& tilingFactor, const maths::Vec4& colourTint = { 1.0f })
-			: subTexture(subTexture), tilingFactor(tilingFactor), colour(colourTint)
-		{
-			transform *= maths::Mat4::translate({ position.x, position.y, 0.0f });
-			transform *= maths::Mat4::rotate(rotation, { 0,0,1 }, true);
-			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
-		}
 		
 		RotatedQuadProperties(const maths::Vec3& position)
 		{
