@@ -16,6 +16,8 @@ namespace daedalus::graphics {
 		void unbind() override;
 
 		void resize(uint32_t width, uint32_t height) override;
+		// need to call bind() and unbind() before and after use
+		int readPixel(uint32_t attachmentIndex, int x, int y) override;
 
 		uint32_t getColourAttachmentRendererID(uint32_t index) const override { DD_CORE_ASSERT(index < m_colourAttachmentIDs.size()); return m_colourAttachmentIDs[index]; }
 

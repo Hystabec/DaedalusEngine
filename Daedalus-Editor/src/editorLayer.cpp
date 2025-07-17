@@ -22,7 +22,7 @@ namespace daedalus::editor
 		m_editorCamera = graphics::EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
 		graphics::FramebufferSpecification fbSpec;
-		fbSpec.attachments = { graphics::FramebufferTextureFormat::RGBA8, graphics::FramebufferTextureFormat::Depth };
+		fbSpec.attachments = { graphics::FramebufferTextureFormat::RGBA8, graphics::FramebufferTextureFormat::RED_INTEGER, graphics::FramebufferTextureFormat::Depth };
 		fbSpec.width = 1600;
 		fbSpec.height = 900;
 		m_framebuffer = graphics::Framebuffer::create(fbSpec);
@@ -93,6 +93,22 @@ namespace daedalus::editor
 
 		// update scene
 		m_activeScene->updateEditor(dt, m_editorCamera);
+
+		auto [mx, my] = ImGui::GetMousePos();
+		mx -= m_viewportBounds[0].x;
+		my -= m_viewportBounds[0].y;
+		maths::Vec2 viewportSize = m_viewportBounds[1].x - m_viewportBounds[0].x;
+		my = viewportSize.y - my;
+
+		int mouseX = (int)mx;
+		int mouseY = (int)my;
+
+		if (application::Input::getMouseButton(application::InputCode::Mouse_Button_Left) && 
+			(mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y))
+		{
+			int pixelData = m_framebuffer->readPixel(1, mouseX, mouseY);
+			DD_CORE_LOG_INFO("pixel data: {}", pixelData);
+		}
 
 		m_framebuffer->unbind();
 	}
@@ -176,6 +192,7 @@ namespace daedalus::editor
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
+		auto viewportOffset = ImGui::GetCursorPos(); // Includes the tab bar
 
 		m_viewportFocused = ImGui::IsWindowFocused();
 		m_viewportHovered = ImGui::IsWindowHovered();
@@ -190,6 +207,16 @@ namespace daedalus::editor
 		uint32_t textureID = m_framebuffer->getColourAttachmentRendererID();
 		ImGui::Image(textureID, viewportSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
+		auto windowSize = ImGui::GetWindowSize();
+		ImVec2 minBound = ImGui::GetWindowPos();
+		minBound.x += viewportOffset.x;
+		minBound.y += viewportOffset.y;
+
+		ImVec2 maxBound = { minBound.x + windowSize.x, minBound.y + windowSize.y };
+		m_viewportBounds[0] = { minBound.x, minBound.y };
+		m_viewportBounds[1] = { maxBound.x, maxBound.y };
+
+		// Gizmos
 		scene::Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
 
 		// runtime camera from entity

@@ -28,6 +28,7 @@ namespace daedalus::editor
 
 		bool m_viewportFocused = false, m_viewportHovered = false;
 		maths::Vec2 m_viewportSize;
+		maths::Vec2 m_viewportBounds[2];
 
 		Shr_ptr<scene::Scene> m_activeScene;
 		std::string m_currentSceneFilepath = std::string();

@@ -24,7 +24,7 @@ namespace daedalus::graphics {
 			glBindTexture(texture_target(multisampled), id);
 		}
 
-		static void attach_colour_texture(uint32_t id, int samples, GLenum format, uint32_t width, uint32_t height, int index)
+		static void attach_colour_texture(uint32_t id, int samples, GLenum internalFormat, GLenum format, uint32_t width, uint32_t height, int index)
 		{
 			bool multisampled = samples > 1;
 			if (multisampled)
@@ -33,7 +33,7 @@ namespace daedalus::graphics {
 			}
 			else
 			{
-				glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+				glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr);
 				
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -130,7 +130,10 @@ namespace daedalus::graphics {
 				switch (m_colourAttachmentSpecification[i].textureFormat)
 				{
 				case FramebufferTextureFormat::RGBA8:
-					utils::attach_colour_texture(m_colourAttachmentIDs[i], m_specification.samples, GL_RGBA8, m_specification.width, m_specification.height, (int)i);
+					utils::attach_colour_texture(m_colourAttachmentIDs[i], m_specification.samples, GL_RGBA8, GL_RGBA, m_specification.width, m_specification.height, (int)i);
+					break;
+				case FramebufferTextureFormat::RED_INTEGER:
+					utils::attach_colour_texture(m_colourAttachmentIDs[i], m_specification.samples, GL_R32I, GL_RED_INTEGER, m_specification.width, m_specification.height, (int)i);
 					break;
 				}
 			}
@@ -188,6 +191,17 @@ namespace daedalus::graphics {
 		m_specification.height = height;
 
 		invalidate();
+	}
+
+	int OpenGLFramebuffer::readPixel(uint32_t attachmentIndex, int x, int y)
+	{
+		DD_CORE_ASSERT(attachmentIndex < m_colourAttachmentIDs.size());
+
+		glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
+		int pixelData;
+		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+
+		return pixelData;
 	}
 
 }

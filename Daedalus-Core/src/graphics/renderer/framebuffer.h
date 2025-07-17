@@ -8,6 +8,7 @@ namespace daedalus::graphics {
 
 		// Colour
 		RGBA8,
+		RED_INTEGER,
 
 		// Depth/stencil
 		DEPTH24STENCIL8,
@@ -57,6 +58,8 @@ namespace daedalus::graphics {
 		virtual void unbind() = 0;
 
 		virtual void resize(uint32_t width, uint32_t height) = 0;
+		// need to call bind() and unbind() before and after use
+		virtual int readPixel(uint32_t attachmentIndex, int x, int y) = 0;
 
 		virtual uint32_t getColourAttachmentRendererID(uint32_t index = 0) const = 0;
 

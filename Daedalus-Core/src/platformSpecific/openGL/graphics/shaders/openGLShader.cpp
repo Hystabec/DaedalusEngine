@@ -207,21 +207,18 @@ namespace daedalus { namespace graphics {
 		glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
 		if (isLinked == GL_FALSE)
 		{
-			/*
-			* TO DO: fix vector issue as cant retrive the openGL error message
-			* This causes an vector subscript out of range error on glGetProgramInfoLog due to GL_INFO_LOG_LENGTH returning 0
-			 
 			GLint length = 0;
 			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
 
 			
 			std::vector<GLchar> infoLog(length);
-			glGetProgramInfoLog(program, length, &length, &infoLog[0]);
+			if (length)
+			{
+				glGetProgramInfoLog(program, length, &length, &infoLog[0]);
+				DD_CORE_LOG_ERROR("Failed to link shader | {}", &infoLog[0]);
+				DD_CORE_ASSERT(false, "Shader failed to link");
+			}
 			
-
-			DD_CORE_LOG_ERROR("Failed to link shader | {}", &infoLog[0]);
-			DD_CORE_ASSERT(false, "Shader failed to link");
-			*/
 
 			DD_CORE_LOG_ERROR("Failed to link shader");
 			DD_CORE_ASSERT(false, "Shader failed to link");
