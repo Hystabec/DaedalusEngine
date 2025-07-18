@@ -48,14 +48,45 @@ namespace daedalus { namespace graphics { namespace buffers {
 		const auto& layout = vertexBuffer->getLayout();
 		for (const auto& element : layout.getElements())
 		{
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index,
-				element.getComponentCount(),
-				shader_data_type_to_Open_GL_base_type(element.getBaseDataType()),
-				element.Normalized ? GL_TRUE : GL_FALSE,
-				layout.getStide(),
-				((const void*)((uint64_t)element.Offset)));	//cast to a uint64_t first to remove compiler warning when casting uint32_t to a void*
-			index++;
+			switch (element.getBaseDataType())
+			{
+			case dataTypes::BaseDataType::Float:
+			case dataTypes::BaseDataType::Double:
+				{
+					// TO DO: Check if matrix are handled differently
+					/*if (element.getComponentCount() > 4)
+					{
+
+					}
+					else*/
+					{
+						glEnableVertexAttribArray(index);
+						glVertexAttribPointer(index,
+							element.getComponentCount(),
+							shader_data_type_to_Open_GL_base_type(element.getBaseDataType()),
+							element.Normalized ? GL_TRUE : GL_FALSE,
+							layout.getStide(),
+							((const void*)((uint64_t)element.Offset)));	//cast to a uint64_t first to remove compiler warning when casting uint32_t to a void*
+						index++;
+					}
+					break;
+				}
+			case dataTypes::BaseDataType::uInt:
+			case dataTypes::BaseDataType::Int:
+			case dataTypes::BaseDataType::Bool:
+				{
+					glEnableVertexAttribArray(index);
+					glVertexAttribIPointer(index,
+						element.getComponentCount(),
+						shader_data_type_to_Open_GL_base_type(element.getBaseDataType()),
+						layout.getStide(),
+						((const void*)((uint64_t)element.Offset)));	//cast to a uint64_t first to remove compiler warning when casting uint32_t to a void*
+					index++;
+					break;
+				}
+			}
+
+			
 		}
 		m_VertexBuffers.push_back(vertexBuffer);
 	}

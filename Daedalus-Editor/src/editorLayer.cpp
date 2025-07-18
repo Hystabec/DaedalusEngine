@@ -22,7 +22,7 @@ namespace daedalus::editor
 		m_editorCamera = graphics::EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
 		graphics::FramebufferSpecification fbSpec;
-		fbSpec.attachments = { graphics::FramebufferTextureFormat::RGBA8, graphics::FramebufferTextureFormat::RED_INTEGER, graphics::FramebufferTextureFormat::Depth };
+		fbSpec.attachments = { graphics::FramebufferTextureFormat::RGBA8, graphics::FramebufferTextureFormat::RED_UNSIGNED_INTEGER, graphics::FramebufferTextureFormat::Depth };
 		fbSpec.width = 1600;
 		fbSpec.height = 900;
 		m_framebuffer = graphics::Framebuffer::create(fbSpec);
@@ -90,6 +90,7 @@ namespace daedalus::editor
 		maths::Vec4 colourVec = maths::Vec4(25.0f/255.0f, 25.0f / 255.0f, 25.0f / 255.0f, 1.0f);
 		graphics::RenderCommands::setClearColour(colourVec);
 		graphics::RenderCommands::clear();
+		m_framebuffer->clearAttachment(1, (uint32_t)entt::null);
 
 		// update scene
 		m_activeScene->updateEditor(dt, m_editorCamera);
@@ -103,11 +104,12 @@ namespace daedalus::editor
 		int mouseX = (int)mx;
 		int mouseY = (int)my;
 
-		if (application::Input::getMouseButton(application::InputCode::Mouse_Button_Left) && 
-			(mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y))
+		/*if (application::Input::getMouseButton(application::InputCode::Mouse_Button_Left) && 
+			(mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y))*/
+		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 		{
-			int pixelData = m_framebuffer->readPixel(1, mouseX, mouseY);
-			DD_CORE_LOG_INFO("pixel data: {}", pixelData);
+			uint32_t pixelData = m_framebuffer->readPixel(1, mouseX, mouseY);
+			m_hoveredEntity = pixelData != entt::null ? scene::Entity((entt::entity)pixelData, m_activeScene.get()) : scene::Entity();
 		}
 
 		m_framebuffer->unbind();
@@ -187,6 +189,12 @@ namespace daedalus::editor
 		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
 
+		ImGui::Separator();
+		
+		std::string name = "None";
+		if (m_hoveredEntity)
+			name = m_hoveredEntity.getComponent<scene::TagComponent>().Tag;
+		ImGui::Text("Hovered Entity: %s", name.c_str());
 
 		ImGui::End();
 

@@ -10,7 +10,7 @@ namespace daedalus { namespace graphics { namespace buffers {
 		{
 			None = 0,
 			Bool,
-			Int, Float, Double
+			uInt, Int, Float, Double
 		};
 
 		struct DataType
@@ -92,6 +92,7 @@ namespace daedalus { namespace graphics { namespace buffers {
 
 } } }
 
+#define DD_BUFFERS_UINT  daedalus::graphics::buffers::dataTypes::DataType(sizeof(uint32_t),      daedalus::graphics::buffers::dataTypes::BaseDataType::uInt,  1)
 #define DD_BUFFERS_INT   daedalus::graphics::buffers::dataTypes::DataType(sizeof(int),           daedalus::graphics::buffers::dataTypes::BaseDataType::Int,   1)
 #define DD_BUFFERS_FLOAT daedalus::graphics::buffers::dataTypes::DataType(sizeof(float),         daedalus::graphics::buffers::dataTypes::BaseDataType::Float, 1)
 #define DD_BUFFERS_BOOL  daedalus::graphics::buffers::dataTypes::DataType(sizeof(bool),          daedalus::graphics::buffers::dataTypes::BaseDataType::Bool,  1)

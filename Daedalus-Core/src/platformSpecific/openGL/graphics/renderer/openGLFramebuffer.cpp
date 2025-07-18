@@ -78,6 +78,21 @@ namespace daedalus::graphics {
 
 			return false;
 		}
+
+		static GLenum DD_FB_texture_format_to_GL(FramebufferTextureFormat format)
+		{
+			switch (format)
+			{
+			case daedalus::graphics::FramebufferTextureFormat::RGBA8:
+				return GL_RGBA8;
+			case daedalus::graphics::FramebufferTextureFormat::RED_INTEGER:
+			case daedalus::graphics::FramebufferTextureFormat::RED_UNSIGNED_INTEGER: // the is no internal openGL GL_RED_UNSIGNED_INTEGER
+				return GL_RED_INTEGER;
+			}
+
+			DD_CORE_ASSERT(false, "Unknown format");
+			return 0;
+		}
 	}
 
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& specification)
@@ -134,6 +149,9 @@ namespace daedalus::graphics {
 					break;
 				case FramebufferTextureFormat::RED_INTEGER:
 					utils::attach_colour_texture(m_colourAttachmentIDs[i], m_specification.samples, GL_R32I, GL_RED_INTEGER, m_specification.width, m_specification.height, (int)i);
+					break;
+				case FramebufferTextureFormat::RED_UNSIGNED_INTEGER:
+					utils::attach_colour_texture(m_colourAttachmentIDs[i], m_specification.samples, GL_R32UI, GL_RED_INTEGER, m_specification.width, m_specification.height, (int)i);
 					break;
 				}
 			}
@@ -193,15 +211,25 @@ namespace daedalus::graphics {
 		invalidate();
 	}
 
-	int OpenGLFramebuffer::readPixel(uint32_t attachmentIndex, int x, int y)
+	uint32_t OpenGLFramebuffer::readPixel(uint32_t attachmentIndex, int x, int y)
 	{
 		DD_CORE_ASSERT(attachmentIndex < m_colourAttachmentIDs.size());
 
 		glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
-		int pixelData;
-		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+		uint32_t pixelData;
+		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT, &pixelData);
 
 		return pixelData;
+	}
+
+	void OpenGLFramebuffer::clearAttachment(uint32_t attachmentIndex, uint32_t value)
+	{
+		DD_CORE_ASSERT(attachmentIndex < m_colourAttachmentIDs.size());
+
+		auto& spec = m_colourAttachmentSpecification[attachmentIndex];
+
+		glClearTexImage(m_colourAttachmentIDs[attachmentIndex], 0,
+			utils::DD_FB_texture_format_to_GL(spec.textureFormat), GL_UNSIGNED_INT, &value);
 	}
 
 }

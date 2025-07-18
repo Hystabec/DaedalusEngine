@@ -16,6 +16,9 @@ namespace daedalus { namespace graphics {
 		float texIndex;
 		float tilingFactor;
 		maths::Vec4 colour;
+
+		// Editor only
+		uint32_t entityID;
 	};
 
 	struct Renderer2DData
@@ -55,11 +58,12 @@ namespace daedalus { namespace graphics {
 
 		s_data.quadVertexBuffer = buffers::VertexBuffer::create(s_data.maxVertices * sizeof(QuadVertex));
 		s_data.quadVertexBuffer->setLayout({
-			{ DD_BUFFERS_VEC3,	"a_position"	 },
-			{ DD_BUFFERS_VEC2,	"a_texCoord"	 },
-			{ DD_BUFFERS_FLOAT,	"a_texIndex"	 },
-			{ DD_BUFFERS_FLOAT,	"a_tilingFactor" },
-			{ DD_BUFFERS_VEC4,	"a_colour"		 }
+			{ DD_BUFFERS_VEC3,	 "a_position"	  },
+			{ DD_BUFFERS_VEC2,	 "a_texCoord"	  },
+			{ DD_BUFFERS_FLOAT,	 "a_texIndex"	  },
+			{ DD_BUFFERS_FLOAT,	 "a_tilingFactor" },
+			{ DD_BUFFERS_VEC4,	 "a_colour"		  },
+			{ DD_BUFFERS_UINT,	 "a_entityID"	  }
 		});
 		s_data.quadVertexArray->addVertexBuffer(s_data.quadVertexBuffer);
 
@@ -206,7 +210,7 @@ namespace daedalus { namespace graphics {
 		s_data.textureSlotIndex = 1;
 	}
 
-	void Renderer2D::drawQuad(const primatives2D::QuadProperties& quadProps)
+	void Renderer2D::drawQuad(const primatives2D::QuadProperties& quadProps, uint32_t entityID)
 	{
 		DD_PROFILE_FUNCTION();
 		DD_CORE_ASSERT((s_data.beginCalled), "Renderer2D::begin not called");
@@ -276,6 +280,7 @@ namespace daedalus { namespace graphics {
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = quadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
+		s_data.QuadVertexBufferPtr->entityID = entityID;
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadVertexBufferPtr->position = quadProps.transform * s_data.quadVertexPositions[1];
@@ -283,6 +288,7 @@ namespace daedalus { namespace graphics {
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = quadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
+		s_data.QuadVertexBufferPtr->entityID = entityID;
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadVertexBufferPtr->position = quadProps.transform * s_data.quadVertexPositions[2];
@@ -290,6 +296,7 @@ namespace daedalus { namespace graphics {
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = quadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
+		s_data.QuadVertexBufferPtr->entityID = entityID;
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadVertexBufferPtr->position = quadProps.transform * s_data.quadVertexPositions[3];
@@ -297,6 +304,7 @@ namespace daedalus { namespace graphics {
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = quadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
+		s_data.QuadVertexBufferPtr->entityID = entityID;
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.quadIndexCount += 6;
@@ -306,7 +314,7 @@ namespace daedalus { namespace graphics {
 #endif 
 	}
 
-	void Renderer2D::drawRotatedQuad(const primatives2D::RotatedQuadProperties& rotQuadProps)
+	void Renderer2D::drawRotatedQuad(const primatives2D::RotatedQuadProperties& rotQuadProps, uint32_t entityID)
 	{
 		DD_PROFILE_FUNCTION();
 		DD_CORE_ASSERT((s_data.beginCalled), "Renderer2D::begin not called");
@@ -377,6 +385,7 @@ namespace daedalus { namespace graphics {
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = rotQuadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = rotQuadProps.colour;
+		s_data.QuadVertexBufferPtr->entityID = entityID;
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadVertexBufferPtr->position = rotQuadProps.transform * s_data.quadVertexPositions[1];
@@ -384,6 +393,7 @@ namespace daedalus { namespace graphics {
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = rotQuadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = rotQuadProps.colour;
+		s_data.QuadVertexBufferPtr->entityID = entityID;
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadVertexBufferPtr->position = rotQuadProps.transform * s_data.quadVertexPositions[2];
@@ -391,6 +401,7 @@ namespace daedalus { namespace graphics {
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = rotQuadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = rotQuadProps.colour;
+		s_data.QuadVertexBufferPtr->entityID = entityID;
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadVertexBufferPtr->position = rotQuadProps.transform * s_data.quadVertexPositions[3];
@@ -398,6 +409,7 @@ namespace daedalus { namespace graphics {
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = rotQuadProps.tilingFactor;
 		s_data.QuadVertexBufferPtr->colour = rotQuadProps.colour;
+		s_data.QuadVertexBufferPtr->entityID = entityID;
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.quadIndexCount += 6;
@@ -405,6 +417,14 @@ namespace daedalus { namespace graphics {
 #ifndef DD_DISTRO
 		s_data.stats.quadCount++;
 #endif 
+	}
+
+	void Renderer2D::drawSprite(const maths::Mat4& transform, scene::SpriteRendererComponent& spriteComponent, uint32_t entityID)
+	{
+		// QuadProperties stores potentially alot of wasted/unwanted data
+		// might make this function do that same as drawQuad just with all the data from spriteComponent
+
+		drawQuad({ transform, spriteComponent.Colour }, entityID);
 	}
 
 #ifndef DD_DISTRO

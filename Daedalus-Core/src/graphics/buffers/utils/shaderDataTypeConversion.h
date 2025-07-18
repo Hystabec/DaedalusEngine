@@ -12,6 +12,7 @@ namespace daedalus { namespace graphics { namespace buffers {
 		switch (baseDataType)
 		{
 		case dataTypes::BaseDataType::Bool:   return GL_BOOL;
+		case dataTypes::BaseDataType::uInt:   return GL_UNSIGNED_INT;
 		case dataTypes::BaseDataType::Int:    return GL_INT;
 		case dataTypes::BaseDataType::Float:  return GL_FLOAT;
 		case dataTypes::BaseDataType::Double: return GL_DOUBLE;

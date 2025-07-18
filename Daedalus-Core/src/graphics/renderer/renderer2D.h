@@ -6,6 +6,7 @@
 
 #include "graphics/rendering/texture.h"
 #include "graphics/rendering/primative2DProperties.h"
+#include "scene/entityComponents/spriteRendererComponent.h"
 
 namespace daedalus { namespace graphics {
 
@@ -25,11 +26,15 @@ namespace daedalus { namespace graphics {
 		// primatives
 		
 		/// @brief Draws a 2D Quad to the screen
-		static void drawQuad(const primatives2D::QuadProperties& quadProps);
+		/// @brief - Default entityID is UINT32_MAX as that is the same as entt::null
+		static void drawQuad(const primatives2D::QuadProperties& quadProps, uint32_t entityID = UINT32_MAX);
 		
-		/// @brief  Draws a 2D Quad to the screen with the option to be rotated.
-		/// Rotation should be in radians
-		static void drawRotatedQuad(const primatives2D::RotatedQuadProperties& rotQuadProps); 
+		/// @brief Draws a 2D Quad to the screen with the option to be rotated.
+		/// @brief Rotation should be in radians
+		/// @brief - Default entityID is UINT32_MAX as that is the same as entt::null
+		static void drawRotatedQuad(const primatives2D::RotatedQuadProperties& rotQuadProps, uint32_t entityID = UINT32_MAX);
+
+		static void drawSprite(const maths::Mat4& transform, scene::SpriteRendererComponent& spriteComponent, uint32_t entityID);
 
 #ifndef DD_DISTRO
 		struct Statistics

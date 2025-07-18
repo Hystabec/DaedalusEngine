@@ -3,7 +3,7 @@
 
 #include "graphics/renderer/renderer2D.h"
 #include "entity.h"
-#include "components.h"
+#include "entityComponents/components.h"
 
 namespace daedalus::scene {
 
@@ -67,7 +67,8 @@ namespace daedalus::scene {
 			{
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-				graphics::Renderer2D::drawQuad({ transform.getTransform(), sprite.Colour });
+				graphics::Renderer2D::drawSprite( transform.getTransform(), sprite, (uint32_t)entity);
+
 			}
 
 			graphics::Renderer2D::end();
@@ -83,7 +84,8 @@ namespace daedalus::scene {
 		{
 			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-			graphics::Renderer2D::drawQuad({ transform.getTransform(), sprite.Colour });
+			//graphics::Renderer2D::drawQuad({ transform.getTransform(), sprite.Colour }, (int)entity);
+			graphics::Renderer2D::drawSprite(transform.getTransform(), sprite, (uint32_t)entity);
 		}
 
 		graphics::Renderer2D::end();
