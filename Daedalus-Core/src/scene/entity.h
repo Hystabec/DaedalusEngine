@@ -30,6 +30,7 @@ namespace daedalus::scene {
 		template<typename T, typename... Args>
 		T& addOrRepalaceComponent(Args&&... args)
 		{
+			DD_CORE_ASSERT(m_scene, "Scene is nullptr (invalid entity)");
 			return m_scene->m_registry.emplace_or_replace<T>(m_handle, std::forward<Args>()...);
 		}
 
@@ -40,10 +41,11 @@ namespace daedalus::scene {
 			return m_scene->m_registry.get<T>(m_handle);
 		}
 
-		template<typename T>
+		template<typename... T>
 		bool hasComponent()
 		{
-			return m_scene->m_registry.all_of<T>(m_handle);
+			DD_CORE_ASSERT(m_scene, "Scene is nullptr (invalid entity)");
+			return m_scene->m_registry.all_of<T...>(m_handle);
 		}
 
 		/// @brief Remove a specified component from the entity. 
