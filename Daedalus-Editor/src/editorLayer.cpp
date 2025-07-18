@@ -90,6 +90,9 @@ namespace daedalus::editor
 		maths::Vec4 colourVec = maths::Vec4(25.0f/255.0f, 25.0f / 255.0f, 25.0f / 255.0f, 1.0f);
 		graphics::RenderCommands::setClearColour(colourVec);
 		graphics::RenderCommands::clear();
+
+		// entt::null is the same as the max uint value - so if the value
+		// from the frame buffer is max uint then it isnt a valid entity
 		m_framebuffer->clearAttachment(1, (uint32_t)entt::null);
 
 		// update scene
@@ -109,6 +112,7 @@ namespace daedalus::editor
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 		{
 			uint32_t pixelData = m_framebuffer->readPixel(1, mouseX, mouseY);
+			// if the returned value is the max uint value then it will equal entt::null 
 			m_hoveredEntity = pixelData != entt::null ? scene::Entity((entt::entity)pixelData, m_activeScene.get()) : scene::Entity();
 		}
 
