@@ -98,20 +98,25 @@ namespace daedalus::editor
 		// update scene
 		m_activeScene->updateEditor(dt, m_editorCamera);
 
-		auto [mx, my] = ImGui::GetMousePos();
-		mx -= m_viewportBounds[0].x;
-		my -= m_viewportBounds[0].y;
-		maths::Vec2 viewportSize = m_viewportBounds[1] - m_viewportBounds[0];
-		my = viewportSize.y - my;
-
-		int mouseX = (int)mx;
-		int mouseY = (int)my;
-
-		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+		// TO DO: Move the below code block into the the mouse button pressed event
+		// so that it is only ran when an object is going to be picked from the scene
+		// instead of running every frame
 		{
-			uint32_t pixelData = m_framebuffer->readPixel(1, mouseX, mouseY);
-			// if the returned value is the max uint value then it will equal entt::null 
-			m_hoveredEntity = pixelData != entt::null ? scene::Entity((entt::entity)pixelData, m_activeScene.get()) : scene::Entity();
+			auto [mx, my] = ImGui::GetMousePos();
+			mx -= m_viewportBounds[0].x;
+			my -= m_viewportBounds[0].y;
+			maths::Vec2 viewportSize = m_viewportBounds[1] - m_viewportBounds[0];
+			my = viewportSize.y - my;
+
+			int mouseX = (int)mx;
+			int mouseY = (int)my;
+
+			if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+			{
+				uint32_t pixelData = m_framebuffer->readPixel(1, mouseX, mouseY);
+				// if the returned value is the max uint value then it will equal entt::null 
+				m_hoveredEntity = pixelData != entt::null ? scene::Entity((entt::entity)pixelData, m_activeScene.get()) : scene::Entity();
+			}
 		}
 
 		m_framebuffer->unbind();
@@ -288,6 +293,7 @@ namespace daedalus::editor
 		// Shortcut events
 		event::EventDispatcher dispatcher(e);
 		dispatcher.dispatch<event::KeyPressedEvent>(DD_BIND_EVENT_FUN(EditorLayer::onKeyPressed));
+		dispatcher.dispatch<event::MouseButtonPressedEvent>(DD_BIND_EVENT_FUN(EditorLayer::onMouseButtonPressed));
 
 		//// Blocking functionality from ImGuiLayer
 		//if (!(m_viewportFocused && m_viewportHovered))
@@ -357,6 +363,29 @@ namespace daedalus::editor
 		}
 
 		return false;
+	}
+
+	bool EditorLayer::onMouseButtonPressed(event::MouseButtonPressedEvent& e)
+	{
+		if (e.getButtonCode() == application::InputCode::Mouse_Button_Left)
+		{
+			if (canMousePick())
+			{
+				m_sceneHierarchyPanel.setSelectedEntity(m_hoveredEntity);
+			}
+		}
+
+		return false;
+	}
+
+	bool EditorLayer::canMousePick() const
+	{
+		// Check if the camera is being used
+		// TO DO: Expand this to actually check if the camera is being manipulated
+		// no just if left control is pressed 
+		bool cameraInUse = application::Input::getKeyDown(application::InputCode::Key_Left_Control);
+
+		return m_viewportHovered && m_viewportFocused && !ImGuizmo::IsUsing() && !ImGuizmo::IsOver() && !cameraInUse;
 	}
 
 	void EditorLayer::newScene()

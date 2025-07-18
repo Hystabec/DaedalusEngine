@@ -1,6 +1,7 @@
 #pragma once
 
 #include "event.h"
+#include "../application/input/inputCodes.h"
 
 namespace daedalus { namespace event {
 
@@ -43,24 +44,24 @@ namespace daedalus { namespace event {
 	class  MouseButtonEvent : public Event
 	{
 	public:
-		inline int getButtonCode() const { return m_buttonCode; }
+		inline application::InputCode getButtonCode() const { return m_buttonCode; }
 
 		EVENT_CLASS_CATEGORY(EventCategory::Mouse | EventCategory::Input)
 
 	protected:
-		MouseButtonEvent(int buttonCode)
+		MouseButtonEvent(application::InputCode buttonCode)
 			: m_buttonCode(buttonCode)
 		{
 		}
 
 	protected:
-		int m_buttonCode;
+		application::InputCode m_buttonCode;
 	};
 
 	class  MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressedEvent(int buttonCode)
+		MouseButtonPressedEvent(application::InputCode buttonCode)
 			: MouseButtonEvent(buttonCode)
 		{
 		}
@@ -71,7 +72,7 @@ namespace daedalus { namespace event {
 	class  MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleasedEvent(int buttonCode)
+		MouseButtonReleasedEvent(application::InputCode buttonCode)
 			: MouseButtonEvent(buttonCode)
 		{
 		}

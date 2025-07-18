@@ -1,30 +1,31 @@
 #pragma once
 
 #include "event.h"
+#include "../application/input/inputCodes.h"
 
 namespace daedalus { namespace event {
 
 	class  KeyEvent : public Event
 	{
 	public:
-		inline int getKeyCode() const { return m_keyCode; }
+		inline application::InputCode getKeyCode() const { return m_keyCode; }
 
 		EVENT_CLASS_CATEGORY(EventCategory::Keyboard | EventCategory::Input)
 
 	protected:
-		KeyEvent(int keycode)
+		KeyEvent(application::InputCode keycode)
 			: m_keyCode(keycode)
 		{
 		}
 
 	protected:
-		int m_keyCode;
+		application::InputCode m_keyCode;
 	};
 
 	class  KeyPressedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(int keycode)
+		KeyPressedEvent(application::InputCode keycode)
 			: KeyEvent(keycode)
 		{ 
 		}
@@ -35,7 +36,7 @@ namespace daedalus { namespace event {
 	class  KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyReleasedEvent(int keycode)
+		KeyReleasedEvent(application::InputCode keycode)
 			: KeyEvent(keycode)
 		{
 		}
@@ -46,7 +47,7 @@ namespace daedalus { namespace event {
 	class  KeyHeldEvent : public KeyEvent
 	{
 	public:
-		KeyHeldEvent(int keycode, int count)
+		KeyHeldEvent(application::InputCode keycode, int count)
 			: KeyEvent(keycode), m_count(count)
 		{
 		}
@@ -62,7 +63,7 @@ namespace daedalus { namespace event {
 	class  KeyTypedEvent : public KeyEvent
 	{
 	public:
-		KeyTypedEvent(int keycode)
+		KeyTypedEvent(application::InputCode keycode)
 			: KeyEvent(keycode)
 		{
 		}

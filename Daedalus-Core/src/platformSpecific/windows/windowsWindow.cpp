@@ -7,6 +7,8 @@
 #include "events/keyEvent.h"
 #include "events/mouseEvent.h"
 
+#include "application/input/inputCodeConversion.h"
+
 #include "platformSpecific/openGL/graphics/renderer/openGLContext.h"
 
 namespace daedalus { namespace application {
@@ -81,19 +83,19 @@ namespace daedalus { namespace application {
 				{
 				case GLFW_PRESS:
 				{
-					event::KeyPressedEvent event(key);
+					event::KeyPressedEvent event(application::utils::glfw_keycode_to_DD_keycode(key));
 					data.EventCallBack(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					event::KeyReleasedEvent event(key);
+					event::KeyReleasedEvent event(application::utils::glfw_keycode_to_DD_keycode(key));
 					data.EventCallBack(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
-					event::KeyHeldEvent event(key, 1);
+					event::KeyHeldEvent event(application::utils::glfw_keycode_to_DD_keycode(key), 1);
 					data.EventCallBack(event);
 					break;
 				}
@@ -104,7 +106,7 @@ namespace daedalus { namespace application {
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-				event::KeyTypedEvent event(keycode);
+				event::KeyTypedEvent event(application::utils::glfw_keycode_to_DD_keycode(keycode));
 				data.EventCallBack(event);
 			});
 
@@ -116,13 +118,13 @@ namespace daedalus { namespace application {
 				{
 				case GLFW_PRESS:
 				{
-					event::MouseButtonPressedEvent event(button);
+					event::MouseButtonPressedEvent event(application::utils::glfw_keycode_to_DD_keycode(button));
 					data.EventCallBack(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					event::MouseButtonReleasedEvent event(button);
+					event::MouseButtonReleasedEvent event(application::utils::glfw_keycode_to_DD_keycode(button));
 					data.EventCallBack(event);
 					break;
 				}

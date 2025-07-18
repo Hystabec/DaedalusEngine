@@ -56,6 +56,11 @@ namespace daedalus::editor
 		ImGui::End();
 	}
 
+	void SceneHierarchyPanel::setSelectedEntity(scene::Entity entity)
+	{
+		m_selectionContext = entity;
+	}
+
 	void SceneHierarchyPanel::drawEntityNode(scene::Entity entity)
 	{
 		auto& tag = entity.getComponent<scene::TagComponent>().Tag;

@@ -17,6 +17,9 @@ namespace daedalus::editor
 		
 	private:
 		bool onKeyPressed(event::KeyPressedEvent& e);
+		bool onMouseButtonPressed(event::MouseButtonPressedEvent& e);
+
+		bool canMousePick() const;
 
 		void newScene();
 		void openScene();
