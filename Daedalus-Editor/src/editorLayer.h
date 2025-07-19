@@ -38,8 +38,6 @@ namespace daedalus::editor
 
 		SceneHierarchyPanel m_sceneHierarchyPanel;
 		int m_gizmoType = -1;
-
-		scene::Entity m_hoveredEntity;
 	};
 
 }

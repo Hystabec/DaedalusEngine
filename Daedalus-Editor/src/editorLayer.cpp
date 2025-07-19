@@ -98,27 +98,6 @@ namespace daedalus::editor
 		// update scene
 		m_activeScene->updateEditor(dt, m_editorCamera);
 
-		// TO DO: Move the below code block into the the mouse button pressed event
-		// so that it is only ran when an object is going to be picked from the scene
-		// instead of running every frame
-		{
-			auto [mx, my] = ImGui::GetMousePos();
-			mx -= m_viewportBounds[0].x;
-			my -= m_viewportBounds[0].y;
-			maths::Vec2 viewportSize = m_viewportBounds[1] - m_viewportBounds[0];
-			my = viewportSize.y - my;
-
-			int mouseX = (int)mx;
-			int mouseY = (int)my;
-
-			if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
-			{
-				uint32_t pixelData = m_framebuffer->readPixel(1, mouseX, mouseY);
-				// if the returned value is the max uint value then it will equal entt::null 
-				m_hoveredEntity = pixelData != entt::null ? scene::Entity((entt::entity)pixelData, m_activeScene.get()) : scene::Entity();
-			}
-		}
-
 		m_framebuffer->unbind();
 	}
 
@@ -195,13 +174,6 @@ namespace daedalus::editor
 		ImGui::Text("Quads: %d", stats.quadCount);
 		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
-
-		ImGui::Separator();
-		
-		std::string name = "None";
-		if (m_hoveredEntity)
-			name = m_hoveredEntity.getComponent<scene::TagComponent>().Tag;
-		ImGui::Text("Hovered Entity: %s", name.c_str());
 
 		ImGui::End();
 
@@ -371,7 +343,24 @@ namespace daedalus::editor
 		{
 			if (canMousePick())
 			{
-				m_sceneHierarchyPanel.setSelectedEntity(m_hoveredEntity);
+				auto [mx, my] = ImGui::GetMousePos();
+				mx -= m_viewportBounds[0].x;
+				my -= m_viewportBounds[0].y;
+				maths::Vec2 viewportSize = m_viewportBounds[1] - m_viewportBounds[0];
+				my = viewportSize.y - my;
+
+				int mouseX = (int)mx;
+				int mouseY = (int)my;
+
+				// binding and unbinding is kind of expensive but i dont think i have much choice
+				m_framebuffer->bind();
+				uint32_t pixelData = m_framebuffer->readPixel(1, mouseX, mouseY);
+				m_framebuffer->unbind();
+
+				// if the returned value is the max uint value then it will equal entt::null 
+				scene::Entity pickedEntity = pixelData != entt::null ? scene::Entity((entt::entity)pixelData, m_activeScene.get()) : scene::Entity();
+
+				m_sceneHierarchyPanel.setSelectedEntity(pickedEntity);
 			}
 		}
 
