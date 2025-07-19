@@ -155,6 +155,14 @@ namespace daedalus { namespace maths {
 		return !(x == other.x && y == other.y && z == other.z);
 	}
 
+	Vec3& Vec3::operator=(const Vec3& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+		this->z = other.z;
+		return *this;
+	}
+
 	Vec3& Vec3::operator +=(const Vec3& other)
 	{
 		this->add(other);

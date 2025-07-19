@@ -44,6 +44,9 @@ namespace daedalus { namespace maths {
 		friend Vec4 operator /(const Vec4& left, const Vec4& right);
 		friend Vec4 operator /(const Vec4& left, float scalar);
 
+		// assignment operators
+
+		Vec4& operator  =(const Vec4& other);
 		Vec4& operator +=(const Vec4& other);
 		Vec4& operator -=(const Vec4& other);
 		Vec4& operator *=(const Vec4& other);

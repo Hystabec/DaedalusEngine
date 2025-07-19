@@ -172,6 +172,15 @@ namespace daedalus { namespace maths {
 		};
 	}
 
+	Vec4& Vec4::operator=(const Vec4& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+		this->z = other.z;
+		this->w = other.w;
+		return *this;
+	}
+
 	Vec4& Vec4::operator +=(const Vec4& other)
 	{
 		this->add(other);
