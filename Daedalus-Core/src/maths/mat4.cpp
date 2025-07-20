@@ -137,6 +137,15 @@ namespace daedalus { namespace maths {
 			);
 		}
 
+		Mat4& Mat4::operator=(const Mat4& other)
+		{
+			this->columns[0] = other.columns[0];
+			this->columns[1] = other.columns[1];
+			this->columns[2] = other.columns[2];
+			this->columns[3] = other.columns[3];
+			return *this;
+		}
+
 		Mat4& Mat4::operator*=(const Mat4& other)
 		{
 			return this->multiply(other);
