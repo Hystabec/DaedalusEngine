@@ -2,6 +2,7 @@
 #include "renderer2D.h"
 
 #include "../buffers/vertexArray.h"
+#include "../buffers/uniformBuffer.h"
 #include "../shaders/shader.h"
 #include "renderCommands.h"
 
@@ -116,7 +117,7 @@ namespace daedalus { namespace graphics {
 		s_data.quadVertexPositions[2] = {  0.5f,  0.5f, 0.0f };
 		s_data.quadVertexPositions[3] = { -0.5f,  0.5f, 0.0f };
 
-		s_data.cameraUniformBuffer = buffers::UniformBuffer::Create(sizeof(Renderer2DData::CameraData), 0);
+		s_data.cameraUniformBuffer = buffers::UniformBuffer::create(sizeof(Renderer2DData::CameraData), 0);
 	}
 
 	void Renderer2D::shutdown()
