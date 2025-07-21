@@ -2,7 +2,7 @@ project "Daedalus-Core"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++20"
-	staticruntime "on"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin/intermediate/" .. outputdir .. "/%{prj.name}")
@@ -39,7 +39,8 @@ project "Daedalus-Core"
 		"%{dependDir.stb_image}",
 		"%{dependDir.entt}/include",
 		"%{dependDir.yaml_cpp}/include",
-		"%{dependDir.ImGuizmo}"
+		"%{dependDir.ImGuizmo}",
+		"%{dependDir.VulkanSDK}/Include"
 	}
 
 	libdirs
@@ -73,23 +74,50 @@ project "Daedalus-Core"
 		}
 
 	filter "configurations:Debug"
+		runtime "Debug"
+		symbols "on"
 		defines
 		{
 			"DD_DEBUG",
 			"DD_USING_ASSERTS",
 			"DD_USING_PROFILING"
 		}
-		symbols "on"
+		
+		links
+		{
+			"%{library.ShaderC_Debug}",
+			"%{library.SPIRV_Cross_Debug}",
+			"%{library.SPIRV_Cross_GLSL_Debug}"
+		}
 
 	filter "configurations:Realease"
+		runtime "Release"
+		optimize "on"
 		defines
 		{
 			"DD_RELEASE",
 			"DD_USING_ASSERTS",
 			"DD_USING_PROFILING"
 		}
-		optimize "on"
+
+		links
+		{
+			"%{library.ShaderC_Release}",
+			"%{library.SPIRV_Cross_Release}",
+			"%{library.SPIRV_Cross_GLSL_Release}"
+		}
 
 	filter "configurations:Distro"
-		defines "DD_DISTRO"
+		runtime "Release"
 		optimize "on"
+		defines 
+		{
+			"DD_DISTRO"
+		}
+
+		links
+		{
+			"%{library.ShaderC_Release}",
+			"%{library.SPIRV_Cross_Release}",
+			"%{library.SPIRV_Cross_GLSL_Release}"
+		}

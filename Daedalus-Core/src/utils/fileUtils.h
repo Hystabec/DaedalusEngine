@@ -6,19 +6,33 @@ namespace daedalus { namespace utils {
 
 	static std::string read_file(const std::string& filePath, bool* checkBool = nullptr)
 	{
+		DD_PROFILE_FUNCTION();
+
 		std::string result;
 		std::ifstream in(filePath, std::ios::in | std::ios::binary);
 
 		if (in)
 		{
 			in.seekg(0, std::ios::end);
-			result.resize(in.tellg());
-			in.seekg(0, std::ios::beg);
-			in.read(&result[0], result.size());
-			in.close();
 
-			if(checkBool)
-				(*checkBool) = true;
+			size_t size = in.tellg();
+			if (size != -1)
+			{
+				result.resize(size);
+				in.seekg(0, std::ios::beg);
+				in.read(&result[0], result.size());
+
+				if (checkBool)
+					(*checkBool) = true;
+			}
+			else
+			{
+				DD_CORE_LOG_ERROR("Could not read file '{}'", filePath);
+
+				if (checkBool)
+					(*checkBool) = false;
+			}
+			in.close();
 		}
 		else
 		{

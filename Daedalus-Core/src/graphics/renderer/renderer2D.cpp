@@ -46,6 +46,13 @@ namespace daedalus { namespace graphics {
 #ifndef DD_DISTRO
 		Renderer2D::Statistics stats;
 #endif
+
+		struct CameraData
+		{
+			maths::Mat4 viewProjection;
+		};
+		CameraData cameraBuffer;
+		Shr_ptr<buffers::UniformBuffer> cameraUniformBuffer;
 	};
 
 	static Renderer2DData s_data;
@@ -101,9 +108,6 @@ namespace daedalus { namespace graphics {
 		std::string shaderPath = renderer2DUtils::get_default_shader_path(&testBool);
 		DD_CORE_ASSERT(testBool, "Default Shader file not found");
 		s_data.defaultShader = Shader::create(shaderPath);
-
-		s_data.defaultShader->enable();
-		s_data.defaultShader->setUniformia(samplers, s_data.maxTextureSlots, "u_textures");
 		
 		s_data.textureSlots[0] = s_data.whiteTexture;
 
@@ -111,6 +115,8 @@ namespace daedalus { namespace graphics {
 		s_data.quadVertexPositions[1] = {  0.5f, -0.5f, 0.0f };
 		s_data.quadVertexPositions[2] = {  0.5f,  0.5f, 0.0f };
 		s_data.quadVertexPositions[3] = { -0.5f,  0.5f, 0.0f };
+
+		s_data.cameraUniformBuffer = buffers::UniformBuffer::Create(sizeof(Renderer2DData::CameraData), 0);
 	}
 
 	void Renderer2D::shutdown()
@@ -120,41 +126,7 @@ namespace daedalus { namespace graphics {
 		delete[] s_data.QuadVertexBufferBase;
 	}
 
-	void Renderer2D::begin(const Camera& camera, const maths::Mat4& transform)
-	{
-		DD_PROFILE_FUNCTION();
-		DD_CORE_ASSERT(!(s_data.beginCalled), "Renderer2D::end not called");
-		s_data.beginCalled = true;
-
-		maths::Mat4 viewProj = camera.getProjection() * maths::Mat4::invert(transform);
-
-		s_data.defaultShader->enable();
-		s_data.defaultShader->setUniformMat4(viewProj, "u_projView");
-
-		s_data.quadIndexCount = 0;
-		s_data.QuadVertexBufferPtr = s_data.QuadVertexBufferBase;
-
-		s_data.textureSlotIndex = 1;
-	}
-
-	void Renderer2D::begin(const graphics::EditorCamera& editorCamera)
-	{
-		DD_PROFILE_FUNCTION();
-		DD_CORE_ASSERT(!(s_data.beginCalled), "Renderer2D::end not called");
-		s_data.beginCalled = true;
-
-		maths::Mat4 viewProj = editorCamera.getViewProjection();
-
-		s_data.defaultShader->enable();
-		s_data.defaultShader->setUniformMat4(viewProj, "u_projView");
-
-		s_data.quadIndexCount = 0;
-		s_data.QuadVertexBufferPtr = s_data.QuadVertexBufferBase;
-
-		s_data.textureSlotIndex = 1;
-	}
-
-	void Renderer2D::begin(const OrthographicCamera& othoCamera)
+	void Renderer2D::begin(const OrthographicCamera& othoCamera) // TO DO: Remove
 	{
 		DD_PROFILE_FUNCTION();
 		DD_CORE_ASSERT(!(s_data.beginCalled), "Renderer2D::end not called");
@@ -163,10 +135,31 @@ namespace daedalus { namespace graphics {
 		s_data.defaultShader->enable();
 		s_data.defaultShader->setUniformMat4(othoCamera.getProjectViewMatrix(), "u_projView");
 
-		s_data.quadIndexCount = 0;
-		s_data.QuadVertexBufferPtr = s_data.QuadVertexBufferBase;
+		startBatch();
+	}
 
-		s_data.textureSlotIndex = 1;
+	void Renderer2D::begin(const Camera& camera, const maths::Mat4& transform)
+	{
+		DD_PROFILE_FUNCTION();
+		DD_CORE_ASSERT(!(s_data.beginCalled), "Renderer2D::end not called");
+		s_data.beginCalled = true;
+
+		s_data.cameraBuffer.viewProjection = camera.getProjection() * maths::Mat4::invert(transform);
+		s_data.cameraUniformBuffer->setData(&s_data.cameraBuffer, sizeof(Renderer2DData::CameraData));
+
+		startBatch();
+	}
+
+	void Renderer2D::begin(const graphics::EditorCamera& editorCamera)
+	{
+		DD_PROFILE_FUNCTION();
+		DD_CORE_ASSERT(!(s_data.beginCalled), "Renderer2D::end not called");
+		s_data.beginCalled = true;
+
+		s_data.cameraBuffer.viewProjection = editorCamera.getViewProjection();
+		s_data.cameraUniformBuffer->setData(&s_data.cameraBuffer, sizeof(Renderer2DData::CameraData));
+
+		startBatch();
 	}
 
 	void Renderer2D::end()
@@ -200,14 +193,18 @@ namespace daedalus { namespace graphics {
 		}
 	}
 
+	void Renderer2D::startBatch()
+	{
+		s_data.quadIndexCount = 0;
+		s_data.QuadVertexBufferPtr = s_data.QuadVertexBufferBase;
+
+		s_data.textureSlotIndex = 1;
+	}
+
 	void Renderer2D::flushAndReset()
 	{
 		flush();
-
-		// from begin()
-		s_data.quadIndexCount = 0;
-		s_data.QuadVertexBufferPtr = s_data.QuadVertexBufferBase;
-		s_data.textureSlotIndex = 1;
+		startBatch();
 	}
 
 	void Renderer2D::drawQuad(const primatives2D::QuadProperties& quadProps, uint32_t entityID)

@@ -28,14 +28,24 @@ namespace daedalus { namespace graphics {
 		const std::string& getName() const override { return m_name; }
 
 	private:
+		std::unordered_map<GLenum,std::string> preProcess(const std::string& source);
+
+		void compileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& shaderSources);
+		void compileOrGetOpenGLBinaries();
+		void createProgram();
+		void reflect(GLenum stage, const std::vector<uint32_t>& shaderData);
+
 		GLint getUniformLocation(const std::string& name);
 
-		std::unordered_map<GLenum,std::string> preProcess(const std::string& source);
-		GLuint compile(const std::unordered_map<GLenum, std::string>& shaderSources);
-
-		std::string m_name;
 	private:
 		GLuint m_shaderID;
+		std::string m_filePath;
+		std::string m_name;
+
+		std::unordered_map<GLenum, std::vector<uint32_t>> m_vulkanSPIRV;
+		std::unordered_map<GLenum, std::vector<uint32_t>> m_openGLSPIRV;
+
+		std::unordered_map<GLenum, std::string> m_openGLSourceCode;
 	};
 
 } }
