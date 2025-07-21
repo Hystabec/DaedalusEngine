@@ -6,7 +6,7 @@
 
 namespace daedalus::graphics::buffers {
 
-	Shr_ptr<UniformBuffer> create(uint32_t size, uint32_t binding)
+	Shr_ptr<UniformBuffer> UniformBuffer::create(uint32_t size, uint32_t binding)
 	{
 		switch (Renderer::getCurrentAPI())
 		{
