@@ -7,6 +7,8 @@
 ## daedalus-files
 #profiler generated files
 *.profile.json
+#cache files
+*/resources/cache/
 #imgui file
 imgui.ini
 

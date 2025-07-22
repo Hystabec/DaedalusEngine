@@ -82,6 +82,7 @@ namespace daedalus { namespace graphics {
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& filePath)
+		: m_filePath(filePath)
 	{
 		DD_PROFILE_FUNCTION();
 
@@ -258,6 +259,7 @@ namespace daedalus { namespace graphics {
 			}
 			else
 			{
+				DD_ASSERT(!m_filePath.empty(), "File path is empty");
 				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, utils::glShaderStageToShaderC(stage), m_filePath.c_str(), options);
 				if (module.GetCompilationStatus() != shaderc_compilation_status_success)
 				{
@@ -319,7 +321,8 @@ namespace daedalus { namespace graphics {
 				m_openGLSourceCode[stage] = glslCompiler.compile();
 				auto& source = m_openGLSourceCode[stage];
 
-				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, utils::glShaderStageToShaderC(stage), m_filePath.c_str());
+				DD_ASSERT(!m_filePath.empty(), "File path is empty");
+				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, utils::glShaderStageToShaderC(stage), m_filePath.c_str(), options);
 				if (module.GetCompilationStatus() != shaderc_compilation_status_success)
 				{
 					DD_CORE_LOG_ERROR(module.GetErrorMessage());
@@ -396,7 +399,8 @@ namespace daedalus { namespace graphics {
 		DD_CORE_LOG_INFO("{} uniform buffers", resources.uniform_buffers.size());
 		DD_CORE_LOG_INFO("{} resources", resources.sampled_images.size());
 
-		DD_CORE_LOG_INFO("Uniform buffers:");
+		if(!(resources.uniform_buffers.empty()))
+			DD_CORE_LOG_INFO("Uniform buffers:");
 		for (const auto& resource : resources.uniform_buffers)
 		{
 			const auto& bufferType = compiler.get_type(resource.base_type_id);

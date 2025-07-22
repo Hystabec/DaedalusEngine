@@ -2,7 +2,7 @@ project "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++20"
-	staticruntime "on"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin/intermediate/" .. outputdir .. "/%{prj.name}")
@@ -12,6 +12,14 @@ project "Sandbox"
 		"src/**.h",
 		"src/**.cpp",
 		"src/**.hpp"
+	}
+
+	-- Dont think i should need to define YAML static as it not used in this project
+	-- however it doesnt seem to compile if it dont
+	-- TO DO: investigate if YAML is being used anywhere / accidnetly included in a header file etc.
+	defines
+	{
+		"YAML_CPP_STATIC_DEFINE"
 	}
 
 	includedirs
