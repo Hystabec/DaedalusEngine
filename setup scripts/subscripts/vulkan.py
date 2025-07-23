@@ -44,18 +44,25 @@ def checkVulkanSDK():
     print(f"Correct Vulkan SDK located at {VULKAN_SDK}")
     return True
 
-VulkanSDKDebugLibsURL = 'https://files.lunarg.com/SDK-1.4.321.1/VulkanSDK-1.4.321.1-DebugLibs.zip'
-OutputDirectory = "Daedalus-Core/Dependencies/VulkanSDK"
-TempZipFile = f"{OutputDirectory}/VulkanSDK.zip"
+OutputDirectory = ""
 
 def checkVulkanSDKDebugLibs():
-    shadercdLib = Path(f"{OutputDirectory}/Lib/shaderc_sharedd.lib")
-    if (not shadercdLib.exists()):
-        print(f"No Vulkan SDK debug libs found. (Checked {shadercdLib})")
-        print("Downloading", VulkanSDKDebugLibsURL)
-        with urlopen(VulkanSDKDebugLibsURL) as zipresp:
-            with ZipFile(BytesIO(zipresp.read())) as zfile:
-                zfile.extractall(OutputDirectory)
+    if (VULKAN_SDK is None):
+        shadercdLib = Path(f"Daedalus-Core/Dependencies/VulkanSDK/Lib/shaderc_sharedd.lib")
+        if (not shadercdLib.exists()):
+            print(f"No Vulkan SDK debug libs found. (Checked {shadercdLib})")
+            print("'Shader Toolchain Debug Symbols - 64-bit' needs to be installed as a component, when prompted by the vulkan setup wizard")
+            return False
+        else:
+            OutputDirectory = "Daedalus-Core/Dependencies/VulkanSDK"
+    else:
+        shadercdLib = Path(f"{VULKAN_SDK}/Lib/shaderc_sharedd.lib")
+        if (not shadercdLib.exists()):
+            print(f"No Vulkan SDK debug libs found. (Checked {shadercdLib})")
+            print("'Shader Toolchain Debug Symbols - 64-bit' needs to be installed as a component, when prompted by the vulkan setup wizard")
+            return False
+        else:
+            OutputDirectory = VULKAN_SDK
 
-    print(f"Vulkan SDK debug libs located at {OutputDirectory}")
+    print(f"Vulkan SDK debug libs located at {OutputDirectory}/Lib")
     return True
