@@ -340,7 +340,7 @@ namespace daedalus { namespace graphics {
 				if (out.is_open())
 				{
 					auto& data = shaderData[stage];
-					out.write((char*)data.data(), data.size() / sizeof(uint32_t));
+					out.write((char*)data.data(), data.size() * sizeof(uint32_t));
 					out.flush();
 					out.close();
 				}
