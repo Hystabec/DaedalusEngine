@@ -40,7 +40,7 @@ namespace daedalus { namespace graphics {
 
 	void Renderer::submit(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, const Shr_ptr<graphics::Shader>& shader, const maths::Mat4& transform)
 	{
-		shader->enable();
+		shader->bind();
 		shader->setUniformMat4(m_sceneData->projectionViewMatrix, "u_projView");
 		shader->setUniformMat4(transform, "u_transform");
 

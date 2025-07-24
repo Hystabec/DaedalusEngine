@@ -22,8 +22,8 @@ namespace daedalus { namespace graphics {
 		void setUniform3f(const maths::Vec3& vector, const std::string& name) override;
 		void setUniform4f(const maths::Vec4& vector, const std::string& name) override;
 
-		void enable() const override;
-		void disable() const override;
+		void bind() const override;
+		void unbind() const override;
 
 		const std::string& getName() const override { return m_name; }
 

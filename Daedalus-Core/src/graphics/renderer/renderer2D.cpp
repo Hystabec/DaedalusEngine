@@ -13,10 +13,10 @@ namespace daedalus { namespace graphics {
 	struct QuadVertex
 	{
 		maths::Vec3 position;
+		maths::Vec4 colour;
 		maths::Vec2 texCoord;
 		float texIndex;
 		float tilingFactor;
-		maths::Vec4 colour;
 
 		// Editor only
 		uint32_t entityID;
@@ -67,10 +67,10 @@ namespace daedalus { namespace graphics {
 		s_data.quadVertexBuffer = buffers::VertexBuffer::create(s_data.maxVertices * sizeof(QuadVertex));
 		s_data.quadVertexBuffer->setLayout({
 			{ DD_BUFFERS_VEC3,	 "a_position"	  },
+			{ DD_BUFFERS_VEC4,	 "a_colour"		  },
 			{ DD_BUFFERS_VEC2,	 "a_texCoord"	  },
 			{ DD_BUFFERS_FLOAT,	 "a_texIndex"	  },
 			{ DD_BUFFERS_FLOAT,	 "a_tilingFactor" },
-			{ DD_BUFFERS_VEC4,	 "a_colour"		  },
 			{ DD_BUFFERS_UINT,	 "a_entityID"	  }
 		});
 		s_data.quadVertexArray->addVertexBuffer(s_data.quadVertexBuffer);
@@ -133,7 +133,7 @@ namespace daedalus { namespace graphics {
 		DD_CORE_ASSERT(!(s_data.beginCalled), "Renderer2D::end not called");
 		s_data.beginCalled = true;
 
-		s_data.defaultShader->enable();
+		s_data.defaultShader->bind();
 		s_data.defaultShader->setUniformMat4(othoCamera.getProjectViewMatrix(), "u_projView");
 
 		startBatch();
@@ -183,6 +183,8 @@ namespace daedalus { namespace graphics {
 		// bind textures
 		for (uint32_t i = 0; i < s_data.textureSlotIndex; i++)
 			s_data.textureSlots[i]->bind(i);
+
+		s_data.defaultShader->bind();
 
 		// if there is nothing to render skip this
 		if (dataSize != 0)
@@ -274,34 +276,34 @@ namespace daedalus { namespace graphics {
 			* maths::Mat4::scale({ quadProps.size.x, quadProps.size.y, 1 });*/
 
 		s_data.QuadVertexBufferPtr->position = quadProps.transform * s_data.quadVertexPositions[0];
+		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[0];
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = quadProps.tilingFactor;
-		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
 		s_data.QuadVertexBufferPtr->entityID = entityID;
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadVertexBufferPtr->position = quadProps.transform * s_data.quadVertexPositions[1];
+		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[1];
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = quadProps.tilingFactor;
-		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
 		s_data.QuadVertexBufferPtr->entityID = entityID;
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadVertexBufferPtr->position = quadProps.transform * s_data.quadVertexPositions[2];
+		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[2];
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = quadProps.tilingFactor;
-		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
 		s_data.QuadVertexBufferPtr->entityID = entityID;
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadVertexBufferPtr->position = quadProps.transform * s_data.quadVertexPositions[3];
+		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
 		s_data.QuadVertexBufferPtr->texCoord = texCoords[3];
 		s_data.QuadVertexBufferPtr->texIndex = textureIndex;
 		s_data.QuadVertexBufferPtr->tilingFactor = quadProps.tilingFactor;
-		s_data.QuadVertexBufferPtr->colour = quadProps.colour;
 		s_data.QuadVertexBufferPtr->entityID = entityID;
 		s_data.QuadVertexBufferPtr++;
 

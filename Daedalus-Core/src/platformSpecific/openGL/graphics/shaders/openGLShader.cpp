@@ -6,6 +6,7 @@
 #include <spirv_cross/spirv_glsl.hpp>
 
 #include "utils/fileUtils.h"
+#include "utils/timer.h"
 #include "maths/maths.h"
 
 namespace daedalus { namespace graphics {
@@ -48,7 +49,7 @@ namespace daedalus { namespace graphics {
 
 		static const char* getCacheDirectory()
 		{
-			return "resources/cache/shader/opengl";
+			return "resources/cache/shaders/opengl";
 		}
 
 		static void createCacheDirectoryIfNeeded()
@@ -96,15 +97,18 @@ namespace daedalus { namespace graphics {
 			DD_CORE_LOG_ERROR("Failed to read shader file : path - {}", filePath);
 			m_name = "Invalid shader";
 			m_shaderID = 0;
-			return;
 		}
 
 		DD_CORE_ASSERT(wasReadCorrectly, "Invalid Shader");
 		auto shaderSources = preProcess(shaderSrc);
 
-		compileOrGetVulkanBinaries(shaderSources);
-		compileOrGetOpenGLBinaries();
-		createProgram();
+		{
+			daedalus::utils::Timer timer;
+			compileOrGetVulkanBinaries(shaderSources);
+			compileOrGetOpenGLBinaries();
+			createProgram();
+			DD_CORE_LOG_WARN("Shader creation took {} ms", timer.elapsedMilliseconds());
+		}
 
 		// Getting name from file path
 		auto lastSlash = filePath.find_last_of("/\\");
@@ -187,14 +191,14 @@ namespace daedalus { namespace graphics {
 		glUniform4f(getUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
 	}
 
-	void OpenGLShader::enable() const
+	void OpenGLShader::bind() const
 	{
 		DD_PROFILE_FUNCTION();
 
 		glUseProgram(m_shaderID);
 	}
 
-	void OpenGLShader::disable() const
+	void OpenGLShader::unbind() const
 	{
 		DD_PROFILE_FUNCTION();
 
@@ -219,6 +223,7 @@ namespace daedalus { namespace graphics {
 			DD_CORE_ASSERT(utils::shaderTypeFromString(type), "Invalid shader type specifier");
 
 			size_t nextLinePos = source.find_first_not_of("\r\n", eol);
+			DD_CORE_ASSERT(nextLinePos != std::string::npos, "Syntax error");
 			pos = source.find(typeToken, nextLinePos);
 			shaderSources[utils::shaderTypeFromString(type)] = source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.size() - 1 : nextLinePos));
 		}
@@ -259,7 +264,7 @@ namespace daedalus { namespace graphics {
 			}
 			else
 			{
-				DD_ASSERT(!m_filePath.empty(), "File path is empty");
+				DD_ASSERT(!m_filePath.empty(), "File path is invalid");
 				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, utils::glShaderStageToShaderC(stage), m_filePath.c_str(), options);
 				if (module.GetCompilationStatus() != shaderc_compilation_status_success)
 				{
@@ -321,7 +326,7 @@ namespace daedalus { namespace graphics {
 				m_openGLSourceCode[stage] = glslCompiler.compile();
 				auto& source = m_openGLSourceCode[stage];
 
-				DD_ASSERT(!m_filePath.empty(), "File path is empty");
+				DD_ASSERT(!m_filePath.empty(), "File path is invalid");
 				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, utils::glShaderStageToShaderC(stage), m_filePath.c_str(), options);
 				if (module.GetCompilationStatus() != shaderc_compilation_status_success)
 				{
@@ -351,25 +356,26 @@ namespace daedalus { namespace graphics {
 		for (auto&& [stage, spirv] : m_openGLSPIRV)
 		{
 			GLuint shaderID = shadersIDs.emplace_back(glCreateShader(stage));
-			glShaderBinary(1, &shaderID, GL_SHADER_BINARY_FORMAT_SPIR_V, spirv.data(), (GLsizei)(spirv.size() / sizeof(uint32_t)));
+
+			glShaderBinary(1, &shaderID, GL_SHADER_BINARY_FORMAT_SPIR_V, spirv.data(), (GLsizei)(spirv.size() * sizeof(uint32_t)));
 			glSpecializeShader(shaderID, "main", 0, nullptr, nullptr);
+
 			glAttachShader(program, shaderID);
 		}
 
 		glLinkProgram(program);
 
-		GLint isLinked;
+		GLint isLinked = 0;
 		glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
 		if (isLinked == GL_FALSE)
 		{
 			GLint length = 0;
 			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
-			
-			std::vector<GLchar> infoLog(length);
 			if (length)
 			{
-				glGetProgramInfoLog(program, length, &length, &infoLog[0]);
-				DD_CORE_LOG_ERROR("Failed to link shader | {}", &infoLog[0]);
+				std::vector<GLchar> infoLog(length);
+				glGetProgramInfoLog(program, length, &length, infoLog.data());
+				DD_CORE_LOG_ERROR("Failed to link shader | {}", infoLog.data());
 				DD_CORE_ASSERT(false, "Shader failed to link");
 			}
 			

@@ -153,7 +153,7 @@ public:
 				daedalus::maths::Mat4 squareTransform = daedalus::maths::Mat4::translate(daedalus::maths::Vec3(x * 0.2f, y * 0.2f, 0.0f)) * daedalus::maths::Mat4::scale({ 0.1f });
 
 				auto flatShader = m_shaderLib.get("flatShader");
-				flatShader->enable();
+				flatShader->bind();
 				x % 2 == 0 ? flatShader->setUniform4f(redCol, "u_colour") : flatShader->setUniform4f(greenCol, "u_colour");
 
 				daedalus::graphics::Renderer::submit(m_squareVertexArray, flatShader, squareTransform);

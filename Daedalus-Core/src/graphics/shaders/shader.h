@@ -36,8 +36,8 @@ namespace daedalus { namespace graphics {
 		/// @brief sets a 4 float vector for a specified uniform location - shader->enable needs to be called first
 		virtual void setUniform4f(const maths::Vec4& vector, const std::string& name) = 0;
 
-		virtual void enable() const = 0;
-		virtual void disable() const = 0;
+		virtual void bind() const = 0;
+		virtual void unbind() const = 0;
 
 		virtual const std::string& getName() const = 0;
 
