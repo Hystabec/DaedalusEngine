@@ -6,7 +6,7 @@
 #include "../shaders/shader.h"
 #include "renderCommands.h"
 
-#include "utils/rendererUtils.h"
+#include "utils/findFileLocation.h"
 
 namespace daedalus { namespace graphics {
 
@@ -62,7 +62,7 @@ namespace daedalus { namespace graphics {
 	{
 		DD_PROFILE_FUNCTION();
 
-		s_data.quadVertexArray = buffers::VertexArray::Create();	
+		s_data.quadVertexArray = buffers::VertexArray::Create();
 
 		s_data.quadVertexBuffer = buffers::VertexBuffer::create(s_data.maxVertices * sizeof(QuadVertex));
 		s_data.quadVertexBuffer->setLayout({
@@ -72,7 +72,7 @@ namespace daedalus { namespace graphics {
 			{ DD_BUFFERS_FLOAT,	 "a_texIndex"	  },
 			{ DD_BUFFERS_FLOAT,	 "a_tilingFactor" },
 			{ DD_BUFFERS_UINT,	 "a_entityID"	  }
-		});
+			});
 		s_data.quadVertexArray->addVertexBuffer(s_data.quadVertexBuffer);
 
 		s_data.QuadVertexBufferBase = new QuadVertex[s_data.maxVertices];
@@ -105,8 +105,9 @@ namespace daedalus { namespace graphics {
 		for (uint32_t i = 0; i < s_data.maxTextureSlots; i++)
 			samplers[i] = i;
 
-		bool testBool;
-		std::string shaderPath = renderer2DUtils::get_default_shader_path(&testBool);
+		//bool testBool;
+		//std::string shaderPath = renderer2DUtils::get_default_shader_path(&testBool);
+		auto[shaderPath, testBool] = utils::get_core_resource_file_location("shaders\\default2DShader.glsl");
 		DD_CORE_ASSERT(testBool, "Default Shader file not found");
 		s_data.defaultShader = Shader::create(shaderPath);
 		

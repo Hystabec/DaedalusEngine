@@ -10,6 +10,8 @@
 #include "application/applicationCore.h"
 #include "application/input/inputCodes.h"
 
+#include "utils/findFileLocation.h"
+
 //temp
 #include <glfw3.h>
 
@@ -51,9 +53,16 @@ namespace daedalus { namespace application {
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
+		auto[boldFont, bfCheck] = utils::get_core_resource_file_location("fonts\\Noto_Sans\\NotoSans-Bold.ttf");
+		auto[normalFont, nfCheck] = utils::get_core_resource_file_location("fonts\\Noto_Sans\\NotoSans-Medium.ttf");
+
 		// Sets custom ImGui styling
-		io.Fonts->AddFontFromFileTTF("resources/fonts/Noto_Sans/NotoSans-Bold.ttf", 18.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("resources/fonts/Noto_Sans/NotoSans-Medium.ttf", 18.0f);
+		if(bfCheck)
+			io.Fonts->AddFontFromFileTTF(boldFont.c_str(), 18.0f);
+
+		if (nfCheck)
+			io.FontDefault = io.Fonts->AddFontFromFileTTF(normalFont.c_str(), 18.0f);
+
 		setDarkThemeColours();
 
 		GLFWwindow* wind = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
