@@ -1,5 +1,6 @@
 #pragma once
 #include "panels/sceneHierarchyPanel.h"
+#include "panels/contentBrowserPanel.h"
 
 namespace daedalus::editor
 {
@@ -38,6 +39,7 @@ namespace daedalus::editor
 
 		SceneHierarchyPanel m_sceneHierarchyPanel;
 		int m_gizmoType = -1;
+		ContentBrowserPanel m_contentBrowserPanel;
 	};
 
 }

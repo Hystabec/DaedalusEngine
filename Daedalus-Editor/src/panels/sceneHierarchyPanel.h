@@ -2,6 +2,7 @@
 
 namespace daedalus::editor
 {
+	// TO DO: consider moving into core - as it could be used for runtime debugging (in development builds)
 
 	class SceneHierarchyPanel
 	{

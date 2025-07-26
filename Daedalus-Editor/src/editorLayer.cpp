@@ -165,6 +165,7 @@ namespace daedalus::editor
 		}
 
 		m_sceneHierarchyPanel.onImGuiRender();
+		m_contentBrowserPanel.onImGuiRender();
 
 		ImGui::Begin("Stats");
 
