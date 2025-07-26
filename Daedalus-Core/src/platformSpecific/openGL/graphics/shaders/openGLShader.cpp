@@ -107,7 +107,7 @@ namespace daedalus { namespace graphics {
 			compileOrGetVulkanBinaries(shaderSources);
 			compileOrGetOpenGLBinaries();
 			createProgram();
-			DD_CORE_LOG_WARN("Shader creation took {} ms", timer.elapsedMilliseconds());
+			DD_CORE_LOG_INFO("Shader creation took {} ms", timer.elapsedMilliseconds());
 		}
 
 		// Getting name from file path

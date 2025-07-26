@@ -93,7 +93,7 @@ public:
 		auto triShader = graphics::Shader::create("TriangleShader", triangleVertexSrc, triangleFragSrc);
 		m_shaderLib.add("TriangleShader", triShader);
 
-		m_shaderLib.load("resources/shaders/flatShader.glsl");
+		m_shaderLib.load("assets/shaders/flatShader.glsl");
 
 		float textureVerts[5 * 4] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -114,10 +114,10 @@ public:
 		Shr_ptr<graphics::buffers::IndexBuffer> textureIndexBuff(graphics::buffers::IndexBuffer::create(sqrIndices, sizeof(sqrIndices) / sizeof(uint32_t)));
 		m_texuterVerexArray->setIndexBuffer(textureIndexBuff);
 
-		m_shaderLib.load("texSha", "resources/shaders/textureShader.glsl");
+		m_shaderLib.load("texSha", "assets/shaders/textureShader.glsl");
 
-		m_texture = daedalus::graphics::Texture2D::create("resources/testImage.png");
-		m_DDTestImage = daedalus::graphics::Texture2D::create("resources/DD_testImage.png");
+		m_texture = daedalus::graphics::Texture2D::create("assets/testImage.png");
+		m_DDTestImage = daedalus::graphics::Texture2D::create("assets/DD_testImage.png");
 
 		m_shaderLib.get("texSha")->setUniform1i(0, "u_texture");
 	}

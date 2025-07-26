@@ -24,6 +24,7 @@ namespace daedalus::editor
 
 		void newScene();
 		void openScene();
+		void openScene(const std::filesystem::path& path);
 		void saveScene();
 		void saveSceneAs();
 	private:

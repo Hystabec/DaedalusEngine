@@ -172,71 +172,87 @@ namespace daedalus::scene {
 
 	bool SceneSerializer::deserialize(const std::string& filepath)
 	{
-		std::ifstream stream(filepath);
-		std::stringstream strStream;
-		strStream << stream.rdbuf();
+		// I dont really like try statements
+		// but this was the easiest ways to handle a few issues 
 
-		YAML::Node data = YAML::Load(strStream.str());
-		if (!data["Scene"])
-			return false;
-
-		std::string sceneName = data["Scene"].as<std::string>();
-		DD_CORE_LOG_TRACE("Deserializing scene {}", sceneName);
-
-		auto entites = data["Entities"];
-		if (entites)
+		// TO DO: Either remove the try block and do some error checking before hand
+		// or expand the catch statement to give a reason why the deserializtion failed
+		try
 		{
-			for (auto entity : entites)
+			std::ifstream stream(filepath);
+			std::stringstream strStream;
+			strStream << stream.rdbuf();
+
+			YAML::Node data = YAML::Load(strStream.str());
+			if (!data["Scene"])
 			{
-				uint64_t uuid = entity["Entity"].as<uint64_t>(); // TO DO: add unique ids
+				DD_CORE_LOG_ERROR("Deserialization Error: file contains no scene data: {}", filepath);
+				return false;
+			}
 
-				std::string name;
-				auto tagComponent = entity["TagComponent"];
-				if (tagComponent)
-					name = tagComponent["Tag"].as<std::string>();
+			std::string sceneName = data["Scene"].as<std::string>();
+			DD_CORE_LOG_TRACE("Deserializing scene {}", sceneName);
 
-				DD_CORE_LOG_TRACE("Deserialized entity with ID = {}, name = {}", uuid, name);
-
-				Entity deserializedEntity = m_scene->createEntity(name);
-
-				auto component = entity["TransformComponent"];
-				if (component)
+			auto entites = data["Entities"];
+			if (entites)
+			{
+				for (auto entity : entites)
 				{
-					auto& tc = deserializedEntity.addOrRepalaceComponent<TransformComponent>();
-					tc.Position = component["Position"].as<maths::Vec3>();
-					tc.Rotation = component["Rotation"].as<maths::Vec3>();
-					tc.Scale = component["Scale"].as<maths::Vec3>();
-				}
+					uint64_t uuid = entity["Entity"].as<uint64_t>(); // TO DO: add unique ids
 
-				component = entity["CameraComponent"];
-				if (component)
-				{
-					auto& cc = deserializedEntity.addOrRepalaceComponent<CameraComponent>();
-					auto cameraProps = component["Camera"];
-					cc.Camera.setProjectionType((SceneCamera::ProjectionType)cameraProps["ProjectionType"].as<int>());
+					std::string name;
+					auto tagComponent = entity["TagComponent"];
+					if (tagComponent)
+						name = tagComponent["Tag"].as<std::string>();
 
-					cc.Camera.setPerspectiveVerticalFOV(cameraProps["PerspectiveFOV"].as<float>());
-					cc.Camera.setPerspectiveNearClip(cameraProps["PerspectiveNear"].as<float>());
-					cc.Camera.setPerspectiveFarClip(cameraProps["PerspectiveFar"].as<float>());
+					DD_CORE_LOG_TRACE("Deserialized entity with ID = {}, name = {}", uuid, name);
 
-					cc.Camera.setOrthographicSize(cameraProps["OrthographicSize"].as<float>());
-					cc.Camera.setOrthographicNearClip(cameraProps["OrthographicNear"].as<float>());
-					cc.Camera.setOrthographicFarClip(cameraProps["OrthographicFar"].as<float>());
+					Entity deserializedEntity = m_scene->createEntity(name);
 
-					cc.Primary = component["Primary"].as<bool>();
-					cc.FixedAspectRatio = component["FixedAspectRatio"].as<bool>();
-				}
+					auto component = entity["TransformComponent"];
+					if (component)
+					{
+						auto& tc = deserializedEntity.addOrRepalaceComponent<TransformComponent>();
+						tc.Position = component["Position"].as<maths::Vec3>();
+						tc.Rotation = component["Rotation"].as<maths::Vec3>();
+						tc.Scale = component["Scale"].as<maths::Vec3>();
+					}
 
-				component = entity["SpriteRendererComponent"];
-				if (component)
-				{
-					auto& src = deserializedEntity.addOrRepalaceComponent<SpriteRendererComponent>();
-					src.Colour = component["Colour"].as<maths::Vec4>();
+					component = entity["CameraComponent"];
+					if (component)
+					{
+						auto& cc = deserializedEntity.addOrRepalaceComponent<CameraComponent>();
+						auto cameraProps = component["Camera"];
+						cc.Camera.setProjectionType((SceneCamera::ProjectionType)cameraProps["ProjectionType"].as<int>());
+
+						cc.Camera.setPerspectiveVerticalFOV(cameraProps["PerspectiveFOV"].as<float>());
+						cc.Camera.setPerspectiveNearClip(cameraProps["PerspectiveNear"].as<float>());
+						cc.Camera.setPerspectiveFarClip(cameraProps["PerspectiveFar"].as<float>());
+
+						cc.Camera.setOrthographicSize(cameraProps["OrthographicSize"].as<float>());
+						cc.Camera.setOrthographicNearClip(cameraProps["OrthographicNear"].as<float>());
+						cc.Camera.setOrthographicFarClip(cameraProps["OrthographicFar"].as<float>());
+
+						cc.Primary = component["Primary"].as<bool>();
+						cc.FixedAspectRatio = component["FixedAspectRatio"].as<bool>();
+					}
+
+					component = entity["SpriteRendererComponent"];
+					if (component)
+					{
+						auto& src = deserializedEntity.addOrRepalaceComponent<SpriteRendererComponent>();
+						src.Colour = component["Colour"].as<maths::Vec4>();
+					}
 				}
 			}
-		}
 
-		return true;
+			return true;
+		}
+		catch (...)
+		{
+			DD_CORE_LOG_ERROR("Deserialization Error: Could not deserialize scene: {}", filepath);
+			return false;
+		}
 	}
 
 	bool SceneSerializer::deserializeRuntime(const std::string& filepath)

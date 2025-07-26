@@ -11,9 +11,9 @@ void Layer2D::attach()
 {
 	DD_PROFILE_FUNCTION();
 
-	m_texture = daedalus::graphics::Texture2D::create("resources/DD_testImage.png");
-	m_texture2 = daedalus::graphics::Texture2D::create("resources/testImage.png");
-	m_fullSubTextureTesting = daedalus::graphics::Texture2D::create("resources/subTextureTesting.png");
+	m_texture = daedalus::graphics::Texture2D::create("assets/DD_testImage.png");
+	m_texture2 = daedalus::graphics::Texture2D::create("assets/testImage.png");
+	m_fullSubTextureTesting = daedalus::graphics::Texture2D::create("assets/subTextureTesting.png");
 	m_subTexture = daedalus::graphics::SubTexture2D::createFromCoords(m_fullSubTextureTesting, { 24, 12 }, { 110, 240 });
 	m_subTexture2 = daedalus::graphics::SubTexture2D::createFromCoords(m_fullSubTextureTesting, { 300, 16 }, {194, 213});
 }

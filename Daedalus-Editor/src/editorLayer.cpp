@@ -200,6 +200,20 @@ namespace daedalus::editor
 		uint32_t textureID = m_framebuffer->getColourAttachmentRendererID();
 		ImGui::Image(textureID, viewportSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
+		// TO DO: If the drop target is a valid file, should probably prompt the user
+		// to save the current scene
+		if (ImGui::BeginDragDropTarget())
+		{
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM");
+
+			if (payload)
+			{
+				const wchar_t* path = (const wchar_t*)payload->Data;
+				openScene(path);
+				ImGui::EndDragDropTarget();
+			}
+		}
+
 		// Gizmos
 		scene::Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
 
@@ -391,14 +405,21 @@ namespace daedalus::editor
 		std::string filepath = utils::FileDialog::openFile("Daedalus Scene (*.daedalus)\0*.daedalus\0");
 		if (!filepath.empty())
 		{
-			m_activeScene = create_shr_ptr<scene::Scene>();
+			openScene(filepath);
+		}
+	}
 
-			scene::SceneSerializer serializer(m_activeScene);
-			serializer.deserialize(filepath);
+	void EditorLayer::openScene(const std::filesystem::path& path)
+	{
+		auto newScene = create_shr_ptr<scene::Scene>();
 
+		scene::SceneSerializer serializer(newScene);
+		if (serializer.deserialize(path.string()))
+		{
+			m_activeScene = newScene;
 			m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 			m_sceneHierarchyPanel.setContext(m_activeScene);
-			m_currentSceneFilepath = filepath;
+			m_currentSceneFilepath = path.string();
 		}
 	}
 

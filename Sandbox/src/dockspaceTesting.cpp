@@ -9,7 +9,7 @@ EditorLayer::EditorLayer()
 void EditorLayer::attach()
 {
 	DD_PROFILE_FUNCTION();
-	m_texture = daedalus::graphics::Texture2D::create("resources/testImage.png");
+	m_texture = daedalus::graphics::Texture2D::create("assets/testImage.png");
 
 	daedalus::graphics::FramebufferSpecification fbSpec;
 	fbSpec.width = 1280;

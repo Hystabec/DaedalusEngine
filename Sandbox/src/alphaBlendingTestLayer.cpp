@@ -11,8 +11,8 @@ void AlphaBlendingTestLayer::attach()
 {
 	DD_PROFILE_FUNCTION();
 
-	m_texture = daedalus::graphics::Texture2D::create("resources/alphaTesting_1.png");
-	m_texture2 = daedalus::graphics::Texture2D::create("resources/alphaTesting_2.png");
+	m_texture = daedalus::graphics::Texture2D::create("assets/alphaTesting_1.png");
+	m_texture2 = daedalus::graphics::Texture2D::create("assets/alphaTesting_2.png");
 
 	ro1 = { {-1.0f,0.0f, -0.1f},{1.0f}, m_texture };
 	ro2 = { {1.0f,0.0f, -0.1f},{1.0f}, m_texture2 };
