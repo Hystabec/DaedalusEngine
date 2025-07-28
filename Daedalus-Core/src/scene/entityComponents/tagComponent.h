@@ -5,12 +5,12 @@ namespace daedalus::scene {
 
 	struct TagComponent
 	{
-		std::string Tag;
+		std::string tag;
 
 		TagComponent() = default;
 		TagComponent(const TagComponent&) = default;
 		TagComponent(const std::string& tag)
-			: Tag(tag)
+			: tag(tag)
 		{
 		}
 	};

@@ -425,7 +425,7 @@ namespace daedalus { namespace graphics {
 		// QuadProperties stores potentially alot of wasted/unwanted data
 		// might make this function do that same as drawQuad just with all the data from spriteComponent
 
-		drawQuad({ transform, spriteComponent.Colour }, entityID);
+		drawQuad({ transform, spriteComponent.material.texture, spriteComponent.material.tilingFactor, spriteComponent.colour }, entityID);
 	}
 
 #ifndef DD_DISTRO

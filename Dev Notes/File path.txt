@@ -1,0 +1,4 @@
+Anything that requires a file path:
+e.g. Texture2D::create() or read_file()
+should take std::filesystem::path as the argument not std::string
+this is because std::filesystem::path is a wchar instead of char, so extended character sets can be used

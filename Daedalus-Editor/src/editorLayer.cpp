@@ -204,14 +204,13 @@ namespace daedalus::editor
 		// to save the current scene
 		if (ImGui::BeginDragDropTarget())
 		{
-			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM");
-
-			if (payload)
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 			{
-				const wchar_t* path = (const wchar_t*)payload->Data;
+				std::filesystem::path path = (const wchar_t*)payload->Data;
+				if(path.extension().string() == ".Daedalus")
 				openScene(path);
-				ImGui::EndDragDropTarget();
 			}
+			ImGui::EndDragDropTarget();
 		}
 
 		// Gizmos
@@ -252,17 +251,17 @@ namespace daedalus::editor
 				maths::Vec3 position, rotation, scale;
 				if (maths::Mat4::decomposeTransform(transform, position, rotation, scale))
 				{
-					if(is_meaningful_difference(tc.Position, position))
-						tc.Position = position;
+					if(is_meaningful_difference(tc.position, position))
+						tc.position = position;
 
-					if (is_meaningful_difference(tc.Rotation, rotation))
+					if (is_meaningful_difference(tc.rotation, rotation))
 					{
-						maths::Vec3 deltaRotation = rotation - tc.Rotation;
-						tc.Rotation += deltaRotation;
+						maths::Vec3 deltaRotation = rotation - tc.rotation;
+						tc.rotation += deltaRotation;
 					}
 
-					if(is_meaningful_difference(tc.Scale, scale))
-						tc.Scale = scale;
+					if(is_meaningful_difference(tc.scale, scale))
+						tc.scale = scale;
 				}
 			}
 		}

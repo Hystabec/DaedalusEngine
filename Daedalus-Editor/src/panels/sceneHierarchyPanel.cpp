@@ -63,7 +63,7 @@ namespace daedalus::editor
 
 	void SceneHierarchyPanel::drawEntityNode(scene::Entity entity)
 	{
-		auto& tag = entity.getComponent<scene::TagComponent>().Tag;
+		auto& tag = entity.getComponent<scene::TagComponent>().tag;
 		
 		static const ImGuiTreeNodeFlags flags = ((m_selectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow
 			| ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -233,7 +233,7 @@ namespace daedalus::editor
 		// This check is kind of pointless as all entities should have a Tag
 		if (entity.hasComponent<scene::TagComponent>())
 		{
-			auto& tag = entity.getComponent<scene::TagComponent>().Tag;
+			auto& tag = entity.getComponent<scene::TagComponent>().tag;
 
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
@@ -272,21 +272,21 @@ namespace daedalus::editor
 		draw_component<scene::TransformComponent>("Transform",
 			[](scene::TransformComponent& tc)
 			{
-				draw_vec3_control("Position", tc.Position);
+				draw_vec3_control("Position", tc.position);
 
-				maths::Vec3 rotation = maths::radians_to_degrees(tc.Rotation);
+				maths::Vec3 rotation = maths::radians_to_degrees(tc.rotation);
 				if(draw_vec3_control("Rotation", rotation, 1.0f))
-					tc.Rotation = maths::degrees_to_radians(rotation);
+					tc.rotation = maths::degrees_to_radians(rotation);
 
-				draw_vec3_control("Scale", tc.Scale, 0.1f, 1.0f);
+				draw_vec3_control("Scale", tc.scale, 0.1f, 1.0f);
 			}, entity, false);
 		
 		draw_component<scene::CameraComponent>("Camera",
 			[](scene::CameraComponent& cameraComp)
 			{
-				auto& camera = cameraComp.Camera;
+				auto& camera = cameraComp.camera;
 
-				ImGui::Checkbox("Primary", &cameraComp.Primary);
+				ImGui::Checkbox("Primary", &cameraComp.primary);
 
 				const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
 				const char* currentProjectionTypeString = projectionTypeStrings[(int)camera.getProjectionType()];
@@ -308,7 +308,7 @@ namespace daedalus::editor
 					ImGui::EndCombo();
 				}
 
-				if (cameraComp.Camera.getProjectionType() == scene::SceneCamera::ProjectionType::Perspective)
+				if (cameraComp.camera.getProjectionType() == scene::SceneCamera::ProjectionType::Perspective)
 				{
 					float perspecVertivalFov = maths::radians_to_degrees(camera.getPerspectiveVerticalFOV());
 					if (ImGui::DragFloat("Vertical FOV", &perspecVertivalFov))
@@ -323,7 +323,7 @@ namespace daedalus::editor
 						camera.setPerspectiveFarClip(perspecFar);
 				}
 
-				if (cameraComp.Camera.getProjectionType() == scene::SceneCamera::ProjectionType::Othographic)
+				if (cameraComp.camera.getProjectionType() == scene::SceneCamera::ProjectionType::Othographic)
 				{
 					float orthoSize = camera.getOrthographicSize();
 					if (ImGui::DragFloat("Size", &orthoSize))
@@ -337,15 +337,30 @@ namespace daedalus::editor
 					if (ImGui::DragFloat("Far", &orthoFar))
 						camera.setOrthographicFarClip(orthoFar);
 
-					ImGui::Checkbox("Fixed aspect ratio", &cameraComp.FixedAspectRatio);
+					ImGui::Checkbox("Fixed aspect ratio", &cameraComp.fixedAspectRatio);
 				}
 			}, entity);
 		
 		draw_component<scene::SpriteRendererComponent>("Sprite Renderer",
 			[](scene::SpriteRendererComponent& spriteRenderer)
 			{
-				auto& colour = spriteRenderer.Colour;
-				ImGui::ColorEdit4("Colour", colour);
+				ImGui::ColorEdit4("Colour", spriteRenderer.colour);
+				// Texture
+				ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
+
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+					{
+						std::filesystem::path path = (const wchar_t*)payload->Data;
+						if (path.extension().string() == ".png")
+							spriteRenderer.material.texture = graphics::Texture2D::create(path.string());
+					}
+					ImGui::EndDragDropTarget();
+				}
+
+				ImGui::DragFloat("Tiling Factor", &spriteRenderer.material.tilingFactor, 0.1f, 0.0f);
+
 			}, entity);
 	}
 

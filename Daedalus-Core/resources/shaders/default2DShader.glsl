@@ -25,6 +25,7 @@ struct vertexOutput
 
 layout(location = 0) out vertexOutput v_output;
 layout(location = 4) out flat uint v_entityID;
+layout(location = 5) out flat float v_testFFloat;
 
 void main()
 {
@@ -33,6 +34,7 @@ void main()
 	v_output.texIndex = a_texIndex;
 	v_output.tilingFactor = a_tilingFactor;
 	v_entityID = a_entityID;
+	v_testFFloat = 0.75;
 
 	gl_Position = u_cameraBuffer.viewProj * vec4(a_position, 1.0);
 }
@@ -53,6 +55,7 @@ struct vertexOutput
 
 layout(location = 0) in vertexOutput v_input;
 layout(location = 4) in flat uint v_entityID;
+layout(location = 5) in flat float v_testFFloat;
 
 layout(binding = 0) uniform sampler2D u_textures[32];
 
@@ -97,5 +100,6 @@ void main()
 	}
 
 	colour = texColor;
+	colour = vec4(v_testFFloat, 0, 0, 1.0);
 	entityID = v_entityID;
 }

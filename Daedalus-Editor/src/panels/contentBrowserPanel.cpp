@@ -9,9 +9,6 @@ namespace daedalus::editor
 
 	static const std::filesystem::path s_assetPath = "assets";
 
-	// TO DO: This will need to be changed if the scene extention is ever changed
-	static const std::string s_sceneExtention = ".Daedalus";
-
 	ContentBrowserPanel::ContentBrowserPanel()
 		: m_currentDirectory(s_assetPath)
 	{
@@ -83,15 +80,12 @@ namespace daedalus::editor
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
 			ImGui::ImageButton("##ImageButton", (ImTextureID)elementIcon->getRendererID(), {thumbnailSize, thumbnailSize}, {0, 1}, {1, 0});
 
-			if(path.extension().string() == s_sceneExtention)
+			if (ImGui::BeginDragDropSource())
 			{
-				if (ImGui::BeginDragDropSource())
-				{
-					const wchar_t* itemPath = path.c_str();
-					ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
-					ImGui::Image((ImTextureID)elementIcon->getRendererID(), ImVec2{ 64, 64 }, { 0, 1 }, { 1, 0 });
-					ImGui::EndDragDropSource();
-				}
+				const wchar_t* itemPath = path.c_str();
+				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
+				ImGui::Image((ImTextureID)elementIcon->getRendererID(), ImVec2{ 64, 64 }, { 0, 1 }, { 1, 0 });
+				ImGui::EndDragDropSource();
 			}
 
 			ImGui::PopStyleColor();

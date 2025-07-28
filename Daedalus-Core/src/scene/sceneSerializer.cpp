@@ -7,6 +7,8 @@
 #include "entity.h"
 #include "entityComponents/components.h"
 
+#define LOG_SERIALIZATION_TO_CONSOLE 0
+
 namespace YAML {
 
 	template<>
@@ -105,20 +107,20 @@ namespace daedalus::scene {
 		{
 			out << YAML::Key << "TagComponent";
 			out << YAML::BeginMap;
-			out << YAML::Key << "Tag" << YAML::Value << entity.getComponent<TagComponent>().Tag;
+			out << YAML::Key << "Tag" << YAML::Value << entity.getComponent<TagComponent>().tag;
 			out << YAML::EndMap;
 		}
 
 		serialize_component<TransformComponent>(out, "TransformComponent", entity, [](YAML::Emitter& out, TransformComponent& tc)
 			{
-				out << YAML::Key << "Position" << YAML::Value << tc.Position;
-				out << YAML::Key << "Rotation" << YAML::Value << tc.Rotation;
-				out << YAML::Key << "Scale" << YAML::Value << tc.Scale;
+				out << YAML::Key << "Position" << YAML::Value << tc.position;
+				out << YAML::Key << "Rotation" << YAML::Value << tc.rotation;
+				out << YAML::Key << "Scale" << YAML::Value << tc.scale;
 			});
 
 		serialize_component<CameraComponent>(out, "CameraComponent", entity, [](YAML::Emitter& out, CameraComponent& cc)
 			{
-				auto& camera = cc.Camera;
+				auto& camera = cc.camera;
 
 				out << YAML::Key << "Camera" << YAML::Value;
 				out << YAML::BeginMap;
@@ -131,13 +133,13 @@ namespace daedalus::scene {
 				out << YAML::Key << "OrthographicFar" << YAML::Value << camera.getOrthographicFarClip();
 				out << YAML::EndMap;
 
-				out << YAML::Key << "Primary" << YAML::Value << cc.Primary;
-				out << YAML::Key << "FixedAspectRatio" << YAML::Value << cc.FixedAspectRatio;
+				out << YAML::Key << "Primary" << YAML::Value << cc.primary;
+				out << YAML::Key << "FixedAspectRatio" << YAML::Value << cc.fixedAspectRatio;
 			});
 
 		serialize_component<SpriteRendererComponent>(out, "SpriteRendererComponent", entity, [](YAML::Emitter& out, SpriteRendererComponent& src)
 			{
-				out << YAML::Key << "Colour" << YAML::Value << src.Colour;
+				out << YAML::Key << "Colour" << YAML::Value << src.colour;
 			});
 
 		out << YAML::EndMap;
@@ -191,7 +193,9 @@ namespace daedalus::scene {
 			}
 
 			std::string sceneName = data["Scene"].as<std::string>();
+#if LOG_SERIALIZATION_TO_CONSOLE
 			DD_CORE_LOG_TRACE("Deserializing scene {}", sceneName);
+#endif
 
 			auto entites = data["Entities"];
 			if (entites)
@@ -205,7 +209,9 @@ namespace daedalus::scene {
 					if (tagComponent)
 						name = tagComponent["Tag"].as<std::string>();
 
+#if LOG_SERIALIZATION_TO_CONSOLE
 					DD_CORE_LOG_TRACE("Deserialized entity with ID = {}, name = {}", uuid, name);
+#endif
 
 					Entity deserializedEntity = m_scene->createEntity(name);
 
@@ -213,9 +219,9 @@ namespace daedalus::scene {
 					if (component)
 					{
 						auto& tc = deserializedEntity.addOrRepalaceComponent<TransformComponent>();
-						tc.Position = component["Position"].as<maths::Vec3>();
-						tc.Rotation = component["Rotation"].as<maths::Vec3>();
-						tc.Scale = component["Scale"].as<maths::Vec3>();
+						tc.position = component["Position"].as<maths::Vec3>();
+						tc.rotation = component["Rotation"].as<maths::Vec3>();
+						tc.scale = component["Scale"].as<maths::Vec3>();
 					}
 
 					component = entity["CameraComponent"];
@@ -223,25 +229,25 @@ namespace daedalus::scene {
 					{
 						auto& cc = deserializedEntity.addOrRepalaceComponent<CameraComponent>();
 						auto cameraProps = component["Camera"];
-						cc.Camera.setProjectionType((SceneCamera::ProjectionType)cameraProps["ProjectionType"].as<int>());
+						cc.camera.setProjectionType((SceneCamera::ProjectionType)cameraProps["ProjectionType"].as<int>());
 
-						cc.Camera.setPerspectiveVerticalFOV(cameraProps["PerspectiveFOV"].as<float>());
-						cc.Camera.setPerspectiveNearClip(cameraProps["PerspectiveNear"].as<float>());
-						cc.Camera.setPerspectiveFarClip(cameraProps["PerspectiveFar"].as<float>());
+						cc.camera.setPerspectiveVerticalFOV(cameraProps["PerspectiveFOV"].as<float>());
+						cc.camera.setPerspectiveNearClip(cameraProps["PerspectiveNear"].as<float>());
+						cc.camera.setPerspectiveFarClip(cameraProps["PerspectiveFar"].as<float>());
 
-						cc.Camera.setOrthographicSize(cameraProps["OrthographicSize"].as<float>());
-						cc.Camera.setOrthographicNearClip(cameraProps["OrthographicNear"].as<float>());
-						cc.Camera.setOrthographicFarClip(cameraProps["OrthographicFar"].as<float>());
+						cc.camera.setOrthographicSize(cameraProps["OrthographicSize"].as<float>());
+						cc.camera.setOrthographicNearClip(cameraProps["OrthographicNear"].as<float>());
+						cc.camera.setOrthographicFarClip(cameraProps["OrthographicFar"].as<float>());
 
-						cc.Primary = component["Primary"].as<bool>();
-						cc.FixedAspectRatio = component["FixedAspectRatio"].as<bool>();
+						cc.primary = component["Primary"].as<bool>();
+						cc.fixedAspectRatio = component["FixedAspectRatio"].as<bool>();
 					}
 
 					component = entity["SpriteRendererComponent"];
 					if (component)
 					{
 						auto& src = deserializedEntity.addOrRepalaceComponent<SpriteRendererComponent>();
-						src.Colour = component["Colour"].as<maths::Vec4>();
+						src.colour = component["Colour"].as<maths::Vec4>();
 					}
 				}
 			}

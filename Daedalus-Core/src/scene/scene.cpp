@@ -21,21 +21,21 @@ namespace daedalus::scene {
 		{
 			m_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
 				{
-					if (!nsc.ScriptBound)
+					if (!nsc.scriptBound)
 					{
 						DD_CORE_LOG_WARN("No Script bound to NativeScriptComponent");
 						return;
 					}
 
 					// TO DO: Moveto Scene::onScenePlay
-					if (!nsc.Instance)
+					if (!nsc.instance)
 					{
-						nsc.Instance = nsc.InstantiateScript();
-						nsc.Instance->m_entity = Entity{ entity, this };
-						nsc.Instance->onCreate();
+						nsc.instance = nsc.instantiateScript();
+						nsc.instance->m_entity = Entity{ entity, this };
+						nsc.instance->onCreate();
 					}
 
-					nsc.Instance->onUpdate(dt);
+					nsc.instance->onUpdate(dt);
 				});
 		}
 
@@ -49,9 +49,9 @@ namespace daedalus::scene {
 			{
 				auto [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
 
-				if (camera.Primary)
+				if (camera.primary)
 				{
-					mainCamera = &camera.Camera;
+					mainCamera = &camera.camera;
 					mainCameraTransform = transform.getTransform();
 					break;
 				}
@@ -97,7 +97,7 @@ namespace daedalus::scene {
 		entity.addComponent<TransformComponent>();
 
 		auto& tag = entity.addComponent<TagComponent>();
-		tag.Tag = name.empty() ? "Entity" : name;
+		tag.tag = name.empty() ? "Entity" : name;
 
 		return entity;
 	}
@@ -117,8 +117,8 @@ namespace daedalus::scene {
 		for (auto entity : view)
 		{
 			auto& cameraComp = view.get<CameraComponent>(entity);
-			if (!cameraComp.FixedAspectRatio)
-				cameraComp.Camera.setViewportSize(width, hegiht);
+			if (!cameraComp.fixedAspectRatio)
+				cameraComp.camera.setViewportSize(width, hegiht);
 		}
 	}
 
@@ -128,7 +128,7 @@ namespace daedalus::scene {
 		for (auto entity : view)
 		{
 			const auto& cc = view.get<CameraComponent>(entity);
-			if (cc.Primary)
+			if (cc.primary)
 				return Entity{ entity, this };
 		}
 
@@ -154,7 +154,7 @@ namespace daedalus::scene {
 	template<>
 	void scene::Scene::onComponentAdded<scene::CameraComponent>(Entity entity, scene::CameraComponent& component)
 	{
-		component.Camera.setViewportSize(m_viewportWidth, m_viewportHeight);
+		component.camera.setViewportSize(m_viewportWidth, m_viewportHeight);
 	}
 
 	template<>
