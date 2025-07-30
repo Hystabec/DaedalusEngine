@@ -1,0 +1,1 @@
+Should create/add a form or random number generation as they can be used frequently in games 

@@ -1,0 +1,5 @@
+Consider moving profiler to optick (or something similar)
+
+https://github.com/bombomby/optick
+
+its would probability be better and easier to use than my current implementation

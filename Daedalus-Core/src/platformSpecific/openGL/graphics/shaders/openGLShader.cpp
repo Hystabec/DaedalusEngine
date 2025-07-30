@@ -9,7 +9,7 @@
 #include "utils/timer.h"
 #include "maths/maths.h"
 
-namespace daedalus { namespace graphics {
+namespace daedalus::graphics {
 
 	namespace utils
 	{
@@ -455,99 +455,11 @@ namespace daedalus { namespace graphics {
 		}
 	}
 
-	GLint OpenGLShader::getUniformLocation(const std::string& name)
+	GLint OpenGLShader::getUniformLocation(const std::string& name) const
 	{
 		DD_PROFILE_FUNCTION();
 
 		return glGetUniformLocation(m_shaderID, name.c_str());
 	}
 
-	//GLuint OpenGLShader::compile(const std::unordered_map<GLenum, std::string>& shaderSources)
-	//{
-	//	DD_PROFILE_FUNCTION();
-
-	//	GLuint program = glCreateProgram();
-
-	//	DD_CORE_ASSERT(shaderSources.size() <= 3, "Only supports up to 3 shaders");
-	//	std::array<GLenum, 3> glShaderIDs;
-
-	//	int glShaderIDIndex = 0;
-	//	for (auto& kv : shaderSources)
-	//	{
-	//		GLenum type = kv.first;
-	//		const std::string& src = kv.second;
-
-	//		GLuint shader = glCreateShader(type);
-
-	//		const GLchar* srcCstr = src.c_str();
-	//		glShaderSource(shader, 1, &srcCstr, 0);
-
-	//		glCompileShader(shader);
-
-	//		GLint compileResult;
-	//		glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
-	//		if (compileResult == GL_FALSE)
-	//		{
-	//			GLint length;
-	//			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
-
-	//			std::vector<GLchar> error(length);
-	//			glGetShaderInfoLog(shader, length, &length, &error[0]);
-
-	//			DD_CORE_LOG_ERROR("Failed to compile shader | {}", &error[0]);
-	//			//DD_CORE_ASSERT(false, "Shader failed to compile");
-
-	//			glDeleteShader(shader);
-	//			break;
-	//		}
-
-	//		glAttachShader(program, shader);
-	//		glShaderIDs[glShaderIDIndex++] = shader;
-	//	}
-
-	//	glLinkProgram(program);
-
-	//	GLint isLinked = 0;
-	//	glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
-	//	if (isLinked == GL_FALSE)
-	//	{
-	//		GLint length = 0;
-	//		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
-
-	//		
-	//		std::vector<GLchar> infoLog(length);
-	//		if (length)
-	//		{
-	//			glGetProgramInfoLog(program, length, &length, &infoLog[0]);
-	//			DD_CORE_LOG_ERROR("Failed to link shader | {}", &infoLog[0]);
-	//			DD_CORE_ASSERT(false, "Shader failed to link");
-	//		}
-	//		
-
-	//		DD_CORE_LOG_ERROR("Failed to link shader");
-	//		DD_CORE_ASSERT(false, "Shader failed to link");
-
-	//		glDeleteProgram(program);
-
-	//		while (glShaderIDIndex > 0)
-	//		{
-	//			glDeleteShader(glShaderIDs[glShaderIDIndex-1]);
-	//			glShaderIDIndex--;
-	//		}
-
-	//		return 0;
-	//	}
-
-	//	//glValidateProgram(program);
-
-	//	while (glShaderIDIndex > 0)
-	//	{
-	//		glDetachShader(program, glShaderIDs[glShaderIDIndex-1]);
-	//		glDeleteShader(glShaderIDs[glShaderIDIndex-1]);
-	//		glShaderIDIndex--;
-	//	}
-
-	//	return program;
-	//}
-
-} }
+}

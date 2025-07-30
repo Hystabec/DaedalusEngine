@@ -4,6 +4,13 @@
 #include <imgui.h> 
 #include <filesystem>
 
+// TO DO: When testing is finished remove macros and statements
+
+// The current font scaling is a little hacky, so if i want different size fonts i should
+// use the actual system, current setup is to get a feel for the different sizes
+#define ENABLE_FONT_SCALING 0
+#define ENABLE_SIZE_SLIDERS 0
+
 namespace daedalus::editor
 {
 
@@ -20,8 +27,11 @@ namespace daedalus::editor
 	{
 		static std::string currentDirPath = s_assetPath.string();
 		static float padding = 16.0f;
-		static float thumbnailSize = 128.0f;
-
+		static float thumbnailSize = 96.0f;
+#if ENABLE_FONT_SCALING
+		static float defaultFontScale = thumbnailSize;
+		float fontScale = thumbnailSize / defaultFontScale;
+#endif
 		ImGui::Begin("Content Browser");
 
 		// TO DO: make this more visually apearling, currently function in generally the way i want
@@ -51,10 +61,8 @@ namespace daedalus::editor
 		}
 		if (currentSubStr != "")
 		{
-			//ImGui::Text("%s", currentSubStr.c_str());
 			ImGui::Button(currentSubStr.c_str());
 		}
-		//ImGui::TextWrapped("Path: %s", clickedFilePath.c_str());
 
 		ImGui::Separator();
 
@@ -67,7 +75,10 @@ namespace daedalus::editor
 			columnCount = 1;
 
 		ImGui::Columns(columnCount, 0, false);
-
+#if ENABLE_FONT_SCALING
+		ImGuiIO& io = ImGui::GetIO();
+		io.FontDefault->FontSize /= fontScale;
+#endif
 		for (auto& directoryElement : std::filesystem::directory_iterator(m_currentDirectory))
 		{
 			const auto& path = directoryElement.path();
@@ -105,19 +116,12 @@ namespace daedalus::editor
 
 			ImGui::NextColumn();
 		}
-
+#if ENABLE_FONT_SCALING
+		io.FontDefault->FontSize *= fontScale;
+#endif
 		ImGui::Columns(1);
-		
-		/*if (m_currentDirectory != s_assetPath)
-		{
-			if (ImGui::Button("<-"))
-			{
-				m_currentDirectory = m_currentDirectory.parent_path();
-				currentDirPath = m_currentDirectory.string();
-			}
-		}*/
 
-#if 0
+#if ENABLE_SIZE_SLIDERS
 		ImGui::SliderFloat("Thumbnail Size", &thumbnailSize, 64, 512);
 		ImGui::SliderFloat("Padding", &padding, 0, 32);
 #endif

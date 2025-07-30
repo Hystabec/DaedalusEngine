@@ -1,0 +1,9 @@
+Create a resource manager for the editor.
+
+This will store data use only in editor,
+e.g. the preview images used for the content browser
+
+This should probably load the images on demand instead of loading everything at the beginning, this will mean there might be a slight performance impact when loading new resources,
+but this will be fine in an editor environment (wont be suitable for the core/runtime)
+
+could multithread to minimize the performance impact?

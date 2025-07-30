@@ -3,7 +3,7 @@
 #include "graphics/shaders/shader.h"
 #include <GL/glew.h>
 
-namespace daedalus { namespace graphics {
+namespace daedalus::graphics {
 
 	class OpenGLShader : public Shader
 	{
@@ -38,7 +38,7 @@ namespace daedalus { namespace graphics {
 		void createProgram();
 		void reflect(GLenum stage, const std::vector<uint32_t>& shaderData);
 
-		GLint getUniformLocation(const std::string& name);
+		GLint getUniformLocation(const std::string& name) const;
 
 	private:
 		GLuint m_shaderID;
@@ -51,4 +51,4 @@ namespace daedalus { namespace graphics {
 		std::unordered_map<GLenum, std::string> m_openGLSourceCode;
 	};
 
-} }
+}
