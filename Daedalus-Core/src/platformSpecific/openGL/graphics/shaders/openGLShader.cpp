@@ -326,7 +326,7 @@ namespace daedalus { namespace graphics {
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
 		options.SetTargetEnvironment(shaderc_target_env_opengl, shaderc_env_version_opengl_4_5);
-		const bool optimize = true;
+		const bool optimize = false;
 		if (optimize)
 			options.SetOptimizationLevel(shaderc_optimization_level_performance);
 
