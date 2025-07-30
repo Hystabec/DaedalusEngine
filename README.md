@@ -12,14 +12,14 @@ Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW]
 * 2D batch rendering.  
 * Texture/Image rendering.  
 * User Interface using Dear ImGui.  
-* Custom Logging libary primarily using spdlog.  
-* Performance profiling using [Chrome Tracing](chrome://tracing).  
+* Custom Logging library primarily using spdlog.  
+* Performance profiling using `chrome://tracing`.  
 * Entity component system using Entt.  
 * Shader cross compilation using SPIR-V.  
 * An Editor application (in development).  
 
 ## Planned Features
-* Suppoty for Mac and Linux.  
+* Suppot for Mac and Linux.  
 * Audio system.  
 * Rendering with Vulkan.  
 * Rendering with DirectX.  
@@ -31,21 +31,22 @@ Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW]
     * That can run projects built in the editor.  
 
 ## Getting Started
-<ins>**1. Downloading the project files:</ins>
+<ins>1. Downloading the project files:</ins>
 
-### Using Git
+### Clone Using Git
 clone using `git clone --recursive https://github.com/Hystabec/DaedalusEngine`.  
 if not cloned recursively, use `git submodule update --init` to clone submodules.  
 
 ### Downloading From GitHub
 Download all the project files.  
-Download the additional submodules which can be found at 'Daedalus-Core/Dependencies'.  
+Download the additional submodules which can be found in `Daedalus-Core/Dependencies`.  
 Current submodules: [ImGuizmo](https://github.com/Hystabec/ImGuizmo/tree/2310acda820d7383d4c4884b7945ada92cd16a47), [yaml-cpp](https://github.com/Hystabec/yaml-cpp/tree/4ea8b0cc00ebe7cc2ce2bae18b84cf0f9767e8a2).  
 All submodules can be viewed in `.gitmodules`. This file shows the `URLs` to download from and the `path` to go into.  
 
-<ins>**2. External Dependencies And Project Setup:</ins>
-1. Run `setup.bat` located in the `setup scripts` folder. This will check for any required external dependencies and aquire them if they are not found.  
-2. If the Vulkan SDK is not installed, the user will be prompted to install it. Make sure to install `Shader Toolchain Debug Symbols - 64-bit` when promted by the `vulkan` setup wizard, this will also install the required vulkan debug libraries.  
-3. Run `setup.bat` again to verify that the external dependencies are not present.  
+<ins>2. External Dependencies And Project Setup:</ins>
+1. Run `setup.bat` located in the `setup scripts` folder. This will check for any required external dependencies and acquire them if they are not found.  
+2. If the Vulkan SDK is not installed, the user will be prompted to install it. Make sure to install `Shader Toolchain Debug Symbols - 64-bit` when promted by the `vulkan` setup wizard, this will install the required debug libraries.  
+3. Run `setup.bat` again to verify that the external dependencies are present.  
 4. Run `win-GenerateProject-VS22.bat` to generate the visual studio solution.  
+
 Visual studio solution can be regenerated at anytime by running `win-GenerateProject-VS22.bat`
