@@ -30,8 +30,11 @@ namespace daedalus { namespace graphics {
 	private:
 		std::unordered_map<GLenum,std::string> preProcess(const std::string& source);
 
-		void compileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& shaderSources);
-		void compileOrGetOpenGLBinaries();
+		/// @brief returns true if data has changed
+		/// @brief also returns true if the meta file cant be found/read
+		bool checkCacheDataChange() const;
+		void compileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& shaderSources, bool cacheDataChange);
+		void compileOrGetOpenGLBinaries(bool cacheDataChange);
 		void createProgram();
 		void reflect(GLenum stage, const std::vector<uint32_t>& shaderData);
 

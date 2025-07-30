@@ -49,7 +49,7 @@ namespace daedalus { namespace graphics {
 
 		static const char* getCacheDirectory()
 		{
-			return "resources/cache/shaders/opengl";
+			return "resources\\cache\\shaders\\opengl";
 		}
 
 		static void createCacheDirectoryIfNeeded()
@@ -80,6 +80,11 @@ namespace daedalus { namespace graphics {
 			DD_CORE_ASSERT(false);
 			return "";
 		}
+
+		static std::string filetimepoint_to_string(const std::filesystem::file_time_type& ftp)
+		{
+			return std::format("{}", ftp);
+		}
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& filePath)
@@ -87,10 +92,17 @@ namespace daedalus { namespace graphics {
 	{
 		DD_PROFILE_FUNCTION();
 
+		// Getting name from file path - needs to be done first to check meta data file
+		auto lastSlash = filePath.find_last_of("/\\");
+		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+		auto lastDot = filePath.rfind('.');
+		auto count = lastDot == std::string::npos ? filePath.size() - lastSlash : lastDot - lastSlash;
+		m_name = filePath.substr(lastSlash, count);
+
 		utils::createCacheDirectoryIfNeeded();
 
 		bool wasReadCorrectly = true;
-		std::string shaderSrc = daedalus::utils::read_file(filePath, &wasReadCorrectly);
+		std::string shaderSrc = daedalus::utils::read_file_string(filePath, &wasReadCorrectly);
 		
 		if(!wasReadCorrectly)
 		{
@@ -104,18 +116,12 @@ namespace daedalus { namespace graphics {
 
 		{
 			daedalus::utils::Timer timer;
-			compileOrGetVulkanBinaries(shaderSources);
-			compileOrGetOpenGLBinaries();
+			bool cacheDataChange = checkCacheDataChange();
+			compileOrGetVulkanBinaries(shaderSources, cacheDataChange);
+			compileOrGetOpenGLBinaries(cacheDataChange);
 			createProgram();
 			DD_CORE_LOG_INFO("Shader creation took {} ms", timer.elapsedMilliseconds());
 		}
-
-		// Getting name from file path
-		auto lastSlash = filePath.find_last_of("/\\");
-		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
-		auto lastDot = filePath.rfind('.');
-		auto count = lastDot == std::string::npos ? filePath.size() - lastSlash : lastDot - lastSlash;
-		m_name = filePath.substr(lastSlash, count);
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertex, const std::string& fragment)
@@ -127,8 +133,9 @@ namespace daedalus { namespace graphics {
 		sources[GL_VERTEX_SHADER] = vertex;
 		sources[GL_FRAGMENT_SHADER] = fragment;
 
-		compileOrGetVulkanBinaries(sources);
-		compileOrGetOpenGLBinaries();
+		bool cacheDataChange = checkCacheDataChange();
+		compileOrGetVulkanBinaries(sources, cacheDataChange);
+		compileOrGetOpenGLBinaries(cacheDataChange);
 		createProgram();
 	}
 
@@ -231,9 +238,30 @@ namespace daedalus { namespace graphics {
 		return shaderSources;
 	}
 
-	void OpenGLShader::compileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& shaderSources)
+	bool OpenGLShader::checkCacheDataChange() const
 	{
-		//GLuint program = glCreateProgram();
+		// This checks a stored date in a meta file then checks it agains the current date modified of the shader being used,
+		// if they are different (or the meta file doesnt exist) then the new date will be stored in the meta file and the
+		// compiled shaders will be regenerated
+
+		// not sure if storing the date is the best method, but it works fine
+
+		std::string srcFileDataModified = utils::filetimepoint_to_string(daedalus::utils::file_data_modified(m_filePath));
+		
+		std::filesystem::path metaFilePath = utils::getCacheDirectory() + ("\\" + m_name + ".cache.meta");
+		bool fileReadCorrect;
+		bool result = !((daedalus::utils::read_file_string(metaFilePath, &fileReadCorrect, true) == srcFileDataModified) && fileReadCorrect);
+
+		// update the meta file (or create) with the new data if its different
+		if(result)
+			daedalus::utils::write_file_string(metaFilePath, srcFileDataModified);
+
+		return result;
+	}
+
+	void OpenGLShader::compileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& shaderSources, bool cacheDataChange)
+	{
+		DD_PROFILE_FUNCTION();
 
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
@@ -252,7 +280,7 @@ namespace daedalus { namespace graphics {
 			std::filesystem::path cachePath = cacheDirectory / (shaderFilePath.filename().string() + utils::glShaderStageCachedVulkanFileExtension(stage));
 
 			std::ifstream in(cachePath, std::ios::in | std::ios::binary);
-			if (in.is_open())
+			if (in.is_open() && !cacheDataChange)
 			{
 				in.seekg(0, std::ios::end);
 				auto size = in.tellg();
@@ -289,8 +317,10 @@ namespace daedalus { namespace graphics {
 			reflect(stage, data);
 	}
 
-	void OpenGLShader::compileOrGetOpenGLBinaries()
+	void OpenGLShader::compileOrGetOpenGLBinaries(bool cacheDataChange)
 	{
+		DD_PROFILE_FUNCTION();
+
 		auto& shaderData = m_openGLSPIRV;
 
 		shaderc::Compiler compiler;
@@ -310,7 +340,7 @@ namespace daedalus { namespace graphics {
 			std::filesystem::path cachedPath = cacheDirectory / (shaderFilePath.filename().string() + utils::glShaderStageCachedOpenGLFileExtension(stage));
 
 			std::ifstream in(cachedPath, std::ios::in | std::ios::binary);
-			if (in.is_open())
+			if (in.is_open() && !cacheDataChange)
 			{
 				in.seekg(0, std::ios::end);
 				auto size = in.tellg();
@@ -350,6 +380,8 @@ namespace daedalus { namespace graphics {
 
 	void OpenGLShader::createProgram()
 	{
+		DD_PROFILE_FUNCTION();
+
 		GLuint program = glCreateProgram();
 
 		std::vector<GLuint> shadersIDs;
@@ -398,6 +430,8 @@ namespace daedalus { namespace graphics {
 
 	void OpenGLShader::reflect(GLenum stage, const std::vector<uint32_t>& shaderData)
 	{
+		DD_PROFILE_FUNCTION();
+
 		spirv_cross::Compiler compiler(shaderData);
 		spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
