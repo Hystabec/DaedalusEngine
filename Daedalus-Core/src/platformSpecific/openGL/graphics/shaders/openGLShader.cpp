@@ -80,11 +80,6 @@ namespace daedalus::graphics {
 			DD_CORE_ASSERT(false);
 			return "";
 		}
-
-		static std::string filetimepoint_to_string(const std::filesystem::file_time_type& ftp)
-		{
-			return std::format("{}", ftp);
-		}
 	}
 
 	OpenGLShader::OpenGLShader(const std::filesystem::path& filePath)
