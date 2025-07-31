@@ -116,7 +116,7 @@ namespace daedalus::graphics {
 
 		{
 			daedalus::utils::Timer timer;
-			bool cacheDataChange = checkCacheDataChange();
+			bool cacheDataChange = checkCacheDataChange(shaderSrc);
 			compileOrGetVulkanBinaries(shaderSources, cacheDataChange);
 			compileOrGetOpenGLBinaries(cacheDataChange);
 			createProgram();
@@ -133,7 +133,7 @@ namespace daedalus::graphics {
 		sources[GL_VERTEX_SHADER] = vertex;
 		sources[GL_FRAGMENT_SHADER] = fragment;
 
-		bool cacheDataChange = checkCacheDataChange();
+		bool cacheDataChange = checkCacheDataChange(vertex + fragment);
 		compileOrGetVulkanBinaries(sources, cacheDataChange);
 		compileOrGetOpenGLBinaries(cacheDataChange);
 		createProgram();
@@ -238,25 +238,30 @@ namespace daedalus::graphics {
 		return shaderSources;
 	}
 
-	bool OpenGLShader::checkCacheDataChange() const
+	bool OpenGLShader::checkCacheDataChange(const std::string& shaderSrc) const
 	{
-		// This checks a stored date in a meta file then checks it agains the current date modified of the shader being used,
-		// if they are different (or the meta file doesnt exist) then the new date will be stored in the meta file and the
+		// This checks a stored hash in a meta file then checks it agains the hash of the shader being used,
+		// if they are different (or the meta file doesnt exist) then the new hash will be stored in the meta file and the
 		// compiled shaders will be regenerated
+		size_t newShaderHash = std::hash<std::string>{}(shaderSrc);
 
-		// not sure if storing the date is the best method, but it works fine
-
-		std::string srcFileDataModified = utils::filetimepoint_to_string(daedalus::utils::file_data_modified(m_filePath));
-		
 		std::filesystem::path metaFilePath = utils::getCacheDirectory() + ("\\" + m_name + ".cache.meta");
 		bool fileReadCorrect;
-		bool result = !((daedalus::utils::read_file_string(metaFilePath, &fileReadCorrect, true) == srcFileDataModified) && fileReadCorrect);
+		std::stringstream filesstream(daedalus::utils::read_file_string(metaFilePath, &fileReadCorrect, true));
+		size_t hashFromFile;
+		filesstream >> hashFromFile;
+
+		bool fileChanged = !(newShaderHash == hashFromFile && fileReadCorrect);
 
 		// update the meta file (or create) with the new data if its different
-		if(result)
-			daedalus::utils::write_file_string(metaFilePath, srcFileDataModified);
+		if (fileChanged)
+		{
+			std::stringstream hashsstream;
+			hashsstream << newShaderHash;
+			daedalus::utils::write_file_string(metaFilePath, hashsstream.str());
+		}
 
-		return result;
+		return fileChanged;
 	}
 
 	void OpenGLShader::compileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& shaderSources, bool cacheDataChange)

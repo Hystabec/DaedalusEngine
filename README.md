@@ -3,7 +3,7 @@ Daedalus Engine is a personal Game engine project that i'm developing using tuto
 
 Primarily following [The Cherno's - "Game Engine" series](https://www.youtube.com/playlist?list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT) when developing the engine.  
 
-Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW](https://www.glfw.org), [GLEW](https://glew.sourceforge.net), [stb](https://github.com/nothings/stb), [spdlog](https://github.com/gabime/spdlog), [Dear ImGui](https://github.com/ocornut/imgui), [Entt](https://github.com/skypjack/entt), [yaml-cpp](https://github.com/jbeder/yaml-cpp), [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo), [Vulkan](https://www.vulkan.org) ([SPIR-V](https://www.khronos.org/spirv))  
+Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW](https://www.glfw.org), [GLEW](https://glew.sourceforge.net), [stb](https://github.com/nothings/stb), [spdlog](https://github.com/gabime/spdlog), [Dear ImGui](https://github.com/ocornut/imgui), [Entt](https://github.com/skypjack/entt), [yaml-cpp](https://github.com/jbeder/yaml-cpp), [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo), SPIR-V ([Vulkan](https://www.vulkan.org))  
 
 ## Current Features
 * Custom maths library.  
@@ -21,6 +21,7 @@ Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW]
 ## Planned Features
 * Suppot for Mac and Linux.  
 * Audio system.  
+* Scripting support (C#)
 * Rendering with Vulkan.  
 * Rendering with DirectX.  
 * Rendering with Metal.  

@@ -32,7 +32,7 @@ namespace daedalus::graphics {
 
 		/// @brief returns true if data has changed
 		/// @brief also returns true if the meta file cant be found/read
-		bool checkCacheDataChange() const;
+		bool checkCacheDataChange(const std::string& shaderSrc) const;
 		void compileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& shaderSources, bool cacheDataChange);
 		void compileOrGetOpenGLBinaries(bool cacheDataChange);
 		void createProgram();
