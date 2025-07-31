@@ -10,7 +10,7 @@
 
 namespace daedalus { namespace graphics {
 
-	Shr_ptr<Shader> Shader::create(const std::string& filePath)
+	Shr_ptr<Shader> Shader::create(const std::filesystem::path& filePath)
 	{
 		switch (Renderer::getCurrentAPI())
 		{

@@ -8,7 +8,7 @@ namespace daedalus::graphics {
 	class OpenGLShader : public Shader
 	{
 	public:
-		OpenGLShader(const std::string& filePath);
+		OpenGLShader(const std::filesystem::path& filePath);
 		OpenGLShader(const std::string& name, const std::string& vertex, const std::string& fragment);
 
 		virtual ~OpenGLShader();
@@ -42,7 +42,7 @@ namespace daedalus::graphics {
 
 	private:
 		GLuint m_shaderID;
-		std::string m_filePath;
+		std::filesystem::path m_filePath;
 		std::string m_name;
 
 		std::unordered_map<GLenum, std::vector<uint32_t>> m_vulkanSPIRV;

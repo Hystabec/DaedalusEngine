@@ -1,0 +1,5 @@
+In many log / asserts
+
+std::filesystem::path::string()
+
+has been used if the file name contains an extended character set character this could cause issues

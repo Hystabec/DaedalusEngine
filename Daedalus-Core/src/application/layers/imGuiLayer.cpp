@@ -58,10 +58,10 @@ namespace daedalus { namespace application {
 
 		// Sets custom ImGui styling
 		if(bfCheck)
-			io.Fonts->AddFontFromFileTTF(boldFont.c_str(), 18.0f);
+			io.Fonts->AddFontFromFileTTF(boldFont.string().c_str(), 18.0f);
 
 		if (nfCheck)
-			io.FontDefault = io.Fonts->AddFontFromFileTTF(normalFont.c_str(), 18.0f);
+			io.FontDefault = io.Fonts->AddFontFromFileTTF(normalFont.string().c_str(), 18.0f);
 
 		setDarkThemeColours();
 

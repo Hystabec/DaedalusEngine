@@ -87,17 +87,13 @@ namespace daedalus::graphics {
 		}
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& filePath)
+	OpenGLShader::OpenGLShader(const std::filesystem::path& filePath)
 		: m_filePath(filePath)
 	{
 		DD_PROFILE_FUNCTION();
 
 		// Getting name from file path - needs to be done first to check meta data file
-		auto lastSlash = filePath.find_last_of("/\\");
-		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
-		auto lastDot = filePath.rfind('.');
-		auto count = lastDot == std::string::npos ? filePath.size() - lastSlash : lastDot - lastSlash;
-		m_name = filePath.substr(lastSlash, count);
+		m_name = filePath.stem().string();
 
 		utils::createCacheDirectoryIfNeeded();
 
@@ -106,7 +102,7 @@ namespace daedalus::graphics {
 		
 		if(!wasReadCorrectly)
 		{
-			DD_CORE_LOG_ERROR("Failed to read shader file : path - {}", filePath);
+			DD_CORE_LOG_ERROR("Failed to read shader file : path - {}", filePath.string());
 			m_name = "Invalid shader";
 			m_shaderID = 0;
 		}
@@ -298,7 +294,7 @@ namespace daedalus::graphics {
 			else
 			{
 				DD_ASSERT(!m_filePath.empty(), "File path is invalid");
-				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, utils::glShaderStageToShaderC(stage), m_filePath.c_str(), options);
+				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, utils::glShaderStageToShaderC(stage), m_filePath.string().c_str(), options);
 				if (module.GetCompilationStatus() != shaderc_compilation_status_success)
 				{
 					DD_CORE_LOG_ERROR(module.GetErrorMessage());
@@ -362,7 +358,7 @@ namespace daedalus::graphics {
 				auto& source = m_openGLSourceCode[stage];
 
 				DD_ASSERT(!m_filePath.empty(), "File path is invalid");
-				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, utils::glShaderStageToShaderC(stage), m_filePath.c_str(), options);
+				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, utils::glShaderStageToShaderC(stage), m_filePath.string().c_str(), options);
 				if (module.GetCompilationStatus() != shaderc_compilation_status_success)
 				{
 					DD_CORE_LOG_ERROR(module.GetErrorMessage());
@@ -440,7 +436,7 @@ namespace daedalus::graphics {
 		spirv_cross::Compiler compiler(shaderData);
 		spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
-		DD_CORE_LOG_INFO("OpenGLShader::Reflect - {} {}", utils::glShaderStageToString(stage), m_filePath);
+		DD_CORE_LOG_INFO("OpenGLShader::Reflect - {} {}", utils::glShaderStageToString(stage), m_filePath.string());
 		DD_CORE_LOG_INFO("{} uniform buffers", resources.uniform_buffers.size());
 		DD_CORE_LOG_INFO("{} resources", resources.sampled_images.size());
 

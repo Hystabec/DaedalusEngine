@@ -41,7 +41,7 @@ namespace daedalus { namespace graphics {
 
 		virtual const std::string& getName() const = 0;
 
-		static Shr_ptr<Shader> create(const std::string& filePath);
+		static Shr_ptr<Shader> create(const std::filesystem::path& filePath);
 		static Shr_ptr<Shader> create(const std::string& name, const std::string& vertex, const std::string& frag);
 	};
 
