@@ -27,6 +27,12 @@ namespace daedalus::editor
 		void openScene(const std::filesystem::path& path);
 		void saveScene();
 		void saveSceneAs();
+
+		void onScenePlay();
+		void onSceneStop();
+
+		// UI panels
+		void UIToolbar();
 	private:
 		graphics::EditorCamera m_editorCamera;
 		Shr_ptr<graphics::Framebuffer> m_framebuffer;
@@ -41,6 +47,14 @@ namespace daedalus::editor
 		SceneHierarchyPanel m_sceneHierarchyPanel;
 		int m_gizmoType = -1;
 		ContentBrowserPanel m_contentBrowserPanel;
+
+		Shr_ptr<graphics::Texture2D> m_playIcon, m_stopIcon;
+
+		enum class SceneState
+		{
+			Edit = 0, Play = 1, Pause = 2
+		};
+		SceneState m_sceneState = SceneState::Edit;
 	};
 
 }

@@ -1,0 +1,4 @@
+eventually create a scene renderer class that create a texture to render to the viewport
+will allow the remove of the framebuffers and some other weird things out of editor layer.
+
+Cherno : https://youtu.be/U16wc8w8IA4?si=6PTT4D3-hgBgG1Iz&t=2425

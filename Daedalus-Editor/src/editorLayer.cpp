@@ -27,11 +27,13 @@ namespace daedalus::editor
 		fbSpec.height = 900;
 		m_framebuffer = graphics::Framebuffer::create(fbSpec);
 
+		m_playIcon = graphics::Texture2D::create("resources\\icons\\playButtonIcon.png");
+		m_stopIcon = graphics::Texture2D::create("resources\\icons\\stopButtonIcon.png");
+
 		m_activeScene = create_shr_ptr<scene::Scene>();
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
 
-		
 		/*class CameraController : public scene::ScriptableEntity
 		{
 		public:
@@ -80,14 +82,11 @@ namespace daedalus::editor
 			m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
 
-		if(m_viewportFocused)
-			m_editorCamera.update(dt);
-
 		graphics::Renderer2D::resetStats();
 
 		m_framebuffer->bind();
 
-		maths::Vec4 colourVec = maths::Vec4(25.0f/255.0f, 25.0f / 255.0f, 25.0f / 255.0f, 1.0f);
+		maths::Vec4 colourVec = maths::Vec4(25.0f / 255.0f, 25.0f / 255.0f, 25.0f / 255.0f, 1.0f);
 		graphics::RenderCommands::setClearColour(colourVec);
 		graphics::RenderCommands::clear();
 
@@ -96,7 +95,22 @@ namespace daedalus::editor
 		m_framebuffer->clearAttachment(1, (uint32_t)entt::null);
 
 		// update scene
-		m_activeScene->updateEditor(dt, m_editorCamera);
+		switch (m_sceneState)
+		{
+		case daedalus::editor::EditorLayer::SceneState::Edit:
+		{
+			if (m_viewportFocused)
+				m_editorCamera.update(dt);
+
+			m_activeScene->updateEditor(dt, m_editorCamera);
+			break;
+		}
+		case daedalus::editor::EditorLayer::SceneState::Play:
+		{
+			m_activeScene->updateRuntime(dt);
+			break;
+		}
+		}
 
 		m_framebuffer->unbind();
 	}
@@ -200,74 +214,110 @@ namespace daedalus::editor
 		uint32_t textureID = m_framebuffer->getColourAttachmentRendererID();
 		ImGui::Image(textureID, viewportSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
-		// TO DO: If the drop target is a valid file, should probably prompt the user
-		// to save the current scene
-		if (ImGui::BeginDragDropTarget())
+		// only allow drag and drop(scene) and gizmos if current state is edit
+		if (m_sceneState == SceneState::Edit)
 		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			// TO DO: If the drop target is a valid file, should probably prompt the user
+			// to save the current scene
+			if (ImGui::BeginDragDropTarget())
 			{
-				std::filesystem::path path = (const wchar_t*)payload->Data;
-				if(path.extension().string() == ".Daedalus")
-				openScene(path);
-			}
-			ImGui::EndDragDropTarget();
-		}
-
-		// Gizmos
-		scene::Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
-
-		// runtime camera from entity
-		//auto cameraEntity = m_activeScene->getPrimaryCameraEntity();
-		//const auto& cc = cameraEntity.getComponent<scene::CameraComponent>();
-		//const maths::Mat4& cameraProjection = cc.Camera.getProjection();
-		//maths::Mat4 cameraView = maths::Mat4::invert(cameraEntity.getComponent<scene::TransformComponent>().getTransform())
-
-		if (selectedEntity && m_gizmoType != -1)
-		{
-			ImGuizmo::SetOrthographic(false);
-			ImGuizmo::SetDrawlist();
-
-			ImGuizmo::SetRect(m_viewportBounds[0].x, m_viewportBounds[0].y, m_viewportBounds[1].x - m_viewportBounds[0].x, m_viewportBounds[1].y - m_viewportBounds[0].y);
-
-			const maths::Mat4& cameraProjection = m_editorCamera.getProjection();
-			maths::Mat4 cameraView = m_editorCamera.getViewMatrix();
-
-			auto& tc = selectedEntity.getComponent<scene::TransformComponent>();
-			maths::Mat4 transform = tc.getTransform();
-
-			bool snap = application::Input::getKeyDown(application::InputCode::Key_Left_Shift) || application::Input::getKeyDown(application::InputCode::Key_Right_Shift);
-			float snapValue = 0.5f; // Snap to 0.5 for translate/scale
-			if (m_gizmoType == ImGuizmo::OPERATION::ROTATE)	// snap to 45 degrees for rotation
-				snapValue = 45.0f;
-
-			float snapValues[3] = { snapValue, snapValue, snapValue };
-
-			ImGuizmo::Manipulate(cameraView, cameraProjection,
-				(ImGuizmo::OPERATION)m_gizmoType, ImGuizmo::LOCAL, transform,
-				nullptr, snap ? snapValues : nullptr);
-
-			if (ImGuizmo::IsUsing())
-			{
-				maths::Vec3 position, rotation, scale;
-				if (maths::Mat4::decomposeTransform(transform, position, rotation, scale))
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 				{
-					if(is_meaningful_difference(tc.position, position))
-						tc.position = position;
+					std::filesystem::path path = (const wchar_t*)payload->Data;
+					if (path.extension().string() == ".Daedalus")
+						openScene(path);
+				}
+				ImGui::EndDragDropTarget();
+			}
 
-					if (is_meaningful_difference(tc.rotation, rotation))
+			// Gizmos
+			scene::Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
+
+			// runtime camera from entity
+			//auto cameraEntity = m_activeScene->getPrimaryCameraEntity();
+			//const auto& cc = cameraEntity.getComponent<scene::CameraComponent>();
+			//const maths::Mat4& cameraProjection = cc.Camera.getProjection();
+			//maths::Mat4 cameraView = maths::Mat4::invert(cameraEntity.getComponent<scene::TransformComponent>().getTransform())
+
+			if (selectedEntity && m_gizmoType != -1)
+			{
+				ImGuizmo::SetOrthographic(false);
+				ImGuizmo::SetDrawlist();
+
+				ImGuizmo::SetRect(m_viewportBounds[0].x, m_viewportBounds[0].y, m_viewportBounds[1].x - m_viewportBounds[0].x, m_viewportBounds[1].y - m_viewportBounds[0].y);
+
+				const maths::Mat4& cameraProjection = m_editorCamera.getProjection();
+				maths::Mat4 cameraView = m_editorCamera.getViewMatrix();
+
+				auto& tc = selectedEntity.getComponent<scene::TransformComponent>();
+				maths::Mat4 transform = tc.getTransform();
+
+				bool snap = application::Input::getKeyDown(application::InputCode::Key_Left_Shift) || application::Input::getKeyDown(application::InputCode::Key_Right_Shift);
+				float snapValue = 0.5f; // Snap to 0.5 for translate/scale
+				if (m_gizmoType == ImGuizmo::OPERATION::ROTATE)	// snap to 45 degrees for rotation
+					snapValue = 45.0f;
+
+				float snapValues[3] = { snapValue, snapValue, snapValue };
+
+				ImGuizmo::Manipulate(cameraView, cameraProjection,
+					(ImGuizmo::OPERATION)m_gizmoType, ImGuizmo::LOCAL, transform,
+					nullptr, snap ? snapValues : nullptr);
+
+				if (ImGuizmo::IsUsing())
+				{
+					maths::Vec3 position, rotation, scale;
+					if (maths::Mat4::decomposeTransform(transform, position, rotation, scale))
 					{
-						maths::Vec3 deltaRotation = rotation - tc.rotation;
-						tc.rotation += deltaRotation;
-					}
+						if (is_meaningful_difference(tc.position, position))
+							tc.position = position;
 
-					if(is_meaningful_difference(tc.scale, scale))
-						tc.scale = scale;
+						if (is_meaningful_difference(tc.rotation, rotation))
+						{
+							maths::Vec3 deltaRotation = rotation - tc.rotation;
+							tc.rotation += deltaRotation;
+						}
+
+						if (is_meaningful_difference(tc.scale, scale))
+							tc.scale = scale;
+					}
 				}
 			}
 		}
-
 		ImGui::End();
 		ImGui::PopStyleVar();
+
+		UIToolbar();
+	}
+
+	void EditorLayer::UIToolbar()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+		const auto& colours = ImGui::GetStyle().Colors;
+		const auto& buttonHovered = colours[ImGuiCol_ButtonHovered];
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, buttonHovered.w / 0.5f));
+		const auto& buttonActive = colours[ImGuiCol_ButtonActive];
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, buttonActive.w / 0.5f));
+
+		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+		float size = ImGui::GetWindowHeight() - 4.0f;
+		Shr_ptr<graphics::Texture2D> icon = m_sceneState == SceneState::Edit ? m_playIcon : m_stopIcon;
+		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+		if (ImGui::ImageButton("##playStopButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size)))
+		{
+			if (m_sceneState == SceneState::Edit)
+				onScenePlay();
+			else if (m_sceneState == SceneState::Play)
+				onSceneStop();
+		}
+
+		ImGui::End();
+
+		ImGui::PopStyleVar(3);
+		ImGui::PopStyleColor(3);
 	}
 
 	void EditorLayer::onEvent(event::Event& e)
@@ -321,28 +371,28 @@ namespace daedalus::editor
 			break;
 		}
 
-			// Gizmos
+		// Gizmos
 		case InputCode::Key_Q:
 		{
-			if(shift)
+			if (shift)
 				m_gizmoType = -1;
 			break;
 		}
 		case InputCode::Key_W:
 		{
-			if(shift)
+			if (shift)
 				m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
 			break;
 		}
 		case InputCode::Key_E:
 		{
-			if(shift)
+			if (shift)
 				m_gizmoType = ImGuizmo::OPERATION::ROTATE;
 			break;
 		}
 		case InputCode::Key_R:
 		{
-			if(shift)
+			if (shift)
 				m_gizmoType = ImGuizmo::OPERATION::SCALE;
 			break;
 		}
@@ -446,6 +496,16 @@ namespace daedalus::editor
 			serializer.serialize(filepath);
 			m_currentSceneFilepath = filepath;
 		}
+	}
+
+	void EditorLayer::onScenePlay()
+	{
+		m_sceneState = SceneState::Play;
+	}
+
+	void EditorLayer::onSceneStop()
+	{
+		m_sceneState = SceneState::Edit;
 	}
 
 }
