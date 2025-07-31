@@ -40,7 +40,7 @@ if not cloned recursively, use `git submodule update --init` to clone submodules
 ### Downloading From GitHub
 Download all the project files.  
 Download the additional submodules which can be found in `Daedalus-Core/Dependencies`.  
-Current submodules: [ImGuizmo](https://github.com/Hystabec/ImGuizmo/tree/2310acda820d7383d4c4884b7945ada92cd16a47), [yaml-cpp](https://github.com/Hystabec/yaml-cpp/tree/4ea8b0cc00ebe7cc2ce2bae18b84cf0f9767e8a2).  
+    <sub>Current submodules: [ImGuizmo](https://github.com/Hystabec/ImGuizmo/tree/2310acda820d7383d4c4884b7945ada92cd16a47), [yaml-cpp](https://github.com/Hystabec/yaml-cpp/tree/4ea8b0cc00ebe7cc2ce2bae18b84cf0f9767e8a2).</sub>  
 All submodules can be viewed in `.gitmodules`. This file shows the `URLs` to download from and the `path` to go into.  
 
 <ins>2. External Dependencies And Project Setup:</ins>
