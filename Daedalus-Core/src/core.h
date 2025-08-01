@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 
 #ifdef DD_PLATFORM_WINDOWS
 #else
@@ -8,6 +7,7 @@
 #endif
 
 #include "ddAssert.h"
+#include <memory>
 
 #define BIT(x) (1 << x)
 

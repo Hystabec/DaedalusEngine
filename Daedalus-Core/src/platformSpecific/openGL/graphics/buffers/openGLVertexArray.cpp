@@ -1,8 +1,9 @@
 #include "ddpch.h"
 #include "openGLVertexArray.h"
 
-#include <GL/glew.h>
 #include "graphics/buffers/utils/shaderDataTypeConversion.h"
+
+#include <GL/glew.h>
 #include <vector>
 
 namespace daedalus { namespace graphics { namespace buffers {

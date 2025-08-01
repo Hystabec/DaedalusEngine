@@ -1,8 +1,8 @@
 #include "ddpch.h"
 #include "application/input/input.h"
 
-#include <glfw3.h>
 #include "application/applicationCore.h"
+#include <glfw3.h>
 
 namespace daedalus::application {
 

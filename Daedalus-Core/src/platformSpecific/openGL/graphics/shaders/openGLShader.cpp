@@ -1,13 +1,13 @@
 #include "ddpch.h"
 #include "openGLShader.h"
 
-#include <shaderc/shaderc.hpp>
-#include <spirv_cross/spirv_cross.hpp>
-#include <spirv_cross/spirv_glsl.hpp>
-
 #include "utils/fileUtils.h"
 #include "utils/timer.h"
 #include "maths/maths.h"
+
+#include <shaderc/shaderc.hpp>
+#include <spirv_cross/spirv_cross.hpp>
+#include <spirv_cross/spirv_glsl.hpp>
 
 namespace daedalus::graphics {
 

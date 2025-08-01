@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Daedalus.h>
-#include "imgui.h"
+#include <imgui.h>
+#include "Daedalus.h"
 
 class generalLayer : public daedalus::application::Layer
 {

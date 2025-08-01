@@ -1,9 +1,9 @@
 #include "editorpch.h"
 #include "sceneHierarchyPanel.h"
 
+//#include "scene/components.h"
 #include <imgui.h> 
 #include <imgui_internal.h>
-//#include "scene/components.h"
 
 namespace daedalus::editor
 {

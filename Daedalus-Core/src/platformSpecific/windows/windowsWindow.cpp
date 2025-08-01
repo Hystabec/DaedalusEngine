@@ -1,8 +1,6 @@
 #include "ddpch.h"
 #include "windowsWindow.h"
 
-#include <glfw3.h>
-
 #include "events/windowEvent.h"
 #include "events/keyEvent.h"
 #include "events/mouseEvent.h"
@@ -10,6 +8,8 @@
 #include "application/input/inputCodeConversion.h"
 
 #include "platformSpecific/openGL/graphics/renderer/openGLContext.h"
+
+#include <glfw3.h>
 
 namespace daedalus { namespace application {
 

@@ -1,11 +1,11 @@
 #include "editorpch.h"
 #include "EditorLayer.h"
 
-#include <imgui.h>
-#include <ImGuizmo.h>
-
 #include "scene/sceneSerializer.h"
 #include "utils/platformUtils.h"
+
+#include <imgui.h>
+#include <ImGuizmo.h>
 #include <limits>
 
 namespace daedalus::editor

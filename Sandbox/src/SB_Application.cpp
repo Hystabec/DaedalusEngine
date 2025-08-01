@@ -1,5 +1,4 @@
-#include <Daedalus.h>
-#include "imgui.h"
+#include "Daedalus.h"
 
 #include "generalLayer.h"
 #include "2DTestLayer.h"
@@ -7,6 +6,8 @@
 #include "dockspaceTesting.h"
 
 #include "entryPoint.h"
+
+//#include <imgui.h>
 
 class SandBox : public daedalus::Application
 {

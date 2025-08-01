@@ -1,16 +1,16 @@
 #include "ddpch.h"
 #include "imGuiLayer.h"
 
+#include "application/applicationCore.h"
+#include "application/input/inputCodes.h"
+
+#include "utils/findFileLocation.h"
+
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
 #include <ImGuizmo.h>
-
-#include "application/applicationCore.h"
-#include "application/input/inputCodes.h"
-
-#include "utils/findFileLocation.h"
 
 //temp
 #include <glfw3.h>

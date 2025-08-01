@@ -15,6 +15,8 @@
 #include "src/application/input/input.h"
 #include "src/application/input/inputCodes.h"
 
+#include "src/application/uuid.h"
+
 // ---events
 #include "src/events/keyEvent.h"
 #include "src/events/mouseEvent.h"

@@ -1,14 +1,14 @@
 #include "ddpch.h"
 #include "utils/platformUtils.h"
 
+#include "application/applicationCore.h"
+#include "platformSpecific/windows/windowsWindow.h"
+
 #include <commdlg.h>
 
 #include <glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <glfw3native.h>
-
-#include "application/applicationCore.h"
-#include "platformSpecific/windows/windowsWindow.h"
 
 namespace daedalus::utils {
 

@@ -1,7 +1,7 @@
 #include "ddpch.h"
 #include "openGLTexture.h"
 
-#include "stb_image.h"
+#include <stb_image.h>
 #include <GL/glew.h>
 
 namespace daedalus { namespace graphics {

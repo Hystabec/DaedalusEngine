@@ -1,8 +1,8 @@
 #pragma once
 
-#include <filesystem>
-
 #include "graphics/rendering/texture.h"
+
+#include <filesystem>
 
 namespace daedalus::editor
 {
