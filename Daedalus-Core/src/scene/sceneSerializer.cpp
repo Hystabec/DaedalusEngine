@@ -1,11 +1,11 @@
 #include "ddpch.h"
 #include "sceneSerializer.h"
 
-#include <fstream>
-#include <yaml-cpp/yaml.h>
-
 #include "entity.h"
 #include "entityComponents/components.h"
+
+#include <fstream>
+#include <yaml-cpp/yaml.h>
 
 #define LOG_SERIALIZATION_TO_CONSOLE 0
 
@@ -100,8 +100,10 @@ namespace daedalus::scene {
 
 	static void serialize_entity(YAML::Emitter& out, Entity& entity)
 	{
+		DD_CORE_ASSERT(entity.hasComponent<IDComponent>());
+
 		out << YAML::BeginMap;
-		out << YAML::Key << "Entity" << YAML::Value << "123456789"; // TO DO: Entity ID goes here
+		out << YAML::Key << "Entity" << YAML::Value << entity.getUUID();
 
 		if (entity.hasComponent<TagComponent>())
 		{
@@ -202,7 +204,7 @@ namespace daedalus::scene {
 			{
 				for (auto entity : entites)
 				{
-					uint64_t uuid = entity["Entity"].as<uint64_t>(); // TO DO: add unique ids
+					uint64_t uuid = entity["Entity"].as<uint64_t>();
 
 					std::string name;
 					auto tagComponent = entity["TagComponent"];
@@ -213,7 +215,7 @@ namespace daedalus::scene {
 					DD_CORE_LOG_TRACE("Deserialized entity with ID = {}, name = {}", uuid, name);
 #endif
 
-					Entity deserializedEntity = m_scene->createEntity(name);
+					Entity deserializedEntity = m_scene->createEntityWithUUID(uuid, name);
 
 					auto component = entity["TransformComponent"];
 					if (component)

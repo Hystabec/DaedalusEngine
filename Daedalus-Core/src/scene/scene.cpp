@@ -93,7 +93,13 @@ namespace daedalus::scene {
 
 	Entity Scene::createEntity(const std::string& name)
 	{
+		return createEntityWithUUID(UUID(), name);
+	}
+
+	Entity Scene::createEntityWithUUID(UUID uuid, const std::string& name)
+	{
 		Entity entity = { m_registry.create(), this };
+		entity.addComponent<IDComponent>(uuid);
 		entity.addComponent<TransformComponent>();
 
 		auto& tag = entity.addComponent<TagComponent>();
@@ -139,6 +145,11 @@ namespace daedalus::scene {
 	void scene::Scene::onComponentAdded(Entity entity, T& component)
 	{
 		static_assert(false);
+	}
+
+	template<>
+	void scene::Scene::onComponentAdded<scene::IDComponent>(Entity entity, scene::IDComponent& component)
+	{
 	}
 
 	template<>

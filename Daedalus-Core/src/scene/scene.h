@@ -1,9 +1,10 @@
 #pragma once
 
-#include <entt.hpp>
-
 #include "application/time/deltaTime.h"
 #include "graphics/camera/editorCamera.h"
+#include "application/uuid.h"
+
+#include <entt.hpp>
 
 namespace daedalus::editor
 {
@@ -25,6 +26,7 @@ namespace daedalus::scene {
 		void updateEditor(const application::DeltaTime& dt, graphics::EditorCamera& camera);
 
 		Entity createEntity(const std::string& name = std::string());
+		Entity createEntityWithUUID(UUID uuid, const std::string& name = std::string());
 		void destroyEntity(Entity entity);
 
 		void onViewportResize(uint32_t width, uint32_t hegiht);

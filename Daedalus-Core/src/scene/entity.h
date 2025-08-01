@@ -1,7 +1,10 @@
 #pragma once
 
-#include <entt.hpp>
 #include "scene.h"
+#include "application/uuid.h"
+#include "entityComponents/idComponent.h"
+
+#include <entt.hpp>
 
 namespace daedalus::scene {
 
@@ -59,6 +62,8 @@ namespace daedalus::scene {
 				DD_ASSERT_FORMAT_MESSAGE("Cannot remove component [{}]", typeid(T).name()));
 			m_scene->m_registry.remove<T>(m_handle);
 		}
+
+		UUID getUUID() { return getComponent<IDComponent>().ID; }
 
 		operator bool() const { return m_handle != entt::null; }
 		operator uint32_t() const { return (uint32_t)m_handle; }
