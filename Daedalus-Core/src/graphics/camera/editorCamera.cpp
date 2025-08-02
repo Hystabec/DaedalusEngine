@@ -143,18 +143,10 @@ namespace daedalus::graphics {
 
 	std::pair<float, float> EditorCamera::panSpeed() const
 	{
-#ifdef DD_PLATFORM_WINDOWS	// This is kind of anoying but cant use std::min as min is a macro
-		float x = min(m_viewportWidth / 1000.0f, 2.4f);
-#else
 		float x = std::min(m_viewportWidth / 1000.0f, 2.4f);
-#endif
 		float xFactor = 0.0366f * (x * x) - 0.1778f * x + 0.3021f;
 
-#ifdef DD_PLATFORM_WINDOWS	// This is kind of anoying but cant use std::min as min is a macro
-		float y = min(m_viewportHeight / 1000.0f, 2.4f);
-#else
 		float y = std::min(m_viewportHeight / 1000.0f, 2.4f);
-#endif
 		float yFactor = 0.0366f * (y * y) - 0.1778f * y + 0.3021f;
 
 		// The 'magic numbers' used to calculate xFactor and yFactor form a
@@ -171,17 +163,11 @@ namespace daedalus::graphics {
 	float EditorCamera::zoomSpeed() const
 	{
 		float distance = m_distance * 0.2f;
-#ifdef DD_PLATFORM_WINDOWS	// This is kind of anoying but cant use std::max as max is a macro
-		distance = max(distance, 0.0f);
-#else
 		distance = std::max(distance, 0.0f);
-#endif
+
 		float speed = distance * distance;
-#ifdef DD_PLATFORM_WINDOWS	// This is kind of anoying but cant use std::min as min is a macro, thanks windows...
-		speed = min(speed, 100.0f);
-#else
 		speed = std::min(speed, 100.0f);
-#endif
+
 		return speed;
 	}
 

@@ -1,7 +1,10 @@
 #pragma once
 
 #ifdef DD_PLATFORM_WINDOWS
-#include <Windows.h>
+	#ifndef NOMINMAX
+		#define NOMINMAX
+	#endif
+	#include <Windows.h>
 #endif
 
 #include <iostream>
