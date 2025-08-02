@@ -242,6 +242,7 @@ namespace daedalus::editor
 			{
 				tag = std::string(buffer);
 			}
+			ImGui::SetItemTooltip("ID: %llu", entity.getUUID());
 		}
 
 		ImGui::SameLine();
