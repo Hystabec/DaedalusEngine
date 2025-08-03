@@ -33,6 +33,59 @@ namespace daedalus::scene {
 	{
 	}
 
+	template<typename T>
+	static void copy_components(entt::registry& dst, const entt::registry& src, const std::unordered_map <UUID, entt::entity>& enttMap)
+	{
+		auto view = src.view<T>();
+		for (auto& e : view)
+		{
+			UUID uuid = src.get<IDComponent>(e).ID;
+			entt::entity eID = enttMap.at(uuid);
+			DD_CORE_ASSERT(enttMap.find(uuid) != enttMap.end())
+
+			auto& component = src.get<T>(e);
+			dst.emplace_or_replace<T>(eID, component);
+		}
+	}
+
+	template<typename T>
+	static void copy_components_if_exists(Entity dst, Entity src)
+	{
+		if (src.hasComponent<T>())
+			dst.addOrRepalaceComponent<T>(src.getComponent<T>());
+	}
+
+	Shr_ptr<Scene> Scene::copy(Shr_ptr<Scene> src)
+	{
+		Shr_ptr<Scene> dest = create_shr_ptr<Scene>();
+
+		dest->m_viewportWidth = src->m_viewportWidth;
+		dest->m_viewportHeight = src->m_viewportHeight;
+
+		auto& srcSceneReg = src->m_registry;
+		auto& destSceneReg = dest->m_registry;
+
+		std::unordered_map<UUID, entt::entity> enttMap;
+
+		auto idView = srcSceneReg.view<IDComponent>();
+		for (auto& e : idView)
+		{
+			UUID uuid = srcSceneReg.get<IDComponent>(e).ID;
+			const auto& name = srcSceneReg.get<TagComponent>(e).tag;
+			enttMap[uuid] = dest->createEntityWithUUID(uuid, name);;
+		}
+
+		// dont need to do ID and tag as they have already been done
+		copy_components<TransformComponent>		(destSceneReg, srcSceneReg, enttMap);
+		copy_components<CameraComponent>		(destSceneReg, srcSceneReg, enttMap);
+		copy_components<SpriteRendererComponent>(destSceneReg, srcSceneReg, enttMap);
+		copy_components<Rigidbody2DComponent>	(destSceneReg, srcSceneReg, enttMap);
+		copy_components<BoxCollider2DComponent>	(destSceneReg, srcSceneReg, enttMap);
+		copy_components<NativeScriptComponent>	(destSceneReg, srcSceneReg, enttMap);
+
+		return dest;
+	}
+
 	Entity Scene::createEntity(const std::string& name)
 	{
 		return createEntityWithUUID(UUID(), name);
@@ -53,6 +106,18 @@ namespace daedalus::scene {
 	void Scene::destroyEntity(Entity entity)
 	{
 		m_registry.destroy(entity);
+	}
+
+	void Scene::duplicateEntity(Entity entity)
+	{
+		Entity newEntity = createEntity(entity.getName());
+
+		copy_components_if_exists<TransformComponent>(newEntity, entity);
+		copy_components_if_exists<CameraComponent>(newEntity, entity);
+		copy_components_if_exists<SpriteRendererComponent>(newEntity, entity);
+		copy_components_if_exists<Rigidbody2DComponent>(newEntity, entity);
+		copy_components_if_exists<BoxCollider2DComponent>(newEntity, entity);
+		copy_components_if_exists<NativeScriptComponent>(newEntity, entity);
 	}
 
 	void Scene::onRuntimeStart()

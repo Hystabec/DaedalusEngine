@@ -26,9 +26,12 @@ namespace daedalus::scene {
 		Scene();
 		~Scene();
 
+		static Shr_ptr<Scene> copy(Shr_ptr<Scene> src);
+
 		Entity createEntity(const std::string& name = std::string());
 		Entity createEntityWithUUID(UUID uuid, const std::string& name = std::string());
 		void destroyEntity(Entity entity);
+		void duplicateEntity(Entity entity);
 
 		void onRuntimeStart();
 		void onRutimeStop();
