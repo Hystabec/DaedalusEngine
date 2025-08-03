@@ -5,7 +5,25 @@
 #include "entity.h"
 #include "entityComponents/components.h"
 
+#include <box2d/box2d.h>
+
 namespace daedalus::scene {
+
+	static b2BodyType rigid_body_type_to_box2D_body_type(scene::Rigidbody2DComponent::BodyType bodyType)
+	{
+		switch (bodyType)
+		{
+		case daedalus::scene::Rigidbody2DComponent::BodyType::Static:
+			return b2BodyType::b2_staticBody;
+		case daedalus::scene::Rigidbody2DComponent::BodyType::Dynamic:
+			return b2BodyType::b2_dynamicBody;
+		case daedalus::scene::Rigidbody2DComponent::BodyType::Kinematic:
+			return b2BodyType::b2_kinematicBody;
+		}
+
+		DD_CORE_ASSERT(false, "Unknown body type");
+		return b2BodyType::b2_staticBody;
+	}
 
 	Scene::Scene()
 	{
@@ -13,6 +31,83 @@ namespace daedalus::scene {
 
 	Scene::~Scene()
 	{
+	}
+
+	Entity Scene::createEntity(const std::string& name)
+	{
+		return createEntityWithUUID(UUID(), name);
+	}
+
+	Entity Scene::createEntityWithUUID(UUID uuid, const std::string& name)
+	{
+		Entity entity = { m_registry.create(), this };
+		entity.addComponent<IDComponent>(uuid);
+		entity.addComponent<TransformComponent>();
+
+		auto& tag = entity.addComponent<TagComponent>();
+		tag.tag = name.empty() ? "Entity" : name;
+
+		return entity;
+	}
+
+	void Scene::destroyEntity(Entity entity)
+	{
+		m_registry.destroy(entity);
+	}
+
+	void Scene::onRuntimeStart()
+	{
+		b2WorldDef worldDef = b2DefaultWorldDef();
+		worldDef.gravity = { 0.0f, -9.8f };
+		m_physicsWorld = create_uni_ptr<b2WorldId>(b2CreateWorld(&worldDef));
+
+		using namespace scene;
+
+		auto view = m_registry.view<Rigidbody2DComponent>();
+		for (auto e : view)
+		{
+			Entity entity = { e, this };
+			auto& transform = entity.getComponent<TransformComponent>();
+			auto& rb2d = entity.getComponent<Rigidbody2DComponent>();
+
+			b2BodyDef bodyDef = b2DefaultBodyDef();
+			bodyDef.type = rigid_body_type_to_box2D_body_type(rb2d.type);
+			bodyDef.position = { transform.position.x, transform.position.y };
+			bodyDef.rotation = b2MakeRot(transform.rotation.z);
+			//bodyDef.fixedRotation = true;
+
+			b2BodyId body = b2CreateBody(*m_physicsWorld, &bodyDef);
+
+			if (rb2d.fixedRotation)
+			{
+				b2MotionLocks locks;
+				locks.linearX = false;	// need to initialize this?
+				locks.linearY = false;	// need to initialize this?
+				locks.angularZ = true;
+				b2Body_SetMotionLocks(body, locks);
+			}
+
+			m_entityBox2DBodyMap[entity.getUUID()] = body;
+
+			if (entity.hasComponent<BoxCollider2DComponent>())
+			{
+				auto& bc2d = entity.getComponent<BoxCollider2DComponent>();
+
+				b2Polygon polygon = b2MakeBox(bc2d.size.x * transform.scale.x, bc2d.size.y * transform.scale.y);
+				b2ShapeDef shapeDef = b2DefaultShapeDef();
+				shapeDef.density = bc2d.desity;
+				shapeDef.material.friction = bc2d.friction;
+				shapeDef.material.restitution = bc2d.restitution;
+				//shapeDef.material.restitutionThreshold = bc2d.restitutionThreshold;
+				b2ShapeId shapeID = b2CreatePolygonShape(body, &shapeDef, &polygon);
+			}
+		}
+	}
+
+	void Scene::onRutimeStop()
+	{
+		b2DestroyWorld(*m_physicsWorld);
+		m_physicsWorld.reset();
 	}
 
 	void Scene::updateRuntime(const application::DeltaTime& dt)
@@ -58,6 +153,27 @@ namespace daedalus::scene {
 			}
 		}
 
+		// Physics
+		{
+			const int32_t subStepCount = 4;
+			b2World_Step(*m_physicsWorld, dt, subStepCount);
+
+			auto view = m_registry.view<Rigidbody2DComponent>();
+			
+			for(auto e : view)
+			{
+				Entity enity = { e, this };
+				auto& transform = enity.getComponent<TransformComponent>();
+				auto& rb2d = enity.getComponent<Rigidbody2DComponent>();
+
+				b2BodyId& body = m_entityBox2DBodyMap.at(enity.getUUID());
+				const auto& position = b2Body_GetPosition(body);
+				transform.position.x = position.x;
+				transform.position.y = position.y;
+				transform.rotation.z = b2Rot_GetAngle(b2Body_GetRotation(body));
+			}
+		}
+
 		if (mainCamera)
 		{
 			graphics::Renderer2D::begin(*mainCamera, mainCameraTransform);
@@ -91,28 +207,6 @@ namespace daedalus::scene {
 		graphics::Renderer2D::end();
 	}
 
-	Entity Scene::createEntity(const std::string& name)
-	{
-		return createEntityWithUUID(UUID(), name);
-	}
-
-	Entity Scene::createEntityWithUUID(UUID uuid, const std::string& name)
-	{
-		Entity entity = { m_registry.create(), this };
-		entity.addComponent<IDComponent>(uuid);
-		entity.addComponent<TransformComponent>();
-
-		auto& tag = entity.addComponent<TagComponent>();
-		tag.tag = name.empty() ? "Entity" : name;
-
-		return entity;
-	}
-
-	void Scene::destroyEntity(Entity entity)
-	{
-		m_registry.destroy(entity);
-	}
-
 	void Scene::onViewportResize(uint32_t width, uint32_t hegiht)
 	{
 		m_viewportWidth = width;
@@ -140,6 +234,9 @@ namespace daedalus::scene {
 
 		return {};
 	}
+
+	// TO DO: figure a way to remove the below functions/make them optional
+	// currently they have to have a template, even if its empty
 
 	template<typename T>
 	void scene::Scene::onComponentAdded(Entity entity, T& component)
@@ -170,6 +267,16 @@ namespace daedalus::scene {
 
 	template<>
 	void scene::Scene::onComponentAdded<scene::SpriteRendererComponent>(Entity entity, scene::SpriteRendererComponent& component)
+	{
+	}
+
+	template<>
+	void scene::Scene::onComponentAdded<scene::Rigidbody2DComponent>(Entity entity, scene::Rigidbody2DComponent& component)
+	{
+	}
+
+	template<>
+	void scene::Scene::onComponentAdded<scene::BoxCollider2DComponent>(Entity entity, scene::BoxCollider2DComponent& component)
 	{
 	}
 

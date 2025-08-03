@@ -1,0 +1,56 @@
+Scene: Untitled
+Entities:
+  - Entity: 10656514189493746146
+    TagComponent:
+      Tag: Platform
+    TransformComponent:
+      Position: [0, -5, 0]
+      Rotation: [0, 0, 0.17453294]
+      Scale: [20, 1, 1]
+    SpriteRendererComponent:
+      Colour: [0.28957528, 0.28957528, 0.28957528, 1]
+    Rigidbody2DComponent:
+      BodyType: Static
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+      Desity: 1
+      Friction: 0.5
+      Restitution: 0
+  - Entity: 12035540377459869004
+    TagComponent:
+      Tag: Box
+    TransformComponent:
+      Position: [6.248971, 2.0599964, 0]
+      Rotation: [0, 0, -0.10933029]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Colour: [0.23250641, 0.972973, 0.10518626, 1]
+    Rigidbody2DComponent:
+      BodyType: Dynamic
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+      Desity: 1
+      Friction: 0.2
+      Restitution: 0.4
+  - Entity: 13517902223792627785
+    TagComponent:
+      Tag: Camera
+    TransformComponent:
+      Position: [-1, -2, 16]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 0
+        PerspectiveFOV: 0.7853982
+        PerspectiveNear: 0.01
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: true
+      FixedAspectRatio: false

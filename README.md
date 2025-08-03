@@ -3,7 +3,7 @@ Daedalus Engine is a personal Game engine project that i'm developing using tuto
 
 Primarily following [The Cherno's - "Game Engine" series](https://www.youtube.com/playlist?list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT) when developing the engine.  
 
-Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW](https://www.glfw.org), [GLEW](https://glew.sourceforge.net), [stb](https://github.com/nothings/stb), [spdlog](https://github.com/gabime/spdlog), [Dear ImGui](https://github.com/ocornut/imgui), [Entt](https://github.com/skypjack/entt), [yaml-cpp](https://github.com/jbeder/yaml-cpp), [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo), SPIR-V ([Vulkan](https://www.vulkan.org))  
+Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW](https://www.glfw.org), [GLEW](https://glew.sourceforge.net), [stb](https://github.com/nothings/stb), [spdlog](https://github.com/gabime/spdlog), [Dear ImGui](https://github.com/ocornut/imgui), [Entt](https://github.com/skypjack/entt), [yaml-cpp](https://github.com/jbeder/yaml-cpp), [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo), SPIR-V ([Vulkan](https://www.vulkan.org)), [box2d](https://github.com/erincatto/box2d)  
 
 ## Current Features
 * Custom maths library.  
@@ -15,6 +15,7 @@ Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW]
 * Custom Logging library primarily using spdlog.  
 * Performance profiling using `chrome://tracing`.  
 * Entity component system using Entt.  
+* 2D physics using Box2D
 * Shader cross compilation using SPIR-V.  
 * An Editor application (in development).  
 
@@ -26,7 +27,7 @@ Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW]
 * Rendering with DirectX.  
 * Rendering with Metal.  
 * 3D batch rendering.  
-* 2D and 3D physics engine.  
+* 3D physics engine.  
 * A complete editor application.  
 * A standalone runtime environment.  
     * That can run projects built in the editor.  

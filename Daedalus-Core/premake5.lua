@@ -40,6 +40,7 @@ project "Daedalus-Core"
 		"%{dependDir.entt}/include",
 		"%{dependDir.yaml_cpp}/include",
 		"%{dependDir.ImGuizmo}",
+		"%{dependDir.Box2D}/include",
 		"%{dependDir.VulkanSDK}/Include"
 	}
 
@@ -55,7 +56,8 @@ project "Daedalus-Core"
 		"glfw3_mt.lib",
 		"opengl32.lib",
 		"glew32s.lib",
-		"yaml-cpp"
+		"yaml-cpp",
+		"Box2D"
 	}
 
 	buildoptions "/utf-8"

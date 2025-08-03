@@ -343,6 +343,9 @@ namespace daedalus::editor
 	{
 		using namespace application;
 
+		// TO DO: The ctrl + KEY should be usable when focusing and hovering any window
+		// but gizmos camera etc. should still be blocked
+
 		bool ctrl = Input::getKeyDown(InputCode::Key_Left_Control) || Input::getKeyDown(InputCode::Key_Right_Control);
 		bool shift = Input::getKeyDown(InputCode::Key_Left_Shift) || Input::getKeyDown(InputCode::Key_Right_Shift);
 		switch ((InputCode)e.getKeyCode())
@@ -501,11 +504,13 @@ namespace daedalus::editor
 	void EditorLayer::onScenePlay()
 	{
 		m_sceneState = SceneState::Play;
+		m_activeScene->onRuntimeStart();
 	}
 
 	void EditorLayer::onSceneStop()
 	{
 		m_sceneState = SceneState::Edit;
+		m_activeScene->onRutimeStop();
 	}
 
 }
