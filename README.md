@@ -3,30 +3,31 @@ Daedalus Engine is a personal Game engine project that i'm developing using tuto
 
 Primarily following [The Cherno's - "Game Engine" series](https://www.youtube.com/playlist?list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT) when developing the engine.  
 
-Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW](https://www.glfw.org), [GLEW](https://glew.sourceforge.net), [stb](https://github.com/nothings/stb), [spdlog](https://github.com/gabime/spdlog), [Dear ImGui](https://github.com/ocornut/imgui), [Entt](https://github.com/skypjack/entt), [yaml-cpp](https://github.com/jbeder/yaml-cpp), [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo), SPIR-V ([Vulkan](https://www.vulkan.org))  
+Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW](https://www.glfw.org), [GLEW](https://glew.sourceforge.net), [stb](https://github.com/nothings/stb), [spdlog](https://github.com/gabime/spdlog), [Dear ImGui](https://github.com/ocornut/imgui), [Entt](https://github.com/skypjack/entt), [yaml-cpp](https://github.com/jbeder/yaml-cpp), [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo), SPIR-V ([Vulkan](https://www.vulkan.org)), [box2d](https://github.com/erincatto/box2d)  
 
 ## Current Features
 * Custom maths library.  
 * Event system.  
-* Rendering with OpenGL .  
+* Rendering with `OpenGL` .  
 * 2D batch rendering.  
 * Texture/Image rendering.  
-* User Interface using Dear ImGui.  
-* Custom Logging library primarily using spdlog.  
+* User Interface using `Dear ImGui`.  
+* Custom Logging library primarily using `spdlog`.  
 * Performance profiling using `chrome://tracing`.  
-* Entity component system using Entt.  
-* Shader cross compilation using SPIR-V.  
+* Entity component system using `Entt`.  
+* 2D physics using `Box2D`
+* Shader cross compilation using `SPIR-V`.  
 * An Editor application (in development).  
 
 ## Planned Features
 * Suppot for Mac and Linux.  
 * Audio system.  
 * Scripting support (C#)
-* Rendering with Vulkan.  
-* Rendering with DirectX.  
-* Rendering with Metal.  
+* Rendering with `Vulkan`.  
+* Rendering with `DirectX`.  
+* Rendering with `Metal`.  
 * 3D batch rendering.  
-* 2D and 3D physics engine.  
+* 3D physics engine.  
 * A complete editor application.  
 * A standalone runtime environment.  
     * That can run projects built in the editor.  
@@ -41,7 +42,7 @@ if not cloned recursively, use `git submodule update --init` to clone submodules
 ### Downloading From GitHub
 Download all the project files.  
 Download the additional submodules which can be found in `Daedalus-Core/Dependencies`.  
-    <sub>Current submodules: [ImGuizmo](https://github.com/Hystabec/ImGuizmo/tree/2310acda820d7383d4c4884b7945ada92cd16a47), [yaml-cpp](https://github.com/Hystabec/yaml-cpp/tree/4ea8b0cc00ebe7cc2ce2bae18b84cf0f9767e8a2).</sub>  
+    <sub>Current submodules: [ImGuizmo](https://github.com/Hystabec/ImGuizmo/tree/2310acda820d7383d4c4884b7945ada92cd16a47), [yaml-cpp](https://github.com/Hystabec/yaml-cpp/tree/4ea8b0cc00ebe7cc2ce2bae18b84cf0f9767e8a2), [Box2D](https://github.com/Hystabec/box2d/tree/43e0742c4ac5777169ce4e5415236acdc176b1b6).</sub>  
 All submodules can be viewed in `.gitmodules`. This file shows the `URLs` to download from and the `path` to go into.  
 
 <ins>2. External Dependencies And Project Setup:</ins>

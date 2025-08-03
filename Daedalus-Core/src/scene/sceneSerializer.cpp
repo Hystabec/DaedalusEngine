@@ -12,6 +12,28 @@
 namespace YAML {
 
 	template<>
+	struct convert<daedalus::maths::Vec2>
+	{
+		static Node encode(const daedalus::maths::Vec2& rhs)
+		{
+			Node node;
+			node.push_back(rhs.x);
+			node.push_back(rhs.y);
+			return node;
+		}
+
+		static bool decode(const Node& node, daedalus::maths::Vec2& rhs)
+		{
+			if (!node.IsSequence() || node.size() != 2)
+				return false;
+
+			rhs.x = node[0].as<float>();
+			rhs.y = node[1].as<float>();
+			return true;
+		}
+	};
+
+	template<>
 	struct convert<daedalus::maths::Vec3>
 	{
 		static Node encode(const daedalus::maths::Vec3& rhs)
@@ -65,6 +87,13 @@ namespace YAML {
 
 namespace daedalus::scene {
 
+	static YAML::Emitter& operator<<(YAML::Emitter& out, const maths::Vec2& vec)
+	{
+		out << YAML::Flow;
+		out << YAML::BeginSeq << vec.x << vec.y << YAML::EndSeq;
+		return out;
+	}
+
 	static YAML::Emitter& operator<<(YAML::Emitter& out, const maths::Vec3& vec)
 	{
 		out << YAML::Flow;
@@ -77,6 +106,35 @@ namespace daedalus::scene {
 		out << YAML::Flow;
 		out << YAML::BeginSeq << vec.x << vec.y << vec.z << vec.w << YAML::EndSeq;
 		return out;
+	}
+
+	static std::string rigidbody2D_body_type_to_string(Rigidbody2DComponent::BodyType bodyType)
+	{
+		switch (bodyType)
+		{
+		case Rigidbody2DComponent::BodyType::Static:
+			return "Static";
+		case Rigidbody2DComponent::BodyType::Dynamic:
+			return "Dynamic";
+		case Rigidbody2DComponent::BodyType::Kinematic:
+			return "Kinematic";
+		}
+
+		DD_CORE_ASSERT(false, "Unknown type");
+		return {};
+	}
+
+	static Rigidbody2DComponent::BodyType rigidbody2D_body_type_from_string(const std::string& bodyTypeString)
+	{
+		if (bodyTypeString == "Static")
+			return Rigidbody2DComponent::BodyType::Static;
+		else if(bodyTypeString == "Dynamic")
+			return Rigidbody2DComponent::BodyType::Dynamic;
+		else if (bodyTypeString == "Kinematic")
+			return Rigidbody2DComponent::BodyType::Kinematic;
+		
+		DD_CORE_ASSERT(false, "Unknown type");
+		return Rigidbody2DComponent::BodyType::Static;
 	}
 
 	SceneSerializer::SceneSerializer(const Shr_ptr<Scene>& scene)
@@ -142,6 +200,21 @@ namespace daedalus::scene {
 		serialize_component<SpriteRendererComponent>(out, "SpriteRendererComponent", entity, [](YAML::Emitter& out, SpriteRendererComponent& src)
 			{
 				out << YAML::Key << "Colour" << YAML::Value << src.colour;
+			});
+
+		serialize_component<Rigidbody2DComponent>(out, "Rigidbody2DComponent", entity, [](YAML::Emitter& out, Rigidbody2DComponent& src)
+			{
+				out << YAML::Key << "BodyType" << YAML::Value << rigidbody2D_body_type_to_string(src.type);
+				out << YAML::Key << "FixedRotation" << YAML::Value << src.fixedRotation;
+			});
+
+		serialize_component<BoxCollider2DComponent>(out, "BoxCollider2DComponent", entity, [](YAML::Emitter& out, BoxCollider2DComponent& src)
+			{
+				out << YAML::Key << "Offset" << YAML::Value << src.offset;
+				out << YAML::Key << "Size" << YAML::Value << src.size;
+				out << YAML::Key << "Desity" << YAML::Value << src.desity;
+				out << YAML::Key << "Friction" << YAML::Value << src.friction;
+				out << YAML::Key << "Restitution" << YAML::Value << src.restitution;
 			});
 
 		out << YAML::EndMap;
@@ -250,6 +323,26 @@ namespace daedalus::scene {
 					{
 						auto& src = deserializedEntity.addOrRepalaceComponent<SpriteRendererComponent>();
 						src.colour = component["Colour"].as<maths::Vec4>();
+					}
+
+					component = entity["Rigidbody2DComponent"];
+					if (component)
+					{
+						auto& src = deserializedEntity.addOrRepalaceComponent<Rigidbody2DComponent>();
+						src.type = rigidbody2D_body_type_from_string(component["BodyType"].as<std::string>());
+						src.fixedRotation = component["FixedRotation"].as<bool>();
+					}
+
+					component = entity["BoxCollider2DComponent"];
+					if (component)
+					{
+						auto& src = deserializedEntity.addOrRepalaceComponent<BoxCollider2DComponent>();
+						src.offset = component["Offset"].as<maths::Vec2>();
+						src.size = component["Size"].as<maths::Vec2>();
+
+						src.desity = component["Desity"].as<float>();
+						src.friction = component["Friction"].as<float>();
+						src.restitution = component["Restitution"].as<float>();
 					}
 				}
 			}

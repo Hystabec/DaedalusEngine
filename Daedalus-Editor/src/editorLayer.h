@@ -27,9 +27,12 @@ namespace daedalus::editor
 		void openScene(const std::filesystem::path& path);
 		void saveScene();
 		void saveSceneAs();
+		void serializeScene(Shr_ptr<scene::Scene> scene, const std::filesystem::path& path);
 
 		void onScenePlay();
 		void onSceneStop();
+
+		void duplicateEntity();
 
 		// UI panels
 		void UIToolbar();
@@ -42,7 +45,8 @@ namespace daedalus::editor
 		maths::Vec2 m_viewportBounds[2];
 
 		Shr_ptr<scene::Scene> m_activeScene;
-		std::string m_currentSceneFilepath = std::string();
+		Shr_ptr<scene::Scene> m_editorScene;
+		std::filesystem::path m_currentSceneFilepath = std::filesystem::path();
 
 		SceneHierarchyPanel m_sceneHierarchyPanel;
 		int m_gizmoType = -1;

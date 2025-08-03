@@ -31,6 +31,7 @@ namespace daedalus::editor
 		m_stopIcon = graphics::Texture2D::create("resources\\icons\\stopButtonIcon.png");
 
 		m_activeScene = create_shr_ptr<scene::Scene>();
+		m_editorScene = m_activeScene;
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
 
@@ -77,6 +78,7 @@ namespace daedalus::editor
 			m_viewportSize.x > 0.0f && m_viewportSize.y > 0.0f &&	// zero sized framebuffer is invalid
 			(spec.width != m_viewportSize.x || spec.height != m_viewportSize.y))
 		{
+
 			m_editorCamera.setViewportSize(m_viewportSize.x, m_viewportSize.y);
 			m_framebuffer->resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 			m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
@@ -343,6 +345,9 @@ namespace daedalus::editor
 	{
 		using namespace application;
 
+		// TO DO: The ctrl + KEY should be usable when focusing and hovering any window
+		// but gizmos camera etc. should still be blocked
+
 		bool ctrl = Input::getKeyDown(InputCode::Key_Left_Control) || Input::getKeyDown(InputCode::Key_Right_Control);
 		bool shift = Input::getKeyDown(InputCode::Key_Left_Shift) || Input::getKeyDown(InputCode::Key_Right_Shift);
 		switch ((InputCode)e.getKeyCode())
@@ -367,6 +372,15 @@ namespace daedalus::editor
 				saveSceneAs();
 			else if (ctrl)
 				saveScene();
+
+			break;
+		}
+
+		//
+		case InputCode::Key_D:
+		{
+			if (ctrl)
+				duplicateEntity();
 
 			break;
 		}
@@ -446,12 +460,13 @@ namespace daedalus::editor
 		m_activeScene = create_shr_ptr<scene::Scene>();
 		m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		m_sceneHierarchyPanel.setContext(m_activeScene);
-		m_currentSceneFilepath = std::string();
+		m_currentSceneFilepath = std::filesystem::path();
 	}
 
 	void EditorLayer::openScene()
 	{
-		std::string filepath = utils::FileDialog::openFile("Daedalus Scene (*.daedalus)\0*.daedalus\0");
+		// open file returns a string - here is getting cast/constucted into a filepath
+		std::filesystem::path filepath = utils::FileDialog::openFile("Daedalus Scene (*.daedalus)\0*.daedalus\0");
 		if (!filepath.empty())
 		{
 			openScene(filepath);
@@ -465,10 +480,13 @@ namespace daedalus::editor
 		scene::SceneSerializer serializer(newScene);
 		if (serializer.deserialize(path.string()))
 		{
-			m_activeScene = newScene;
-			m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
-			m_sceneHierarchyPanel.setContext(m_activeScene);
+			m_editorScene = newScene;
+
+			m_editorScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+			m_sceneHierarchyPanel.setContext(m_editorScene);
 			m_currentSceneFilepath = path.string();
+
+			m_activeScene = m_editorScene;
 		}
 	}
 
@@ -482,30 +500,56 @@ namespace daedalus::editor
 			return;
 		}
 
-		scene::SceneSerializer serializer(m_activeScene);
-		serializer.serialize(m_currentSceneFilepath);
-		DD_LOG_INFO("Scene saved [{}]", m_currentSceneFilepath);
+		serializeScene(m_activeScene, m_currentSceneFilepath);
 	}
 
 	void EditorLayer::saveSceneAs()
 	{
-		std::string filepath = utils::FileDialog::saveFile("Daedalus Scene (*.daedalus)\0*.daedalus\0");
+		std::filesystem::path filepath = utils::FileDialog::saveFile("Daedalus Scene (*.daedalus)\0*.daedalus\0");
 		if (!filepath.empty())
 		{
-			scene::SceneSerializer serializer(m_activeScene);
-			serializer.serialize(filepath);
+			serializeScene(m_activeScene, filepath);
 			m_currentSceneFilepath = filepath;
 		}
+	}
+
+	void EditorLayer::serializeScene(Shr_ptr<scene::Scene> scene, const std::filesystem::path& path)
+	{
+		scene::SceneSerializer serializer(scene);
+		serializer.serialize(path.string());
+		DD_LOG_INFO("Scene saved [{}]", path.string());
 	}
 
 	void EditorLayer::onScenePlay()
 	{
 		m_sceneState = SceneState::Play;
+
+		// Make the active scene a copy of the editor scene
+		// now becomes the runtime scene
+		m_activeScene = scene::Scene::copy(m_editorScene);
+		m_activeScene->onRuntimeStart();
+
+		m_sceneHierarchyPanel.setContext(m_activeScene);
 	}
 
 	void EditorLayer::onSceneStop()
 	{
 		m_sceneState = SceneState::Edit;
+		
+		m_activeScene->onRutimeStop();
+		m_activeScene = m_editorScene;
+
+		m_sceneHierarchyPanel.setContext(m_activeScene);
+	}
+
+	void EditorLayer::duplicateEntity()
+	{
+		if (m_sceneState != SceneState::Edit)
+			return;
+
+		scene::Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
+		if (selectedEntity)
+			m_editorScene->duplicateEntity(selectedEntity);
 	}
 
 }

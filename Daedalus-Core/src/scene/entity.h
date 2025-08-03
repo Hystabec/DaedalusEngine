@@ -2,15 +2,14 @@
 
 #include "scene.h"
 #include "application/uuid.h"
+
 #include "entityComponents/idComponent.h"
+#include "entityComponents/tagComponent.h"
+#include "entityComponents/transformComponent.h"
 
 #include <entt.hpp>
 
 namespace daedalus::scene {
-
-	struct TransformComponent;
-	struct TagComponent;
-	// foward declared components for requires args
 
 	class Entity
 	{
@@ -34,7 +33,9 @@ namespace daedalus::scene {
 		T& addOrRepalaceComponent(Args&&... args)
 		{
 			DD_CORE_ASSERT(m_scene, "Scene is nullptr (invalid entity)");
-			return m_scene->m_registry.emplace_or_replace<T>(m_handle, std::forward<Args>()...);
+			T& component = m_scene->m_registry.emplace_or_replace<T>(m_handle, std::forward<Args>(args)...);
+			m_scene->onComponentAdded<T>(*this, component);
+			return component;
 		}
 
 		template<typename T>
@@ -44,26 +45,36 @@ namespace daedalus::scene {
 			return m_scene->m_registry.get<T>(m_handle);
 		}
 
+		template<typename T>
+		const T& getComponent() const
+		{
+			DD_CORE_ASSERT(hasComponent<T>(), "Entity does not has component");
+			return m_scene->m_registry.get<T>(m_handle);
+		}
+
 		template<typename... T>
-		bool hasComponent()
+		bool hasComponent() const
 		{
 			DD_CORE_ASSERT(m_scene, "Scene is nullptr (invalid entity)");
 			return m_scene->m_registry.all_of<T...>(m_handle);
 		}
 
 		/// @brief Remove a specified component from the entity. 
-		/// @brief Trying to remove TransformComponent or TagComponent will cause an assert
+		/// @brief Trying to remove IDComponent, TagComponent or TransformComponent will cause an assert
 		template<typename T>
 		void removeComponent()// requires(!std::is_same<T, TransformComponent>::value && !std::is_same<T, TagComponent>::value)
 		{
 			DD_CORE_ASSERT(hasComponent<T>(), "Entity does not has component");
-			DD_CORE_ASSERT(!(typeid(T).hash_code() == typeid(TransformComponent).hash_code()
-				|| typeid(T).hash_code() == typeid(TagComponent).hash_code()),
+			DD_CORE_ASSERT(!(typeid(T).hash_code() == typeid(IDComponent).hash_code() || 
+				typeid(T).hash_code() == typeid(TagComponent).hash_code()) ||
+				typeid(T).hash_code() == typeid(TransformComponent).hash_code(),
 				DD_ASSERT_FORMAT_MESSAGE("Cannot remove component [{}]", typeid(T).name()));
 			m_scene->m_registry.remove<T>(m_handle);
 		}
 
-		UUID getUUID() { return getComponent<IDComponent>().ID; }
+		UUID getUUID() const { return getComponent<IDComponent>().ID; }
+		const std::string& getName() const { return getComponent<TagComponent>().tag; }
+		TransformComponent& getTransformComponent() { return getComponent<TransformComponent>(); }
 
 		operator bool() const { return m_handle != entt::null; }
 		operator uint32_t() const { return (uint32_t)m_handle; }
@@ -71,12 +82,6 @@ namespace daedalus::scene {
 
 		bool operator==(const Entity& other) const { return m_handle == other.m_handle && m_scene == other.m_scene; }
 		bool operator!=(const Entity& other) const { return !(*this == other); }
-	public:
-		// this idea of being able to call entity.Transform seems good but i dont know how i would do it
-		// would be easier to just do it as a function that retrieves a reference to the transform
-
-		//maths::Mat4& Transform = getComponent<TransformComponent>().Transform;
-		//std::string& Tag = getComponent<TagComponent>().Tag;
 
 	private:
 		entt::entity m_handle{ entt::null };
