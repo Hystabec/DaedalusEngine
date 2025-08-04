@@ -35,6 +35,11 @@ namespace daedalus::editor
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
 
+		if(m_currentSceneFilepath == std::filesystem::path())
+			Application::get().getWindow()->setWindowName("Daedalus Editor");
+		else
+			Application::get().getWindow()->setWindowName("Daedalus Editor - " + m_currentSceneFilepath.stem().string());
+
 		/*class CameraController : public scene::ScriptableEntity
 		{
 		public:
@@ -461,6 +466,7 @@ namespace daedalus::editor
 		m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		m_sceneHierarchyPanel.setContext(m_activeScene);
 		m_currentSceneFilepath = std::filesystem::path();
+		Application::get().getWindow()->setWindowName("Daedalus Editor");
 	}
 
 	void EditorLayer::openScene()
@@ -485,6 +491,7 @@ namespace daedalus::editor
 			m_editorScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 			m_sceneHierarchyPanel.setContext(m_editorScene);
 			m_currentSceneFilepath = path.string();
+			Application::get().getWindow()->setWindowName("Daedalus Editor - " + m_currentSceneFilepath.stem().string());
 
 			m_activeScene = m_editorScene;
 		}
@@ -510,6 +517,7 @@ namespace daedalus::editor
 		{
 			serializeScene(m_activeScene, filepath);
 			m_currentSceneFilepath = filepath;
+			Application::get().getWindow()->setWindowName("Daedalus Editor - " + m_currentSceneFilepath.stem().string());
 		}
 	}
 

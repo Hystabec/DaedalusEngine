@@ -33,6 +33,9 @@ namespace daedalus { namespace application {
 		virtual void setVSync(bool enabled) = 0;
 		virtual bool isVSync() const = 0;
 
+		virtual void setWindowName(const std::string& name) = 0;
+		virtual void setWindowIcon(const std::filesystem::path& path) = 0;
+
 		virtual void* getNativeWindow() const = 0;
 
 		static Uni_ptr<Window> Create(const WindowProperties& props = WindowProperties());

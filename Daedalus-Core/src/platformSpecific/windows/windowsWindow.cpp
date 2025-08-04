@@ -10,6 +10,7 @@
 #include "platformSpecific/openGL/graphics/renderer/openGLContext.h"
 
 #include <glfw3.h>
+#include <stb_image.h>
 
 namespace daedalus { namespace application {
 
@@ -174,6 +175,19 @@ namespace daedalus { namespace application {
 	bool WindowsWindow::isVSync() const
 	{
 		return m_data.Vsync;
+	}
+
+	void WindowsWindow::setWindowName(const std::string& name)
+	{
+		glfwSetWindowTitle(m_window, name.c_str());
+	}
+
+	void WindowsWindow::setWindowIcon(const std::filesystem::path& path)
+	{
+		GLFWimage image;
+		image.pixels = stbi_load(path.string().c_str(), &image.width, &image.height, 0, 4);
+		glfwSetWindowIcon(m_window, 1, &image);
+		stbi_image_free(image.pixels);
 	}
 
 	void WindowsWindow::init(const WindowProperties& props)

@@ -3,9 +3,10 @@
 
 #include "application/window.h"
 #include "application/input/Input.h"
-#include "utils/timer.h"
-
 #include "graphics/renderer/renderer.h"
+
+#include "utils/timer.h"
+#include "utils/findFileLocation.h"
 
 namespace daedalus {
 
@@ -104,6 +105,10 @@ namespace daedalus {
 		debug::Log::init();
 		m_window = Uni_ptr<application::Window>(application::Window::Create(application::WindowProperties(title, width, height, vsync)));
 		m_window->setEventCallback(DD_BIND_EVENT_FUN(Application::onEvent));
+
+		auto[path, found] = utils::get_core_resource_file_location("icons/DD_Logo_V1.png");
+		if (found)
+			m_window->setWindowIcon(path);
 
 		graphics::Renderer::init();
 

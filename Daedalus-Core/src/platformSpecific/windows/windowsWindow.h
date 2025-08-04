@@ -25,6 +25,9 @@ namespace daedalus {
 		void setVSync(bool enabled) override;
 		bool isVSync() const override;
 
+		void setWindowName(const std::string& name) override;
+		void setWindowIcon(const std::filesystem::path& path) override;
+
 		inline void* getNativeWindow() const override { return m_window; }
 
 	private:

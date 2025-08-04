@@ -37,9 +37,9 @@ namespace daedalus::utils {
 
 #ifndef DD_DISTRO
         //doesnt support launching from different dir that executable
-        DD_CORE_ASSERT(false, DD_ASSERT_FORMAT_MESSAGE("default2DShader.glsl not found in {} or {}", defaultPath.string(), "resources\\shaders\\default2DShader.glsl"));
+        DD_CORE_ASSERT(false, DD_ASSERT_FORMAT_MESSAGE("{} not found in {} or {}", file, defaultPath.string(), "resources\\shaders\\default2DShader.glsl"));
 #else
-        DD_CORE_LOG_CRITICAL("default2DShader.glsl not found in {}", "resources\\shaders\\default2DShader.glsl");
+        DD_CORE_LOG_CRITICAL("{} not found in {}", file, "resources\\shaders\\default2DShader.glsl");
         return { "", false };
 #endif
 
