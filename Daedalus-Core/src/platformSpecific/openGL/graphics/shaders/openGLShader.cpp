@@ -261,7 +261,10 @@ namespace daedalus::graphics {
 
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
-		options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_4);
+		// TO DO: using "shaderc_env_version_vulkan_1_4" causes the error "GL_EXT_demote_to_helper_invocation is only supported in Vulkan GLSL."
+		// to occure, so for now version_vulkan_1_2 is being used. Investigate why the version change causes this issue and check if using the 
+		// earlier version is having any negative affects else where. Or find a solution when using version_vulkan_1_4.
+		options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
 		const bool optimize = true;
 		if (optimize)
 			options.SetOptimizationLevel(shaderc_optimization_level_performance);
@@ -350,7 +353,15 @@ namespace daedalus::graphics {
 			else
 			{
 				spirv_cross::CompilerGLSL glslCompiler(spirv);
-				m_openGLSourceCode[stage] = glslCompiler.compile();
+				try
+				{
+					m_openGLSourceCode[stage] = glslCompiler.compile();
+				}
+				catch (const std::exception& e)
+				{
+					DD_ASSERT(false, e.what());
+				}
+
 				auto& source = m_openGLSourceCode[stage];
 
 				DD_ASSERT(!m_filePath.empty(), "File path is invalid");
