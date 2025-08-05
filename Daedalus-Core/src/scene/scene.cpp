@@ -260,7 +260,8 @@ namespace daedalus::scene {
 				for (auto entity : view)
 				{
 					auto [transform, circleComp] = view.get<TransformComponent, CircleRendererComponent>(entity);
-					graphics::Renderer2D::drawCircle(transform.getTransform(), circleComp.colour, circleComp.thickness, circleComp.fade, (uint32_t)entity);
+					if(circleComp.thickness != 0.0f)
+						graphics::Renderer2D::drawCircle(transform.getTransform(), circleComp.colour, circleComp.thickness, circleComp.fade, (uint32_t)entity);
 				}
 			}
 
@@ -286,7 +287,8 @@ namespace daedalus::scene {
 			for (auto entity : view)
 			{
 				auto [transform, circleComp] = view.get<TransformComponent, CircleRendererComponent>(entity);
-				graphics::Renderer2D::drawCircle(transform.getTransform(), circleComp.colour, circleComp.thickness, circleComp.fade, (uint32_t)entity);
+				if (circleComp.thickness != 0.0f)
+					graphics::Renderer2D::drawCircle(transform.getTransform(), circleComp.colour, circleComp.thickness, circleComp.fade, (uint32_t)entity);
 			}
 		}
 
