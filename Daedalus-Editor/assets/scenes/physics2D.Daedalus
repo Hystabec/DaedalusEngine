@@ -1,23 +1,16 @@
 Scene: Untitled
 Entities:
-  - Entity: 13517902223792627785
+  - Entity: 3872665498113848049
     TagComponent:
-      Tag: Camera
+      Tag: Circle
     TransformComponent:
-      Position: [-1, -6, 40]
+      Position: [-0.7489296, 3.564906, 0]
       Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    CameraComponent:
-      Camera:
-        ProjectionType: 0
-        PerspectiveFOV: 0.7853982
-        PerspectiveNear: 0.01
-        PerspectiveFar: 1000
-        OrthographicSize: 10
-        OrthographicNear: -1
-        OrthographicFar: 1
-      Primary: true
-      FixedAspectRatio: false
+      Scale: [2.5, 2.5, 1]
+    CircleRendererComponent:
+      Colour: [0.8069498, 0.09658474, 0.09658474, 1]
+      Thickness: 0.2
+      Fade: 0
   - Entity: 12035540377459869004
     TagComponent:
       Tag: Box
@@ -108,3 +101,21 @@ Entities:
       Desity: 1
       Friction: 0.5
       Restitution: 0
+  - Entity: 13517902223792627785
+    TagComponent:
+      Tag: Camera
+    TransformComponent:
+      Position: [-1, -6, 40]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 0
+        PerspectiveFOV: 0.7853982
+        PerspectiveNear: 0.01
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: true
+      FixedAspectRatio: false

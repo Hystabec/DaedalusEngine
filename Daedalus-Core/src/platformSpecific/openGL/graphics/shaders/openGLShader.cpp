@@ -292,6 +292,7 @@ namespace daedalus::graphics {
 				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, utils::glShaderStageToShaderC(stage), m_filePath.string().c_str(), options);
 				if (module.GetCompilationStatus() != shaderc_compilation_status_success)
 				{
+					DD_CORE_LOG_ERROR("Shader compilation failed in stage: {}", utils::glShaderStageToString(stage));
 					DD_CORE_LOG_ERROR(module.GetErrorMessage());
 					DD_CORE_ASSERT(false);
 				}
@@ -356,6 +357,7 @@ namespace daedalus::graphics {
 				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, utils::glShaderStageToShaderC(stage), m_filePath.string().c_str(), options);
 				if (module.GetCompilationStatus() != shaderc_compilation_status_success)
 				{
+					DD_CORE_LOG_ERROR("Shader compilation failed in stage: {}", utils::glShaderStageToString(stage));
 					DD_CORE_LOG_ERROR(module.GetErrorMessage());
 					DD_CORE_ASSERT(false);
 				}

@@ -79,6 +79,7 @@ namespace daedalus::scene {
 		copy_components<TransformComponent>		(destSceneReg, srcSceneReg, enttMap);
 		copy_components<CameraComponent>		(destSceneReg, srcSceneReg, enttMap);
 		copy_components<SpriteRendererComponent>(destSceneReg, srcSceneReg, enttMap);
+		copy_components<CircleRendererComponent>(destSceneReg, srcSceneReg, enttMap);
 		copy_components<Rigidbody2DComponent>	(destSceneReg, srcSceneReg, enttMap);
 		copy_components<BoxCollider2DComponent>	(destSceneReg, srcSceneReg, enttMap);
 		copy_components<NativeScriptComponent>	(destSceneReg, srcSceneReg, enttMap);
@@ -115,6 +116,7 @@ namespace daedalus::scene {
 		copy_components_if_exists<TransformComponent>(newEntity, entity);
 		copy_components_if_exists<CameraComponent>(newEntity, entity);
 		copy_components_if_exists<SpriteRendererComponent>(newEntity, entity);
+		copy_components_if_exists<CircleRendererComponent>(newEntity, entity);
 		copy_components_if_exists<Rigidbody2DComponent>(newEntity, entity);
 		copy_components_if_exists<BoxCollider2DComponent>(newEntity, entity);
 		copy_components_if_exists<NativeScriptComponent>(newEntity, entity);
@@ -243,13 +245,23 @@ namespace daedalus::scene {
 		{
 			graphics::Renderer2D::begin(*mainCamera, mainCameraTransform);
 
-			auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
-			for (auto entity : group)
 			{
-				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
+				for (auto entity : group)
+				{
+					auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-				graphics::Renderer2D::drawSprite( transform.getTransform(), sprite, (uint32_t)entity);
+					graphics::Renderer2D::drawSprite(transform.getTransform(), sprite, (uint32_t)entity);
+				}
+			}
 
+			{
+				auto view = m_registry.view<TransformComponent, CircleRendererComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, circleComp] = view.get<TransformComponent, CircleRendererComponent>(entity);
+					graphics::Renderer2D::drawCircle(transform.getTransform(), circleComp.colour, circleComp.thickness, circleComp.fade, (uint32_t)entity);
+				}
 			}
 
 			graphics::Renderer2D::end();
@@ -260,13 +272,22 @@ namespace daedalus::scene {
 	{
 		graphics::Renderer2D::begin(camera);
 
-		auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
-		for (auto entity : group)
 		{
-			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+			auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
+			for (auto entity : group)
+			{
+				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				graphics::Renderer2D::drawSprite(transform.getTransform(), sprite, (uint32_t)entity);
+			}
+		}
 
-			//graphics::Renderer2D::drawQuad({ transform.getTransform(), sprite.Colour }, (int)entity);
-			graphics::Renderer2D::drawSprite(transform.getTransform(), sprite, (uint32_t)entity);
+		{
+			auto view = m_registry.view<TransformComponent, CircleRendererComponent>();
+			for (auto entity : view)
+			{
+				auto [transform, circleComp] = view.get<TransformComponent, CircleRendererComponent>(entity);
+				graphics::Renderer2D::drawCircle(transform.getTransform(), circleComp.colour, circleComp.thickness, circleComp.fade, (uint32_t)entity);
+			}
 		}
 
 		graphics::Renderer2D::end();
@@ -332,6 +353,11 @@ namespace daedalus::scene {
 
 	template<>
 	void scene::Scene::onComponentAdded<scene::SpriteRendererComponent>(Entity entity, scene::SpriteRendererComponent& component)
+	{
+	}
+
+	template<>
+	void scene::Scene::onComponentAdded<scene::CircleRendererComponent>(Entity entity, scene::CircleRendererComponent& component)
 	{
 	}
 

@@ -112,7 +112,7 @@ namespace daedalus::editor
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
-		ImGui::Separator();
+		//ImGui::Separator();
 		bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, label.c_str());
 		ImGui::PopStyleVar();
 
@@ -271,6 +271,15 @@ namespace daedalus::editor
 				}
 			}
 
+			if (!m_selectionContext.hasComponent<scene::CircleRendererComponent>())
+			{
+				if (ImGui::MenuItem("Circle Renderer"))
+				{
+					m_selectionContext.addComponent<scene::CircleRendererComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
 			if (!m_selectionContext.hasComponent<scene::Rigidbody2DComponent>())
 			{
 				if (ImGui::MenuItem("Rigidbody 2D"))
@@ -385,6 +394,15 @@ namespace daedalus::editor
 				}
 
 				ImGui::DragFloat("Tiling Factor", &spriteRenderer.material.tilingFactor, 0.1f, 0.0f);
+
+			}, entity);
+
+		draw_component<scene::CircleRendererComponent>("Circle Renderer",
+			[](scene::CircleRendererComponent& cRenderer)
+			{
+				ImGui::ColorEdit4("Colour", cRenderer.colour);
+				ImGui::DragFloat("Thickness", &cRenderer.thickness, 0.025f, 0.0f, 1.0f);
+				ImGui::DragFloat("Fade", &cRenderer.fade, 0.00025f, 0.0f, 5.0f);
 
 			}, entity);
 

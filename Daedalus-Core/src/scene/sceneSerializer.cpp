@@ -202,6 +202,13 @@ namespace daedalus::scene {
 				out << YAML::Key << "Colour" << YAML::Value << src.colour;
 			});
 
+		serialize_component<CircleRendererComponent>(out, "CircleRendererComponent", entity, [](YAML::Emitter& out, CircleRendererComponent& src)
+			{
+				out << YAML::Key << "Colour" << YAML::Value << src.colour;
+				out << YAML::Key << "Thickness" << YAML::Value << src.thickness;
+				out << YAML::Key << "Fade" << YAML::Value << src.fade;
+			});
+
 		serialize_component<Rigidbody2DComponent>(out, "Rigidbody2DComponent", entity, [](YAML::Emitter& out, Rigidbody2DComponent& src)
 			{
 				out << YAML::Key << "BodyType" << YAML::Value << rigidbody2D_body_type_to_string(src.type);
@@ -323,6 +330,15 @@ namespace daedalus::scene {
 					{
 						auto& src = deserializedEntity.addOrRepalaceComponent<SpriteRendererComponent>();
 						src.colour = component["Colour"].as<maths::Vec4>();
+					}
+
+					component = entity["CircleRendererComponent"];
+					if (component)
+					{
+						auto& src = deserializedEntity.addOrRepalaceComponent<CircleRendererComponent>();
+						src.colour = component["Colour"].as<maths::Vec4>();
+						src.thickness = component["Thickness"].as<float>();
+						src.fade = component["Fade"].as<float>();
 					}
 
 					component = entity["Rigidbody2DComponent"];

@@ -8,6 +8,7 @@
 // Graphics components
 #include "cameraComponent.h"
 #include "spriteRendererComponent.h"
+#include "circleRendererComponent.h"
 
 // Physics components
 #include "rigidbody2DComponent.h"

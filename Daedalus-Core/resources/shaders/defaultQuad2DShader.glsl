@@ -1,4 +1,4 @@
-//This is the default 2D shader that render2D uses
+// This is the default quad 2D shader that render2D uses
 
 #type vertex
 #version 450 core
@@ -41,8 +41,8 @@ void main()
 #type fragment
 #version 450 core
 
-layout(location = 0) out vec4 colour;
-layout(location = 1) out uint entityID;
+layout(location = 0) out vec4 o_colour;
+layout(location = 1) out uint o_entityID;
 
 struct vertexOutput
 {
@@ -97,6 +97,6 @@ void main()
 		case 31: texColor *= texture(u_textures[31], v_input.texCoord * v_input.tilingFactor); break;
 	}
 
-	colour = texColor;
-	entityID = v_entityID;
+	o_colour = texColor;
+	o_entityID = v_entityID;
 }

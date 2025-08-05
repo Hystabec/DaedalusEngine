@@ -34,7 +34,6 @@ namespace daedalus { namespace graphics {
 		uint32_t count = indexCount ? indexCount : vertexArray->getIndexBuffer()->count();
 
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
-		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 } }

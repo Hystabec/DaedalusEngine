@@ -34,6 +34,10 @@ namespace daedalus { namespace graphics {
 		/// @brief - Default entityID is UINT32_MAX as that is the same as entt::null
 		static void drawRotatedQuad(const primatives2D::RotatedQuadProperties& rotQuadProps, uint32_t entityID = UINT32_MAX);
 
+		/// @brief Draws a 2D circle to the screen
+		/// @brief - Default entityID is UINT32_MAX as that is the same as entt::null
+		static void drawCircle(const maths::Mat4& transform, const maths::Vec4& colour, float thickness = 1.0f, float fade = 0.0f, uint32_t entityID = UINT32_MAX);
+
 		static void drawSprite(const maths::Mat4& transform, scene::SpriteRendererComponent& spriteComponent, uint32_t entityID);
 
 #ifndef DD_DISTRO
@@ -50,7 +54,15 @@ namespace daedalus { namespace graphics {
 #endif
 	private:
 		static void startBatch();
-		static void flushAndReset();
+
+		static void startBatchQuads();
+		static void startBatchCircles();
+
+		static void flushQuads();
+		static void flushCircles();
+
+		static void flushAndResetQuads();
+		static void flushAndResetCircles();
 	};
 
 } }
