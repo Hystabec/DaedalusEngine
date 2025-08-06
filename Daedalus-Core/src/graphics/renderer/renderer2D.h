@@ -38,7 +38,18 @@ namespace daedalus { namespace graphics {
 		/// @brief - Default entityID is UINT32_MAX as that is the same as entt::null
 		static void drawCircle(const maths::Mat4& transform, const maths::Vec4& colour, float thickness = 1.0f, float fade = 0.0f, uint32_t entityID = UINT32_MAX);
 
+		/// @brief draw a line between 2 points, Should be used for debug purposes
+		static void drawLine(const maths::Vec3& p0, const maths::Vec3& p1, const maths::Vec4& colour);
+		/// @brief draw a rect at a given position with a given size, Should be used for debug purposes
+		static void drawRect(const maths::Vec3& position, const maths::Vec2& size, const maths::Vec4& colour);
+		/// @brief draw a rect using a given transform, Should be used for debug purposes
+		static void drawRect(const maths::Mat4& transform, const maths::Vec4& colour);
+
+		static float getLineThickness();
+		static void setLineThickness(float thickness);
+
 		static void drawSprite(const maths::Mat4& transform, scene::SpriteRendererComponent& spriteComponent, uint32_t entityID);
+
 
 #ifndef DD_DISTRO
 		struct Statistics
@@ -57,12 +68,15 @@ namespace daedalus { namespace graphics {
 
 		static void startBatchQuads();
 		static void startBatchCircles();
+		static void startBatchLines();
 
 		static void flushQuads();
 		static void flushCircles();
+		static void flushLines();
 
 		static void flushAndResetQuads();
 		static void flushAndResetCircles();
+		static void flushAndResetLines();
 	};
 
 } }

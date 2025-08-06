@@ -34,6 +34,12 @@ namespace daedalus { namespace graphics {
 		uint32_t entityID;
 	};
 
+	struct LineVertex
+	{
+		maths::Vec3 position;
+		maths::Vec4 colour;
+	};
+
 	struct Renderer2DData
 	{
 		// TO DO: Make maxQuads resizable as circles will be using this same value and if no circles/no quads are rendered
@@ -47,6 +53,8 @@ namespace daedalus { namespace graphics {
 		static const uint32_t maxTextureSlots = 32; // TO DO: RenderCaps
 
 		bool beginCalled = false;
+
+		// Quads
 		Shr_ptr<buffers::VertexArray> quadVertexArray;
 		Shr_ptr<buffers::VertexBuffer> quadVertexBuffer;
 		Shr_ptr<Shader> defaultQuadShader;
@@ -55,6 +63,7 @@ namespace daedalus { namespace graphics {
 		QuadVertex* quadVertexBufferBase = nullptr;
 		QuadVertex* quadVertexBufferPtr = nullptr;
 
+		// Circles
 		Shr_ptr<buffers::VertexArray> circleVertexArray;
 		Shr_ptr<buffers::VertexBuffer> circleVertexBuffer;
 		Shr_ptr<Shader> defaultCircleShader;
@@ -62,6 +71,17 @@ namespace daedalus { namespace graphics {
 		uint32_t circleIndexCount = 0;
 		CircleVertex* circleVertexBufferBase = nullptr;
 		CircleVertex* circleVertexBufferPtr = nullptr;
+
+		// Lines
+		Shr_ptr<buffers::VertexArray> lineVertexArray;
+		Shr_ptr<buffers::VertexBuffer> lineVertexBuffer;
+		Shr_ptr<Shader> defaultLineShader;
+
+		uint32_t lineVertexCount = 0;
+		LineVertex* lineVertexBufferBase = nullptr;
+		LineVertex* lineVertexBufferPtr = nullptr;
+
+		float lineThickness = 2.0f;
 
 		Shr_ptr<Texture2D> whiteTexture;
 		std::array<Shr_ptr<Texture2D>, maxTextureSlots> textureSlots;
@@ -139,6 +159,18 @@ namespace daedalus { namespace graphics {
 		s_data.circleVertexArray->setIndexBuffer(quadIndexBuff); // Use quad IB - as the data is the same
 		s_data.circleVertexBufferBase = new CircleVertex[s_data.maxVertices];
 
+		// Lines
+		s_data.lineVertexArray = buffers::VertexArray::Create();
+
+		s_data.lineVertexBuffer = buffers::VertexBuffer::create(s_data.maxVertices * sizeof(LineVertex));
+		s_data.lineVertexBuffer->setLayout({
+			{ DD_BUFFERS_VEC3,	 "a_position"	},
+			{ DD_BUFFERS_VEC4,	 "a_colour"			}
+			});
+		s_data.lineVertexArray->addVertexBuffer(s_data.lineVertexBuffer);
+		s_data.lineVertexBufferBase = new LineVertex[s_data.maxVertices];
+
+		// Textures
 		s_data.whiteTexture = graphics::Texture2D::create(1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
 		s_data.whiteTexture->setData(&whiteTextureData, sizeof(whiteTextureData));
@@ -147,15 +179,21 @@ namespace daedalus { namespace graphics {
 		for (uint32_t i = 0; i < s_data.maxTextureSlots; i++)
 			samplers[i] = i;
 
+		// Shaders
 		{
 			auto [shaderPath, testBool] = utils::get_core_resource_file_location("shaders\\defaultQuad2DShader.glsl");
-			DD_CORE_ASSERT(testBool, "Default quad Shader file not found");
+			DD_CORE_ASSERT(testBool, "Default quad shader file not found");
 			s_data.defaultQuadShader = Shader::create(shaderPath);
 		}
 		{
 			auto [shaderPath, testBool] = utils::get_core_resource_file_location("shaders\\defaultCircle2DShader.glsl");
-			DD_CORE_ASSERT(testBool, "Default circle Shader file not found");
+			DD_CORE_ASSERT(testBool, "Default circle shader file not found");
 			s_data.defaultCircleShader = Shader::create(shaderPath);
+		}
+		{
+			auto [shaderPath, testBool] = utils::get_core_resource_file_location("shaders\\defaultLine2DShader.glsl");
+			DD_CORE_ASSERT(testBool, "Default line shader file not found");
+			s_data.defaultLineShader = Shader::create(shaderPath);
 		}
 
 		s_data.textureSlots[0] = s_data.whiteTexture;
@@ -225,12 +263,15 @@ namespace daedalus { namespace graphics {
 		DD_PROFILE_FUNCTION();
 		flushQuads();
 		flushCircles();
+		flushLines();
 	}
 
 	void Renderer2D::startBatch()
 	{
+		DD_PROFILE_FUNCTION();
 		startBatchQuads();
 		startBatchCircles();
+		startBatchLines();
 	}
 
 	void Renderer2D::startBatchQuads()
@@ -244,6 +285,12 @@ namespace daedalus { namespace graphics {
 	{
 		s_data.circleIndexCount = 0;
 		s_data.circleVertexBufferPtr = s_data.circleVertexBufferBase;
+	}
+
+	void Renderer2D::startBatchLines()
+	{
+		s_data.lineVertexCount = 0;
+		s_data.lineVertexBufferPtr = s_data.lineVertexBufferBase;
 	}
 
 	void Renderer2D::flushQuads()
@@ -285,6 +332,24 @@ namespace daedalus { namespace graphics {
 		}
 	}
 
+	void Renderer2D::flushLines()
+	{
+		DD_PROFILE_FUNCTION();
+		if (s_data.lineVertexCount)
+		{
+			//size of buffer in bytes
+			uint32_t dataSize = (uint32_t)((uint8_t*)s_data.lineVertexBufferPtr - (uint8_t*)s_data.lineVertexBufferBase);
+			s_data.lineVertexBuffer->setData(s_data.lineVertexBufferBase, dataSize);
+
+			s_data.defaultLineShader->bind();
+			RenderCommands::setLineThickness(s_data.lineThickness);
+			RenderCommands::drawLines(s_data.lineVertexArray, s_data.lineVertexCount);
+#ifndef DD_DISTRO
+			s_data.stats.drawCalls++;
+#endif 
+		}
+	}
+
 	void Renderer2D::flushAndResetQuads()
 	{
 		flushQuads();
@@ -295,6 +360,12 @@ namespace daedalus { namespace graphics {
 	{
 		flushCircles();
 		startBatchCircles();
+	}
+
+	void Renderer2D::flushAndResetLines()
+	{
+		flushLines();
+		startBatchLines();
 	}
 
 	void Renderer2D::drawQuad(const primatives2D::QuadProperties& quadProps, uint32_t entityID)
@@ -532,6 +603,54 @@ namespace daedalus { namespace graphics {
 		// could split this up into circleCount - but they are tecnically quads
 		s_data.stats.quadCount++;
 #endif 
+	}
+
+	void Renderer2D::drawLine(const maths::Vec3& p0, const maths::Vec3& p1, const maths::Vec4& colour)
+	{
+		s_data.lineVertexBufferPtr->position = p0;
+		s_data.lineVertexBufferPtr->colour = colour;
+		s_data.lineVertexBufferPtr++;
+
+		s_data.lineVertexBufferPtr->position = p1;
+		s_data.lineVertexBufferPtr->colour = colour;
+		s_data.lineVertexBufferPtr++;
+
+		s_data.lineVertexCount += 2;
+	}
+
+	void Renderer2D::drawRect(const maths::Vec3& position, const maths::Vec2& size, const maths::Vec4& colour)
+	{
+		maths::Vec3 p0 = maths::Vec3(position.x - size.x * 0.5f, position.y - size.y * 0.5f, position.z);
+		maths::Vec3 p1 = maths::Vec3(position.x + size.x * 0.5f, position.y - size.y * 0.5f, position.z);
+		maths::Vec3 p2 = maths::Vec3(position.x + size.x * 0.5f, position.y + size.y * 0.5f, position.z);
+		maths::Vec3 p3 = maths::Vec3(position.x - size.x * 0.5f, position.y + size.y * 0.5f, position.z);
+
+		drawLine(p0, p1, colour);
+		drawLine(p1, p2, colour);
+		drawLine(p2, p3, colour);
+		drawLine(p3, p0, colour);
+	}
+
+	void Renderer2D::drawRect(const maths::Mat4& transform, const maths::Vec4& colour)
+	{
+		maths::Vec3 lineVertices[4];
+		for (uint32_t i = 0; i < 4; i++)
+			lineVertices[i] = transform * s_data.quadVertexPositions[i];
+
+		drawLine(lineVertices[0], lineVertices[1], colour);
+		drawLine(lineVertices[1], lineVertices[2], colour);
+		drawLine(lineVertices[2], lineVertices[3], colour);
+		drawLine(lineVertices[3], lineVertices[0], colour);
+	}
+
+	float Renderer2D::getLineThickness()
+	{
+		return s_data.lineThickness;
+	}
+
+	void Renderer2D::setLineThickness(float thickness)
+	{
+		s_data.lineThickness = thickness;
 	}
 
 	void Renderer2D::drawSprite(const maths::Mat4& transform, scene::SpriteRendererComponent& spriteComponent, uint32_t entityID)

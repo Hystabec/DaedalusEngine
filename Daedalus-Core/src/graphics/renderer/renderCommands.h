@@ -18,7 +18,9 @@ namespace daedalus { namespace graphics {
 		inline static void clear() { s_rendererAPI->clear(); }
 
 		inline static void drawIndexed(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount = 0) { s_rendererAPI->drawIndexed(vertexArray, indexCount); }
+		inline static void drawLines(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t vertexCount) { s_rendererAPI->drawLines(vertexArray, vertexCount); }
 
+		inline static void setLineThickness(float thickness) { s_rendererAPI->setLineThickness(thickness); }
 	private:
 		static RendererAPI* s_rendererAPI;
 	};

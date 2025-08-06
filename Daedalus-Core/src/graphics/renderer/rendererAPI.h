@@ -25,6 +25,9 @@ namespace daedalus { namespace graphics {
 		virtual void clear() = 0;
 
 		virtual void drawIndexed(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount = 0) = 0;
+		virtual void drawLines(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t vertexCount) = 0;
+
+		virtual void setLineThickness(float thickness) = 0;
 
 		inline static API getAPI() { return s_API; }
 	private:
