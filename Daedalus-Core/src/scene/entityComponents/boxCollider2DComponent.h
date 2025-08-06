@@ -6,6 +6,8 @@ namespace daedalus::scene {
 
 	struct BoxCollider2DComponent
 	{
+		// offset currently doesnt do anything
+		// TO DO: Make offset work with box2D
 		maths::Vec2 offset = { 0.0f, 0.0f };
 		maths::Vec2 size = { 0.5f, 0.5f };
 
