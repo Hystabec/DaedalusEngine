@@ -224,6 +224,15 @@ namespace daedalus::scene {
 				out << YAML::Key << "Restitution" << YAML::Value << src.restitution;
 			});
 
+		serialize_component<CircleCollider2DComponent>(out, "CircleCollider2DComponent", entity, [](YAML::Emitter& out, CircleCollider2DComponent& src)
+			{
+				out << YAML::Key << "Offset" << YAML::Value << src.offset;
+				out << YAML::Key << "Radius" << YAML::Value << src.radius;
+				out << YAML::Key << "Desity" << YAML::Value << src.desity;
+				out << YAML::Key << "Friction" << YAML::Value << src.friction;
+				out << YAML::Key << "Restitution" << YAML::Value << src.restitution;
+			});
+
 		out << YAML::EndMap;
 	}
 
@@ -355,6 +364,18 @@ namespace daedalus::scene {
 						auto& src = deserializedEntity.addOrRepalaceComponent<BoxCollider2DComponent>();
 						src.offset = component["Offset"].as<maths::Vec2>();
 						src.size = component["Size"].as<maths::Vec2>();
+
+						src.desity = component["Desity"].as<float>();
+						src.friction = component["Friction"].as<float>();
+						src.restitution = component["Restitution"].as<float>();
+					}
+
+					component = entity["CircleCollider2DComponent"];
+					if (component)
+					{
+						auto& src = deserializedEntity.addOrRepalaceComponent<CircleCollider2DComponent>();
+						src.offset = component["Offset"].as<maths::Vec2>();
+						src.radius = component["Radius"].as<float>();
 
 						src.desity = component["Desity"].as<float>();
 						src.friction = component["Friction"].as<float>();

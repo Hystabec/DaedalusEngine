@@ -76,13 +76,14 @@ namespace daedalus::scene {
 		}
 
 		// dont need to do ID and tag as they have already been done
-		copy_components<TransformComponent>		(destSceneReg, srcSceneReg, enttMap);
-		copy_components<CameraComponent>		(destSceneReg, srcSceneReg, enttMap);
-		copy_components<SpriteRendererComponent>(destSceneReg, srcSceneReg, enttMap);
-		copy_components<CircleRendererComponent>(destSceneReg, srcSceneReg, enttMap);
-		copy_components<Rigidbody2DComponent>	(destSceneReg, srcSceneReg, enttMap);
-		copy_components<BoxCollider2DComponent>	(destSceneReg, srcSceneReg, enttMap);
-		copy_components<NativeScriptComponent>	(destSceneReg, srcSceneReg, enttMap);
+		copy_components<TransformComponent>			(destSceneReg, srcSceneReg, enttMap);
+		copy_components<CameraComponent>			(destSceneReg, srcSceneReg, enttMap);
+		copy_components<SpriteRendererComponent>	(destSceneReg, srcSceneReg, enttMap);
+		copy_components<CircleRendererComponent>	(destSceneReg, srcSceneReg, enttMap);
+		copy_components<Rigidbody2DComponent>		(destSceneReg, srcSceneReg, enttMap);
+		copy_components<BoxCollider2DComponent>		(destSceneReg, srcSceneReg, enttMap);
+		copy_components<CircleCollider2DComponent>	(destSceneReg, srcSceneReg, enttMap);
+		copy_components<NativeScriptComponent>		(destSceneReg, srcSceneReg, enttMap);
 
 		return dest;
 	}
@@ -113,13 +114,14 @@ namespace daedalus::scene {
 	{
 		Entity newEntity = createEntity(entity.getName());
 
-		copy_components_if_exists<TransformComponent>(newEntity, entity);
-		copy_components_if_exists<CameraComponent>(newEntity, entity);
-		copy_components_if_exists<SpriteRendererComponent>(newEntity, entity);
-		copy_components_if_exists<CircleRendererComponent>(newEntity, entity);
-		copy_components_if_exists<Rigidbody2DComponent>(newEntity, entity);
-		copy_components_if_exists<BoxCollider2DComponent>(newEntity, entity);
-		copy_components_if_exists<NativeScriptComponent>(newEntity, entity);
+		copy_components_if_exists<TransformComponent>		(newEntity, entity);
+		copy_components_if_exists<CameraComponent>			(newEntity, entity);
+		copy_components_if_exists<SpriteRendererComponent>	(newEntity, entity);
+		copy_components_if_exists<CircleRendererComponent>	(newEntity, entity);
+		copy_components_if_exists<Rigidbody2DComponent>		(newEntity, entity);
+		copy_components_if_exists<BoxCollider2DComponent>	(newEntity, entity);
+		copy_components_if_exists<CircleCollider2DComponent>(newEntity, entity);
+		copy_components_if_exists<NativeScriptComponent>	(newEntity, entity);
 	}
 
 	void Scene::onRuntimeStart()
@@ -167,6 +169,22 @@ namespace daedalus::scene {
 				shapeDef.material.restitution = bc2d.restitution;
 				//shapeDef.material.restitutionThreshold = bc2d.restitutionThreshold;
 				b2ShapeId shapeID = b2CreatePolygonShape(body, &shapeDef, &polygon);
+			}
+
+			if (entity.hasComponent<CircleCollider2DComponent>())
+			{
+				auto& cc2d = entity.getComponent<CircleCollider2DComponent>();
+
+				b2Circle circle;
+				circle.center = b2Vec2(cc2d.offset.x, cc2d.offset.y);
+				circle.radius = cc2d.radius;
+
+				b2ShapeDef shapeDef = b2DefaultShapeDef();
+				shapeDef.density = cc2d.desity;
+				shapeDef.material.friction = cc2d.friction;
+				shapeDef.material.restitution = cc2d.restitution;
+
+				b2ShapeId shapeID = b2CreateCircleShape(body, &shapeDef, &circle);
 			}
 		}
 	}
@@ -370,6 +388,11 @@ namespace daedalus::scene {
 
 	template<>
 	void scene::Scene::onComponentAdded<scene::BoxCollider2DComponent>(Entity entity, scene::BoxCollider2DComponent& component)
+	{
+	}
+
+	template<>
+	void scene::Scene::onComponentAdded<scene::CircleCollider2DComponent>(Entity entity, scene::CircleCollider2DComponent& component)
 	{
 	}
 

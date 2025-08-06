@@ -298,6 +298,15 @@ namespace daedalus::editor
 				}
 			}
 
+			if (!m_selectionContext.hasComponent<scene::CircleCollider2DComponent>())
+			{
+				if (ImGui::MenuItem("Circle Collider 2D"))
+				{
+					m_selectionContext.addComponent<scene::CircleCollider2DComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
 			ImGui::EndPopup();
 		}
 
@@ -433,15 +442,26 @@ namespace daedalus::editor
 
 			}, entity);
 
-		draw_component<scene::BoxCollider2DComponent>("Rigidbody 2D",
+		draw_component<scene::BoxCollider2DComponent>("Box Collider 2D",
 			[](scene::BoxCollider2DComponent& bc2d)
 			{
-				ImGui::DragFloat2("Offset", (float*)bc2d.offset);
-				ImGui::DragFloat2("Size", (float*)bc2d.size);
+				ImGui::DragFloat2("Offset", (float*)bc2d.offset, 0.1f);
+				ImGui::DragFloat2("Size", (float*)bc2d.size, 0.1f);
 				ImGui::DragFloat("Desity", &bc2d.desity, 0.01f, 0.0f, 1.0f);
 				ImGui::DragFloat("Friction", &bc2d.friction, 0.01f, 0.0f, 1.0f);
 				ImGui::DragFloat("Restitution", &bc2d.restitution, 0.01f, 0.0f, 1.0f);
 				//ImGui::DragFloat("Restitution Threshold", &bc2d.restitutionThreshold);
+
+			}, entity);
+
+		draw_component<scene::CircleCollider2DComponent>("Circle Collider 2D",
+			[](scene::CircleCollider2DComponent& bc2d)
+			{
+				ImGui::DragFloat2("Offset", (float*)bc2d.offset, 0.1f);
+				ImGui::DragFloat("Radius", &bc2d.radius, 0.1f, 0.0f);
+				ImGui::DragFloat("Desity", &bc2d.desity, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Friction", &bc2d.friction, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution", &bc2d.restitution, 0.01f, 0.0f, 1.0f);
 
 			}, entity);
 	}

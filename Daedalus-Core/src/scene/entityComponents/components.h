@@ -13,6 +13,7 @@
 // Physics components
 #include "rigidbody2DComponent.h"
 #include "boxCollider2DComponent.h"
+#include "circleCollider2DComponent.h"
 
 // Scripting components
 #include "nativeScriptComponent.h"
