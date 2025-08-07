@@ -164,7 +164,6 @@ namespace daedalus::editor
 					openScene();
 				}
 
-				// TO DO: add save
 				if (ImGui::MenuItem("Save", "Ctrl+S"))
 				{
 					saveScene();

@@ -225,17 +225,14 @@ namespace daedalus::scene {
 		maths::Mat4 mainCameraTransform;
 		{
 			auto view = m_registry.view<TransformComponent, CameraComponent>();
-			for (auto entity : view)
-			{
-				auto [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
-
-				if (camera.primary)
+			view.each([&](const TransformComponent& transform, CameraComponent& camera)
 				{
-					mainCamera = &camera.camera;
-					mainCameraTransform = transform.getTransform();
-					break;
-				}
-			}
+					if (camera.primary)
+					{
+						mainCamera = &camera.camera;
+						mainCameraTransform = transform.getTransform();
+					}
+				});
 		}
 
 		// Physics
@@ -275,12 +272,11 @@ namespace daedalus::scene {
 
 			{
 				auto view = m_registry.view<TransformComponent, CircleRendererComponent>();
-				for (auto entity : view)
-				{
-					auto [transform, circleComp] = view.get<TransformComponent, CircleRendererComponent>(entity);
-					if(circleComp.thickness != 0.0f)
-						graphics::Renderer2D::drawCircle(transform.getTransform(), circleComp.colour, circleComp.thickness, circleComp.fade, (uint32_t)entity);
-				}
+				view.each([](const auto entity, const auto& transform, const auto& circleComp)
+					{
+						if (circleComp.thickness != 0.0f)
+							graphics::Renderer2D::drawCircle(transform.getTransform(), circleComp.colour, circleComp.thickness, circleComp.fade, (uint32_t)entity);
+					});
 			}
 
 			graphics::Renderer2D::end();
@@ -302,12 +298,11 @@ namespace daedalus::scene {
 
 		{
 			auto view = m_registry.view<TransformComponent, CircleRendererComponent>();
-			for (auto entity : view)
-			{
-				auto [transform, circleComp] = view.get<TransformComponent, CircleRendererComponent>(entity);
-				if (circleComp.thickness != 0.0f)
-					graphics::Renderer2D::drawCircle(transform.getTransform(), circleComp.colour, circleComp.thickness, circleComp.fade, (uint32_t)entity);
-			}
+			view.each([](const auto entity, const auto& transform, const auto& circleComp)
+				{
+					if (circleComp.thickness != 0.0f)
+						graphics::Renderer2D::drawCircle(transform.getTransform(), circleComp.colour, circleComp.thickness, circleComp.fade, (uint32_t)entity);
+				});
 		}
 
 		graphics::Renderer2D::end();
