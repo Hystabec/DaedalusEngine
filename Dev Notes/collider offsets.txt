@@ -1,0 +1,3 @@
+Box collider 2D offset doesn't currently do anything
+
+Showing collider overlay for the circle collider 2D doesn't acutely represent the offset + rotation

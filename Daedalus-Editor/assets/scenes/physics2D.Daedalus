@@ -1,66 +1,50 @@
 Scene: Untitled
 Entities:
-  - Entity: 16042357292662359930
+  - Entity: 3872665498113848049
     TagComponent:
-      Tag: Platform
+      Tag: Circle
     TransformComponent:
-      Position: [19.204725, -20.733984, -0.2550993]
+      Position: [-4.7, 5.5, 0]
       Rotation: [0, 0, 0]
-      Scale: [1.3689879, 2.73287, 1]
-    SpriteRendererComponent:
-      Colour: [0.28957528, 0.28957528, 0.28957528, 1]
+      Scale: [2.5, 2.5, 1]
+    CircleRendererComponent:
+      Colour: [0.8069498, 0.09658474, 0.09658474, 1]
+      Thickness: 0.2
+      Fade: 0
     Rigidbody2DComponent:
-      BodyType: Static
+      BodyType: Dynamic
       FixedRotation: false
-    BoxCollider2DComponent:
+    CircleCollider2DComponent:
       Offset: [0, 0]
-      Size: [0.5, 0.5]
+      Radius: 0.5
       Desity: 1
       Friction: 0.5
       Restitution: 0
-  - Entity: 13517902223792627785
+  - Entity: 12035540377459869004
     TagComponent:
-      Tag: Camera
+      Tag: Box
     TransformComponent:
-      Position: [-1, -6, 40]
-      Rotation: [0, 0, 0]
+      Position: [-11.2, 7.907651, 0]
+      Rotation: [0, 0, -0.10933029]
       Scale: [1, 1, 1]
-    CameraComponent:
-      Camera:
-        ProjectionType: 0
-        PerspectiveFOV: 0.7853982
-        PerspectiveNear: 0.01
-        PerspectiveFar: 1000
-        OrthographicSize: 10
-        OrthographicNear: -1
-        OrthographicFar: 1
-      Primary: true
-      FixedAspectRatio: false
-  - Entity: 12299312197268480524
-    TagComponent:
-      Tag: Platform
-    TransformComponent:
-      Position: [-7.395191, 3.2797918, 0]
-      Rotation: [0, 0, -0.410336]
-      Scale: [20.000004, 1, 1]
     SpriteRendererComponent:
-      Colour: [0.28957528, 0.28957528, 0.28957528, 1]
+      Colour: [0.23250641, 0.972973, 0.10518626, 1]
     Rigidbody2DComponent:
-      BodyType: Static
+      BodyType: Dynamic
       FixedRotation: false
     BoxCollider2DComponent:
       Offset: [0, 0]
       Size: [0.5, 0.5]
       Desity: 1
-      Friction: 0.5
-      Restitution: 0
-  - Entity: 7069570246628304272
+      Friction: 0.2
+      Restitution: 0.75
+  - Entity: 10656514189493746146
     TagComponent:
       Tag: Platform
     TransformComponent:
-      Position: [4.1166234, -5.435215, 0]
-      Rotation: [0, 0, 0.46370995]
-      Scale: [19.999996, 1, 1]
+      Position: [8.655565, -21.510668, 9.541516e-07]
+      Rotation: [0, 0, 0]
+      Scale: [20.000004, 1, 1]
     SpriteRendererComponent:
       Colour: [0.28957528, 0.28957528, 0.28957528, 1]
     Rigidbody2DComponent:
@@ -90,12 +74,30 @@ Entities:
       Desity: 1
       Friction: 0.5
       Restitution: 0
-  - Entity: 10656514189493746146
+  - Entity: 7069570246628304272
     TagComponent:
       Tag: Platform
     TransformComponent:
-      Position: [8.655565, -21.510668, 9.541516e-07]
-      Rotation: [0, 0, 0]
+      Position: [4.1166234, -5.435215, 0]
+      Rotation: [0, 0, 0.46370995]
+      Scale: [19.999996, 1, 1]
+    SpriteRendererComponent:
+      Colour: [0.28957528, 0.28957528, 0.28957528, 1]
+    Rigidbody2DComponent:
+      BodyType: Static
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+      Desity: 1
+      Friction: 0.5
+      Restitution: 0
+  - Entity: 12299312197268480524
+    TagComponent:
+      Tag: Platform
+    TransformComponent:
+      Position: [-7.395191, 3.2797918, 0]
+      Rotation: [0, 0, -0.410336]
       Scale: [20.000004, 1, 1]
     SpriteRendererComponent:
       Colour: [0.28957528, 0.28957528, 0.28957528, 1]
@@ -108,41 +110,39 @@ Entities:
       Desity: 1
       Friction: 0.5
       Restitution: 0
-  - Entity: 12035540377459869004
+  - Entity: 13517902223792627785
     TagComponent:
-      Tag: Box
+      Tag: Camera
     TransformComponent:
-      Position: [-11.2, 7.907651, 0]
-      Rotation: [0, 0, -0.10933029]
+      Position: [-1, -6, 40]
+      Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 0
+        PerspectiveFOV: 0.7853982
+        PerspectiveNear: 0.01
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: true
+      FixedAspectRatio: false
+  - Entity: 16042357292662359930
+    TagComponent:
+      Tag: Platform
+    TransformComponent:
+      Position: [19.204725, -20.733984, -0.2550993]
+      Rotation: [0, 0, 0]
+      Scale: [1.3689879, 2.73287, 1]
     SpriteRendererComponent:
-      Colour: [0.23250641, 0.972973, 0.10518626, 1]
+      Colour: [0.28957528, 0.28957528, 0.28957528, 1]
     Rigidbody2DComponent:
-      BodyType: Dynamic
+      BodyType: Static
       FixedRotation: false
     BoxCollider2DComponent:
       Offset: [0, 0]
       Size: [0.5, 0.5]
-      Desity: 1
-      Friction: 0.2
-      Restitution: 0.75
-  - Entity: 3872665498113848049
-    TagComponent:
-      Tag: Circle
-    TransformComponent:
-      Position: [-4.7, 5.5, 0]
-      Rotation: [0, 0, 0]
-      Scale: [2.5, 2.5, 1]
-    CircleRendererComponent:
-      Colour: [0.8069498, 0.09658474, 0.09658474, 1]
-      Thickness: 0.2
-      Fade: 0
-    Rigidbody2DComponent:
-      BodyType: Dynamic
-      FixedRotation: false
-    CircleCollider2DComponent:
-      Offset: [0, 0]
-      Radius: 1.25
       Desity: 1
       Friction: 0.5
       Restitution: 0

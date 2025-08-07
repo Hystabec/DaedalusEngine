@@ -42,6 +42,12 @@ namespace daedalus::scene {
 		void onViewportResize(uint32_t width, uint32_t hegiht);
 
 		Entity getPrimaryCameraEntity();
+
+		template<typename... components>
+		auto getAllEntitiesWith()
+		{
+			return m_registry.view<components...>();
+		}
 	private:
 		template<typename T>
 		void onComponentAdded(Entity entity, T& component);

@@ -177,7 +177,8 @@ namespace daedalus::scene {
 
 				b2Circle circle;
 				circle.center = b2Vec2(cc2d.offset.x, cc2d.offset.y);
-				circle.radius = cc2d.radius;
+				// This assumes circles are uniform
+				circle.radius = cc2d.radius * transform.scale.x;
 
 				b2ShapeDef shapeDef = b2DefaultShapeDef();
 				shapeDef.density = cc2d.desity;

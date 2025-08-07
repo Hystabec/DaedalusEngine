@@ -119,6 +119,8 @@ namespace daedalus::editor
 		}
 		}
 
+		renderOverlays();
+
 		m_framebuffer->unbind();
 	}
 
@@ -181,6 +183,17 @@ namespace daedalus::editor
 
 				ImGui::EndMenu();
 			}
+
+			if (ImGui::BeginMenu("View"))
+			{
+				if (ImGui::MenuItem("Show collider overlay", "Alt+C", m_showColliderOverlay))
+				{
+					m_showColliderOverlay = !m_showColliderOverlay;
+				}
+
+				ImGui::EndMenu();
+			}
+
 			ImGui::EndMainMenuBar();
 		}
 
@@ -352,8 +365,12 @@ namespace daedalus::editor
 		// TO DO: The ctrl + KEY should be usable when focusing and hovering any window
 		// but gizmos camera etc. should still be blocked
 
+		// This should probably be organized alphabetically, as more shotcut get added
+		// its going to get more confusing with the current order.
+
 		bool ctrl = Input::getKeyDown(InputCode::Key_Left_Control) || Input::getKeyDown(InputCode::Key_Right_Control);
 		bool shift = Input::getKeyDown(InputCode::Key_Left_Shift) || Input::getKeyDown(InputCode::Key_Right_Shift);
+		bool alt = Input::getKeyDown(InputCode::Key_Left_Alt) || Input::getKeyDown(InputCode::Key_Right_Alt);
 		switch ((InputCode)e.getKeyCode())
 		{
 		case InputCode::Key_N:
@@ -379,8 +396,6 @@ namespace daedalus::editor
 
 			break;
 		}
-
-		//
 		case InputCode::Key_D:
 		{
 			if (ctrl)
@@ -388,7 +403,13 @@ namespace daedalus::editor
 
 			break;
 		}
+		case InputCode::Key_C:
+		{
+			if (alt)
+				m_showColliderOverlay = !m_showColliderOverlay;
 
+			break;
+		}
 		// Gizmos
 		case InputCode::Key_Q:
 		{
@@ -447,6 +468,51 @@ namespace daedalus::editor
 		}
 
 		return false;
+	}
+
+	void EditorLayer::renderOverlays()
+	{
+		using namespace graphics;
+
+		// This will need to be expanded when new overlays get added
+		// early return so begin and end scene arnt called
+		if (!m_showColliderOverlay)
+			return;
+
+		switch (m_sceneState)
+		{
+		case EditorLayer::SceneState::Edit:
+		{
+			Renderer2D::begin(m_editorCamera);
+			break;
+		}
+		case EditorLayer::SceneState::Play:
+		{
+			scene::Entity camera = m_activeScene->getPrimaryCameraEntity();
+			DD_ASSERT(camera, "No primary camera");
+			Renderer2D::begin(camera.getComponent<scene::CameraComponent>().camera, camera.getComponent<scene::TransformComponent>().getTransform());
+			break;
+		}
+		}
+
+		m_activeScene->getAllEntitiesWith<scene::TransformComponent, scene::CircleCollider2DComponent>().each([](const scene::TransformComponent& tc, const scene::CircleCollider2DComponent& cc2d)
+			{
+				maths::Mat4 transform = maths::Mat4::translate(tc.position + maths::Vec3(cc2d.offset, 0.001f))
+					* maths::Mat4::scale(/*Assumes scale is uniform*/ tc.scale.x * (cc2d.radius * 2.0f));
+
+				Renderer2D::drawCircle(transform, maths::Vec4(0.0f, 1.0f, 0.0f, 1.0f), 0.05f);
+			});
+
+		m_activeScene->getAllEntitiesWith<scene::TransformComponent, scene::BoxCollider2DComponent>().each([](const scene::TransformComponent& tc, const scene::BoxCollider2DComponent& bc2d)
+			{
+				maths::Mat4 transform = maths::Mat4::translate(tc.position + maths::Vec3(bc2d.offset, 0.001f))
+					* maths::Mat4::rotate(tc.rotation.z, maths::Vec3(0.0f, 0.0f, 1.0f))
+					* maths::Mat4::scale(tc.scale * maths::Vec3(bc2d.size * 2.0f, 1.0f));
+
+				Renderer2D::drawRect(transform, maths::Vec4(0.0f, 1.0f, 0.0f, 1.0f));
+			});
+
+		Renderer2D::end();
 	}
 
 	bool EditorLayer::canMousePick() const

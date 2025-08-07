@@ -19,6 +19,7 @@ namespace daedalus::editor
 	private:
 		bool onKeyPressed(event::KeyPressedEvent& e);
 		bool onMouseButtonPressed(event::MouseButtonPressedEvent& e);
+		void renderOverlays();
 
 		bool canMousePick() const;
 
@@ -54,11 +55,14 @@ namespace daedalus::editor
 
 		Shr_ptr<graphics::Texture2D> m_playIcon, m_stopIcon;
 
+		bool m_showColliderOverlay = false;
+
 		enum class SceneState
 		{
 			Edit = 0, Play = 1, Pause = 2
 		};
 		SceneState m_sceneState = SceneState::Edit;
+
 	};
 
 }
