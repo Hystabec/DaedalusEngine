@@ -162,7 +162,8 @@ namespace daedalus::scene {
 			{
 				auto& bc2d = entity.getComponent<BoxCollider2DComponent>();
 
-				b2Polygon polygon = b2MakeBox(bc2d.size.x * transform.scale.x, bc2d.size.y * transform.scale.y);
+				b2Polygon polygon = b2MakeOffsetBox(bc2d.size.x * transform.scale.x, bc2d.size.y * transform.scale.y, b2Vec2(bc2d.offset.x, bc2d.offset.y), b2MakeRot(0.0f));
+
 				b2ShapeDef shapeDef = b2DefaultShapeDef();
 				shapeDef.density = bc2d.desity;
 				shapeDef.material.friction = bc2d.friction;

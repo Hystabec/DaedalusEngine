@@ -500,7 +500,10 @@ namespace daedalus::editor
 
 		m_activeScene->getAllEntitiesWith<scene::TransformComponent, scene::CircleCollider2DComponent>().each([](const scene::TransformComponent& tc, const scene::CircleCollider2DComponent& cc2d)
 			{
-				maths::Mat4 transform = maths::Mat4::translate(tc.position + maths::Vec3(cc2d.offset, 0.001f))
+				maths::Vec3 rotatedOffset = cc2d.offset;
+				rotatedOffset = maths::experimental::rotate_vec3_by_quaternion(maths::experimental::Quaternion(maths::Vec3(0.0f, 0.0f, tc.rotation.z)), rotatedOffset);
+
+				maths::Mat4 transform = maths::Mat4::translate(tc.position + maths::Vec3(rotatedOffset.x, rotatedOffset.y, 0.001f))
 					* maths::Mat4::scale(/*Assumes scale is uniform*/ tc.scale.x * (cc2d.radius * 2.0f));
 
 				Renderer2D::drawCircle(transform, maths::Vec4(0.0f, 1.0f, 0.0f, 1.0f), 0.05f);
@@ -508,7 +511,10 @@ namespace daedalus::editor
 
 		m_activeScene->getAllEntitiesWith<scene::TransformComponent, scene::BoxCollider2DComponent>().each([](const scene::TransformComponent& tc, const scene::BoxCollider2DComponent& bc2d)
 			{
-				maths::Mat4 transform = maths::Mat4::translate(tc.position + maths::Vec3(bc2d.offset, 0.001f))
+				maths::Vec3 rotatedOffset = bc2d.offset;
+				rotatedOffset = maths::experimental::rotate_vec3_by_quaternion(maths::experimental::Quaternion(maths::Vec3(0.0f, 0.0f, tc.rotation.z)), rotatedOffset);
+
+				maths::Mat4 transform = maths::Mat4::translate(tc.position + maths::Vec3(rotatedOffset.x, rotatedOffset.y, 0.001f))
 					* maths::Mat4::rotate(tc.rotation.z, maths::Vec3(0.0f, 0.0f, 1.0f))
 					* maths::Mat4::scale(tc.scale * maths::Vec3(bc2d.size * 2.0f, 1.0f));
 
