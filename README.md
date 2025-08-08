@@ -1,7 +1,5 @@
-<div display="flex">
-    <img height=218 alt="Daedalus logo" src="/resources/DD_Logo_V1.png" display="inline"/>
-    <h1 text-align="center" margin-top="auto" margin-bottom="auto">Daedalus Engine</h1>
-</div>
+<img height=218 alt="Daedalus banner" src="/resources/DD_Banner_V1.png"/>
+<h1></h1>
 
 Daedalus Engine is a personal game engine project that i'm developing using tutorials and guides to improve my C++ skills as well as to help improve my knowledge of game engine and architecting large software systems.  
 
