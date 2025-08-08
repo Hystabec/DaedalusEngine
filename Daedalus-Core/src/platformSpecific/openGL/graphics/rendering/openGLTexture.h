@@ -9,7 +9,7 @@ namespace daedalus { namespace graphics {
 	{
 	public:
 		OpenGLTexture2D(uint32_t width, uint32_t height);
-		OpenGLTexture2D(const std::string& filePath);
+		OpenGLTexture2D(const std::filesystem::path& filePath);
 		~OpenGLTexture2D();
 
 		uint32_t getWdith() const override { return m_width; }
@@ -26,7 +26,7 @@ namespace daedalus { namespace graphics {
 		};
 
 	private:
-		std::string m_path;
+		std::filesystem::path m_path;
 
 		uint32_t m_width;
 		uint32_t m_height;

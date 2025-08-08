@@ -1,4 +1,0 @@
-Add universally unique identifiers (UUID) to core,
-
-currently entities have a placeholder id '123456789' which isn't very useful,
-so a UUID system should be used and entities should be updated with the new system

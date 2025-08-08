@@ -1,3 +1,0 @@
-Imgui used Alt, then pressing Tab to move around the ImGui windows.
-
-This can cause the viewport to become unfocused while trying to use the editor camera (While Alt is the key to manipulate it)

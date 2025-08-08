@@ -1,5 +1,8 @@
-# Daedalus Engine
-![Daedalus Engine](/resources/DD_Logo_V1.png)
+<div style="display: flex;">
+    <img height=218 alt="Daedalus logo" src="/resources/DD_Logo_V1.png" style="display: inline;"/>
+    <h1 style="text-align: center; margin-top: auto; margin-bottom: auto;">Daedalus Engine</h1>
+</div>
+
 Daedalus Engine is a personal game engine project that i'm developing using tutorials and guides to improve my C++ skills as well as to help improve my knowledge of game engine and architecting large software systems.  
 
 Primarily following [The Cherno's - "Game Engine" series](https://www.youtube.com/playlist?list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT) when developing the engine.  

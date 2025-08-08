@@ -186,7 +186,7 @@ namespace daedalus::editor
 
 			if (ImGui::BeginMenu("View"))
 			{
-				if (ImGui::MenuItem("Show collider overlay", "Alt+C", m_showColliderOverlay))
+				if (ImGui::MenuItem("Toggle collider overlay", "Alt+C", m_showColliderOverlay))
 				{
 					m_showColliderOverlay = !m_showColliderOverlay;
 				}
@@ -222,7 +222,7 @@ namespace daedalus::editor
 
 		m_viewportFocused = ImGui::IsWindowFocused();
 		m_viewportHovered = ImGui::IsWindowHovered();
-		Application::get().getImGuiLayer()->setAllowEvents(m_viewportFocused || m_viewportHovered);
+		//Application::get().getImGuiLayer()->setAllowEvents(m_viewportFocused || m_viewportHovered);
 
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 		daedalus::maths::Vec2 viewportSizeAsVec2 = { viewportSize.x, viewportSize.y };
@@ -343,19 +343,14 @@ namespace daedalus::editor
 	{
 		DD_PROFILE_FUNCTION();
 
-		m_editorCamera.onEvent(e);
+		// only run if in the viewport
+		if(m_viewportFocused || m_viewportHovered)
+			m_editorCamera.onEvent(e);
 
 		// Shortcut events
 		event::EventDispatcher dispatcher(e);
 		dispatcher.dispatch<event::KeyPressedEvent>(DD_BIND_EVENT_FUN(EditorLayer::onKeyPressed));
 		dispatcher.dispatch<event::MouseButtonPressedEvent>(DD_BIND_EVENT_FUN(EditorLayer::onMouseButtonPressed));
-
-		//// Blocking functionality from ImGuiLayer
-		//if (!(m_viewportFocused && m_viewportHovered))
-		//{
-		//	ImGuiIO& io = ImGui::GetIO();
-		//	e.setHandled((e.isInCategory(event::EventCategory::Mouse) && io.WantCaptureMouse) || (e.isInCategory(event::EventCategory::Keyboard) && io.WantCaptureMouse));
-		//}
 	}
 
 	bool EditorLayer::onKeyPressed(event::KeyPressedEvent& e)
@@ -371,8 +366,23 @@ namespace daedalus::editor
 		bool ctrl = Input::getKeyDown(InputCode::Key_Left_Control) || Input::getKeyDown(InputCode::Key_Right_Control);
 		bool shift = Input::getKeyDown(InputCode::Key_Left_Shift) || Input::getKeyDown(InputCode::Key_Right_Shift);
 		bool alt = Input::getKeyDown(InputCode::Key_Left_Alt) || Input::getKeyDown(InputCode::Key_Right_Alt);
+		
+		// general editor shortcuts
 		switch ((InputCode)e.getKeyCode())
 		{
+		case InputCode::Key_C:
+		{
+			if (alt)
+				m_showColliderOverlay = !m_showColliderOverlay;
+			break;
+		}
+		case InputCode::Key_D:
+		{
+			if (ctrl)
+				duplicateEntity();
+
+			break;
+		}
 		case InputCode::Key_N:
 		{
 			if (ctrl)
@@ -396,45 +406,38 @@ namespace daedalus::editor
 
 			break;
 		}
-		case InputCode::Key_D:
-		{
-			if (ctrl)
-				duplicateEntity();
+		}
 
-			break;
-		}
-		case InputCode::Key_C:
+		if(m_viewportFocused || m_viewportHovered)
 		{
-			if (alt)
-				m_showColliderOverlay = !m_showColliderOverlay;
-
-			break;
-		}
-		// Gizmos
-		case InputCode::Key_Q:
-		{
-			if (shift)
-				m_gizmoType = -1;
-			break;
-		}
-		case InputCode::Key_W:
-		{
-			if (shift)
-				m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
-			break;
-		}
-		case InputCode::Key_E:
-		{
-			if (shift)
-				m_gizmoType = ImGuizmo::OPERATION::ROTATE;
-			break;
-		}
-		case InputCode::Key_R:
-		{
-			if (shift)
-				m_gizmoType = ImGuizmo::OPERATION::SCALE;
-			break;
-		}
+			// shortcuts that need window to be focused (e.g. editor camera)
+			switch ((InputCode)e.getKeyCode())
+			{
+			case InputCode::Key_E:
+			{
+				if (shift)
+					m_gizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			}
+			case InputCode::Key_Q:
+			{
+				if (shift)
+					m_gizmoType = -1;
+				break;
+			}
+			case InputCode::Key_R:
+			{
+				if (shift)
+					m_gizmoType = ImGuizmo::OPERATION::SCALE;
+				break;
+			}
+			case InputCode::Key_W:
+			{
+				if (shift)
+					m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			}
+			}
 		}
 
 		return false;
@@ -442,7 +445,7 @@ namespace daedalus::editor
 
 	bool EditorLayer::onMouseButtonPressed(event::MouseButtonPressedEvent& e)
 	{
-		if (e.getButtonCode() == application::InputCode::Mouse_Button_Left)
+		if (e.getButtonCode() == application::InputCode::Mouse_Button_Left && m_viewportHovered)
 		{
 			if (canMousePick())
 			{

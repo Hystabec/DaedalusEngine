@@ -14,14 +14,14 @@ namespace daedalus { namespace graphics {
 		add(name, shader);
 	}
 
-	Shr_ptr<Shader> ShaderLibrary::load(const std::string& filePath)
+	Shr_ptr<Shader> ShaderLibrary::load(const std::filesystem::path& filePath)
 	{
 		auto shader = Shader::create(filePath);
 		add(shader);
 		return shader;
 	}
 
-	Shr_ptr<Shader> ShaderLibrary::load(const std::string& name, const std::string& filePath)
+	Shr_ptr<Shader> ShaderLibrary::load(const std::string& name, const std::filesystem::path& filePath)
 	{
 		auto shader = Shader::create(filePath);
 		add(name, shader);

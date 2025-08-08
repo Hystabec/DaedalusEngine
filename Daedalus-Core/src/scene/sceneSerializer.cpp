@@ -236,7 +236,7 @@ namespace daedalus::scene {
 		out << YAML::EndMap;
 	}
 
-	void SceneSerializer::serialize(const std::string& filepath)
+	void SceneSerializer::serialize(const std::filesystem::path& filepath)
 	{
 		YAML::Emitter out;
 		out << YAML::BeginMap;
@@ -257,13 +257,13 @@ namespace daedalus::scene {
 		fout << out.c_str();
 	}
 
-	void SceneSerializer::serializeRuntime(const std::string& filepath)
+	void SceneSerializer::serializeRuntime(const std::filesystem::path& filepath)
 	{
 		// TO DO: Implement
 		DD_CORE_ASSERT(false, "Not yet implemented");
 	}
 
-	bool SceneSerializer::deserialize(const std::string& filepath)
+	bool SceneSerializer::deserialize(const std::filesystem::path& filepath)
 	{
 		// I dont really like try statements
 		// but this was the easiest ways to handle a few issues 
@@ -279,7 +279,7 @@ namespace daedalus::scene {
 			YAML::Node data = YAML::Load(strStream.str());
 			if (!data["Scene"])
 			{
-				DD_CORE_LOG_ERROR("Deserialization Error: file contains no scene data: {}", filepath);
+				DD_CORE_LOG_ERROR("Deserialization Error: file contains no scene data: {}", filepath.string());
 				return false;
 			}
 
@@ -388,12 +388,12 @@ namespace daedalus::scene {
 		}
 		catch (...)
 		{
-			DD_CORE_LOG_ERROR("Deserialization Error: Could not deserialize scene: {}", filepath);
+			DD_CORE_LOG_ERROR("Deserialization Error: Could not deserialize scene: {}", filepath.string());
 			return false;
 		}
 	}
 
-	bool SceneSerializer::deserializeRuntime(const std::string& filepath)
+	bool SceneSerializer::deserializeRuntime(const std::filesystem::path& filepath)
 	{
 		// TO DO: Implement
 		DD_CORE_ASSERT(false, "Not yet implemented");

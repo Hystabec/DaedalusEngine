@@ -10,8 +10,8 @@ namespace daedalus { namespace graphics {
 		void add(const std::string& name, const Shr_ptr<Shader>& shader);
 		void add(const Shr_ptr<Shader>& shader);
 
-		Shr_ptr<Shader> load(const std::string& filePath);
-		Shr_ptr<Shader> load(const std::string& name, const std::string& filePath);
+		Shr_ptr<Shader> load(const std::filesystem::path& filePath);
+		Shr_ptr<Shader> load(const std::string& name, const std::filesystem::path& filePath);
 
 		Shr_ptr<Shader> get(const std::string& name);
 

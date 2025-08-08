@@ -24,7 +24,7 @@ namespace daedalus { namespace graphics {
 		glTextureParameteri(m_rendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(const std::string& filePath)
+	OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& filePath)
 		: m_path(filePath)
 	{
 		DD_PROFILE_FUNCTION();
@@ -33,8 +33,8 @@ namespace daedalus { namespace graphics {
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = nullptr;
 		{
-			DD_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std::string& filePath)");
-			data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+			DD_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& filePath)");
+			data = stbi_load(filePath.string().c_str(), &width, &height, &channels, 0);
 		}
 		DD_CORE_ASSERT(data, "Failed to load image");
 		m_width = width;
