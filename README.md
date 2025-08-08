@@ -1,4 +1,4 @@
-<img align="center" height=218 alt="Daedalus banner" src="/resources/DD_Banner_V1.png"/>
+<img align="center" alt="Daedalus banner" src="/resources/DD_Banner_V1.png"/>
 <h1></h1>
 
 Daedalus Engine is a personal game engine project that i'm developing using tutorials and guides to improve my C++ skills as well as to help improve my knowledge of game engine and architecting large software systems.  
