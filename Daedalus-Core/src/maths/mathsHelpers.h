@@ -1,50 +1,62 @@
 #pragma once
 
-#include "vec2.h"
-#include "vec3.h"
-#include "vec4.h"
+#include <limits>
 
 namespace daedalus::maths {
 
-	constexpr double DD_PI = 3.14159265358979323846;
-
-	inline constexpr float degrees_to_radians(const float& degrees)
+	namespace interals
 	{
-		return (float)(degrees * (float)DD_PI / 180.0f);
+		template<class T, std::enable_if_t<std::is_arithmetic_v<T>>...>
+		constexpr T dd_sqrtNewtonRaphson(T x, T curr, T prev)
+		{
+			return curr == prev ? curr : dd_sqrtNewtonRaphson(x, T(0.5) * (curr + x / curr), curr);
+		}
+
+		constexpr float dd_sqrtNewtonRaphson(int x, int curr, int prev)
+		{
+			return curr == prev ? curr : dd_sqrtNewtonRaphson((float)x, (0.5f * (curr + (float)x / (float)curr)), (float)curr);
+		}
 	}
 
-	inline static Vec2 degrees_to_radians(const Vec2& degrees)
+	/// @brief Returns nan if a invalid input is given
+	template<class T, std::enable_if_t<std::is_arithmetic_v<T>>...>
+	constexpr T dd_sqrt(T x)
 	{
-		return Vec2{ degrees_to_radians(degrees.x), degrees_to_radians(degrees.y) };
+		if (x >= T(0) && x < std::numeric_limits<T>::infinity())
+			return interals::dd_sqrtNewtonRaphson(x, x, T(0));
+		else
+		{
+			DD_CORE_LOG_ERROR("dd_sqrt invalid input: {}", x);
+			return std::numeric_limits<T>::quiet_NaN();
+		}
 	}
 
-	inline static Vec3 degrees_to_radians(const Vec3& degrees)
+	/// @brief Returns 0 if an invalid input is given
+	constexpr float dd_sqrt(int x)
 	{
-		return { degrees_to_radians(degrees.x), degrees_to_radians(degrees.y), degrees_to_radians(degrees.z) };
+		if (x >= 0 && x < INT32_MAX)
+			return interals::dd_sqrtNewtonRaphson(x, x, 0);
+		else
+		{
+			DD_CORE_LOG_ERROR("dd_sqrt invalid input: {}", x);
+			return 0;
+		}
 	}
 
-	inline static Vec4 degrees_to_radians(const Vec4& degrees)
+	template<class T, std::enable_if_t<std::is_arithmetic_v<T>>...>
+	constexpr T dd_abs(const T& x)
 	{
-		return { degrees_to_radians(degrees.x), degrees_to_radians(degrees.y), degrees_to_radians(degrees.z), degrees_to_radians(degrees.w) };
+		return x < T(0) ? -x : x;
 	}
 
-	inline constexpr float radians_to_degrees(const float& rads)
+	constexpr bool epsilon_equal(float x, float y)
 	{
-		return (float)(rads * 180.0f / (float)DD_PI);
+		return dd_abs(x - y) < std::numeric_limits<float>::epsilon();
 	}
 
-	inline static Vec2 radians_to_degrees(const Vec2& rads)
+	constexpr bool epsilon_not_equal(float x, float y)
 	{
-		return { radians_to_degrees(rads.x), radians_to_degrees(rads.y) };
+		return dd_abs(x - y) >= std::numeric_limits<float>::epsilon();
 	}
 
-	inline static Vec3 radians_to_degrees(const Vec3& rads)
-	{
-		return { radians_to_degrees(rads.x), radians_to_degrees(rads.y), radians_to_degrees(rads.z) };
-	}
-
-	inline static Vec4 radians_to_degrees(const Vec4& rads)
-	{
-		return { radians_to_degrees(rads.x), radians_to_degrees(rads.y), radians_to_degrees(rads.z), radians_to_degrees(rads.w) };
-	}
 }

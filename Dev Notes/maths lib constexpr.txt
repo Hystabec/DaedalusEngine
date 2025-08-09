@@ -1,0 +1,18 @@
+In a few mat4 functions instead of using memset or memcopy a for loop was used, this is probably slower that using memset/memcopy. However memset and memcopy are not constexpr so they cant be used in a constexpr function.
+
+
+I decided to make various function inline instead of constexpr (mainly helper functions in the structs)
+
+
+Various functions couldn't be made constexpr as the functions use sin, cos, tan, asin or atan2
+
+The following functions couldn't be made constexpr:
+Quaternion(const Vec3& euler)
+Mat4 perspective(float fov, float aspectRatio, float nearPlane, float farPlane)
+Mat4 rotate(float angle, const Vec3& axis, bool inRadians = true)
+bool decomposeTransform(const Mat4& transform, Vec3& outPosition, Vec3& outRotation, Vec3& outScale)
+
+could look at making constexpr version of: sin, cos, tan, asin and atan2 inorder to make them constexpr
+
+
+The main one i would like to change is to make "Quaternion(const Vec3& euler)" a constexpr

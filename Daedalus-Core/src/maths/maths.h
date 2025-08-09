@@ -5,6 +5,8 @@
 #include "vec4.h"
 #include "mat4.h"
 
+#include "constants.h"
+#include "angularUnitConversions.h"
 #include "mathsHelpers.h"
 
 #define _USE_MATH_DEFINES

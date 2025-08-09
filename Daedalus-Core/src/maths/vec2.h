@@ -1,7 +1,6 @@
 #pragma once
-#include "vec4.h"
 
-namespace daedalus { namespace maths {
+namespace daedalus::maths {
 
 	struct Vec3;
 	struct Vec4;
@@ -10,66 +9,205 @@ namespace daedalus { namespace maths {
 	{
 		float x, y;
 
-		Vec2();
-		Vec2(const float& x);
-		Vec2(const float& x, const float& y);
-		Vec2(const Vec2& other);
+		constexpr Vec2()
+			: x(0.0f), y(0.0f)
+		{
+		}
 
-		Vec2(const Vec3& other);
-		Vec2(const Vec4& other);
+		constexpr Vec2(float scalar)
+			: x(scalar), y(scalar)
+		{
+		}
+
+		constexpr Vec2(float x, float y)
+			: x(x), y(y)
+		{
+		}
+
+		constexpr Vec2(const Vec2& other)
+			: x(other.x), y(other.y)
+		{
+		}
+
+		constexpr Vec2(const Vec3& other);
+		constexpr Vec2(const Vec4& other);
 
 		// Locical Operators
 
-		bool operator ==(const Vec2& other);
-		bool operator !=(const Vec2& other);
+		constexpr bool operator ==(const Vec2& other) const
+		{
+			return x == other.x && y == other.y;
+		}
+
+		constexpr bool operator !=(const Vec2& other) const
+		{
+			return !(x == other.x && y == other.y);
+		}
 
 		// Binary Arithmetic Operators
 		
 		/// @brief Modifies caller and returns result
-		Vec2& add(const Vec2& other);
+		constexpr Vec2& add(const Vec2& other)
+		{
+			x += other.x;
+			y += other.y;
+			return *this;
+		}
 		/// @brief Modifies caller and returns result
-		Vec2& subtract(const Vec2& other);
+		constexpr Vec2& subtract(const Vec2& other)
+		{
+			x -= other.x;
+			y -= other.y;
+			return *this;
+		}
 		/// @brief Modifies caller and returns result
-		Vec2& multiply(const Vec2& other);
+		constexpr Vec2& multiply(const Vec2& other)
+		{
+			x *= other.x;
+			y *= other.y;
+			return *this;
+		}
 		/// @brief Modifies caller and returns result
-		Vec2& multiply(float scalar);
+		constexpr Vec2& multiply(float scalar)
+		{
+			x *= scalar;
+			y *= scalar;
+			return *this;
+		}
 		/// @brief Modifies caller and returns result
-		Vec2& divide(const Vec2& other);
+		constexpr Vec2& divide(const Vec2& other)
+		{
+			x /= other.x;
+			y /= other.y;
+			return *this;
+		}
 		/// @brief Modifies caller and returns result
-		Vec2& divide(float scalar);
+		constexpr Vec2& divide(float scalar)
+		{
+			x /= scalar;
+			y /= scalar;
+			return *this;
+		}
 
-		friend Vec2 operator +(const Vec2& left, const Vec2& right);
-		friend Vec2 operator -(const Vec2& left, const Vec2& right);
-		friend Vec2 operator *(const Vec2& left, const Vec2& right);
-		friend Vec2 operator *(const Vec2& left, float scalar);
-		friend Vec2 operator /(const Vec2& left, const Vec2& right);
-		friend Vec2 operator /(const Vec2& left, float scalar);
+		friend constexpr Vec2 operator +(const Vec2& left, const Vec2& right)
+		{
+			return {
+			left.x + right.x,
+			left.y + right.y
+			};
+		}
+
+		friend constexpr Vec2 operator -(const Vec2& left, const Vec2& right)
+		{
+			return {
+			left.x - right.x,
+			left.y - right.y
+			};
+		}
+
+		friend constexpr Vec2 operator *(const Vec2& left, const Vec2& right)
+		{
+			return {
+			left.x * right.x,
+			left.y * right.y
+			};
+		}
+
+		friend constexpr Vec2 operator *(const Vec2& left, float scalar)
+		{
+			return {
+			left.x * scalar,
+			left.y * scalar
+			};
+		}
+
+		friend constexpr Vec2 operator /(const Vec2& left, const Vec2& right)
+		{
+			return {
+			left.x / right.x,
+			left.y / right.y
+			};
+		}
+
+		friend constexpr Vec2 operator /(const Vec2& left, float scalar)
+		{
+			return {
+			left.x / scalar,
+			left.y / scalar
+			};
+		}
 
 		// assignment operators
 
-		Vec2& operator  =(const Vec2& other);
-		Vec2& operator +=(const Vec2& other);
-		Vec2& operator -=(const Vec2& other);
-		Vec2& operator *=(const Vec2& other);
-		Vec2& operator *=(float scalar);
-		Vec2& operator /=(const Vec2& other);
-		Vec2& operator /=(float scalar);
+		constexpr Vec2& operator  =(const Vec2& other)
+		{
+			this->x = other.x;
+			this->y = other.y;
+			return *this;
+		}
+
+		constexpr Vec2& operator +=(const Vec2& other)
+		{
+			this->add(other);
+			return *this;
+		}
+
+		constexpr Vec2& operator -=(const Vec2& other)
+		{
+			this->subtract(other);
+			return *this;
+		}
+
+		constexpr Vec2& operator *=(const Vec2& other)
+		{
+			this->multiply(other);
+			return *this;
+		}
+
+		constexpr Vec2& operator *=(float scalar)
+		{
+			this->multiply(scalar);
+			return *this;
+		}
+
+		constexpr Vec2& operator /=(const Vec2& other)
+		{
+			this->divide(other);
+			return *this;
+		}
+
+		constexpr Vec2& operator /=(float scalar)
+		{
+			this->divide(scalar);
+			return *this;
+		}
 
 		// Unary Operators
 
-		Vec2 operator +() const;
-		Vec2 operator -() const;
+		constexpr Vec2 operator +() const
+		{
+			return Vec2(+(this->x), +(this->y));
+		}
+
+		constexpr Vec2 operator -() const
+		{
+			return Vec2(-(this->x), -(this->y));
+		}
 
 		// Cast Operators
 
-		operator float* () { return &x; }
-		operator const float* () const { return &x; }
+		constexpr operator float* () { return &x; }
+		constexpr operator const float* () const { return &x; }
 
 		// Extras / Helpers
 
-		static float dot(const Vec2& left, const Vec2& right);
+		static inline float dot(const Vec2& left, const Vec2& right)
+		{
+			return (left.x * right.x) + (left.y * right.y);
+		}
+
 	};
 
-} }
+}
 
 LOG_CREATE_FORMAT(daedalus::maths::Vec2, "x: {}, y: {}", vec, vec.x, vec.y);
