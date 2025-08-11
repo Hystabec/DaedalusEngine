@@ -17,3 +17,23 @@
 
 // Scripting components
 #include "nativeScriptComponent.h"
+
+namespace daedalus::scene {
+
+	template<typename... Components>
+	struct ComponentGroup
+	{
+	};
+
+	using AllComponents = 
+		ComponentGroup<IDComponent, TagComponent, TransformComponent,
+		CameraComponent, SpriteRendererComponent, CircleRendererComponent,
+		Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent,
+		NativeScriptComponent>;
+
+	using AllOptionalComponents =
+		ComponentGroup<CameraComponent, SpriteRendererComponent, CircleRendererComponent,
+		Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent,
+		NativeScriptComponent>;
+
+}

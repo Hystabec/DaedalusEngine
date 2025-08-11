@@ -1,4 +1,3 @@
-#include "editorLayer.h"
 #include "ddpch.h"
 #include "scene.h"
 
@@ -35,26 +34,46 @@ namespace daedalus::scene {
 		physics2DStop();
 	}
 
-	template<typename T>
-	static void copy_components(entt::registry& dst, const entt::registry& src, const std::unordered_map <UUID, entt::entity>& enttMap)
+	template<typename... Component>
+	static void copy_component(entt::registry& dst, const entt::registry& src, const std::unordered_map <UUID, entt::entity>& enttMap)
 	{
-		auto view = src.view<T>();
-		for (auto& e : view)
-		{
-			UUID uuid = src.get<IDComponent>(e).ID;
-			entt::entity eID = enttMap.at(uuid);
-			DD_CORE_ASSERT(enttMap.find(uuid) != enttMap.end())
+		// an inline lambda that immediatly gets exapanded for each component passed to the function
+		([&]()
+			{
+				auto view = src.view<Component>();
+				for (auto& e : view)
+				{
+					UUID uuid = src.get<IDComponent>(e).ID;
+					entt::entity eID = enttMap.at(uuid);
+					DD_CORE_ASSERT(enttMap.find(uuid) != enttMap.end())
 
-			auto& component = src.get<T>(e);
-			dst.emplace_or_replace<T>(eID, component);
-		}
+						auto& component = src.get<Component>(e);
+					dst.emplace_or_replace<Component>(eID, component);
+				}
+			}(), ...);
 	}
 
-	template<typename T>
-	static void copy_components_if_exists(Entity dst, Entity src)
+	template<typename... Component>
+	static void copy_component(ComponentGroup<Component...>, entt::registry& dst, const entt::registry& src, const std::unordered_map <UUID, entt::entity>& enttMap)
 	{
-		if (src.hasComponent<T>())
-			dst.addOrRepalaceComponent<T>(src.getComponent<T>());
+		copy_component<Component...>(dst, src, enttMap);
+	}
+
+	template<typename... Component>
+	static void copy_component_if_exists(Entity dst, Entity src)
+	{
+		// an inline lambda that immediatly gets exapanded for each component passed to the function
+		([&]()
+			{
+				if (src.hasComponent<Component>())
+					dst.addOrRepalaceComponent<Component>(src.getComponent<Component>());
+			}(), ...);
+	}
+
+	template<typename... Component>
+	static void copy_component_if_exists(ComponentGroup<Component...>, Entity dst, Entity src)
+	{
+		copy_component_if_exists<Component...>(dst, src);
 	}
 
 	Shr_ptr<Scene> Scene::copy(Shr_ptr<Scene> src)
@@ -78,14 +97,7 @@ namespace daedalus::scene {
 		}
 
 		// dont need to do ID and tag as they have already been done
-		copy_components<TransformComponent>			(destSceneReg, srcSceneReg, enttMap);
-		copy_components<CameraComponent>			(destSceneReg, srcSceneReg, enttMap);
-		copy_components<SpriteRendererComponent>	(destSceneReg, srcSceneReg, enttMap);
-		copy_components<CircleRendererComponent>	(destSceneReg, srcSceneReg, enttMap);
-		copy_components<Rigidbody2DComponent>		(destSceneReg, srcSceneReg, enttMap);
-		copy_components<BoxCollider2DComponent>		(destSceneReg, srcSceneReg, enttMap);
-		copy_components<CircleCollider2DComponent>	(destSceneReg, srcSceneReg, enttMap);
-		copy_components<NativeScriptComponent>		(destSceneReg, srcSceneReg, enttMap);
+		copy_component(AllComponents{}, destSceneReg, srcSceneReg, enttMap);
 
 		return dest;
 	}
@@ -115,15 +127,7 @@ namespace daedalus::scene {
 	void Scene::duplicateEntity(Entity entity)
 	{
 		Entity newEntity = createEntity(entity.getName());
-
-		copy_components_if_exists<TransformComponent>		(newEntity, entity);
-		copy_components_if_exists<CameraComponent>			(newEntity, entity);
-		copy_components_if_exists<SpriteRendererComponent>	(newEntity, entity);
-		copy_components_if_exists<CircleRendererComponent>	(newEntity, entity);
-		copy_components_if_exists<Rigidbody2DComponent>		(newEntity, entity);
-		copy_components_if_exists<BoxCollider2DComponent>	(newEntity, entity);
-		copy_components_if_exists<CircleCollider2DComponent>(newEntity, entity);
-		copy_components_if_exists<NativeScriptComponent>	(newEntity, entity);
+		copy_component_if_exists(AllComponents{}, newEntity, entity);
 	}
 
 	void Scene::onRuntimeStart()
