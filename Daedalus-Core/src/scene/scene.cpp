@@ -1,3 +1,4 @@
+#include "editorLayer.h"
 #include "ddpch.h"
 #include "scene.h"
 
@@ -31,6 +32,7 @@ namespace daedalus::scene {
 
 	Scene::~Scene()
 	{
+		physics2DStop();
 	}
 
 	template<typename T>
@@ -126,6 +128,175 @@ namespace daedalus::scene {
 
 	void Scene::onRuntimeStart()
 	{
+		physics2DStart();
+	}
+
+	void Scene::onSimulateStart()
+	{
+		physics2DStart();
+	}
+
+	void Scene::onRutimeStop()
+	{
+		physics2DStop();
+	}
+
+	void Scene::onSimulateStop()
+	{
+		physics2DStop();
+	}
+
+	void Scene::updateRuntime(const application::DeltaTime& dt)
+	{
+		// update scripts
+		{
+			m_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
+				{
+					if (!nsc.scriptBound)
+					{
+						DD_CORE_LOG_WARN("No Script bound to NativeScriptComponent");
+						return;
+					}
+
+					// TO DO: Moveto Scene::onScenePlay
+					if (!nsc.instance)
+					{
+						nsc.instance = nsc.instantiateScript();
+						nsc.instance->m_entity = Entity{ entity, this };
+						nsc.instance->onCreate();
+					}
+
+					nsc.instance->onUpdate(dt);
+				});
+		}
+
+		// find main camera
+		graphics::Camera* mainCamera = nullptr;
+		maths::Mat4 mainCameraTransform;
+		{
+			auto view = m_registry.view<TransformComponent, CameraComponent>();
+			view.each([&](const TransformComponent& transform, CameraComponent& camera)
+				{
+					if (camera.primary)
+					{
+						mainCamera = &camera.camera;
+						mainCameraTransform = transform.getTransform();
+					}
+				});
+		}
+
+		// Physics
+		{
+			const int32_t subStepCount = 4;
+			b2World_Step(*m_physicsWorld, dt, subStepCount);
+
+			auto view = m_registry.view<Rigidbody2DComponent>();
+			
+			for(auto e : view)
+			{
+				Entity enity = { e, this };
+				auto& transform = enity.getComponent<TransformComponent>();
+				auto& rb2d = enity.getComponent<Rigidbody2DComponent>();
+
+				b2BodyId& body = m_entityBox2DBodyMap.at(enity.getUUID());
+				const auto& position = b2Body_GetPosition(body);
+				transform.position.x = position.x;
+				transform.position.y = position.y;
+				transform.rotation.z = b2Rot_GetAngle(b2Body_GetRotation(body));
+			}
+		}
+
+		// Render2D sprites
+		if (mainCamera)
+		{
+			graphics::Renderer2D::begin(*mainCamera, mainCameraTransform);
+
+			{
+				auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
+				for (auto entity : group)
+				{
+					auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
+					graphics::Renderer2D::drawSprite(transform.getTransform(), sprite, (uint32_t)entity);
+				}
+			}
+
+			{
+				auto view = m_registry.view<TransformComponent, CircleRendererComponent>();
+				view.each([](const auto entity, const auto& transform, const auto& circleComp)
+					{
+						if (circleComp.thickness != 0.0f)
+							graphics::Renderer2D::drawCircle(transform.getTransform(), circleComp.colour, circleComp.thickness, circleComp.fade, (uint32_t)entity);
+					});
+			}
+
+			graphics::Renderer2D::end();
+		}
+	}
+
+	void Scene::updateSimulation(const application::DeltaTime& dt, graphics::EditorCamera& camera)
+	{
+		// Physics
+		{
+			const int32_t subStepCount = 4;
+			b2World_Step(*m_physicsWorld, dt, subStepCount);
+
+			auto view = m_registry.view<Rigidbody2DComponent>();
+
+			for (auto e : view)
+			{
+				Entity enity = { e, this };
+				auto& transform = enity.getComponent<TransformComponent>();
+				auto& rb2d = enity.getComponent<Rigidbody2DComponent>();
+
+				b2BodyId& body = m_entityBox2DBodyMap.at(enity.getUUID());
+				const auto& position = b2Body_GetPosition(body);
+				transform.position.x = position.x;
+				transform.position.y = position.y;
+				transform.rotation.z = b2Rot_GetAngle(b2Body_GetRotation(body));
+			}
+		}
+
+		// render
+		renderSceneEditor(camera);
+	}
+
+	void Scene::updateEditor(const application::DeltaTime& dt, graphics::EditorCamera& camera)
+	{
+		// render
+		renderSceneEditor(camera);
+	}
+
+	void Scene::onViewportResize(uint32_t width, uint32_t hegiht)
+	{
+		m_viewportWidth = width;
+		m_viewportHeight = hegiht;
+
+		// resize non-fixed aspect ratio cameras
+		auto view = m_registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			auto& cameraComp = view.get<CameraComponent>(entity);
+			if (!cameraComp.fixedAspectRatio)
+				cameraComp.camera.setViewportSize(width, hegiht);
+		}
+	}
+
+	Entity Scene::getPrimaryCameraEntity()
+	{
+		auto view = m_registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			const auto& cc = view.get<CameraComponent>(entity);
+			if (cc.primary)
+				return Entity{ entity, this };
+		}
+
+		return {};
+	}
+
+	void Scene::physics2DStart()
+	{
 		b2WorldDef worldDef = b2DefaultWorldDef();
 		worldDef.gravity = { 0.0f, -9.8f };
 		m_physicsWorld = create_uni_ptr<b2WorldId>(b2CreateWorld(&worldDef));
@@ -191,102 +362,18 @@ namespace daedalus::scene {
 		}
 	}
 
-	void Scene::onRutimeStop()
+	void Scene::physics2DStop()
 	{
-		b2DestroyWorld(*m_physicsWorld);
-		m_physicsWorld.reset();
+		if (m_physicsWorld)
+		{
+			b2DestroyWorld(*m_physicsWorld);
+			m_physicsWorld.reset();
+		}
 	}
 
-	void Scene::updateRuntime(const application::DeltaTime& dt)
+	void Scene::renderSceneEditor(graphics::EditorCamera& camera)
 	{
-		// update scripts
-		{
-			m_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
-				{
-					if (!nsc.scriptBound)
-					{
-						DD_CORE_LOG_WARN("No Script bound to NativeScriptComponent");
-						return;
-					}
-
-					// TO DO: Moveto Scene::onScenePlay
-					if (!nsc.instance)
-					{
-						nsc.instance = nsc.instantiateScript();
-						nsc.instance->m_entity = Entity{ entity, this };
-						nsc.instance->onCreate();
-					}
-
-					nsc.instance->onUpdate(dt);
-				});
-		}
-
-
 		// Render2D sprites
-		graphics::Camera* mainCamera = nullptr;
-		maths::Mat4 mainCameraTransform;
-		{
-			auto view = m_registry.view<TransformComponent, CameraComponent>();
-			view.each([&](const TransformComponent& transform, CameraComponent& camera)
-				{
-					if (camera.primary)
-					{
-						mainCamera = &camera.camera;
-						mainCameraTransform = transform.getTransform();
-					}
-				});
-		}
-
-		// Physics
-		{
-			const int32_t subStepCount = 4;
-			b2World_Step(*m_physicsWorld, dt, subStepCount);
-
-			auto view = m_registry.view<Rigidbody2DComponent>();
-			
-			for(auto e : view)
-			{
-				Entity enity = { e, this };
-				auto& transform = enity.getComponent<TransformComponent>();
-				auto& rb2d = enity.getComponent<Rigidbody2DComponent>();
-
-				b2BodyId& body = m_entityBox2DBodyMap.at(enity.getUUID());
-				const auto& position = b2Body_GetPosition(body);
-				transform.position.x = position.x;
-				transform.position.y = position.y;
-				transform.rotation.z = b2Rot_GetAngle(b2Body_GetRotation(body));
-			}
-		}
-
-		if (mainCamera)
-		{
-			graphics::Renderer2D::begin(*mainCamera, mainCameraTransform);
-
-			{
-				auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
-				for (auto entity : group)
-				{
-					auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-
-					graphics::Renderer2D::drawSprite(transform.getTransform(), sprite, (uint32_t)entity);
-				}
-			}
-
-			{
-				auto view = m_registry.view<TransformComponent, CircleRendererComponent>();
-				view.each([](const auto entity, const auto& transform, const auto& circleComp)
-					{
-						if (circleComp.thickness != 0.0f)
-							graphics::Renderer2D::drawCircle(transform.getTransform(), circleComp.colour, circleComp.thickness, circleComp.fade, (uint32_t)entity);
-					});
-			}
-
-			graphics::Renderer2D::end();
-		}
-	}
-
-	void Scene::updateEditor(const application::DeltaTime& dt, graphics::EditorCamera& camera)
-	{
 		graphics::Renderer2D::begin(camera);
 
 		{
@@ -308,34 +395,6 @@ namespace daedalus::scene {
 		}
 
 		graphics::Renderer2D::end();
-	}
-
-	void Scene::onViewportResize(uint32_t width, uint32_t hegiht)
-	{
-		m_viewportWidth = width;
-		m_viewportHeight = hegiht;
-
-		// resize non-fixed aspect ratio cameras
-		auto view = m_registry.view<CameraComponent>();
-		for (auto entity : view)
-		{
-			auto& cameraComp = view.get<CameraComponent>(entity);
-			if (!cameraComp.fixedAspectRatio)
-				cameraComp.camera.setViewportSize(width, hegiht);
-		}
-	}
-
-	Entity Scene::getPrimaryCameraEntity()
-	{
-		auto view = m_registry.view<CameraComponent>();
-		for (auto entity : view)
-		{
-			const auto& cc = view.get<CameraComponent>(entity);
-			if (cc.primary)
-				return Entity{ entity, this };
-		}
-
-		return {};
 	}
 
 	// TO DO: figure a way to remove the below functions/make them optional

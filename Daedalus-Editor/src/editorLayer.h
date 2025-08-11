@@ -31,6 +31,7 @@ namespace daedalus::editor
 		void serializeScene(Shr_ptr<scene::Scene> scene, const std::filesystem::path& path);
 
 		void onScenePlay();
+		void onSceneSimulate();
 		void onSceneStop();
 
 		void duplicateEntity();
@@ -53,13 +54,13 @@ namespace daedalus::editor
 		int m_gizmoType = -1;
 		ContentBrowserPanel m_contentBrowserPanel;
 
-		Shr_ptr<graphics::Texture2D> m_playIcon, m_stopIcon;
+		Shr_ptr<graphics::Texture2D> m_playIcon, m_stopIcon, m_simulateIcon;
 
 		bool m_showColliderOverlay = false;
 
 		enum class SceneState
 		{
-			Edit = 0, Play = 1, Pause = 2
+			Edit = 0, Play = 1, Pause = 2, Simulate = 3
 		};
 		SceneState m_sceneState = SceneState::Edit;
 

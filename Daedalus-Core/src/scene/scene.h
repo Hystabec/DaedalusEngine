@@ -34,9 +34,12 @@ namespace daedalus::scene {
 		void duplicateEntity(Entity entity);
 
 		void onRuntimeStart();
+		void onSimulateStart();
 		void onRutimeStop();
+		void onSimulateStop();
 
 		void updateRuntime(const application::DeltaTime& dt);
+		void updateSimulation(const application::DeltaTime& dt, graphics::EditorCamera& camera);
 		void updateEditor(const application::DeltaTime& dt, graphics::EditorCamera& camera);
 
 		void onViewportResize(uint32_t width, uint32_t hegiht);
@@ -52,6 +55,10 @@ namespace daedalus::scene {
 		template<typename T>
 		void onComponentAdded(Entity entity, T& component);
 
+		void physics2DStart();
+		void physics2DStop();
+
+		void renderSceneEditor(graphics::EditorCamera& camera);
 	private:
 		entt::registry m_registry;
 		uint32_t m_viewportWidth = 0, m_viewportHeight = 0;

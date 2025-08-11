@@ -29,9 +29,10 @@ namespace daedalus::editor
 
 		m_playIcon = graphics::Texture2D::create("resources\\icons\\playButtonIcon.png");
 		m_stopIcon = graphics::Texture2D::create("resources\\icons\\stopButtonIcon.png");
+		m_simulateIcon = graphics::Texture2D::create("resources\\icons\\simulateButtonIcon.png");
 
-		m_activeScene = create_shr_ptr<scene::Scene>();
-		m_editorScene = m_activeScene;
+		m_editorScene = create_shr_ptr<scene::Scene>();
+		m_activeScene = m_editorScene;
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
 
@@ -104,7 +105,7 @@ namespace daedalus::editor
 		// update scene
 		switch (m_sceneState)
 		{
-		case daedalus::editor::EditorLayer::SceneState::Edit:
+		case SceneState::Edit:
 		{
 			if (m_viewportFocused)
 				m_editorCamera.update(dt);
@@ -112,7 +113,15 @@ namespace daedalus::editor
 			m_activeScene->updateEditor(dt, m_editorCamera);
 			break;
 		}
-		case daedalus::editor::EditorLayer::SceneState::Play:
+		case SceneState::Simulate:
+		{
+			if (m_viewportFocused)
+				m_editorCamera.update(dt);
+
+			m_activeScene->updateSimulation(dt, m_editorCamera);
+			break;
+		}
+		case SceneState::Play:
 		{
 			m_activeScene->updateRuntime(dt);
 			break;
@@ -323,16 +332,41 @@ namespace daedalus::editor
 		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 		float size = ImGui::GetWindowHeight() - 4.0f;
-		Shr_ptr<graphics::Texture2D> icon = m_sceneState == SceneState::Edit ? m_playIcon : m_stopIcon;
-		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
-		if (ImGui::ImageButton("##playStopButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size)))
 		{
-			if (m_sceneState == SceneState::Edit)
-				onScenePlay();
-			else if (m_sceneState == SceneState::Play)
-				onSceneStop();
+			Shr_ptr<graphics::Texture2D> icon = m_sceneState == SceneState::Play ? m_stopIcon : m_playIcon;
+			ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+			if (ImGui::ImageButton("##playStopButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
+				m_sceneState == SceneState::Simulate ? ImVec4(0.5f, 0.5f, 0.5f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f)))
+			{
+				if (m_sceneState == SceneState::Edit)
+					onScenePlay();
+				else if (m_sceneState == SceneState::Play)
+					onSceneStop();
+			}
+			if (ImGui::BeginItemTooltip())
+			{
+				ImGui::Text(m_sceneState == SceneState::Play ? "Stop" : "Start");
+				ImGui::EndTooltip();
+			}
 		}
-
+		ImGui::SameLine();
+		{
+			Shr_ptr<graphics::Texture2D> icon = m_sceneState == SceneState::Simulate ? m_stopIcon : m_simulateIcon;
+			//ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+			if (ImGui::ImageButton("##simulatePlayStopButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
+				m_sceneState == SceneState::Play ? ImVec4(0.5f, 0.5f, 0.5f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f)))
+			{
+				if (m_sceneState == SceneState::Edit)
+					onSceneSimulate();
+				else if (m_sceneState == SceneState::Simulate)
+					onSceneStop();
+			}
+			if (ImGui::BeginItemTooltip())
+			{
+				ImGui::Text(m_sceneState == SceneState::Simulate ? "Stop simulation" : "Start simulation");
+				ImGui::EndTooltip();
+			}
+		}
 		ImGui::End();
 
 		ImGui::PopStyleVar(3);
@@ -614,11 +648,25 @@ namespace daedalus::editor
 		m_sceneHierarchyPanel.setContext(m_activeScene);
 	}
 
+	void EditorLayer::onSceneSimulate()
+	{
+		m_sceneState = SceneState::Simulate;
+
+		// Make the active scene a copy of the editor scene
+		// now becomes the runtime scene
+		m_activeScene = scene::Scene::copy(m_editorScene);
+		m_activeScene->onSimulateStart();
+
+		m_sceneHierarchyPanel.setContext(m_activeScene);
+	}
+
 	void EditorLayer::onSceneStop()
 	{
+		DD_CORE_ASSERT(m_sceneState == SceneState::Play || m_sceneState == SceneState::Simulate);
+		m_sceneState == SceneState::Play ? m_activeScene->onRutimeStop() : m_activeScene->onSimulateStop();
+
 		m_sceneState = SceneState::Edit;
 		
-		m_activeScene->onRutimeStop();
 		m_activeScene = m_editorScene;
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
