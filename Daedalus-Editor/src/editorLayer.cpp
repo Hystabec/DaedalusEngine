@@ -90,7 +90,9 @@ namespace daedalus::editor
 			m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
 
+#ifndef DD_DISTRO
 		graphics::Renderer2D::resetStats();
+#endif
 
 		m_framebuffer->bind();
 
@@ -210,14 +212,14 @@ namespace daedalus::editor
 		m_contentBrowserPanel.onImGuiRender();
 
 		ImGui::Begin("Stats");
-
+#ifndef DD_DISTRO
 		auto stats = graphics::Renderer2D::getStats();
 		ImGui::Text("Renderer2D Stats:");
 		ImGui::Text("Draw calls: %d", stats.drawCalls);
 		ImGui::Text("Quads: %d", stats.quadCount);
 		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
-
+#endif
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });

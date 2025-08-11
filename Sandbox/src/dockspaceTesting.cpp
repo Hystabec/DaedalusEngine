@@ -27,7 +27,9 @@ void EditorLayer::update(const daedalus::application::DeltaTime& dt)
 	DD_PROFILE_FUNCTION();
 	m_camController.update(dt);
 
+#ifndef DD_DISTRO
 	daedalus::graphics::Renderer2D::resetStats();
+#endif
 
 	{
 		DD_PROFILE_SCOPE("renderer prep");
@@ -75,12 +77,14 @@ void EditorLayer::imGuiRender()
 	}
 
 	ImGui::Begin("Settings");
+#ifndef DD_DISTRO
 	auto stats = daedalus::graphics::Renderer2D::getStats();
 	ImGui::Text("Renderer2D Stats:");
 	ImGui::Text("Draw calls: %d", stats.drawCalls);
 	ImGui::Text("Quads: %d", stats.quadCount);
 	ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 	ImGui::Text("Indices: %d", stats.getTotalIndexCount());
+#endif
 	ImGui::End();
 
 	ImGui::Begin("Viewport");

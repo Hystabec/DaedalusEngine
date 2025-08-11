@@ -92,7 +92,7 @@ project "Daedalus-Core"
 			"%{library.SPIRV_Cross_GLSL_Debug}"
 		}
 
-	filter "configurations:Realease"
+	filter "configurations:Release"
 		runtime "Release"
 		optimize "on"
 		defines
