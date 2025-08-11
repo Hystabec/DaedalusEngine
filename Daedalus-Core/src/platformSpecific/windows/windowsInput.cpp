@@ -24,7 +24,7 @@ namespace daedalus::application {
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow()->getNativeWindow());
 		auto state = glfwGetKey(window, (int)keycode);
-		return state == GLFW_PRESS || state == GLFW_REPEAT;
+		return state == GLFW_PRESS;
 	}
 
 	bool Input::getMouseButton(InputCode button)

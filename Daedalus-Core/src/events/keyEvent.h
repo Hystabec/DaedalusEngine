@@ -47,17 +47,17 @@ namespace daedalus { namespace event {
 	class  KeyHeldEvent : public KeyEvent
 	{
 	public:
-		KeyHeldEvent(application::InputCode keycode, int count)
-			: KeyEvent(keycode), m_count(count)
+		KeyHeldEvent(application::InputCode keycode, bool isRepeat)
+			: KeyEvent(keycode), m_isRepeat(isRepeat)
 		{
 		}
 
-		inline int count() const { return m_count; }
+		inline bool isRepeat() const { return m_isRepeat; }
 
 		EVENT_CLASS_TYPE(EventType::KeyHeld)
 
 	private:
-		int m_count;
+		bool m_isRepeat;
 	};
 
 	class  KeyTypedEvent : public KeyEvent
