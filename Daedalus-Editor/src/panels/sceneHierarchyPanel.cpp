@@ -63,12 +63,12 @@ namespace daedalus::editor
 
 	void SceneHierarchyPanel::drawEntityNode(scene::Entity entity)
 	{
-		auto& tag = entity.getComponent<scene::TagComponent>().tag;
+		const auto& name = entity.getName();
 		
 		static const ImGuiTreeNodeFlags flags = ((m_selectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow
 			| ImGuiTreeNodeFlags_SpanAvailWidth;
 
-		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
+		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, name.c_str());
 		if (ImGui::IsItemClicked())
 		{
 			m_selectionContext = entity;
@@ -231,16 +231,16 @@ namespace daedalus::editor
 	void SceneHierarchyPanel::drawComponents(scene::Entity entity)
 	{
 		// This check is kind of pointless as all entities should have a Tag
-		if (entity.hasComponent<scene::TagComponent>())
+		if (entity.hasComponent<scene::IDComponent>())
 		{
-			auto& tag = entity.getComponent<scene::TagComponent>().tag;
+			auto& name = entity.getComponent<scene::IDComponent>().name;
 
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
-			strcpy_s(buffer, sizeof(buffer), tag.c_str());
-			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
+			strcpy_s(buffer, sizeof(buffer), name.c_str());
+			if (ImGui::InputText("##Name", buffer, sizeof(buffer)))
 			{
-				tag = std::string(buffer);
+				name = std::string(buffer);
 			}
 			ImGui::SetItemTooltip("ID: %llu", entity.getUUID());
 		}
@@ -311,6 +311,21 @@ namespace daedalus::editor
 		}
 
 		ImGui::PopItemWidth();
+
+		draw_component<scene::TagComponent>("Tag",
+			[](scene::TagComponent& tc)
+			{
+				auto& tag = tc.tag;
+
+				char buffer[256];
+				memset(buffer, 0, sizeof(buffer));
+				strcpy_s(buffer, sizeof(buffer), tag.c_str());
+				if (ImGui::InputText("Tag", buffer, sizeof(buffer)))
+				{
+					tag = std::string(buffer);
+				}
+
+			}, entity, false);
 
 		draw_component<scene::TransformComponent>("Transform",
 			[](scene::TransformComponent& tc)
@@ -439,6 +454,9 @@ namespace daedalus::editor
 				}
 
 				ImGui::Checkbox("Fixed Rotation", &rb2d.fixedRotation);
+				ImGui::DragFloat("Desity", &rb2d.desity, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Friction", &rb2d.friction, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution", &rb2d.restitution, 0.01f, 0.0f, 1.0f);
 
 			}, entity);
 
@@ -447,10 +465,6 @@ namespace daedalus::editor
 			{
 				ImGui::DragFloat2("Offset", (float*)bc2d.offset, 0.1f);
 				ImGui::DragFloat2("Size", (float*)bc2d.size, 0.1f);
-				ImGui::DragFloat("Desity", &bc2d.desity, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Friction", &bc2d.friction, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution", &bc2d.restitution, 0.01f, 0.0f, 1.0f);
-				//ImGui::DragFloat("Restitution Threshold", &bc2d.restitutionThreshold);
 
 			}, entity);
 
@@ -459,9 +473,6 @@ namespace daedalus::editor
 			{
 				ImGui::DragFloat2("Offset", (float*)bc2d.offset, 0.1f);
 				ImGui::DragFloat("Radius", &bc2d.radius, 0.1f, 0.0f);
-				ImGui::DragFloat("Desity", &bc2d.desity, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Friction", &bc2d.friction, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution", &bc2d.restitution, 0.01f, 0.0f, 1.0f);
 
 			}, entity);
 	}

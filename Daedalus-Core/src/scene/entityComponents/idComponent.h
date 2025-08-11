@@ -6,11 +6,12 @@ namespace daedalus::scene {
 	struct IDComponent
 	{
 		UUID ID;
+		std::string name;
 
 		IDComponent() = default;
 		IDComponent(const IDComponent&) = default;
-		IDComponent(UUID uuid)
-			: ID(uuid)
+		IDComponent(UUID uuid, const std::string& name)
+			: ID(uuid), name(name)
 		{
 		};
 	};

@@ -162,6 +162,7 @@ namespace daedalus::scene {
 
 		out << YAML::BeginMap;
 		out << YAML::Key << "Entity" << YAML::Value << entity.getUUID();
+		out << YAML::Key << "Name" << YAML::Value << entity.getName();
 
 		if (entity.hasComponent<TagComponent>())
 		{
@@ -213,24 +214,21 @@ namespace daedalus::scene {
 			{
 				out << YAML::Key << "BodyType" << YAML::Value << rigidbody2D_body_type_to_string(src.type);
 				out << YAML::Key << "FixedRotation" << YAML::Value << src.fixedRotation;
+				out << YAML::Key << "Desity" << YAML::Value << src.desity;
+				out << YAML::Key << "Friction" << YAML::Value << src.friction;
+				out << YAML::Key << "Restitution" << YAML::Value << src.restitution;
 			});
 
 		serialize_component<BoxCollider2DComponent>(out, "BoxCollider2DComponent", entity, [](YAML::Emitter& out, BoxCollider2DComponent& src)
 			{
 				out << YAML::Key << "Offset" << YAML::Value << src.offset;
 				out << YAML::Key << "Size" << YAML::Value << src.size;
-				out << YAML::Key << "Desity" << YAML::Value << src.desity;
-				out << YAML::Key << "Friction" << YAML::Value << src.friction;
-				out << YAML::Key << "Restitution" << YAML::Value << src.restitution;
 			});
 
 		serialize_component<CircleCollider2DComponent>(out, "CircleCollider2DComponent", entity, [](YAML::Emitter& out, CircleCollider2DComponent& src)
 			{
 				out << YAML::Key << "Offset" << YAML::Value << src.offset;
 				out << YAML::Key << "Radius" << YAML::Value << src.radius;
-				out << YAML::Key << "Desity" << YAML::Value << src.desity;
-				out << YAML::Key << "Friction" << YAML::Value << src.friction;
-				out << YAML::Key << "Restitution" << YAML::Value << src.restitution;
 			});
 
 		out << YAML::EndMap;
@@ -294,17 +292,18 @@ namespace daedalus::scene {
 				for (auto entity : entites)
 				{
 					uint64_t uuid = entity["Entity"].as<uint64_t>();
+					std::string name = entity["Name"].as<std::string>();
 
-					std::string name;
-					auto tagComponent = entity["TagComponent"];
-					if (tagComponent)
-						name = tagComponent["Tag"].as<std::string>();
 
 #if LOG_SERIALIZATION_TO_CONSOLE
 					DD_CORE_LOG_TRACE("Deserialized entity with ID = {}, name = {}", uuid, name);
 #endif
 
 					Entity deserializedEntity = m_scene->createEntityWithUUID(uuid, name);
+
+					auto tagComponent = entity["TagComponent"];
+					if (tagComponent)
+						deserializedEntity.getComponent<TagComponent>().tag = tagComponent["Tag"].as<std::string>();
 
 					auto component = entity["TransformComponent"];
 					if (component)
@@ -356,6 +355,10 @@ namespace daedalus::scene {
 						auto& src = deserializedEntity.addOrRepalaceComponent<Rigidbody2DComponent>();
 						src.type = rigidbody2D_body_type_from_string(component["BodyType"].as<std::string>());
 						src.fixedRotation = component["FixedRotation"].as<bool>();
+
+						src.desity = component["Desity"].as<float>();
+						src.friction = component["Friction"].as<float>();
+						src.restitution = component["Restitution"].as<float>();
 					}
 
 					component = entity["BoxCollider2DComponent"];
@@ -364,10 +367,6 @@ namespace daedalus::scene {
 						auto& src = deserializedEntity.addOrRepalaceComponent<BoxCollider2DComponent>();
 						src.offset = component["Offset"].as<maths::Vec2>();
 						src.size = component["Size"].as<maths::Vec2>();
-
-						src.desity = component["Desity"].as<float>();
-						src.friction = component["Friction"].as<float>();
-						src.restitution = component["Restitution"].as<float>();
 					}
 
 					component = entity["CircleCollider2DComponent"];
@@ -376,10 +375,6 @@ namespace daedalus::scene {
 						auto& src = deserializedEntity.addOrRepalaceComponent<CircleCollider2DComponent>();
 						src.offset = component["Offset"].as<maths::Vec2>();
 						src.radius = component["Radius"].as<float>();
-
-						src.desity = component["Desity"].as<float>();
-						src.friction = component["Friction"].as<float>();
-						src.restitution = component["Restitution"].as<float>();
 					}
 				}
 			}

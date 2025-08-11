@@ -90,9 +90,10 @@ namespace daedalus::scene {
 
 		auto idView = srcSceneReg.view<IDComponent>();
 		for (auto& e : idView)
-		{
-			UUID uuid = srcSceneReg.get<IDComponent>(e).ID;
-			const auto& name = srcSceneReg.get<TagComponent>(e).tag;
+		{	
+			auto& idComp = srcSceneReg.get<IDComponent>(e);
+			UUID uuid = idComp.ID;
+			const auto& name = idComp.name;
 			enttMap[uuid] = dest->createEntityWithUUID(uuid, name);;
 		}
 
@@ -110,11 +111,9 @@ namespace daedalus::scene {
 	Entity Scene::createEntityWithUUID(UUID uuid, const std::string& name)
 	{
 		Entity entity = { m_registry.create(), this };
-		entity.addComponent<IDComponent>(uuid);
+		auto& idComp = entity.addComponent<IDComponent>(uuid, name.empty() ? "Entity" : name);
 		entity.addComponent<TransformComponent>();
-
-		auto& tag = entity.addComponent<TagComponent>();
-		tag.tag = name.empty() ? "Entity" : name;
+		entity.addComponent<TagComponent>();
 
 		return entity;
 	}
@@ -340,9 +339,9 @@ namespace daedalus::scene {
 				b2Polygon polygon = b2MakeOffsetBox(bc2d.size.x * transform.scale.x, bc2d.size.y * transform.scale.y, b2Vec2(bc2d.offset.x, bc2d.offset.y), b2MakeRot(0.0f));
 
 				b2ShapeDef shapeDef = b2DefaultShapeDef();
-				shapeDef.density = bc2d.desity;
-				shapeDef.material.friction = bc2d.friction;
-				shapeDef.material.restitution = bc2d.restitution;
+				shapeDef.density = rb2d.desity;
+				shapeDef.material.friction = rb2d.friction;
+				shapeDef.material.restitution = rb2d.restitution;
 				//shapeDef.material.restitutionThreshold = bc2d.restitutionThreshold;
 				b2ShapeId shapeID = b2CreatePolygonShape(body, &shapeDef, &polygon);
 			}
@@ -357,9 +356,9 @@ namespace daedalus::scene {
 				circle.radius = cc2d.radius * transform.scale.x;
 
 				b2ShapeDef shapeDef = b2DefaultShapeDef();
-				shapeDef.density = cc2d.desity;
-				shapeDef.material.friction = cc2d.friction;
-				shapeDef.material.restitution = cc2d.restitution;
+				shapeDef.density = rb2d.desity;
+				shapeDef.material.friction = rb2d.friction;
+				shapeDef.material.restitution = rb2d.restitution;
 
 				b2ShapeId shapeID = b2CreateCircleShape(body, &shapeDef, &circle);
 			}

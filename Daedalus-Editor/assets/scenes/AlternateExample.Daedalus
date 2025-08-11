@@ -1,8 +1,9 @@
 Scene: Untitled
 Entities:
   - Entity: 4600214829609461608
+    Name: Blue Square
     TagComponent:
-      Tag: Blue Square
+      Tag: ""
     TransformComponent:
       Position: [-3.6, 0, 0]
       Rotation: [0, 0, 0]
@@ -10,8 +11,9 @@ Entities:
     SpriteRendererComponent:
       Colour: [0, 0.074417524, 0.37065637, 1]
   - Entity: 5584292168197608504
+    Name: Green Square
     TagComponent:
-      Tag: Green Square
+      Tag: ""
     TransformComponent:
       Position: [0, 2.7, 0]
       Rotation: [0, 0, 0]
@@ -19,8 +21,9 @@ Entities:
     SpriteRendererComponent:
       Colour: [0.2, 0.8, 0.2, 1]
   - Entity: 3600051667108352741
+    Name: Camera A
     TagComponent:
-      Tag: Camera A
+      Tag: ""
     TransformComponent:
       Position: [0, 0, 0]
       Rotation: [0, 0, 0]
@@ -37,8 +40,9 @@ Entities:
       Primary: true
       FixedAspectRatio: false
   - Entity: 15158649015749387294
+    Name: red Square
     TagComponent:
-      Tag: red Square
+      Tag: ""
     TransformComponent:
       Position: [0, -3.2, 0]
       Rotation: [0, 0, 0]

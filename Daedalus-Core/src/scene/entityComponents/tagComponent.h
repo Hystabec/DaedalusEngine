@@ -3,6 +3,7 @@
 
 namespace daedalus::scene {
 
+	// Currently doesnt do anything
 	struct TagComponent
 	{
 		std::string tag;

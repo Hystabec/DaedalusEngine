@@ -4,8 +4,8 @@
 #include "application/uuid.h"
 
 #include "entityComponents/idComponent.h"
-#include "entityComponents/tagComponent.h"
 #include "entityComponents/transformComponent.h"
+#include "entityComponents/tagComponent.h"
 
 #include <entt.hpp>
 
@@ -73,7 +73,7 @@ namespace daedalus::scene {
 		}
 
 		UUID getUUID() const { return getComponent<IDComponent>().ID; }
-		const std::string& getName() const { return getComponent<TagComponent>().tag; }
+		const std::string& getName() const { return getComponent<IDComponent>().name; }
 		TransformComponent& getTransformComponent() { return getComponent<TransformComponent>(); }
 
 		operator bool() const { return m_handle != entt::null; }

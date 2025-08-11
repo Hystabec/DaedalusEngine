@@ -1,8 +1,9 @@
 Scene: Untitled
 Entities:
   - Entity: 3872665498113848049
+    Name: Circle
     TagComponent:
-      Tag: Circle
+      Tag: ""
     TransformComponent:
       Position: [-4.7, 5.5, 0]
       Rotation: [0, 0, 0]
@@ -14,15 +15,16 @@ Entities:
     Rigidbody2DComponent:
       BodyType: Dynamic
       FixedRotation: false
-    CircleCollider2DComponent:
-      Offset: [0, 0]
-      Radius: 0.5
       Desity: 1
       Friction: 0.5
       Restitution: 0
+    CircleCollider2DComponent:
+      Offset: [0, 0]
+      Radius: 0.5
   - Entity: 12035540377459869004
+    Name: Box
     TagComponent:
-      Tag: Box
+      Tag: ""
     TransformComponent:
       Position: [-11.2, 7.907651, 0]
       Rotation: [0, 0, -0.10933029]
@@ -32,15 +34,16 @@ Entities:
     Rigidbody2DComponent:
       BodyType: Dynamic
       FixedRotation: false
-    BoxCollider2DComponent:
-      Offset: [0, 0]
-      Size: [0.5, 0.5]
       Desity: 1
       Friction: 0.2
       Restitution: 0.75
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
   - Entity: 10656514189493746146
+    Name: Platform
     TagComponent:
-      Tag: Platform
+      Tag: ""
     TransformComponent:
       Position: [8.655565, -21.510668, 9.541516e-07]
       Rotation: [0, 0, 0]
@@ -50,15 +53,16 @@ Entities:
     Rigidbody2DComponent:
       BodyType: Static
       FixedRotation: false
-    BoxCollider2DComponent:
-      Offset: [0, 0]
-      Size: [0.5, 0.5]
       Desity: 1
       Friction: 0.5
       Restitution: 0
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
   - Entity: 15159689632603219981
+    Name: Platform
     TagComponent:
-      Tag: Platform
+      Tag: ""
     TransformComponent:
       Position: [-8.377473, -14.904534, 0]
       Rotation: [0, 0, -0.7088597]
@@ -68,15 +72,16 @@ Entities:
     Rigidbody2DComponent:
       BodyType: Static
       FixedRotation: false
-    BoxCollider2DComponent:
-      Offset: [0, 0]
-      Size: [0.5, 0.5]
       Desity: 1
       Friction: 0.5
       Restitution: 0
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
   - Entity: 7069570246628304272
+    Name: Platform
     TagComponent:
-      Tag: Platform
+      Tag: ""
     TransformComponent:
       Position: [4.1166234, -5.435215, 0]
       Rotation: [0, 0, 0.46370995]
@@ -86,15 +91,16 @@ Entities:
     Rigidbody2DComponent:
       BodyType: Static
       FixedRotation: false
-    BoxCollider2DComponent:
-      Offset: [0, 0]
-      Size: [0.5, 0.5]
       Desity: 1
       Friction: 0.5
       Restitution: 0
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
   - Entity: 12299312197268480524
+    Name: Platform
     TagComponent:
-      Tag: Platform
+      Tag: ""
     TransformComponent:
       Position: [-7.395191, 3.2797918, 0]
       Rotation: [0, 0, -0.410336]
@@ -104,15 +110,16 @@ Entities:
     Rigidbody2DComponent:
       BodyType: Static
       FixedRotation: false
-    BoxCollider2DComponent:
-      Offset: [0, 0]
-      Size: [0.5, 0.5]
       Desity: 1
       Friction: 0.5
       Restitution: 0
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
   - Entity: 13517902223792627785
+    Name: Camera
     TagComponent:
-      Tag: Camera
+      Tag: ""
     TransformComponent:
       Position: [-1, -6, 40]
       Rotation: [0, 0, 0]
@@ -129,8 +136,9 @@ Entities:
       Primary: true
       FixedAspectRatio: false
   - Entity: 16042357292662359930
+    Name: Platform
     TagComponent:
-      Tag: Platform
+      Tag: ""
     TransformComponent:
       Position: [19.204725, -20.733984, -0.2550993]
       Rotation: [0, 0, 0]
@@ -140,9 +148,9 @@ Entities:
     Rigidbody2DComponent:
       BodyType: Static
       FixedRotation: false
-    BoxCollider2DComponent:
-      Offset: [0, 0]
-      Size: [0.5, 0.5]
       Desity: 1
       Friction: 0.5
       Restitution: 0
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
