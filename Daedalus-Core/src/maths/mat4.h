@@ -5,7 +5,7 @@
 #include "angularUnitConversions.h"
 #include "mathsHelpers.h"
 
-namespace daedalus { namespace maths {
+namespace daedalus::maths {
 
 	struct Mat4
 	{
@@ -493,7 +493,7 @@ namespace daedalus { namespace maths {
 		}
 	};
 
-} }
+}
 
 LOG_CREATE_FORMAT(daedalus::maths::Mat4, "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}", 
 	thisMat4, 

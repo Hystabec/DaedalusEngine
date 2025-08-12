@@ -12,8 +12,8 @@
 class SandBox : public daedalus::Application
 {
 public:
-	SandBox()
-		: Application("SandBox", 1280, 720, true)
+	SandBox(const daedalus::ApplicationSpecification& spec)
+		: Application(spec)
 	{
 		//this->pushLayer(new generalLayer());
 		this->pushLayer(new Layer2D());
@@ -26,7 +26,15 @@ public:
 	}
 };
 
-daedalus::Application* daedalus::createApplication()
+daedalus::Application* daedalus::createApplication(daedalus::ApplicationCommandLineArgs args)
 {
-	return new SandBox();
+	daedalus::ApplicationSpecification spec;
+	spec.name = "SandBox";
+	spec.width = 1280;
+	spec.height = 720;
+	spec.vsync = true;
+	spec.workingDirectory = "SandBox";
+	spec.commandLineArgs = args;
+
+	return new SandBox(spec);
 }

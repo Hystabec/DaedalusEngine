@@ -11,6 +11,28 @@
 
 namespace daedalus {
 
+	struct ApplicationCommandLineArgs
+	{
+		int count = 0;
+		char** args = nullptr;
+
+		const char* operator[](int index) const
+		{
+			DD_CORE_ASSERT(index < count);
+			return args[index];
+		}
+	};
+
+	struct ApplicationSpecification
+	{
+		std::string name = "Daedalus Window";
+		uint32_t width = 960;
+		uint32_t height = 540;
+		bool vsync = false;
+		std::filesystem::path workingDirectory;
+		ApplicationCommandLineArgs commandLineArgs = ApplicationCommandLineArgs();
+	};
+
 	class  Application
 	{
 	public:
@@ -31,8 +53,10 @@ namespace daedalus {
 
 		inline application::ImGuiLayer* getImGuiLayer() { return m_ImGuiLayer; }
 
+		const ApplicationSpecification& getSpecification() const { return m_specification; }
+
 	protected:
-		Application(std::string title = "Daedalus Window", uint32_t width = 960, uint32_t height = 540, bool vsync = false);
+		Application(const ApplicationSpecification& specification);
 
 	private:
 		bool onWindowClose(event::WindowClosedEvent& e);
@@ -41,6 +65,7 @@ namespace daedalus {
 	private:
 		static Application* s_instance;
 		
+		ApplicationSpecification m_specification;
 		Uni_ptr<application::Window> m_window;
 		application::ImGuiLayer* m_ImGuiLayer;
 		bool m_running = true;
@@ -52,6 +77,6 @@ namespace daedalus {
 	};
 
 	//To be defined in client
-	Application* createApplication();
+	Application* createApplication(ApplicationCommandLineArgs args);
 
 }

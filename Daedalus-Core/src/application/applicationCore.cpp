@@ -95,7 +95,7 @@ namespace daedalus {
 		m_running = false;
 	}
 
-	Application::Application(std::string title, uint32_t width, uint32_t height, bool vsync)
+	Application::Application(const ApplicationSpecification& specification)
 	{
 		DD_PROFILE_FUNCTION();
 
@@ -103,8 +103,11 @@ namespace daedalus {
 		s_instance = this;
 
 		debug::Log::init();
-		m_window = Uni_ptr<application::Window>(application::Window::Create(application::WindowProperties(title, width, height, vsync)));
+		m_window = Uni_ptr<application::Window>(application::Window::Create(application::WindowProperties(specification.name, specification.width, specification.height, specification.vsync)));
 		m_window->setEventCallback(DD_BIND_EVENT_FUN(Application::onEvent));
+
+		if (!m_specification.workingDirectory.empty())
+			std::filesystem::current_path(m_specification.workingDirectory);
 
 		auto[path, found] = utils::get_core_resource_file_location("icons/DD_Logo_V1.png");
 		if (found)

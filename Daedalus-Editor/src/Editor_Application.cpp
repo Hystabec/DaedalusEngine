@@ -9,8 +9,8 @@ namespace daedalus
 	class Editor : public Application
 	{
 	public:
-		Editor()
-			: Application("Daedalus Editor", 1600, 900, true)
+		Editor(const ApplicationSpecification& spec)
+			: Application(spec)
 		{
 			this->pushLayer(new editor::EditorLayer());
 		}
@@ -20,9 +20,17 @@ namespace daedalus
 		}
 	};
 
-	Application* createApplication()
+	Application* createApplication(ApplicationCommandLineArgs args)
 	{
-		return new Editor();
+		ApplicationSpecification spec;
+		spec.name = "Daedalus Editor";
+		spec.width = 1600;
+		spec.height = 900;
+		spec.vsync = true;
+		spec.workingDirectory = "Daedalus-Editor";
+		spec.commandLineArgs = args;
+
+		return new Editor(spec);
 	}
 
 }
