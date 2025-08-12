@@ -36,7 +36,7 @@ namespace daedalus { namespace graphics {
 			DD_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& filePath)");
 			data = stbi_load(filePath.string().c_str(), &width, &height, &channels, 0);
 		}
-		DD_CORE_ASSERT(data, "Failed to load image");
+		DD_CORE_ASSERT(data, DD_ASSERT_FORMAT_MESSAGE("Failed to load image '{}'", filePath.string()));
 		m_width = width;
 		m_height = height;
 

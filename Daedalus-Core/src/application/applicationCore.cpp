@@ -106,8 +106,23 @@ namespace daedalus {
 		m_window = Uni_ptr<application::Window>(application::Window::Create(application::WindowProperties(specification.name, specification.width, specification.height, specification.vsync)));
 		m_window->setEventCallback(DD_BIND_EVENT_FUN(Application::onEvent));
 
+		m_specification = specification;
+
+		DD_CORE_LOG_INFO("Current path: {}", std::filesystem::current_path().string());
 		if (!m_specification.workingDirectory.empty())
-			std::filesystem::current_path(m_specification.workingDirectory);
+		{ 
+			std::filesystem::path newPath = std::filesystem::current_path() / m_specification.workingDirectory;
+			if (std::filesystem::exists(newPath))
+			{
+				DD_CORE_LOG_WARN("Working directory changed from '{}' to '{}'", std::filesystem::current_path().string(), newPath.lexically_normal().string());
+				std::filesystem::current_path(newPath);
+			}
+			else
+			{
+				DD_CORE_LOG_ERROR("Could not change working directory to '{}' as folder does not exist", m_specification.workingDirectory.string());
+				DD_CORE_LOG_WARN("Using default working directory '{}'", std::filesystem::current_path().string());
+			}
+		}
 
 		auto[path, found] = utils::get_core_resource_file_location("icons/DD_Logo_V1.png");
 		if (found)

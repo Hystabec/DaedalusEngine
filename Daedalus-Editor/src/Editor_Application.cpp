@@ -27,7 +27,7 @@ namespace daedalus
 		spec.width = 1600;
 		spec.height = 900;
 		spec.vsync = true;
-		spec.workingDirectory = "Daedalus-Editor";
+		spec.workingDirectory = "";
 		spec.commandLineArgs = args;
 
 		return new Editor(spec);

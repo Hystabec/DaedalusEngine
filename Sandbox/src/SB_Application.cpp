@@ -33,7 +33,7 @@ daedalus::Application* daedalus::createApplication(daedalus::ApplicationCommandL
 	spec.width = 1280;
 	spec.height = 720;
 	spec.vsync = true;
-	spec.workingDirectory = "SandBox";
+	spec.workingDirectory = "";
 	spec.commandLineArgs = args;
 
 	return new SandBox(spec);

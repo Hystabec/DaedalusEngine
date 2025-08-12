@@ -34,6 +34,13 @@ namespace daedalus::editor
 		m_editorScene = create_shr_ptr<scene::Scene>();
 		m_activeScene = m_editorScene;
 
+		auto& commandLineArgs = Application::get().getSpecification().commandLineArgs;
+		if (commandLineArgs.count > 1)
+		{
+			auto sceneFilePath = commandLineArgs[1];
+			openScene(sceneFilePath);
+		}
+
 		m_sceneHierarchyPanel.setContext(m_activeScene);
 
 		if(m_currentSceneFilepath == std::filesystem::path())

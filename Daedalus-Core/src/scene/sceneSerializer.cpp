@@ -268,7 +268,7 @@ namespace daedalus::scene {
 		{
 			data = YAML::LoadFile(filepath.string());
 		}
-		catch (YAML::ParserException e)
+		catch (YAML::Exception e)
 		{
 			DD_CORE_LOG_ERROR("Failed to load scene file '{}'\n{}", filepath.string(), e.what());
 			return false;
