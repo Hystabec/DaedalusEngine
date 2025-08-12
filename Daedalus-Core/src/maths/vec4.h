@@ -237,6 +237,18 @@ namespace daedalus::maths {
 		constexpr operator float* () { return &x; }
 		constexpr operator const float* () const { return &x; }
 
+		constexpr float& operator[](int index)
+		{
+			DD_CORE_ASSERT(!(index < 0 || index > 3), "Index out of range");
+			return (&x)[index];
+		}
+
+		constexpr const float& operator[](int index) const
+		{
+			DD_CORE_ASSERT(!(index < 0 || index > 3), "Index out of range");
+			return (&x)[index];
+		}
+
 		// Extras / Helpers
 
 		static inline float dot(const Vec4& left, const Vec4& right)

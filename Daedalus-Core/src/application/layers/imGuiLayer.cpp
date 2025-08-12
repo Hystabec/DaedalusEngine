@@ -128,8 +128,6 @@ namespace daedalus { namespace application {
 	void ImGuiLayer::setDarkThemeColours()
 	{
 		auto& colours = ImGui::GetStyle().Colors;
-		ImVec4 pink = { 1.0f, 0.0f, 1.0f, 1.0f };
-
 		colours[ImGuiCol_WindowBg] =			ImVec4{ 0.10f, 0.10f, 0.10f, 1.0f };
 		
 		colours[ImGuiCol_Header] =				ImVec4{ 0.25f, 0.25f, 0.25f, 1.0f };

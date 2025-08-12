@@ -202,6 +202,18 @@ namespace daedalus { namespace maths {
 		constexpr operator float* () { return elements; }
 		constexpr operator const float* () const { return elements; }
 
+		constexpr float& operator[](int index)
+		{
+			DD_CORE_ASSERT(!(index < 0 || index > 15), "Index out of range");
+			return elements[index];
+		}
+
+		constexpr const float& operator[](int index) const
+		{
+			DD_CORE_ASSERT(!(index < 0 || index > 15), "Index out of range");
+			return elements[index];
+		}
+
 		// Extras / Helpers
 
 		static constexpr Mat4 identity()

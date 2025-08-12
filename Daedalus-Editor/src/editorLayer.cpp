@@ -513,14 +513,11 @@ namespace daedalus::editor
 	{
 		using namespace graphics;
 
-		// This will need to be expanded when new overlays get added
-		// early return so begin and end scene arnt called
-		if (!m_showColliderOverlay)
-			return;
 
 		switch (m_sceneState)
 		{
 		case EditorLayer::SceneState::Edit:
+		case EditorLayer::SceneState::Simulate:
 		{
 			Renderer2D::begin(m_editorCamera);
 			break;
@@ -534,28 +531,45 @@ namespace daedalus::editor
 		}
 		}
 
-		m_activeScene->getAllEntitiesWith<scene::TransformComponent, scene::CircleCollider2DComponent>().each([](const scene::TransformComponent& tc, const scene::CircleCollider2DComponent& cc2d)
-			{
-				maths::Vec3 rotatedOffset = cc2d.offset;
-				rotatedOffset = maths::experimental::rotate_vec3_by_quaternion(maths::experimental::Quaternion(maths::Vec3(0.0f, 0.0f, tc.rotation.z)), rotatedOffset);
+		if (m_showColliderOverlay)
+		{
+			m_activeScene->getAllEntitiesWith<scene::TransformComponent, scene::CircleCollider2DComponent>().each([](const scene::TransformComponent& tc, const scene::CircleCollider2DComponent& cc2d)
+				{
+					maths::Vec3 rotatedOffset = cc2d.offset;
+					rotatedOffset = maths::experimental::rotate_vec3_by_quaternion(maths::experimental::Quaternion(maths::Vec3(0.0f, 0.0f, tc.rotation.z)), rotatedOffset);
 
-				maths::Mat4 transform = maths::Mat4::translate(tc.position + maths::Vec3(rotatedOffset.x, rotatedOffset.y, 0.001f))
-					* maths::Mat4::scale(/*Assumes scale is uniform*/ tc.scale.x * (cc2d.radius * 2.0f));
+					maths::Mat4 transform = maths::Mat4::translate(tc.position + maths::Vec3(rotatedOffset.x, rotatedOffset.y, 0.001f))
+						* maths::Mat4::scale(/*Assumes scale is uniform*/ tc.scale.x * (cc2d.radius * 2.0f));
 
-				Renderer2D::drawCircle(transform, maths::Vec4(0.0f, 1.0f, 0.0f, 1.0f), 0.05f);
-			});
+					Renderer2D::drawCircle(transform, maths::Vec4(0.0f, 1.0f, 0.0f, 1.0f), 0.05f);
+				});
 
-		m_activeScene->getAllEntitiesWith<scene::TransformComponent, scene::BoxCollider2DComponent>().each([](const scene::TransformComponent& tc, const scene::BoxCollider2DComponent& bc2d)
-			{
-				maths::Vec3 rotatedOffset = bc2d.offset;
-				rotatedOffset = maths::experimental::rotate_vec3_by_quaternion(maths::experimental::Quaternion(maths::Vec3(0.0f, 0.0f, tc.rotation.z)), rotatedOffset);
+			m_activeScene->getAllEntitiesWith<scene::TransformComponent, scene::BoxCollider2DComponent>().each([](const scene::TransformComponent& tc, const scene::BoxCollider2DComponent& bc2d)
+				{
+					maths::Vec3 rotatedOffset = bc2d.offset;
+					rotatedOffset = maths::experimental::rotate_vec3_by_quaternion(maths::experimental::Quaternion(maths::Vec3(0.0f, 0.0f, tc.rotation.z)), rotatedOffset);
 
-				maths::Mat4 transform = maths::Mat4::translate(tc.position + maths::Vec3(rotatedOffset.x, rotatedOffset.y, 0.001f))
-					* maths::Mat4::rotate(tc.rotation.z, maths::Vec3(0.0f, 0.0f, 1.0f))
-					* maths::Mat4::scale(tc.scale * maths::Vec3(bc2d.size * 2.0f, 1.0f));
+					maths::Mat4 transform = maths::Mat4::translate(tc.position + maths::Vec3(rotatedOffset.x, rotatedOffset.y, 0.001f))
+						* maths::Mat4::rotate(tc.rotation.z, maths::Vec3(0.0f, 0.0f, 1.0f))
+						* maths::Mat4::scale(tc.scale * maths::Vec3(bc2d.size * 2.0f, 1.0f));
 
-				Renderer2D::drawRect(transform, maths::Vec4(0.0f, 1.0f, 0.0f, 1.0f));
-			});
+					Renderer2D::drawRect(transform, maths::Vec4(0.0f, 1.0f, 0.0f, 1.0f));
+				});
+		}
+
+		// selected entity outline
+		if (scene::Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity())
+		{
+			// This is something of a temporary solution,
+			// as it can only draw boxs with 2D objects.
+			// A better (but currently massivly overkill solution) could be to
+			// use jump flooding, which would also work with 3D.
+			// Example of jump flooding: https://www.youtube.com/watch?v=QjrAJwaUy64
+
+			auto& tc = selectedEntity.getTransformComponent();
+
+			graphics::Renderer2D::drawRect(tc.getTransform() * maths::Mat4::translate(maths::Vec3(0.0f, 0.0f, 0.001f)), maths::Vec4(0.76f, 0.00f, 0.10f, 1.0f));
+		}
 
 		Renderer2D::end();
 	}
