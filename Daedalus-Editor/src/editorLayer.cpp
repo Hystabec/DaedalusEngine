@@ -572,7 +572,12 @@ namespace daedalus::editor
 
 	void EditorLayer::newScene()
 	{
-		m_activeScene = create_shr_ptr<scene::Scene>();
+		if (m_sceneState != SceneState::Edit)
+			return;
+
+		m_editorScene = create_shr_ptr<scene::Scene>();
+
+		m_activeScene = m_editorScene;
 		m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		m_sceneHierarchyPanel.setContext(m_activeScene);
 		m_currentSceneFilepath = std::filesystem::path();
@@ -581,6 +586,9 @@ namespace daedalus::editor
 
 	void EditorLayer::openScene()
 	{
+		if (m_sceneState != SceneState::Edit)
+			return;
+
 		// open file returns a string - here is getting cast/constucted into a filepath
 		std::filesystem::path filepath = utils::FileDialog::openFile("Daedalus Scene (*.daedalus)\0*.daedalus\0");
 		if (!filepath.empty())
@@ -591,6 +599,9 @@ namespace daedalus::editor
 
 	void EditorLayer::openScene(const std::filesystem::path& path)
 	{
+		if (m_sceneState != SceneState::Edit)
+			return;
+
 		auto newScene = create_shr_ptr<scene::Scene>();
 
 		scene::SceneSerializer serializer(newScene);
@@ -609,6 +620,11 @@ namespace daedalus::editor
 
 	void EditorLayer::saveScene()
 	{
+		// could just save the edit scnene instead of doing this check,
+		// but this seems better
+		if (m_sceneState != SceneState::Edit)
+			return;
+
 		// If the current scene wasnt opened/saved from/to a file, open the
 		// saveAs dialog
 		if (m_currentSceneFilepath.empty())
@@ -622,6 +638,11 @@ namespace daedalus::editor
 
 	void EditorLayer::saveSceneAs()
 	{
+		// could just save the edit scnene instead of doing this check,
+		// but this seems better
+		if (m_sceneState != SceneState::Edit)
+			return;
+
 		std::filesystem::path filepath = utils::FileDialog::saveFile("Daedalus Scene (*.daedalus)\0*.daedalus\0");
 		if (!filepath.empty())
 		{

@@ -61,6 +61,19 @@ namespace daedalus::editor
 		m_selectionContext = entity;
 	}
 
+	template<typename T>
+	void SceneHierarchyPanel::displayAddComponentEntry(const std::string& entryName)
+	{
+		if (!m_selectionContext.hasComponent<T>())
+		{
+			if (ImGui::MenuItem(entryName.c_str()))
+			{
+				m_selectionContext.addComponent<T>();
+				ImGui::CloseCurrentPopup();
+			}
+		}
+	}
+
 	void SceneHierarchyPanel::drawEntityNode(scene::Entity entity)
 	{
 		const auto& name = entity.getName();
@@ -253,59 +266,13 @@ namespace daedalus::editor
 
 		if (ImGui::BeginPopup("AddComponent"))
 		{
-			if (!m_selectionContext.hasComponent<scene::CameraComponent>())
-			{
-				if (ImGui::MenuItem("Camera"))
-				{
-					m_selectionContext.addComponent<scene::CameraComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_selectionContext.hasComponent<scene::SpriteRendererComponent>())
-			{
-				if (ImGui::MenuItem("Sprite Renderer"))
-				{
-					m_selectionContext.addComponent<scene::SpriteRendererComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_selectionContext.hasComponent<scene::CircleRendererComponent>())
-			{
-				if (ImGui::MenuItem("Circle Renderer"))
-				{
-					m_selectionContext.addComponent<scene::CircleRendererComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_selectionContext.hasComponent<scene::Rigidbody2DComponent>())
-			{
-				if (ImGui::MenuItem("Rigidbody 2D"))
-				{
-					m_selectionContext.addComponent<scene::Rigidbody2DComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_selectionContext.hasComponent<scene::BoxCollider2DComponent>())
-			{
-				if (ImGui::MenuItem("Box Collider 2D"))
-				{
-					m_selectionContext.addComponent<scene::BoxCollider2DComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_selectionContext.hasComponent<scene::CircleCollider2DComponent>())
-			{
-				if (ImGui::MenuItem("Circle Collider 2D"))
-				{
-					m_selectionContext.addComponent<scene::CircleCollider2DComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
+			// this could be like copy_component in scene.cpp
+			displayAddComponentEntry<scene::CameraComponent>("Camera");
+			displayAddComponentEntry<scene::SpriteRendererComponent>("Sprite Renderer");
+			displayAddComponentEntry<scene::CircleRendererComponent>("Circle Renderer");
+			displayAddComponentEntry<scene::Rigidbody2DComponent>("Rigidbody 2D");
+			displayAddComponentEntry<scene::BoxCollider2DComponent>("Box Collider 2D");
+			displayAddComponentEntry<scene::CircleCollider2DComponent>("Circle Collider 2D");
 
 			ImGui::EndPopup();
 		}

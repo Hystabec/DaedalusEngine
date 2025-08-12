@@ -1,7 +1,5 @@
 #pragma once
 
-#include <xhash>
-
 namespace daedalus {
 
 	// This could be exapanded to two uint64_t (total of 128 bit value) if collisions become an issue
@@ -23,12 +21,14 @@ namespace daedalus {
 
 namespace std {
 
+	template <typename T> struct hash;
+
 	template<>
 	struct hash<daedalus::UUID>
 	{
 		std::size_t operator()(const daedalus::UUID& uuid) const
 		{
-			return hash<uint64_t>{}((uint64_t)uuid);
+			return (uint64_t)uuid;
 		}
 	};
 

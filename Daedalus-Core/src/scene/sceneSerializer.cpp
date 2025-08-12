@@ -263,129 +263,131 @@ namespace daedalus::scene {
 
 	bool SceneSerializer::deserialize(const std::filesystem::path& filepath)
 	{
-		// I dont really like try statements
-		// but this was the easiest ways to handle a few issues 
-
-		// TO DO: Either remove the try block and do some error checking before hand
-		// or expand the catch statement to give a reason why the deserializtion failed
+		YAML::Node data;
 		try
 		{
-			std::ifstream stream(filepath);
-			std::stringstream strStream;
-			strStream << stream.rdbuf();
-
-			YAML::Node data = YAML::Load(strStream.str());
-			if (!data["Scene"])
-			{
-				DD_CORE_LOG_ERROR("Deserialization Error: file contains no scene data: {}", filepath.string());
-				return false;
-			}
-
-			std::string sceneName = data["Scene"].as<std::string>();
-#if LOG_SERIALIZATION_TO_CONSOLE
-			DD_CORE_LOG_TRACE("Deserializing scene {}", sceneName);
-#endif
-
-			auto entites = data["Entities"];
-			if (entites)
-			{
-				for (auto entity : entites)
-				{
-					uint64_t uuid = entity["Entity"].as<uint64_t>();
-					std::string name = entity["Name"].as<std::string>();
-
-
-#if LOG_SERIALIZATION_TO_CONSOLE
-					DD_CORE_LOG_TRACE("Deserialized entity with ID = {}, name = {}", uuid, name);
-#endif
-
-					Entity deserializedEntity = m_scene->createEntityWithUUID(uuid, name);
-
-					auto tagComponent = entity["TagComponent"];
-					if (tagComponent)
-						deserializedEntity.getComponent<TagComponent>().tag = tagComponent["Tag"].as<std::string>();
-
-					auto component = entity["TransformComponent"];
-					if (component)
-					{
-						auto& tc = deserializedEntity.addOrRepalaceComponent<TransformComponent>();
-						tc.position = component["Position"].as<maths::Vec3>();
-						tc.rotation = component["Rotation"].as<maths::Vec3>();
-						tc.scale = component["Scale"].as<maths::Vec3>();
-					}
-
-					component = entity["CameraComponent"];
-					if (component)
-					{
-						auto& cc = deserializedEntity.addOrRepalaceComponent<CameraComponent>();
-						auto cameraProps = component["Camera"];
-						cc.camera.setProjectionType((SceneCamera::ProjectionType)cameraProps["ProjectionType"].as<int>());
-
-						cc.camera.setPerspectiveVerticalFOV(cameraProps["PerspectiveFOV"].as<float>());
-						cc.camera.setPerspectiveNearClip(cameraProps["PerspectiveNear"].as<float>());
-						cc.camera.setPerspectiveFarClip(cameraProps["PerspectiveFar"].as<float>());
-
-						cc.camera.setOrthographicSize(cameraProps["OrthographicSize"].as<float>());
-						cc.camera.setOrthographicNearClip(cameraProps["OrthographicNear"].as<float>());
-						cc.camera.setOrthographicFarClip(cameraProps["OrthographicFar"].as<float>());
-
-						cc.primary = component["Primary"].as<bool>();
-						cc.fixedAspectRatio = component["FixedAspectRatio"].as<bool>();
-					}
-
-					component = entity["SpriteRendererComponent"];
-					if (component)
-					{
-						auto& src = deserializedEntity.addOrRepalaceComponent<SpriteRendererComponent>();
-						src.colour = component["Colour"].as<maths::Vec4>();
-					}
-
-					component = entity["CircleRendererComponent"];
-					if (component)
-					{
-						auto& src = deserializedEntity.addOrRepalaceComponent<CircleRendererComponent>();
-						src.colour = component["Colour"].as<maths::Vec4>();
-						src.thickness = component["Thickness"].as<float>();
-						src.fade = component["Fade"].as<float>();
-					}
-
-					component = entity["Rigidbody2DComponent"];
-					if (component)
-					{
-						auto& src = deserializedEntity.addOrRepalaceComponent<Rigidbody2DComponent>();
-						src.type = rigidbody2D_body_type_from_string(component["BodyType"].as<std::string>());
-						src.fixedRotation = component["FixedRotation"].as<bool>();
-
-						src.desity = component["Desity"].as<float>();
-						src.friction = component["Friction"].as<float>();
-						src.restitution = component["Restitution"].as<float>();
-					}
-
-					component = entity["BoxCollider2DComponent"];
-					if (component)
-					{
-						auto& src = deserializedEntity.addOrRepalaceComponent<BoxCollider2DComponent>();
-						src.offset = component["Offset"].as<maths::Vec2>();
-						src.size = component["Size"].as<maths::Vec2>();
-					}
-
-					component = entity["CircleCollider2DComponent"];
-					if (component)
-					{
-						auto& src = deserializedEntity.addOrRepalaceComponent<CircleCollider2DComponent>();
-						src.offset = component["Offset"].as<maths::Vec2>();
-						src.radius = component["Radius"].as<float>();
-					}
-				}
-			}
-
-			return true;
+			data = YAML::LoadFile(filepath.string());
 		}
-		catch (...)
+		catch (YAML::ParserException e)
 		{
-			DD_CORE_LOG_ERROR("Deserialization Error: Could not deserialize scene: {}", filepath.string());
+			DD_CORE_LOG_ERROR("Failed to load scene file '{}'\n{}", filepath.string(), e.what());
 			return false;
 		}
+
+		// if the file is of a different format (test with a renamed .png and exception will be thrown when trying to read scene data)
+		try
+		{
+			if (!data["Scene"])
+			{
+				DD_CORE_LOG_ERROR("Deserialization Error: file contains no scene data '{}'", filepath.string());
+				return false;
+			}
+		}
+		catch (YAML::Exception e)
+		{
+			DD_CORE_LOG_ERROR("Failed to load scene file '{}'\n{}", filepath.string(), e.what());
+			return false;
+		}
+
+		std::string sceneName = data["Scene"].as<std::string>();
+#if LOG_SERIALIZATION_TO_CONSOLE
+		DD_CORE_LOG_TRACE("Deserializing scene {}", sceneName);
+#endif
+
+		auto entites = data["Entities"];
+		if (entites)
+		{
+			for (auto entity : entites)
+			{
+				uint64_t uuid = entity["Entity"].as<uint64_t>();
+				std::string name = entity["Name"].as<std::string>();
+
+
+#if LOG_SERIALIZATION_TO_CONSOLE
+				DD_CORE_LOG_TRACE("Deserialized entity with ID = {}, name = {}", uuid, name);
+#endif
+
+				Entity deserializedEntity = m_scene->createEntityWithUUID(uuid, name);
+
+				auto tagComponent = entity["TagComponent"];
+				if (tagComponent)
+					deserializedEntity.getComponent<TagComponent>().tag = tagComponent["Tag"].as<std::string>();
+
+				auto component = entity["TransformComponent"];
+				if (component)
+				{
+					auto& tc = deserializedEntity.addOrRepalaceComponent<TransformComponent>();
+					tc.position = component["Position"].as<maths::Vec3>();
+					tc.rotation = component["Rotation"].as<maths::Vec3>();
+					tc.scale = component["Scale"].as<maths::Vec3>();
+				}
+
+				component = entity["CameraComponent"];
+				if (component)
+				{
+					auto& cc = deserializedEntity.addOrRepalaceComponent<CameraComponent>();
+					auto cameraProps = component["Camera"];
+					cc.camera.setProjectionType((SceneCamera::ProjectionType)cameraProps["ProjectionType"].as<int>());
+
+					cc.camera.setPerspectiveVerticalFOV(cameraProps["PerspectiveFOV"].as<float>());
+					cc.camera.setPerspectiveNearClip(cameraProps["PerspectiveNear"].as<float>());
+					cc.camera.setPerspectiveFarClip(cameraProps["PerspectiveFar"].as<float>());
+
+					cc.camera.setOrthographicSize(cameraProps["OrthographicSize"].as<float>());
+					cc.camera.setOrthographicNearClip(cameraProps["OrthographicNear"].as<float>());
+					cc.camera.setOrthographicFarClip(cameraProps["OrthographicFar"].as<float>());
+
+					cc.primary = component["Primary"].as<bool>();
+					cc.fixedAspectRatio = component["FixedAspectRatio"].as<bool>();
+				}
+
+				component = entity["SpriteRendererComponent"];
+				if (component)
+				{
+					auto& src = deserializedEntity.addOrRepalaceComponent<SpriteRendererComponent>();
+					src.colour = component["Colour"].as<maths::Vec4>();
+				}
+
+				component = entity["CircleRendererComponent"];
+				if (component)
+				{
+					auto& src = deserializedEntity.addOrRepalaceComponent<CircleRendererComponent>();
+					src.colour = component["Colour"].as<maths::Vec4>();
+					src.thickness = component["Thickness"].as<float>();
+					src.fade = component["Fade"].as<float>();
+				}
+
+				component = entity["Rigidbody2DComponent"];
+				if (component)
+				{
+					auto& src = deserializedEntity.addOrRepalaceComponent<Rigidbody2DComponent>();
+					src.type = rigidbody2D_body_type_from_string(component["BodyType"].as<std::string>());
+					src.fixedRotation = component["FixedRotation"].as<bool>();
+
+					src.desity = component["Desity"].as<float>();
+					src.friction = component["Friction"].as<float>();
+					src.restitution = component["Restitution"].as<float>();
+				}
+
+				component = entity["BoxCollider2DComponent"];
+				if (component)
+				{
+					auto& src = deserializedEntity.addOrRepalaceComponent<BoxCollider2DComponent>();
+					src.offset = component["Offset"].as<maths::Vec2>();
+					src.size = component["Size"].as<maths::Vec2>();
+				}
+
+				component = entity["CircleCollider2DComponent"];
+				if (component)
+				{
+					auto& src = deserializedEntity.addOrRepalaceComponent<CircleCollider2DComponent>();
+					src.offset = component["Offset"].as<maths::Vec2>();
+					src.radius = component["Radius"].as<float>();
+				}
+			}
+		}
+
+		return true;
 	}
 
 	bool SceneSerializer::deserializeRuntime(const std::filesystem::path& filepath)

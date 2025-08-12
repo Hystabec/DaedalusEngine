@@ -17,6 +17,9 @@ namespace daedalus::editor
 		scene::Entity getSelectedEntity() const { return m_selectionContext; }
 		void setSelectedEntity(scene::Entity entity);
 	private:
+		template<typename T>
+		void displayAddComponentEntry(const std::string& entryName);
+
 		void drawEntityNode(scene::Entity entity);
 		void drawComponents(scene::Entity entity);
 
