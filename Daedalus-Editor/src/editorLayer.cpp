@@ -459,7 +459,8 @@ namespace daedalus::editor
 			case InputCode::Key_E:
 			{
 				if (shift)
-					m_gizmoType = ImGuizmo::OPERATION::ROTATE;
+					m_gizmoType = ImGuizmo::OPERATION::ROTATE_X | ImGuizmo::OPERATION::ROTATE_Y | ImGuizmo::OPERATION::ROTATE_Z;
+					//m_gizmoType = ImGuizmo::OPERATION::ROTATE;
 				break;
 			}
 			case InputCode::Key_Q:
