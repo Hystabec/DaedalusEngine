@@ -16,6 +16,8 @@ namespace daedalus { namespace graphics {
 		uint32_t getHeight() const  override {return m_height; }
 		uint32_t getRendererID() const override { return m_rendererID; }
 
+		const std::filesystem::path& getSrcFilePath() const { return m_path; };
+
 		void setData(void* data, uint32_t size) override;
 
 		void bind(uint32_t slot = 0) const override;

@@ -14,10 +14,6 @@ namespace daedalus
 		{
 			this->pushLayer(new editor::EditorLayer());
 		}
-
-		~Editor()
-		{
-		}
 	};
 
 	Application* createApplication(ApplicationCommandLineArgs args)

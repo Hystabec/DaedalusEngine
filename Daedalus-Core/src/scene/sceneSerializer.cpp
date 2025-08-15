@@ -201,7 +201,11 @@ namespace daedalus::scene {
 		serialize_component<SpriteRendererComponent>(out, "SpriteRendererComponent", entity, [](YAML::Emitter& out, SpriteRendererComponent& src)
 			{
 				out << YAML::Key << "Colour" << YAML::Value << src.colour;
-			});
+
+				if(src.material.texture)
+					out << YAML::Key << "Texture" << YAML::Value << src.material.texture->getSrcFilePath().string();
+				out << YAML::Key << "TilingFactor" << YAML::Value << src.material.tilingFactor;
+ 			});
 
 		serialize_component<CircleRendererComponent>(out, "CircleRendererComponent", entity, [](YAML::Emitter& out, CircleRendererComponent& src)
 			{
@@ -346,6 +350,10 @@ namespace daedalus::scene {
 				{
 					auto& src = deserializedEntity.addOrRepalaceComponent<SpriteRendererComponent>();
 					src.colour = component["Colour"].as<maths::Vec4>();
+					if (component["Texture"])
+						src.material.texture = graphics::Texture2D::create(component["Texture"].as<std::string>());
+					if(component["TilingFactor"])
+						src.material.tilingFactor = component["TilingFactor"].as<float>();
 				}
 
 				component = entity["CircleRendererComponent"];
