@@ -51,6 +51,12 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
+# Build results - exeption for mono release/debug .lib
+!**/mono/lib/[Dd]ebug/
+!**/mono/lib/[Dd]ebug/*.lib
+!**/mono/lib/[Rr]elease/
+!**/mono/lib/[Rr]elease/*.lib
+
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 # Uncomment if you have tasks that create the project's static files in wwwroot
