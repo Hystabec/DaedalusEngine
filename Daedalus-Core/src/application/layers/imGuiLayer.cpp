@@ -53,8 +53,8 @@ namespace daedalus { namespace application {
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		auto[boldFont, bfCheck] = utils::get_core_resource_file_location("fonts\\Noto_Sans\\NotoSans-Bold.ttf");
-		auto[normalFont, nfCheck] = utils::get_core_resource_file_location("fonts\\Noto_Sans\\NotoSans-Medium.ttf");
+		auto[boldFont, bfCheck] = utils::get_core_file_location("resources\\fonts\\Noto_Sans\\NotoSans-Bold.ttf");
+		auto[normalFont, nfCheck] = utils::get_core_file_location("resources\\fonts\\Noto_Sans\\NotoSans-Medium.ttf");
 
 		// Sets custom ImGui styling
 		if(bfCheck)

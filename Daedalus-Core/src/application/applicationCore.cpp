@@ -4,6 +4,7 @@
 #include "application/window.h"
 #include "application/input/Input.h"
 #include "graphics/renderer/renderer.h"
+#include "scripting/scriptEngine.h"
 
 #include "utils/timer.h"
 #include "utils/findFileLocation.h"
@@ -16,6 +17,7 @@ namespace daedalus {
 	{
 		DD_PROFILE_FUNCTION();
 
+		scripting::ScriptEngine::shutdown();
 		graphics::Renderer::shutdown();
 	}
 
@@ -124,11 +126,12 @@ namespace daedalus {
 			}
 		}
 
-		auto[path, found] = utils::get_core_resource_file_location("icons/DD_Logo_V1.png");
+		auto[path, found] = utils::get_core_file_location("resources\\icons\\DD_Logo_V1.png");
 		if (found)
 			m_window->setWindowIcon(path);
 
 		graphics::Renderer::init();
+		scripting::ScriptEngine::init();
 
 		m_ImGuiLayer = new application::ImGuiLayer;
 		pushOverlay(m_ImGuiLayer);

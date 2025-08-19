@@ -24,6 +24,15 @@ group "Dependecies"
 	include "Daedalus-Core/Dependencies/Box2D"
 group ""
 
+group "Core"
 include "Daedalus-Core"
+include "Daedalus-ScriptCore"
+group ""
+
+group "Tools"
 include "Daedalus-Editor"
+group ""
+
+group "Misc"
 include "Sandbox"
+group ""

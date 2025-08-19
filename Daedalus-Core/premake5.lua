@@ -41,6 +41,7 @@ project "Daedalus-Core"
 		"%{dependDir.yaml_cpp}/include",
 		"%{dependDir.ImGuizmo}",
 		"%{dependDir.Box2D}/include",
+		"%{dependDir.mono}/include",
 		"%{dependDir.VulkanSDK}/Include"
 	}
 
@@ -57,7 +58,8 @@ project "Daedalus-Core"
 		"opengl32.lib",
 		"glew32s.lib",
 		"yaml-cpp",
-		"Box2D"
+		"Box2D",
+		"%{library.mono}"
 	}
 
 	buildoptions "/utf-8"
@@ -73,6 +75,14 @@ project "Daedalus-Core"
 			"DD_PLATFORM_WINDOWS",
 			"DD_RENDER_USING_OPENGL",
 			"GLEW_STATIC"
+		}
+
+		links
+		{
+			"%{library.winSock}",
+			"%{library.winMM}",
+			"%{library.winVersion}",
+			"%{library.winBCypt}"
 		}
 
 	filter "configurations:Debug"

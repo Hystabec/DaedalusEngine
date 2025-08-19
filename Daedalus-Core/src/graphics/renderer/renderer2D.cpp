@@ -181,17 +181,17 @@ namespace daedalus { namespace graphics {
 
 		// Shaders
 		{
-			auto [shaderPath, testBool] = utils::get_core_resource_file_location("shaders\\defaultQuad2DShader.glsl");
+			auto [shaderPath, testBool] = utils::get_core_file_location("resources\\shaders\\defaultQuad2DShader.glsl");
 			DD_CORE_ASSERT(testBool, "Default quad shader file not found");
 			s_data.defaultQuadShader = Shader::create(shaderPath);
 		}
 		{
-			auto [shaderPath, testBool] = utils::get_core_resource_file_location("shaders\\defaultCircle2DShader.glsl");
+			auto [shaderPath, testBool] = utils::get_core_file_location("resources\\shaders\\defaultCircle2DShader.glsl");
 			DD_CORE_ASSERT(testBool, "Default circle shader file not found");
 			s_data.defaultCircleShader = Shader::create(shaderPath);
 		}
 		{
-			auto [shaderPath, testBool] = utils::get_core_resource_file_location("shaders\\defaultLine2DShader.glsl");
+			auto [shaderPath, testBool] = utils::get_core_file_location("resources\\shaders\\defaultLine2DShader.glsl");
 			DD_CORE_ASSERT(testBool, "Default line shader file not found");
 			s_data.defaultLineShader = Shader::create(shaderPath);
 		}

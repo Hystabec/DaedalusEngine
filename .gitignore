@@ -12,6 +12,10 @@
 #imgui file
 imgui.ini
 
+# generated script objects and intermediates
+**/resources/scripts/intermediates/
+**/resources/scripts/*.dll
+
 # User-specific files
 *.rsuser
 *.suo
