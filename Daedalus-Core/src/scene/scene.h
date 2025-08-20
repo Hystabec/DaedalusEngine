@@ -33,6 +33,8 @@ namespace daedalus::scene {
 		void destroyEntity(Entity entity);
 		void duplicateEntity(Entity entity);
 
+		Entity getEntityByUUID(UUID uuid);
+
 		void onRuntimeStart();
 		void onSimulateStart();
 		void onRutimeStop();
@@ -58,10 +60,15 @@ namespace daedalus::scene {
 		void physics2DStart();
 		void physics2DStop();
 
+		void scriptingStart();
+		void scriptingStop();
+
 		void renderSceneEditor(graphics::EditorCamera& camera);
 	private:
 		entt::registry m_registry;
 		uint32_t m_viewportWidth = 0, m_viewportHeight = 0;
+
+		std::unordered_map<UUID, entt::entity> m_entityMap;
 
 		// This being a unique ptr is a bit weird, consider changing later
 		Uni_ptr<b2WorldId> m_physicsWorld = nullptr;

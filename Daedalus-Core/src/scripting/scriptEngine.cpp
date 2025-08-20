@@ -4,6 +4,10 @@
 #include "utils/findFileLocation.h"
 #include "scriptGlue.h"
 
+#include "../scene/scene.h"
+#include "../scene/entity.h"
+#include "../scene/entityComponents/scriptComponent.h"
+
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/object.h>
@@ -95,6 +99,10 @@ namespace daedalus::scripting {
 		MonoImage* coreAssemblyImage = nullptr;
 
 		ScriptClass entityClass;
+		std::unordered_map<std::string, Shr_ptr<ScriptClass>> entityClasses;
+		std::unordered_map<UUID, Shr_ptr<ScriptInstance>> entityInstances;
+
+		scene::Scene* sceneContext = nullptr;
 	};
 
 	static ScriptEngineData* s_data = nullptr;
@@ -102,13 +110,17 @@ namespace daedalus::scripting {
 	void ScriptEngine::init()
 	{
 		s_data = new ScriptEngineData();
+		
 		initMono();
 		loadAssembly("resources/scripts/Daedalus-ScriptCore.dll");
+		loadAssemblyClasses(s_data->coreAssembly);
+		
 		ScriptGlue::registerFunctions();
 
+		s_data->entityClass = ScriptClass("Daedalus", "Entity");
+#if 0
 		// retive and instantiate class (with constuctor)
 		// 1. create an object (and call constuctor)
-		s_data->entityClass = ScriptClass("daedalus", "Entity");
 
 		MonoObject* instance = s_data->entityClass.instantiate();
 
@@ -151,6 +163,7 @@ namespace daedalus::scripting {
 		}
 
 		//DD_CORE_ASSERT(false);
+#endif
 	}
 
 	void ScriptEngine::shutdown()
@@ -204,11 +217,98 @@ namespace daedalus::scripting {
 			DD_ASSERT(false, "failed to load assembly (file could not be found)");
 	}
 
+	void ScriptEngine::onRuntimeStart(scene::Scene* scene)
+	{
+		s_data->sceneContext = scene;
+	}
+
+	void ScriptEngine::onRuntimeStop()
+	{
+		s_data->sceneContext = nullptr;
+		s_data->entityInstances.clear();
+	}
+
+	bool ScriptEngine::entityClassExists(const std::string& fullClassName)
+	{
+		return s_data->entityClasses.find(fullClassName) != s_data->entityClasses.end();
+	}
+
+	void ScriptEngine::createEntityInstance(scene::Entity entity)
+	{
+		const auto& sc = entity.getComponent<scene::ScriptComponent>();
+		if (ScriptEngine::entityClassExists(sc.className))
+		{
+			Shr_ptr<ScriptInstance> instance = create_shr_ptr<ScriptInstance>(s_data->entityClasses[sc.className], entity);
+
+			s_data->entityInstances[entity.getUUID()] = instance;
+
+			instance->invokeOnCreate();
+		}
+	}
+
+	void ScriptEngine::updateEntityInstance(scene::Entity entity, float dt)
+	{
+		UUID entityUUID = entity.getUUID();
+		DD_CORE_ASSERT(s_data->entityInstances.find(entityUUID) != s_data->entityInstances.end());
+
+		Shr_ptr<ScriptInstance> instance = s_data->entityInstances[entityUUID];
+
+		instance->invokeOnUpdate(dt);
+	}
+
+	scene::Scene* ScriptEngine::getSceneContext()
+	{
+		return s_data->sceneContext;
+	}
+
+	const std::unordered_map<std::string, Shr_ptr<ScriptClass>>& ScriptEngine::getEntityClasses()
+	{
+		return s_data->entityClasses;
+	}
+
 	MonoObject* ScriptEngine::instantiateClass(MonoClass* monoClass)
 	{
 		MonoObject* instance = mono_object_new(s_data->appDomain, monoClass);
 		mono_runtime_object_init(instance);
 		return instance;
+	}
+
+	void ScriptEngine::loadAssemblyClasses(MonoAssembly* assembly)
+	{
+		s_data->entityClasses.clear();
+
+		MonoImage* image = mono_assembly_get_image(assembly);
+		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
+		int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
+		MonoClass* baseEntityClass = mono_class_from_name(image, "Daedalus", "Entity");
+
+		for (int32_t i = 0; i < numTypes; i++)
+		{
+			uint32_t cols[MONO_TYPEDEF_SIZE];
+			mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
+
+			const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
+			const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
+
+			MonoClass* monoClass = mono_class_from_name(image, nameSpace, name);
+			if (monoClass == baseEntityClass)
+				continue;
+
+			bool isEntity = mono_class_is_subclass_of(monoClass, baseEntityClass, false);
+
+			if (isEntity)
+			{
+				std::string fullName;
+				if (strlen(nameSpace) != 0)
+					fullName = std::format("{}.{}", nameSpace, name);
+				else
+					fullName = name;
+
+				s_data->entityClasses[fullName] = create_shr_ptr<ScriptClass>(nameSpace, name);
+
+				DD_CORE_LOG_TRACE("{}.{} is a subclass of Daedalus.Entity", nameSpace, name);
+			}
+		}
 	}
 
 	ScriptClass::ScriptClass(const std::string& classNamespace, const std::string& className)
@@ -230,6 +330,33 @@ namespace daedalus::scripting {
 	MonoObject* ScriptClass::invokeMethod(MonoObject* instance, MonoMethod* method, void** params)
 	{
 		return mono_runtime_invoke(method, instance, params, nullptr);
+	}
+
+	ScriptInstance::ScriptInstance(Shr_ptr<ScriptClass> scriptClass, scene::Entity entity)
+		: m_scriptClass(scriptClass)
+	{
+		m_instance = scriptClass->instantiate();
+
+		m_constuctor = s_data->entityClass.getMethod(".ctor", 1);
+		m_onStartMethod = scriptClass->getMethod("OnStart", 0);
+		m_onUpdateMethod = scriptClass->getMethod("OnUpdate", 1);
+
+		// call constuctor
+		UUID uuid = entity.getUUID();
+		void* param = &uuid;
+		m_scriptClass->invokeMethod(m_instance, m_constuctor, &param);
+	}
+
+	void ScriptInstance::invokeOnCreate()
+	{
+		m_scriptClass->invokeMethod(m_instance, m_onStartMethod);
+	}
+
+	void ScriptInstance::invokeOnUpdate(float dt)
+	{
+		void* param = &dt;
+		m_scriptClass->invokeMethod(m_instance, m_onUpdateMethod, &param);
+		
 	}
 
 }

@@ -179,6 +179,11 @@ namespace daedalus::scene {
 				out << YAML::Key << "Scale" << YAML::Value << tc.scale;
 			});
 
+		serialize_component<ScriptComponent>(out, "ScriptComponent", entity, [](YAML::Emitter& out, ScriptComponent& sc)
+			{
+				out << YAML::Key << "ClassName" << YAML::Value << sc.className;
+			});
+
 		serialize_component<CameraComponent>(out, "CameraComponent", entity, [](YAML::Emitter& out, CameraComponent& cc)
 			{
 				auto& camera = cc.camera;
@@ -324,6 +329,13 @@ namespace daedalus::scene {
 					tc.position = component["Position"].as<maths::Vec3>();
 					tc.rotation = component["Rotation"].as<maths::Vec3>();
 					tc.scale = component["Scale"].as<maths::Vec3>();
+				}
+
+				component = entity["ScriptComponent"];
+				if (component)
+				{
+					auto& sc = deserializedEntity.addOrRepalaceComponent<ScriptComponent>();
+					sc.className = component["ClassName"].as<std::string>();
 				}
 
 				component = entity["CameraComponent"];

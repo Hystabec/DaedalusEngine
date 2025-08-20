@@ -1,6 +1,8 @@
 #include "editorpch.h"
 #include "sceneHierarchyPanel.h"
 
+#include "scripting/scriptEngine.h"
+
 //#include "scene/components.h"
 #include <imgui.h> 
 #include <imgui_internal.h>
@@ -267,6 +269,7 @@ namespace daedalus::editor
 		if (ImGui::BeginPopup("AddComponent"))
 		{
 			// this could be like copy_component in scene.cpp
+			displayAddComponentEntry<scene::ScriptComponent>("Script");
 			displayAddComponentEntry<scene::CameraComponent>("Camera");
 			displayAddComponentEntry<scene::SpriteRendererComponent>("Sprite Renderer");
 			displayAddComponentEntry<scene::CircleRendererComponent>("Circle Renderer");
@@ -305,6 +308,27 @@ namespace daedalus::editor
 
 				draw_vec3_control("Scale", tc.scale, 0.1f, 1.0f);
 			}, entity, false);
+
+		draw_component<scene::ScriptComponent>("Script",
+			[](scene::ScriptComponent& sc)
+			{
+				bool scriptClassExists = scripting::ScriptEngine::entityClassExists(sc.className);
+
+				static char buffer[64];
+				strcpy(buffer, sc.className.c_str());
+
+				if (!scriptClassExists)
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.1f, 0.1f, 1.0f));
+
+				if (ImGui::InputText("Class", buffer, sizeof(buffer)))
+				{
+					sc.className = buffer;
+				}
+
+				if (!scriptClassExists)
+					ImGui::PopStyleColor();
+
+			}, entity);
 		
 		draw_component<scene::CameraComponent>("Camera",
 			[](scene::CameraComponent& cameraComp)
@@ -365,7 +389,7 @@ namespace daedalus::editor
 					ImGui::Checkbox("Fixed aspect ratio", &cameraComp.fixedAspectRatio);
 				}
 			}, entity);
-		
+
 		draw_component<scene::SpriteRendererComponent>("Sprite Renderer",
 			[](scene::SpriteRendererComponent& spriteRenderer)
 			{

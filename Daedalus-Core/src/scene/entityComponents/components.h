@@ -5,6 +5,10 @@
 #include "tagComponent.h"
 #include "transformComponent.h"
 
+// Scripting components
+#include "nativeScriptComponent.h"
+#include "scriptComponent.h"
+
 // Graphics components
 #include "cameraComponent.h"
 #include "spriteRendererComponent.h"
@@ -15,9 +19,6 @@
 #include "boxCollider2DComponent.h"
 #include "circleCollider2DComponent.h"
 
-// Scripting components
-#include "nativeScriptComponent.h"
-
 namespace daedalus::scene {
 
 	template<typename... Components>
@@ -27,13 +28,13 @@ namespace daedalus::scene {
 
 	using AllComponents = 
 		ComponentGroup<IDComponent, TagComponent, TransformComponent,
+		NativeScriptComponent, ScriptComponent,
 		CameraComponent, SpriteRendererComponent, CircleRendererComponent,
-		Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent,
-		NativeScriptComponent>;
+		Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent>;
 
 	using AllOptionalComponents =
-		ComponentGroup<CameraComponent, SpriteRendererComponent, CircleRendererComponent,
-		Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent,
-		NativeScriptComponent>;
+		ComponentGroup<NativeScriptComponent, ScriptComponent,
+		CameraComponent, SpriteRendererComponent, CircleRendererComponent,
+		Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent>;
 
 }

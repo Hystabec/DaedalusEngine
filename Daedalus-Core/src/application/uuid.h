@@ -19,6 +19,8 @@ namespace daedalus {
 
 }
 
+LOG_CREATE_FORMAT(daedalus::UUID, "{}", dduuid, (uint64_t)dduuid);
+
 namespace std {
 
 	template <typename T> struct hash;

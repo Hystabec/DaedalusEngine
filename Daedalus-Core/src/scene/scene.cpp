@@ -4,6 +4,7 @@
 #include "graphics/renderer/renderer2D.h"
 #include "entity.h"
 #include "entityComponents/components.h"
+#include "scripting/scriptEngine.h"
 
 #include <box2d/box2d.h>
 
@@ -115,12 +116,15 @@ namespace daedalus::scene {
 		entity.addComponent<TransformComponent>();
 		entity.addComponent<TagComponent>();
 
+		m_entityMap[uuid] = entity;
+
 		return entity;
 	}
 
 	void Scene::destroyEntity(Entity entity)
 	{
 		m_registry.destroy(entity);
+		m_entityMap.erase(entity.getUUID());
 	}
 
 	void Scene::duplicateEntity(Entity entity)
@@ -129,9 +133,20 @@ namespace daedalus::scene {
 		copy_component_if_exists(AllComponents{}, newEntity, entity);
 	}
 
+	Entity Scene::getEntityByUUID(UUID uuid)
+	{
+		if (m_entityMap.find(uuid) != m_entityMap.end())
+			return { m_entityMap.at(uuid), this };
+
+		// NOTE: consider changing to assert
+		DD_CORE_LOG_ERROR("Could not find entity by UUID: '{}'", uuid);
+		return {};
+	}
+
 	void Scene::onRuntimeStart()
 	{
 		physics2DStart();
+		scriptingStart();
 	}
 
 	void Scene::onSimulateStart()
@@ -142,6 +157,7 @@ namespace daedalus::scene {
 	void Scene::onRutimeStop()
 	{
 		physics2DStop();
+		scriptingStop();
 	}
 
 	void Scene::onSimulateStop()
@@ -153,6 +169,13 @@ namespace daedalus::scene {
 	{
 		// update scripts
 		{
+			auto view = m_registry.view<ScriptComponent>();
+			for (auto e : view)
+			{
+				Entity entity = { e, this };
+				scripting::ScriptEngine::updateEntityInstance(entity, dt);
+			}
+
 			m_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
 				{
 					if (!nsc.scriptBound)
@@ -374,6 +397,24 @@ namespace daedalus::scene {
 		}
 	}
 
+	void Scene::scriptingStart()
+	{
+		using namespace scripting;
+		ScriptEngine::onRuntimeStart(this);
+		
+		auto view = m_registry.view<ScriptComponent>();
+		for (auto e : view)
+		{
+			Entity entity = { e, this };
+			ScriptEngine::createEntityInstance(entity);
+		}
+	}
+
+	void Scene::scriptingStop()
+	{
+		scripting::ScriptEngine::onRuntimeStop();
+	}
+
 	void Scene::renderSceneEditor(graphics::EditorCamera& camera)
 	{
 		// Render2D sprites
@@ -457,6 +498,11 @@ namespace daedalus::scene {
 
 	template<>
 	void scene::Scene::onComponentAdded<scene::NativeScriptComponent>(Entity entity, scene::NativeScriptComponent& component)
+	{
+	}
+
+	template<>
+	void scene::Scene::onComponentAdded<scene::ScriptComponent>(Entity entity, scene::ScriptComponent& component)
 	{
 	}
 
