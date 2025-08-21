@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Daedalus
+﻿namespace Daedalus
 {
-    internal class Input
+    public class Input
     {
         public static bool IsKeyDown(InputCode inputCode)
         {

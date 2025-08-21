@@ -116,8 +116,9 @@ namespace daedalus::scripting {
 		loadAssemblyClasses(s_data->coreAssembly);
 		
 		ScriptGlue::registerFunctions();
+		ScriptGlue::registerComponentTypes();
 
-		s_data->entityClass = ScriptClass("Daedalus.Types", "Entity");
+		s_data->entityClass = ScriptClass("Daedalus.Types", "MonoScript");
 #if 0
 		// retive and instantiate class (with constuctor)
 		// 1. create an object (and call constuctor)
@@ -280,7 +281,7 @@ namespace daedalus::scripting {
 		MonoImage* image = mono_assembly_get_image(assembly);
 		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
 		int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
-		MonoClass* baseEntityClass = mono_class_from_name(image, "Daedalus.Types", "Entity");
+		MonoClass* baseEntityClass = mono_class_from_name(image, "Daedalus.Types", "MonoScript");
 
 		for (int32_t i = 0; i < numTypes; i++)
 		{
@@ -305,10 +306,14 @@ namespace daedalus::scripting {
 					fullName = name;
 
 				s_data->entityClasses[fullName] = create_shr_ptr<ScriptClass>(nameSpace, name);
-
-				DD_CORE_LOG_TRACE("{}.{} is a subclass of Daedalus.Entity", nameSpace, name);
+				//DD_CORE_LOG_TRACE("{}.{} is a subclass of Daedalus.Types.MonoScript", nameSpace, name);
 			}
 		}
+	}
+
+	MonoImage* ScriptEngine::getCoreAssemblyImage()
+	{
+		return s_data->coreAssemblyImage;
 	}
 
 	ScriptClass::ScriptClass(const std::string& classNamespace, const std::string& className)

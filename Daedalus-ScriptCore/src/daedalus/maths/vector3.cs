@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Daedalus.Types
-{ 
+﻿namespace Daedalus.Types
+{
     public struct Vector3
     {
         public float X, Y, Z;
@@ -45,35 +39,11 @@ namespace Daedalus.Types
         {
             return new Vector3(vector.X / scalar, vector.Y / scalar, vector.Z / scalar);
         }
-    }
 
-    // NOTE: This should probably be renamed as its not an entity,
-    // it is more like a component. Rename to component?
-    public class Entity
-    {
-        protected Entity()
+        public override string ToString()
         {
-            ID = 0;
-        }
-
-        internal Entity(ulong id)
-        {
-            ID = id;
-        }
-
-        public readonly ulong ID;
-
-        public Vector3 Position
-        {
-            get
-            {
-                InternalCalls.entity_get_position(ID, out Vector3 position);
-                return position;
-            }
-            set
-            {
-                InternalCalls.entity_set_position(ID, ref value);
-            }
+            return ($"x: {X}, y: {Y}, z: {Z}").ToString();
         }
     }
+
 }

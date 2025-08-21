@@ -5,6 +5,7 @@ extern "C" {
 	typedef struct _MonoObject MonoObject;
 	typedef struct _MonoMethod MonoMethod;
 	typedef struct _MonoAssembly MonoAssembly;
+	typedef struct _MonoImage MonoImage;
 }
 
 namespace daedalus::scene {
@@ -70,7 +71,10 @@ namespace daedalus::scripting {
 		static MonoObject* instantiateClass(MonoClass* monoClass);
 		static void loadAssemblyClasses(MonoAssembly* assembly);
 
+		static MonoImage* getCoreAssemblyImage();
+
 		friend class ScriptClass;
+		friend class ScriptGlue;
 	};
 
 }

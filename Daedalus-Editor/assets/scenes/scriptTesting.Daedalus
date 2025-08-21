@@ -1,18 +1,5 @@
 Scene: Untitled
 Entities:
-  - Entity: 15466296278067097890
-    Name: Box
-    TagComponent:
-      Tag: ""
-    TransformComponent:
-      Position: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    ScriptComponent:
-      ClassName: Sandbox.Player
-    SpriteRendererComponent:
-      Colour: [1, 1, 1, 1]
-      TilingFactor: 1
   - Entity: 697428861981448425
     Name: Camera
     TagComponent:
@@ -32,3 +19,16 @@ Entities:
         OrthographicFar: 1
       Primary: true
       FixedAspectRatio: false
+  - Entity: 15466296278067097890
+    Name: Box
+    TagComponent:
+      Tag: ""
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ScriptComponent:
+      ClassName: Sandbox.PlayerScript
+    SpriteRendererComponent:
+      Colour: [1, 1, 1, 1]
+      TilingFactor: 1

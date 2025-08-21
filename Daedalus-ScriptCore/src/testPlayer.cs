@@ -12,17 +12,19 @@ namespace Sandbox
     /// <summary>
     /// Simple testing script
     /// </summary>
-    public class Player : Entity
+    public class PlayerScript : MonoScript
     {
+        private TransformComponent m_transform;
+
         void OnStart()
         {
-            //InternalCalls.native_log($"Player.OnStart: {ID}");
+            //Debug.Log($"Player.OnStart: {ID}");
+            m_transform = GetComponent<TransformComponent>();
         }
 
         void OnUpdate(float deltaTime)
         {
-            //InternalCalls.native_log($"Player.OnUpdate: {deltaTime}");
-
+            //Debug.Log($"Player.OnUpdate: {deltaTime}");
             float speed = 1.0f;
             Vector3 velocity = Vector3.Zero;
 
@@ -38,9 +40,9 @@ namespace Sandbox
 
             velocity *= (speed * deltaTime);
 
-            Vector3 position = Position;
+            Vector3 position = m_transform.Position;
             position += velocity;
-            Position = position;
+            m_transform.Position = position;
         }
 
     }
