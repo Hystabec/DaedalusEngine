@@ -117,7 +117,7 @@ namespace daedalus::scripting {
 		
 		ScriptGlue::registerFunctions();
 
-		s_data->entityClass = ScriptClass("Daedalus", "Entity");
+		s_data->entityClass = ScriptClass("Daedalus.Types", "Entity");
 #if 0
 		// retive and instantiate class (with constuctor)
 		// 1. create an object (and call constuctor)
@@ -280,7 +280,7 @@ namespace daedalus::scripting {
 		MonoImage* image = mono_assembly_get_image(assembly);
 		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
 		int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
-		MonoClass* baseEntityClass = mono_class_from_name(image, "Daedalus", "Entity");
+		MonoClass* baseEntityClass = mono_class_from_name(image, "Daedalus.Types", "Entity");
 
 		for (int32_t i = 0; i < numTypes; i++)
 		{
