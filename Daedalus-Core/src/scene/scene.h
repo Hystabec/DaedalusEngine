@@ -13,10 +13,6 @@ namespace daedalus::editor
 	// foward declared for use in editor
 }
 
-struct b2WorldId;
-struct b2BodyId;
-//foward declare so that Box2D doesnt need to be included and linked in other projects
-
 namespace daedalus::scene {
 
 	class Entity;
@@ -44,6 +40,8 @@ namespace daedalus::scene {
 		void updateRuntime(const application::DeltaTime& dt);
 		void updateSimulation(const application::DeltaTime& dt, graphics::EditorCamera& camera);
 		void updateEditor(const application::DeltaTime& dt, graphics::EditorCamera& camera);
+
+		PhysicsScene2D& getPhysicsScene2D() { return m_physicsScene; }
 
 		void onViewportResize(uint32_t width, uint32_t hegiht);
 

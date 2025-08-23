@@ -26,14 +26,9 @@ namespace Daedalus.Types
         {
             get
             {
-                //InternalCalls.transform_component_get_position(EntityID, out Vector3 position);
                 TransformComponent tc = GetComponent<TransformComponent>();
                 return tc;
             }
-            //private set
-            //{
-            //    //InternalCalls.transform_component_set_position(EntityID, ref value);
-            //}
         }
 
         public bool HasComponent<T>() where T : Component, new()

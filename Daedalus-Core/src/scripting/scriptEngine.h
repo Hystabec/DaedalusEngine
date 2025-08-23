@@ -38,7 +38,7 @@ namespace daedalus::scripting {
 	public:
 		ScriptInstance(Shr_ptr<ScriptClass> scriptClass, scene::Entity entity);
 
-		void invokeOnCreate();
+		void invokeOnStart();
 		void invokeOnUpdate(float dt);
 	private:
 		Shr_ptr<ScriptClass> m_scriptClass;

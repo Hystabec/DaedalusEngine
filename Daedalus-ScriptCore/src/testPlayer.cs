@@ -15,11 +15,14 @@ namespace Sandbox
     public class PlayerScript : MonoScript
     {
         private TransformComponent m_transform;
+        private Rigidbody2DComponent m_rb;
 
         void OnStart()
         {
             //Debug.Log($"Player.OnStart: {ID}");
             m_transform = GetComponent<TransformComponent>();
+
+            m_rb = GetComponent<Rigidbody2DComponent>();
         }
 
         void OnUpdate(float deltaTime)
@@ -38,11 +41,13 @@ namespace Sandbox
             else if (Input.IsKeyDown(InputCode.Key_D))
                 velocity.X = 1.0f;
 
-            velocity *= (speed * deltaTime);
+            velocity *= (speed);
 
-            Vector3 position = m_transform.Position;
-            position += velocity;
-            m_transform.Position = position;
+            m_rb.AddLinearImpulse(velocity.XY);
+
+            //Vector3 position = m_transform.Position;
+            //position += velocity;
+            //m_transform.Position = position;
         }
 
     }

@@ -32,6 +32,14 @@ namespace daedalus::scene {
 		CameraComponent, SpriteRendererComponent, CircleRendererComponent,
 		Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent>;
 
+	/// @brief A group for all components (minus ID component). As when duplicating entities
+	/// i dont want to copy the UUID or other unique ids
+	using AllModifiableComponents =
+		ComponentGroup<TagComponent, TransformComponent, 
+		NativeScriptComponent, ScriptComponent,
+		CameraComponent, SpriteRendererComponent, CircleRendererComponent,
+		Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent>;
+
 	using AllOptionalComponents =
 		ComponentGroup<NativeScriptComponent, ScriptComponent,
 		CameraComponent, SpriteRendererComponent, CircleRendererComponent,

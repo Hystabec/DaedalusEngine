@@ -28,4 +28,17 @@ namespace Daedalus.Types
         }
     }
 
+    public class Rigidbody2DComponent : Component
+    {
+        public void AddLinearImpulse(Vector2 linearImpulse, Vector2 worldPoint, bool wake = true)
+        {
+            InternalCalls.rigidbody2D_component_add_linear_impulse_from_point(MonoScript.EntityID, ref linearImpulse, ref worldPoint, wake);
+        }
+
+        public void AddLinearImpulse(Vector2 linearImpulse, bool wake = true)
+        {
+            InternalCalls.rigidbody2D_component_add_linear_impulse(MonoScript.EntityID, ref linearImpulse, wake);
+        }
+    }
+
 }

@@ -20,6 +20,16 @@
             this.Z = z;
         }
 
+        public Vector2 XY
+        {
+            get => new Vector2(X, Y);
+            set
+            {
+                X = value.X;
+                Y = value.Y;
+            }
+        }
+
         public static Vector3 operator +(Vector3 left, Vector3 right)
         {
             return new Vector3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);

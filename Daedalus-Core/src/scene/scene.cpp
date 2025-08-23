@@ -131,7 +131,8 @@ namespace daedalus::scene {
 	void Scene::duplicateEntity(Entity entity)
 	{
 		Entity newEntity = createEntity(entity.getName());
-		copy_component_if_exists(AllComponents{}, newEntity, entity);
+		newEntity.getComponent<IDComponent>().name = entity.getName();
+		copy_component_if_exists(AllModifiableComponents{}, newEntity, entity);
 	}
 
 	Entity Scene::getEntityByUUID(UUID uuid)

@@ -69,6 +69,30 @@ namespace daedalus::scripting {
 		entity.getTransformComponent().position = *inPosition;
 	}
 
+	static void rigidbody2D_component_add_linear_impulse_from_point(UUID uuid, maths::Vec2* linearImpulse, maths::Vec2* worldPoint, bool wake)
+	{
+		using namespace scene;
+		Scene* sceneContext = scripting::ScriptEngine::getSceneContext();
+		DD_CORE_ASSERT(sceneContext);
+		Entity entity = sceneContext->getEntityByUUID(uuid);
+		DD_CORE_ASSERT(entity);
+
+		auto& pScene2D = sceneContext->getPhysicsScene2D();
+		pScene2D.applyLinearImpulseToEntity(entity, *linearImpulse, *worldPoint, wake);
+	}
+
+	static void rigidbody2D_component_add_linear_impulse(UUID uuid, maths::Vec2* linearImpulse, bool wake)
+	{
+		using namespace scene;
+		Scene* sceneContext = scripting::ScriptEngine::getSceneContext();
+		DD_CORE_ASSERT(sceneContext);
+		Entity entity = sceneContext->getEntityByUUID(uuid);
+		DD_CORE_ASSERT(entity);
+
+		auto& pScene2D = sceneContext->getPhysicsScene2D();
+		pScene2D.applyLinearImpulseCentreToEntity(entity, *linearImpulse, wake);
+	}
+
 	template<typename... Component>
 	static void register_component_types_base(MonoImage* assemblyImage)
 	{
@@ -114,6 +138,9 @@ namespace daedalus::scripting {
 
 		DD_ADD_INTERNAL_CALL(transform_component_get_position);
 		DD_ADD_INTERNAL_CALL(transform_component_set_position);
+
+		DD_ADD_INTERNAL_CALL(rigidbody2D_component_add_linear_impulse_from_point);
+		DD_ADD_INTERNAL_CALL(rigidbody2D_component_add_linear_impulse);
 	}
 
 }

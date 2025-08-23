@@ -243,7 +243,7 @@ namespace daedalus::scripting {
 
 			s_data->entityInstances[entity.getUUID()] = instance;
 
-			instance->invokeOnCreate();
+			instance->invokeOnStart();
 		}
 	}
 
@@ -352,15 +352,19 @@ namespace daedalus::scripting {
 		m_scriptClass->invokeMethod(m_instance, m_constuctor, &param);
 	}
 
-	void ScriptInstance::invokeOnCreate()
+	void ScriptInstance::invokeOnStart()
 	{
-		m_scriptClass->invokeMethod(m_instance, m_onStartMethod);
+		if(m_onStartMethod)
+			m_scriptClass->invokeMethod(m_instance, m_onStartMethod);
 	}
 
 	void ScriptInstance::invokeOnUpdate(float dt)
 	{
-		void* param = &dt;
-		m_scriptClass->invokeMethod(m_instance, m_onUpdateMethod, &param);
+		if (m_onUpdateMethod)
+		{
+			void* param = &dt;
+			m_scriptClass->invokeMethod(m_instance, m_onUpdateMethod, &param);
+		}
 		
 	}
 

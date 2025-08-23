@@ -69,6 +69,36 @@ namespace daedalus::scene {
 		}
 	}
 
+	void PhysicsScene2D::applyForceToEntity(Entity entity, maths::Vec2 force, maths::Vec2 point, bool wake)
+	{
+		DD_CORE_ASSERT(bodyMapContainsEntity(entity));
+		b2Body_ApplyForce(m_entityBox2DBodyMap[entity.getUUID()], b2Vec2(force.x, force.y), b2Vec2(point.x, point.y), wake);
+	}
+
+	void PhysicsScene2D::applyForceCentreToEntity(Entity entity, maths::Vec2 force, bool wake)
+	{
+		DD_CORE_ASSERT(bodyMapContainsEntity(entity));
+		b2Body_ApplyForceToCenter(m_entityBox2DBodyMap[entity.getUUID()], b2Vec2(force.x, force.y), wake);
+	}
+
+	void PhysicsScene2D::applyLinearImpulseToEntity(Entity entity, maths::Vec2 impulse, maths::Vec2 point, bool wake)
+	{
+		DD_CORE_ASSERT(bodyMapContainsEntity(entity));
+		b2Body_ApplyLinearImpulse(m_entityBox2DBodyMap[entity.getUUID()], b2Vec2(impulse.x, impulse.y), b2Vec2(point.x, point.y), wake);
+	}
+
+	void PhysicsScene2D::applyLinearImpulseCentreToEntity(Entity entity, maths::Vec2 impulse, bool wake)
+	{
+		DD_CORE_ASSERT(bodyMapContainsEntity(entity));
+		b2Body_ApplyLinearImpulseToCenter(m_entityBox2DBodyMap[entity.getUUID()], b2Vec2(impulse.x, impulse.y), wake);
+	}
+
+	void PhysicsScene2D::applyTorqueToEntity(Entity entity, float torque, bool wake)
+	{
+		DD_CORE_ASSERT(bodyMapContainsEntity(entity));
+		b2Body_ApplyTorque(m_entityBox2DBodyMap[entity.getUUID()], torque, wake);
+	}
+
 	void PhysicsScene2D::registerEntity(Entity entity)
 	{
 		DD_CORE_ASSERT(m_physicsWorld, "No physics world. 'startScene' not called?");
@@ -125,6 +155,11 @@ namespace daedalus::scene {
 
 			b2ShapeId shapeID = b2CreateCircleShape(body, &shapeDef, &circle);
 		}
+	}
+
+	bool PhysicsScene2D::bodyMapContainsEntity(Entity entity)
+	{
+		return m_entityBox2DBodyMap.find(entity.getUUID()) != m_entityBox2DBodyMap.end();
 	}
 
 }
