@@ -261,9 +261,12 @@ namespace daedalus::editor
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 				{
 					std::filesystem::path path = (const wchar_t*)payload->Data;
-					if (path.extension().string() == ".Daedalus")
+					std::string extension = path.extension().string();
+					std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+					if (extension == ".daedalus")
 						openScene(path);
 				}
+
 				ImGui::EndDragDropTarget();
 			}
 
@@ -665,9 +668,20 @@ namespace daedalus::editor
 		if (m_sceneState != SceneState::Edit)
 			return;
 
-		std::filesystem::path filepath = utils::FileDialog::saveFile("Daedalus Scene (*.daedalus)\0*.daedalus\0");
+		std::string defaultFileName;
+		if (m_currentSceneFilepath.empty())
+			defaultFileName = "newScene.Daedalus";
+		else
+			defaultFileName = m_currentSceneFilepath.filename().string();
+
+		std::filesystem::path filepath = utils::FileDialog::saveFile("Daedalus Scene (*.Daedalus)\0*.Daedalus\0", defaultFileName.c_str());
 		if (!filepath.empty())
 		{
+			// NOTE: Could just change the file extension regardless of what it is
+			// currently it only sets to .Daedalus if it is empty
+			if (filepath.extension().empty())
+				filepath.replace_extension(".Daedalus");
+
 			serializeScene(m_activeScene, filepath);
 			m_currentSceneFilepath = filepath;
 			Application::get().getWindow()->setWindowName("Daedalus Editor - " + m_currentSceneFilepath.stem().string());

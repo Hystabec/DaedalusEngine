@@ -10,7 +10,7 @@ namespace daedalus::utils {
 		// Returns empty string if cancelled
 		static std::string openFile(const char* filter);
 		// Returns empty string if cancelled
-		static std::string saveFile(const char* filter);
+		static std::string saveFile(const char* filter, const char* defaultName);
 	};
 
 }

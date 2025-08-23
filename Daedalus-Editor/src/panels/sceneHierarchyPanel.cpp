@@ -315,7 +315,7 @@ namespace daedalus::editor
 				bool scriptClassExists = scripting::ScriptEngine::entityClassExists(sc.className);
 
 				static char buffer[64];
-				strcpy(buffer, sc.className.c_str());
+				strcpy_s(buffer, sc.className.c_str());
 
 				if (!scriptClassExists)
 					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.1f, 0.1f, 1.0f));

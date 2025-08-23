@@ -32,10 +32,11 @@ namespace daedalus::utils {
 		return std::string();
 	}
 
-	std::string FileDialog::saveFile(const char* filter)
+	std::string FileDialog::saveFile(const char* filter, const char* defaultName)
 	{
 		OPENFILENAMEA ofn;
-		CHAR szFile[260] = { 0 };
+		CHAR szFile[260];
+		strcpy_s(szFile, defaultName);
 		ZeroMemory(&ofn, sizeof(OPENFILENAMEA));
 		ofn.lStructSize = sizeof(OPENFILENAMEA);
 		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::get().getWindow()->getNativeWindow());
