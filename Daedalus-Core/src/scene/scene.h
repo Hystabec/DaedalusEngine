@@ -3,6 +3,7 @@
 #include "application/time/deltaTime.h"
 #include "graphics/camera/editorCamera.h"
 #include "application/uuid.h"
+#include "physicsScene2D.h"
 
 #include <entt.hpp>
 
@@ -70,9 +71,7 @@ namespace daedalus::scene {
 
 		std::unordered_map<UUID, entt::entity> m_entityMap;
 
-		// This being a unique ptr is a bit weird, consider changing later
-		Uni_ptr<b2WorldId> m_physicsWorld = nullptr;
-		std::unordered_map<UUID, b2BodyId> m_entityBox2DBodyMap;
+		PhysicsScene2D m_physicsScene;
 
 		friend class Entity;
 		friend class editor::SceneHierarchyPanel;

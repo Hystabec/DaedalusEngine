@@ -27,6 +27,7 @@ namespace daedalus::scene {
 	}
 
 	Scene::Scene()
+		: m_physicsScene(this)
 	{
 	}
 
@@ -213,23 +214,7 @@ namespace daedalus::scene {
 
 		// Physics
 		{
-			const int32_t subStepCount = 4;
-			b2World_Step(*m_physicsWorld, dt, subStepCount);
-
-			auto view = m_registry.view<Rigidbody2DComponent>();
-			
-			for(auto e : view)
-			{
-				Entity enity = { e, this };
-				auto& transform = enity.getComponent<TransformComponent>();
-				auto& rb2d = enity.getComponent<Rigidbody2DComponent>();
-
-				b2BodyId& body = m_entityBox2DBodyMap.at(enity.getUUID());
-				const auto& position = b2Body_GetPosition(body);
-				transform.position.x = position.x;
-				transform.position.y = position.y;
-				transform.rotation.z = b2Rot_GetAngle(b2Body_GetRotation(body));
-			}
+			m_physicsScene.updateScene(dt);
 		}
 
 		// Render2D sprites
@@ -264,23 +249,7 @@ namespace daedalus::scene {
 	{
 		// Physics
 		{
-			const int32_t subStepCount = 4;
-			b2World_Step(*m_physicsWorld, dt, subStepCount);
-
-			auto view = m_registry.view<Rigidbody2DComponent>();
-
-			for (auto e : view)
-			{
-				Entity enity = { e, this };
-				auto& transform = enity.getComponent<TransformComponent>();
-				auto& rb2d = enity.getComponent<Rigidbody2DComponent>();
-
-				b2BodyId& body = m_entityBox2DBodyMap.at(enity.getUUID());
-				const auto& position = b2Body_GetPosition(body);
-				transform.position.x = position.x;
-				transform.position.y = position.y;
-				transform.rotation.z = b2Rot_GetAngle(b2Body_GetRotation(body));
-			}
+			m_physicsScene.updateScene(dt);
 		}
 
 		// render
@@ -323,9 +292,7 @@ namespace daedalus::scene {
 
 	void Scene::physics2DStart()
 	{
-		b2WorldDef worldDef = b2DefaultWorldDef();
-		worldDef.gravity = { 0.0f, -9.8f };
-		m_physicsWorld = create_uni_ptr<b2WorldId>(b2CreateWorld(&worldDef));
+		m_physicsScene.startScene();
 
 		using namespace scene;
 
@@ -333,68 +300,13 @@ namespace daedalus::scene {
 		for (auto e : view)
 		{
 			Entity entity = { e, this };
-			auto& transform = entity.getComponent<TransformComponent>();
-			auto& rb2d = entity.getComponent<Rigidbody2DComponent>();
-
-			b2BodyDef bodyDef = b2DefaultBodyDef();
-			bodyDef.type = rigid_body_type_to_box2D_body_type(rb2d.type);
-			bodyDef.position = { transform.position.x, transform.position.y };
-			bodyDef.rotation = b2MakeRot(transform.rotation.z);
-			//bodyDef.fixedRotation = true;
-
-			b2BodyId body = b2CreateBody(*m_physicsWorld, &bodyDef);
-
-			if (rb2d.fixedRotation)
-			{
-				b2MotionLocks locks;
-				locks.linearX = false;	// need to initialize this?
-				locks.linearY = false;	// need to initialize this?
-				locks.angularZ = true;
-				b2Body_SetMotionLocks(body, locks);
-			}
-
-			m_entityBox2DBodyMap[entity.getUUID()] = body;
-
-			if (entity.hasComponent<BoxCollider2DComponent>())
-			{
-				auto& bc2d = entity.getComponent<BoxCollider2DComponent>();
-
-				b2Polygon polygon = b2MakeOffsetBox(bc2d.size.x * transform.scale.x, bc2d.size.y * transform.scale.y, b2Vec2(bc2d.offset.x, bc2d.offset.y), b2MakeRot(0.0f));
-
-				b2ShapeDef shapeDef = b2DefaultShapeDef();
-				shapeDef.density = rb2d.desity;
-				shapeDef.material.friction = rb2d.friction;
-				shapeDef.material.restitution = rb2d.restitution;
-				//shapeDef.material.restitutionThreshold = bc2d.restitutionThreshold;
-				b2ShapeId shapeID = b2CreatePolygonShape(body, &shapeDef, &polygon);
-			}
-
-			if (entity.hasComponent<CircleCollider2DComponent>())
-			{
-				auto& cc2d = entity.getComponent<CircleCollider2DComponent>();
-
-				b2Circle circle;
-				circle.center = b2Vec2(cc2d.offset.x, cc2d.offset.y);
-				// This assumes circles are uniform
-				circle.radius = cc2d.radius * transform.scale.x;
-
-				b2ShapeDef shapeDef = b2DefaultShapeDef();
-				shapeDef.density = rb2d.desity;
-				shapeDef.material.friction = rb2d.friction;
-				shapeDef.material.restitution = rb2d.restitution;
-
-				b2ShapeId shapeID = b2CreateCircleShape(body, &shapeDef, &circle);
-			}
+			m_physicsScene.registerEntity(entity);
 		}
 	}
 
 	void Scene::physics2DStop()
 	{
-		if (m_physicsWorld)
-		{
-			b2DestroyWorld(*m_physicsWorld);
-			m_physicsWorld.reset();
-		}
+		m_physicsScene.endScene();
 	}
 
 	void Scene::scriptingStart()
