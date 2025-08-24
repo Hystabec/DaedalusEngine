@@ -3,8 +3,8 @@ project "Daedalus-ScriptCore"
 	language "C#"
 	dotnetframework "4.7.2"
 
-	targetdir ("%{wks.location}/Daedalus-Core/resources/scripts")
-	objdir ("%{wks.location}/Daedalus-Core/resources/scripts/intermediates")
+	targetdir ("../Daedalus-Core/resources/script-bin")
+	objdir ("../Daedalus-Core/resources/script-bin/intermediates")
 
 	files
 	{

@@ -98,6 +98,9 @@ namespace daedalus::scripting {
 		MonoAssembly* coreAssembly = nullptr;
 		MonoImage* coreAssemblyImage = nullptr;
 
+		MonoAssembly* clientAssembly = nullptr;
+		MonoImage* clientAssemblyImage = nullptr;
+
 		ScriptClass entityClass;
 		std::unordered_map<std::string, Shr_ptr<ScriptClass>> entityClasses;
 		std::unordered_map<UUID, Shr_ptr<ScriptInstance>> entityInstances;
@@ -112,59 +115,18 @@ namespace daedalus::scripting {
 		s_data = new ScriptEngineData();
 		
 		initMono();
-		loadAssembly("resources/scripts/Daedalus-ScriptCore.dll");
-		loadAssemblyClasses(s_data->coreAssembly);
+
+		loadAssembly("resources/script-bin/Daedalus-ScriptCore.dll");
+
+		// NOTE: This will need to be made more expanable in the future, project DIR as arg(?)
+		// but it is fine for testing currently (24/08/25)
+		loadClientAssembly("sandboxProject/assets/scripts/script-bin/Sandbox.dll");
+		loadAssemblyClasses();
 		
 		ScriptGlue::registerFunctions();
 		ScriptGlue::registerComponentTypes();
 
-		s_data->entityClass = ScriptClass("Daedalus.Types", "MonoScript");
-#if 0
-		// retive and instantiate class (with constuctor)
-		// 1. create an object (and call constuctor)
-
-		MonoObject* instance = s_data->entityClass.instantiate();
-
-		// 2. call methods
-		{
-			MonoMethod* printMessageFunc = s_data->entityClass.getMethod("PrintMessage", 0);
-			s_data->entityClass.invokeMethod(instance, printMessageFunc, nullptr);
-		}
-
-		// 3. call methods with param
-		{
-			MonoMethod* printIntFunc = s_data->entityClass.getMethod("PrintInt", 1);
-
-			int value = 5;
-			void* param = &value;
-
-			s_data->entityClass.invokeMethod(instance, printIntFunc, &param);
-		}
-		{
-			MonoMethod* printIntsFunc = s_data->entityClass.getMethod("PrintInts", 2);
-
-			int value1 = 63;
-			int value2 = 9321;
-			void* params[] =
-			{
-				&value1,
-				&value2
-			};
-
-			s_data->entityClass.invokeMethod(instance, printIntsFunc, params);
-		}
-		{
-			MonoString* monoString = mono_string_new(s_data->appDomain, "Hello world from C++");
-
-			MonoMethod* printCustomMessageFunc = s_data->entityClass.getMethod("PrintCustomMessage", 1);
-
-			void* stringParam = monoString;
-
-			s_data->entityClass.invokeMethod(instance, printCustomMessageFunc, &stringParam);
-		}
-
-		//DD_CORE_ASSERT(false);
-#endif
+		s_data->entityClass = ScriptClass("Daedalus.Types", "MonoScript", true);
 	}
 
 	void ScriptEngine::shutdown()
@@ -211,11 +173,19 @@ namespace daedalus::scripting {
 		if (result)
 		{
 			s_data->coreAssembly = monoUtils::load_mono_assembly(path);
-			//monoUtils::print_assembly_types(s_data->coreAssembly);
 			s_data->coreAssemblyImage = mono_assembly_get_image(s_data->coreAssembly);
+			//monoUtils::print_assembly_types(s_data->coreAssembly);
 		}
 		else
 			DD_ASSERT(false, "failed to load assembly (file could not be found)");
+	}
+
+	void ScriptEngine::loadClientAssembly(const std::filesystem::path& filepath)
+	{
+
+		s_data->clientAssembly = monoUtils::load_mono_assembly(filepath);
+		s_data->clientAssemblyImage = mono_assembly_get_image(s_data->clientAssembly);
+		//monoUtils::print_assembly_types(s_data->clientAssembly);
 	}
 
 	void ScriptEngine::onRuntimeStart(scene::Scene* scene)
@@ -274,24 +244,23 @@ namespace daedalus::scripting {
 		return instance;
 	}
 
-	void ScriptEngine::loadAssemblyClasses(MonoAssembly* assembly)
+	void ScriptEngine::loadAssemblyClasses()
 	{
 		s_data->entityClasses.clear();
 
-		MonoImage* image = mono_assembly_get_image(assembly);
-		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
+		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(s_data->clientAssemblyImage, MONO_TABLE_TYPEDEF);
 		int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
-		MonoClass* baseEntityClass = mono_class_from_name(image, "Daedalus.Types", "MonoScript");
+		MonoClass* baseEntityClass = mono_class_from_name(s_data->coreAssemblyImage, "Daedalus.Types", "MonoScript");
 
 		for (int32_t i = 0; i < numTypes; i++)
 		{
 			uint32_t cols[MONO_TYPEDEF_SIZE];
 			mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
 
-			const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
-			const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
+			const char* nameSpace = mono_metadata_string_heap(s_data->clientAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
+			const char* name = mono_metadata_string_heap(s_data->clientAssemblyImage, cols[MONO_TYPEDEF_NAME]);
 
-			MonoClass* monoClass = mono_class_from_name(image, nameSpace, name);
+			MonoClass* monoClass = mono_class_from_name(s_data->clientAssemblyImage, nameSpace, name);
 			if (monoClass == baseEntityClass)
 				continue;
 
@@ -316,10 +285,10 @@ namespace daedalus::scripting {
 		return s_data->coreAssemblyImage;
 	}
 
-	ScriptClass::ScriptClass(const std::string& classNamespace, const std::string& className)
+	ScriptClass::ScriptClass(const std::string& classNamespace, const std::string& className, bool isFromCore)
 		: m_classNamespace(classNamespace), m_className(className)
 	{
-		m_monoClass = mono_class_from_name(s_data->coreAssemblyImage, classNamespace.c_str(), className.c_str());
+		m_monoClass = mono_class_from_name(isFromCore ? s_data->coreAssemblyImage : s_data->clientAssemblyImage, classNamespace.c_str(), className.c_str());
 	}
 
 	MonoObject* ScriptClass::instantiate()

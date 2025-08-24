@@ -13,8 +13,8 @@
 imgui.ini
 
 # generated script objects and intermediates
-**/resources/scripts/intermediates/
-**/resources/scripts/*.dll
+**/script-bin/intermediates/
+**/script-bin/*.dll
 
 # User-specific files
 *.rsuser

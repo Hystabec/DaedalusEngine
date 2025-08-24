@@ -20,8 +20,7 @@ namespace daedalus::scripting {
 	public:
 		ScriptClass() = default;
 
-		ScriptClass(const std::string& classNamespace, const std::string& className);
-
+		ScriptClass(const std::string& classNamespace, const std::string& className, bool isFromCore = false);
 
 		MonoObject* instantiate();
 		MonoMethod* getMethod(const std::string& name, int parameterCount);
@@ -55,6 +54,7 @@ namespace daedalus::scripting {
 		static void shutdown();
 
 		static void loadAssembly(const std::filesystem::path& filepath);
+		static void loadClientAssembly(const std::filesystem::path& filepath);
 		static void onRuntimeStart(scene::Scene* scene);
 		static void onRuntimeStop();
 
@@ -69,7 +69,7 @@ namespace daedalus::scripting {
 		static void shutdownMono();
 
 		static MonoObject* instantiateClass(MonoClass* monoClass);
-		static void loadAssemblyClasses(MonoAssembly* assembly);
+		static void loadAssemblyClasses();
 
 		static MonoImage* getCoreAssemblyImage();
 
