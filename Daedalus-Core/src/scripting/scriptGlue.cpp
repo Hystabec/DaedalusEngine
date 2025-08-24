@@ -69,6 +69,30 @@ namespace daedalus::scripting {
 		entity.getTransformComponent().position = *inPosition;
 	}
 
+	static void rigidbody2D_component_apply_force_from_point(UUID uuid, maths::Vec2* force, maths::Vec2* worldPoint, bool wake)
+	{
+		using namespace scene;
+		Scene* sceneContext = scripting::ScriptEngine::getSceneContext();
+		DD_CORE_ASSERT(sceneContext);
+		Entity entity = sceneContext->getEntityByUUID(uuid);
+		DD_CORE_ASSERT(entity);
+
+		auto& pScene2D = sceneContext->getPhysicsScene2D();
+		pScene2D.applyForceToEntity(entity, *force, *worldPoint, wake);
+	}
+
+	static void rigidbody2D_component_apply_force(UUID uuid, maths::Vec2* force, bool wake)
+	{
+		using namespace scene;
+		Scene* sceneContext = scripting::ScriptEngine::getSceneContext();
+		DD_CORE_ASSERT(sceneContext);
+		Entity entity = sceneContext->getEntityByUUID(uuid);
+		DD_CORE_ASSERT(entity);
+
+		auto& pScene2D = sceneContext->getPhysicsScene2D();
+		pScene2D.applyForceCentreToEntity(entity, *force, wake);
+	}
+
 	static void rigidbody2D_component_add_linear_impulse_from_point(UUID uuid, maths::Vec2* linearImpulse, maths::Vec2* worldPoint, bool wake)
 	{
 		using namespace scene;
@@ -91,6 +115,18 @@ namespace daedalus::scripting {
 
 		auto& pScene2D = sceneContext->getPhysicsScene2D();
 		pScene2D.applyLinearImpulseCentreToEntity(entity, *linearImpulse, wake);
+	}
+
+	static void rigidbody2D_component_apply_torque(UUID uuid, float* torque, bool wake)
+	{
+		using namespace scene;
+		Scene* sceneContext = scripting::ScriptEngine::getSceneContext();
+		DD_CORE_ASSERT(sceneContext);
+		Entity entity = sceneContext->getEntityByUUID(uuid);
+		DD_CORE_ASSERT(entity);
+
+		auto& pScene2D = sceneContext->getPhysicsScene2D();
+		pScene2D.applyTorqueToEntity(entity, *torque, wake);
 	}
 
 	template<typename... Component>
@@ -139,8 +175,11 @@ namespace daedalus::scripting {
 		DD_ADD_INTERNAL_CALL(transform_component_get_position);
 		DD_ADD_INTERNAL_CALL(transform_component_set_position);
 
+		DD_ADD_INTERNAL_CALL(rigidbody2D_component_apply_force_from_point);
+		DD_ADD_INTERNAL_CALL(rigidbody2D_component_apply_force);
 		DD_ADD_INTERNAL_CALL(rigidbody2D_component_add_linear_impulse_from_point);
 		DD_ADD_INTERNAL_CALL(rigidbody2D_component_add_linear_impulse);
+		DD_ADD_INTERNAL_CALL(rigidbody2D_component_apply_torque);
 	}
 
 }

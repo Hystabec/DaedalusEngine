@@ -41,9 +41,14 @@ namespace Sandbox
             else if (Input.IsKeyDown(InputCode.Key_D))
                 velocity.X = 1.0f;
 
-            velocity *= (speed);
+            if (Input.IsKeyDown(InputCode.Key_Q))
+                m_rb.ApplyTorque(1.0f);
+            else if (Input.IsKeyDown(InputCode.Key_E))
+                m_rb.ApplyTorque(-1.0f);
 
-            m_rb.AddLinearImpulse(velocity.XY);
+                velocity *= (speed);
+
+            m_rb.ApplyForce(velocity.XY);
 
             //Vector3 position = m_transform.Position;
             //position += velocity;

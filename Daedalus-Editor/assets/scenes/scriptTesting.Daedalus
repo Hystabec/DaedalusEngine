@@ -1,24 +1,27 @@
 Scene: Untitled
 Entities:
-  - Entity: 697428861981448425
-    Name: Camera
+  - Entity: 15466296278067097890
+    Name: Box
     TagComponent:
       Tag: ""
     TransformComponent:
-      Position: [0, 0, 4]
+      Position: [0, -0.27636528, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    CameraComponent:
-      Camera:
-        ProjectionType: 0
-        PerspectiveFOV: 0.7853982
-        PerspectiveNear: 0.01
-        PerspectiveFar: 1000
-        OrthographicSize: 10
-        OrthographicNear: -1
-        OrthographicFar: 1
-      Primary: true
-      FixedAspectRatio: false
+    ScriptComponent:
+      ClassName: Sandbox.PlayerScript
+    SpriteRendererComponent:
+      Colour: [1, 1, 1, 1]
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: Dynamic
+      FixedRotation: false
+      Desity: 0.15
+      Friction: 0.01
+      Restitution: 0
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
   - Entity: 15466296278067097891
     Name: Platform
     TagComponent:
@@ -39,25 +42,22 @@ Entities:
     BoxCollider2DComponent:
       Offset: [0, 0]
       Size: [0.5, 0.5]
-  - Entity: 15466296278067097890
-    Name: Box
+  - Entity: 697428861981448425
+    Name: Camera
     TagComponent:
       Tag: ""
     TransformComponent:
-      Position: [0, -0.27636528, 0]
+      Position: [0, 0, 4]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    ScriptComponent:
-      ClassName: Sandbox.PlayerScript
-    SpriteRendererComponent:
-      Colour: [1, 1, 1, 1]
-      TilingFactor: 1
-    Rigidbody2DComponent:
-      BodyType: Dynamic
-      FixedRotation: false
-      Desity: 1
-      Friction: 0.5
-      Restitution: 0
-    BoxCollider2DComponent:
-      Offset: [0, 0]
-      Size: [0.5, 0.5]
+    CameraComponent:
+      Camera:
+        ProjectionType: 0
+        PerspectiveFOV: 0.7853982
+        PerspectiveNear: 0.01
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: true
+      FixedAspectRatio: false

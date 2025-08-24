@@ -32,10 +32,17 @@ namespace Daedalus
 
         #region rigidbody2D
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void rigidbody2D_component_apply_force_from_point(ulong entityID, ref Types.Vector2 force, ref Types.Vector2 worldPoint, bool wake);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void rigidbody2D_component_apply_force(ulong entityID, ref Types.Vector2 force, bool wake);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static void rigidbody2D_component_add_linear_impulse_from_point(ulong entityID, ref Types.Vector2 linearImpulse, ref Types.Vector2 worldPoint, bool wake);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static void rigidbody2D_component_add_linear_impulse(ulong entityID, ref Types.Vector2 linearImpulse, bool wake);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void rigidbody2D_component_apply_torque(ulong entityID, ref float torque, bool wake);
         #endregion
     }
 }
