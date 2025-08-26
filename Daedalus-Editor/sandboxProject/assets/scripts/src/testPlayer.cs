@@ -17,6 +17,8 @@ namespace Sandbox
         private TransformComponent m_transform;
         private Rigidbody2DComponent m_rb;
 
+        public float speed = 1.0f;
+
         void OnStart()
         {
             //Debug.Log($"Player.OnStart: {ID}");
@@ -28,7 +30,6 @@ namespace Sandbox
         void OnUpdate(float deltaTime)
         {
             //Debug.Log($"Player.OnUpdate: {deltaTime}");
-            float speed = 1.0f;
             Vector3 velocity = Vector3.Zero;
 
             if (Input.IsKeyDown(InputCode.Key_W))
@@ -46,7 +47,7 @@ namespace Sandbox
             else if (Input.IsKeyDown(InputCode.Key_E))
                 m_rb.ApplyTorque(-1.0f);
 
-                velocity *= (speed);
+            velocity *= (speed);
 
             m_rb.ApplyForce(velocity.XY);
 

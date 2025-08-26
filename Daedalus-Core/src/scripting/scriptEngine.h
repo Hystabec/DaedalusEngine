@@ -1,11 +1,14 @@
 #pragma once
 
+#include "../application/uuid.h"
+
 extern "C" {
 	typedef struct _MonoClass MonoClass;
 	typedef struct _MonoObject MonoObject;
 	typedef struct _MonoMethod MonoMethod;
 	typedef struct _MonoAssembly MonoAssembly;
 	typedef struct _MonoImage MonoImage;
+	typedef struct _MonoClassField MonoClassField;
 }
 
 namespace daedalus::scene {
@@ -14,6 +17,26 @@ namespace daedalus::scene {
 }
 
 namespace daedalus::scripting {
+
+	enum class ScriptFieldType
+	{
+		None = 0,
+		Bool, Float, Double,
+		Char, Byte,
+		Short, UShort,
+		Int, UInt,
+		Long, ULong,
+		string,
+		Vector2, Vector3, Vector4,
+		MonoScript
+	};
+
+	struct ScriptField
+	{
+		ScriptFieldType type = ScriptFieldType::None;
+		std::string name = "";
+		MonoClassField* classField = nullptr;
+	};
 
 	class ScriptClass
 	{
@@ -26,10 +49,16 @@ namespace daedalus::scripting {
 		MonoMethod* getMethod(const std::string& name, int parameterCount);
 		MonoObject* invokeMethod(MonoObject* instance, MonoMethod* method, void** params = nullptr);
 
+		inline const std::unordered_map<std::string, ScriptField>& getFields() { return m_fields; }
 	private:
 		std::string m_classNamespace;
 		std::string m_className;
+		
+		std::unordered_map<std::string, ScriptField> m_fields;
+
 		MonoClass* m_monoClass = nullptr;
+
+		friend class ScriptEngine;
 	};
 
 	class ScriptInstance
@@ -39,12 +68,38 @@ namespace daedalus::scripting {
 
 		void invokeOnStart();
 		void invokeOnUpdate(float dt);
+
+		inline Shr_ptr<ScriptClass> getScriptClass() { return m_scriptClass; }
+
+		template<typename T>
+		T getFieldValue(const std::string& name)
+		{
+			bool success = getFieldValueInternal(name, s_fieldValueBuffer);
+
+			if (!success)
+				return T();
+
+			return *((T*)s_fieldValueBuffer);
+		}
+
+		template<typename T>
+		void setFieldValue(const std::string& name, const T& value)
+		{
+			setFieldValueInternal(name, &value);
+		}
+	private:
+		bool getFieldValueInternal(const std::string& name, void* buffer);
+		bool setFieldValueInternal(const std::string& name, const void* value);
+
 	private:
 		Shr_ptr<ScriptClass> m_scriptClass;
 		MonoObject* m_instance = nullptr;
 		MonoMethod* m_constuctor = nullptr;
 		MonoMethod* m_onStartMethod = nullptr;
 		MonoMethod* m_onUpdateMethod = nullptr;
+
+		// buffer with the size of the largest supported type
+		inline static char s_fieldValueBuffer[sizeof(float)];
 	};
 
 	class ScriptEngine
@@ -63,6 +118,7 @@ namespace daedalus::scripting {
 		static void updateEntityInstance(scene::Entity entity, float dt);
 
 		static scene::Scene* getSceneContext();
+		static Shr_ptr<ScriptInstance> getEntityScriptInstance(daedalus::UUID entityID);
 		static const std::unordered_map<std::string, Shr_ptr<ScriptClass>>& getEntityClasses();
 	private:
 		static void initMono();

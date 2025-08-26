@@ -114,8 +114,8 @@ namespace daedalus::editor
 	/// @brief This will draw the data for a specified component using a lambda function
 	/// @brief Taking entity as a ref for both this func and the lambda as i didnt want to make 3 different copies,
 	/// even though it is a single uint32_t
-	template<typename T>
-	static void draw_component(const std::string& label, void(*func)(T&), scene::Entity& entity, bool componentIsRemovable = true)
+	template<typename T, typename componentFunction>
+	static void draw_component(const std::string& label, componentFunction func, scene::Entity& entity, bool componentIsRemovable = true)
 	{
 		if (!entity.hasComponent<T>())
 			return;
@@ -310,7 +310,7 @@ namespace daedalus::editor
 			}, entity, false);
 
 		draw_component<scene::ScriptComponent>("Script",
-			[](scene::ScriptComponent& sc)
+			[entity](scene::ScriptComponent& sc)
 			{
 				bool scriptClassExists = scripting::ScriptEngine::entityClassExists(sc.className);
 
@@ -327,6 +327,24 @@ namespace daedalus::editor
 
 				if (!scriptClassExists)
 					ImGui::PopStyleColor();
+
+				Shr_ptr<scripting::ScriptInstance> scriptInstance = scripting::ScriptEngine::getEntityScriptInstance(entity.getUUID());
+				if (scriptInstance)
+				{
+					const auto& fields = scriptInstance->getScriptClass()->getFields();
+
+					for (const auto& [name, field] : fields)
+					{
+						if (field.type == scripting::ScriptFieldType::Float)
+						{
+							float data = scriptInstance->getFieldValue<float>(name);
+							if (ImGui::DragFloat(name.c_str(), &data))
+							{
+								scriptInstance->setFieldValue(name, data);
+							}
+						}
+					}
+				}
 
 			}, entity);
 		

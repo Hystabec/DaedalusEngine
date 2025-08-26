@@ -11,8 +11,29 @@
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/object.h>
+#include <mono/metadata/tabledefs.h>
 
 namespace daedalus::scripting {
+
+	static const std::unordered_map<std::string, ScriptFieldType> s_ScriptFieldTypeMap =
+	{
+		{ "System.Boolean", ScriptFieldType::Bool },
+		{ "System.Single", ScriptFieldType::Float },
+		{ "System.Double", ScriptFieldType::Double },
+		{ "System.Char", ScriptFieldType::Char },
+		{ "System.Byte", ScriptFieldType::Byte },
+		{ "System.Int16", ScriptFieldType::Short },
+		{ "System.UInt16", ScriptFieldType::UShort },
+		{ "System.Int32", ScriptFieldType::Int },
+		{ "System.UInt32", ScriptFieldType::UInt },
+		{ "System.Int64", ScriptFieldType::Long },
+		{ "System.UInt64", ScriptFieldType::ULong },
+		{ "System.String", ScriptFieldType::string },
+		{ "Daedalus.Types.Vector2", ScriptFieldType::Vector2 },
+		{ "Daedalus.Types.Vector3", ScriptFieldType::Vector3 },
+		{ "Daedalus.Types.Vector4", ScriptFieldType::Vector4 },
+		{ "Daedalus.Types.MonoScript", ScriptFieldType::MonoScript }
+	};
 
 	namespace monoUtils {
 
@@ -88,6 +109,60 @@ namespace daedalus::scripting {
 			}
 		}
 
+		static ScriptFieldType mono_type_to_script_field_type(MonoType* monoType)
+		{
+			std::string typeName = mono_type_get_name(monoType);
+
+			auto it = s_ScriptFieldTypeMap.find(typeName);
+
+			if (it == s_ScriptFieldTypeMap.end())
+			{
+				DD_CORE_LOG_WARN("Script Engine: Unknown type: '{}'", typeName);
+				return ScriptFieldType::None;
+			}
+
+			return it->second;
+		}
+
+		static const char* script_field_type_to_string(ScriptFieldType type)
+		{
+			switch (type)
+			{
+			case daedalus::scripting::ScriptFieldType::Bool:
+				return "Bool";
+			case daedalus::scripting::ScriptFieldType::Float:
+				return "Float";
+			case daedalus::scripting::ScriptFieldType::Double:
+				return "Double";
+			case daedalus::scripting::ScriptFieldType::Char:
+				return "Char";
+			case daedalus::scripting::ScriptFieldType::Byte:
+				return "Byte";
+			case daedalus::scripting::ScriptFieldType::Short:
+				return "Short";
+			case daedalus::scripting::ScriptFieldType::UShort:
+				return "UShort";
+			case daedalus::scripting::ScriptFieldType::Int:
+				return "Int";
+			case daedalus::scripting::ScriptFieldType::UInt:
+				return "UInt";
+			case daedalus::scripting::ScriptFieldType::Long:
+				return "Long";
+			case daedalus::scripting::ScriptFieldType::ULong:
+				return "ULong";
+			case daedalus::scripting::ScriptFieldType::string:
+				return "String";
+			case daedalus::scripting::ScriptFieldType::Vector2:
+				return "Vector2";
+			case daedalus::scripting::ScriptFieldType::Vector3:
+				return "Vector3";
+			case daedalus::scripting::ScriptFieldType::Vector4:
+				return "Vector4";
+			case daedalus::scripting::ScriptFieldType::MonoScript:
+				return "MonoScript";
+			}
+			return "Invalid";
+		}
 	}
 
 	struct ScriptEngineData
@@ -232,6 +307,15 @@ namespace daedalus::scripting {
 		return s_data->sceneContext;
 	}
 
+	Shr_ptr<ScriptInstance> ScriptEngine::getEntityScriptInstance(daedalus::UUID entityID)
+	{
+		auto it = s_data->entityInstances.find(entityID);
+		if (it == s_data->entityInstances.end())
+			return nullptr;
+
+		return it->second;
+	}
+
 	const std::unordered_map<std::string, Shr_ptr<ScriptClass>>& ScriptEngine::getEntityClasses()
 	{
 		return s_data->entityClasses;
@@ -258,24 +342,43 @@ namespace daedalus::scripting {
 			mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
 
 			const char* nameSpace = mono_metadata_string_heap(s_data->clientAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
-			const char* name = mono_metadata_string_heap(s_data->clientAssemblyImage, cols[MONO_TYPEDEF_NAME]);
+			const char* className = mono_metadata_string_heap(s_data->clientAssemblyImage, cols[MONO_TYPEDEF_NAME]);
 
-			MonoClass* monoClass = mono_class_from_name(s_data->clientAssemblyImage, nameSpace, name);
+			MonoClass* monoClass = mono_class_from_name(s_data->clientAssemblyImage, nameSpace, className);
 			if (monoClass == baseEntityClass)
 				continue;
 
 			bool isEntity = mono_class_is_subclass_of(monoClass, baseEntityClass, false);
 
-			if (isEntity)
-			{
-				std::string fullName;
-				if (strlen(nameSpace) != 0)
-					fullName = std::format("{}.{}", nameSpace, name);
-				else
-					fullName = name;
+			if (!isEntity)
+				continue;
+			
+			std::string fullName;
+			if (strlen(nameSpace) != 0)
+				fullName = std::format("{}.{}", nameSpace, className);
+			else
+				fullName = className;
 
-				s_data->entityClasses[fullName] = create_shr_ptr<ScriptClass>(nameSpace, name);
-				//DD_CORE_LOG_TRACE("{}.{} is a subclass of Daedalus.Types.MonoScript", nameSpace, name);
+			Shr_ptr<ScriptClass> scriptClass = create_shr_ptr<ScriptClass>(nameSpace, className);
+			s_data->entityClasses[fullName] = scriptClass;
+			//DD_CORE_LOG_TRACE("{}.{} is a subclass of Daedalus.Types.MonoScript", nameSpace, className);
+
+			int fieldCount = mono_class_num_fields(monoClass);
+			DD_CORE_LOG_TRACE("{} fields[{}]:", className, fieldCount);
+			void* iterator = nullptr;
+			while (MonoClassField* field = mono_class_get_fields(monoClass, &iterator))
+			{
+				const char* fieldName = mono_field_get_name(field);
+				uint32_t flags = mono_field_get_flags(field);
+				if (flags & FIELD_ATTRIBUTE_PUBLIC)
+				{
+					MonoType* type = mono_field_get_type(field);
+					
+					ScriptFieldType fieldType = monoUtils::mono_type_to_script_field_type(type);
+
+					DD_CORE_LOG_TRACE("  {} ({})", fieldName, monoUtils::script_field_type_to_string(fieldType));
+					scriptClass->m_fields[fieldName] = { fieldType, fieldName, field };
+				}
 			}
 		}
 	}
@@ -335,6 +438,32 @@ namespace daedalus::scripting {
 			m_scriptClass->invokeMethod(m_instance, m_onUpdateMethod, &param);
 		}
 		
+	}
+
+	bool ScriptInstance::getFieldValueInternal(const std::string& name, void* buffer)
+	{
+		const auto& fields = m_scriptClass->getFields();
+
+		auto it = fields.find(name);
+		if (it == fields.end())
+			return false;
+
+		const ScriptField& field = it->second;
+		mono_field_get_value(m_instance, field.classField, buffer);
+		return true;
+	}
+
+	bool ScriptInstance::setFieldValueInternal(const std::string& name, const void* value)
+	{
+		const auto& fields = m_scriptClass->getFields();
+
+		auto it = fields.find(name);
+		if (it == fields.end())
+			return false;
+
+		const ScriptField& field = it->second;
+		mono_field_set_value(m_instance, field.classField, (void*)value);
+		return true;
 	}
 
 }
