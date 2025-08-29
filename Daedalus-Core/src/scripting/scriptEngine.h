@@ -18,6 +18,11 @@ namespace daedalus::scene {
 
 namespace daedalus::scripting {
 
+	namespace monoUtils
+	{
+		constexpr size_t maxFieldSize = sizeof(float);
+	}
+
 	enum class ScriptFieldType
 	{
 		None = 0,
@@ -37,6 +42,40 @@ namespace daedalus::scripting {
 		std::string name = "";
 		MonoClassField* classField = nullptr;
 	};
+
+	// ScriptField + storage
+	struct ScriptFieldInstance
+	{
+		ScriptField field;
+
+		ScriptFieldInstance()
+		{
+			memset(m_fieldValueBuffer, 0, sizeof(m_fieldValueBuffer));
+		}
+
+		template<typename T>
+		T getFieldValue()
+		{
+			static_assert(sizeof(T) <= monoUtils::maxFieldSize, "Type too large");
+
+			return *((T*)m_fieldValueBuffer);
+		}
+
+		template<typename T>
+		void setFieldValue(T value)
+		{
+			static_assert(sizeof(T) <= monoUtils::maxFieldSize, "Type too large");
+
+			memcpy(m_fieldValueBuffer, &value, sizeof(T));
+		}
+
+	private:
+		uint8_t m_fieldValueBuffer[monoUtils::maxFieldSize];
+
+		friend class ScriptEngine;
+	};
+
+	using ScriptFieldMap = std::unordered_map<std::string, ScriptFieldInstance>;
 
 	class ScriptClass
 	{
@@ -74,6 +113,8 @@ namespace daedalus::scripting {
 		template<typename T>
 		T getFieldValue(const std::string& name)
 		{
+			static_assert(sizeof(T) <= monoUtils::maxFieldSize, "Type too large");
+
 			bool success = getFieldValueInternal(name, s_fieldValueBuffer);
 
 			if (!success)
@@ -83,8 +124,10 @@ namespace daedalus::scripting {
 		}
 
 		template<typename T>
-		void setFieldValue(const std::string& name, const T& value)
+		void setFieldValue(const std::string& name, T value)
 		{
+			static_assert(sizeof(T) <= monoUtils::maxFieldSize, "Type too large");
+
 			setFieldValueInternal(name, &value);
 		}
 	private:
@@ -99,7 +142,9 @@ namespace daedalus::scripting {
 		MonoMethod* m_onUpdateMethod = nullptr;
 
 		// buffer with the size of the largest supported type
-		inline static char s_fieldValueBuffer[sizeof(float)];
+		inline static uint8_t s_fieldValueBuffer[monoUtils::maxFieldSize];
+
+		friend class ScriptEngine;
 	};
 
 	class ScriptEngine
@@ -119,7 +164,9 @@ namespace daedalus::scripting {
 
 		static scene::Scene* getSceneContext();
 		static Shr_ptr<ScriptInstance> getEntityScriptInstance(daedalus::UUID entityID);
+		static Shr_ptr<ScriptClass> getEntityClass(const std::string& className);
 		static const std::unordered_map<std::string, Shr_ptr<ScriptClass>>& getEntityClasses();
+		static ScriptFieldMap& getEntityScriptFields(daedalus::UUID entityID);
 	private:
 		static void initMono();
 		static void shutdownMono();
@@ -131,6 +178,7 @@ namespace daedalus::scripting {
 
 		friend class ScriptClass;
 		friend class ScriptGlue;
+		friend struct ScriptFieldInstance;
 	};
 
 }

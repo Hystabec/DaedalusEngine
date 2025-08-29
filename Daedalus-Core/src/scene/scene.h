@@ -47,6 +47,8 @@ namespace daedalus::scene {
 
 		Entity getPrimaryCameraEntity();
 
+		bool isRunning() const { return m_isRunning; }
+
 		template<typename... components>
 		auto getAllEntitiesWith()
 		{
@@ -68,6 +70,8 @@ namespace daedalus::scene {
 		uint32_t m_viewportWidth = 0, m_viewportHeight = 0;
 
 		std::unordered_map<UUID, entt::entity> m_entityMap;
+
+		bool m_isRunning = false;
 
 		PhysicsScene2D m_physicsScene;
 

@@ -147,6 +147,7 @@ namespace daedalus::scene {
 
 	void Scene::onRuntimeStart()
 	{
+		m_isRunning = true;
 		physics2DStart();
 		scriptingStart();
 	}
@@ -158,6 +159,7 @@ namespace daedalus::scene {
 
 	void Scene::onRutimeStop()
 	{
+		m_isRunning = false;
 		physics2DStop();
 		scriptingStop();
 	}

@@ -179,6 +179,8 @@ namespace daedalus::scripting {
 		ScriptClass entityClass;
 		std::unordered_map<std::string, Shr_ptr<ScriptClass>> entityClasses;
 		std::unordered_map<UUID, Shr_ptr<ScriptInstance>> entityInstances;
+		
+		std::unordered_map<UUID, ScriptFieldMap> entityScriptFields;
 
 		scene::Scene* sceneContext = nullptr;
 	};
@@ -286,7 +288,18 @@ namespace daedalus::scripting {
 		{
 			Shr_ptr<ScriptInstance> instance = create_shr_ptr<ScriptInstance>(s_data->entityClasses[sc.className], entity);
 
-			s_data->entityInstances[entity.getUUID()] = instance;
+			UUID entityID = entity.getUUID();
+			s_data->entityInstances[entityID] = instance;
+
+			// copy feild values
+			if (s_data->entityScriptFields.contains(entityID)) 
+			{
+				ScriptFieldMap& fieldMap = s_data->entityScriptFields.at(entityID);
+				for (auto& [name, fieldInstance] : fieldMap)
+				{
+					instance->setFieldValueInternal(name, fieldInstance.m_fieldValueBuffer);
+				}
+			}
 
 			instance->invokeOnStart();
 		}
@@ -316,9 +329,31 @@ namespace daedalus::scripting {
 		return it->second;
 	}
 
+	Shr_ptr<ScriptClass> ScriptEngine::getEntityClass(const std::string& className)
+	{
+		auto it = s_data->entityClasses.find(className);
+		if (it == s_data->entityClasses.end())
+			return nullptr;
+
+		return it->second;
+	}
+
 	const std::unordered_map<std::string, Shr_ptr<ScriptClass>>& ScriptEngine::getEntityClasses()
 	{
 		return s_data->entityClasses;
+	}
+
+	ScriptFieldMap& ScriptEngine::getEntityScriptFields(daedalus::UUID entityID)
+	{
+		/*auto it = s_data->entityScriptFields.find(entityID);
+		if (it == s_data->entityScriptFields.end())
+		{
+			DD_CORE_ASSERT(false);
+			return ScriptFieldMap();
+		}
+
+		return it->second;*/
+		return s_data->entityScriptFields[entityID];
 	}
 
 	MonoObject* ScriptEngine::instantiateClass(MonoClass* monoClass)

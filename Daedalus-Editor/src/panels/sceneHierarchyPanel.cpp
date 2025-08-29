@@ -310,7 +310,7 @@ namespace daedalus::editor
 			}, entity, false);
 
 		draw_component<scene::ScriptComponent>("Script",
-			[entity](scene::ScriptComponent& sc)
+			[entity, scene = m_sceneContext](scene::ScriptComponent& sc)
 			{
 				bool scriptClassExists = scripting::ScriptEngine::entityClassExists(sc.className);
 
@@ -328,19 +328,66 @@ namespace daedalus::editor
 				if (!scriptClassExists)
 					ImGui::PopStyleColor();
 
-				Shr_ptr<scripting::ScriptInstance> scriptInstance = scripting::ScriptEngine::getEntityScriptInstance(entity.getUUID());
-				if (scriptInstance)
+				// Fields
+				bool isSceneRunning = scene->isRunning();
+				if (isSceneRunning)
 				{
-					const auto& fields = scriptInstance->getScriptClass()->getFields();
-
-					for (const auto& [name, field] : fields)
+					Shr_ptr<scripting::ScriptInstance> scriptInstance = scripting::ScriptEngine::getEntityScriptInstance(entity.getUUID());
+					if (scriptInstance)
 					{
-						if (field.type == scripting::ScriptFieldType::Float)
+						const auto& fields = scriptInstance->getScriptClass()->getFields();
+
+						for (const auto& [name, field] : fields)
 						{
-							float data = scriptInstance->getFieldValue<float>(name);
-							if (ImGui::DragFloat(name.c_str(), &data))
+							if (field.type == scripting::ScriptFieldType::Float)
 							{
-								scriptInstance->setFieldValue(name, data);
+								float data = scriptInstance->getFieldValue<float>(name);
+								if (ImGui::DragFloat(name.c_str(), &data))
+								{
+									scriptInstance->setFieldValue(name, data);
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					if (scriptClassExists)
+					{
+						auto entityClass = scripting::ScriptEngine::getEntityClass(sc.className);
+						auto& fields = entityClass->getFields();
+
+						auto& classFields = scripting::ScriptEngine::getEntityScriptFields(entity.getUUID());
+
+						for (const auto& [name, field] : fields)
+						{
+							// Field set in editor
+							if (classFields.find(name) != classFields.end())
+							{
+								scripting::ScriptFieldInstance& scriptField = classFields.at(name);
+
+								if (field.type == scripting::ScriptFieldType::Float)
+								{
+									float data = scriptField.getFieldValue<float>();
+									if (ImGui::DragFloat(name.c_str(), &data))
+									{
+										scriptField.setFieldValue(data);
+									}
+								}
+							}
+							else
+							{
+								if (field.type == scripting::ScriptFieldType::Float)
+								{
+									// TO DO: load the default value for the C# field
+									float data = 0.0f;
+									if (ImGui::DragFloat(name.c_str(), &data))
+									{
+										auto& fieldInstance = classFields[name];
+										fieldInstance.field = field;
+										fieldInstance.setFieldValue(data);
+									}
+								}
 							}
 						}
 					}
