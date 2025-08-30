@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../application/uuid.h"
+#include "maths/vec4.h"
 
 extern "C" {
 	typedef struct _MonoClass MonoClass;
@@ -20,7 +21,7 @@ namespace daedalus::scripting {
 
 	namespace monoUtils
 	{
-		constexpr size_t maxFieldSize = sizeof(float);
+		constexpr size_t maxFieldSize = sizeof(std::string);
 	}
 
 	enum class ScriptFieldType
@@ -31,7 +32,7 @@ namespace daedalus::scripting {
 		Short, UShort,
 		Int, UInt,
 		Long, ULong,
-		string,
+		String,
 		Vector2, Vector3, Vector4,
 		MonoScript
 	};
@@ -180,5 +181,93 @@ namespace daedalus::scripting {
 		friend class ScriptGlue;
 		friend struct ScriptFieldInstance;
 	};
+
+	namespace utils
+	{
+		inline const char* script_field_type_to_string(ScriptFieldType fieldType)
+		{
+			switch (fieldType)
+			{
+			case ScriptFieldType::None:
+				return "None";
+			case ScriptFieldType::Bool:
+				return "Bool";
+			case ScriptFieldType::Float:
+				return "Float";
+			case ScriptFieldType::Double:
+				return "Double";
+			case ScriptFieldType::Char:
+				return "Char";
+			case ScriptFieldType::Byte:
+				return "Byte";
+			case ScriptFieldType::Short:
+				return "Short";
+			case ScriptFieldType::UShort:
+				return "UShort";
+			case ScriptFieldType::Int:
+				return "Int";
+			case ScriptFieldType::UInt:
+				return "UInt";
+			case ScriptFieldType::Long:
+				return "Long";
+			case ScriptFieldType::ULong:
+				return "ULong";
+			case ScriptFieldType::String:
+				return "String";
+			case ScriptFieldType::Vector2:
+				return "Vector2";
+			case ScriptFieldType::Vector3:
+				return "Vector3";
+			case ScriptFieldType::Vector4:
+				return "Vector4";
+			case ScriptFieldType::MonoScript:
+				return "MonoScript";
+			}
+
+			DD_CORE_ASSERT(false, "Unknow ScriptFieldType");
+			return "None";
+		}
+
+		inline ScriptFieldType script_field_type_from_string(std::string_view fieldType)
+		{
+			if (fieldType == "None")
+				return ScriptFieldType::None;
+			else if (fieldType == "Bool")
+				return ScriptFieldType::Bool;
+			else if (fieldType == "Float")
+				return ScriptFieldType::Float;
+			else if (fieldType == "Double")
+				return ScriptFieldType::Double;
+			else if (fieldType == "Char")
+				return ScriptFieldType::Char;
+			else if (fieldType == "Byte")
+				return ScriptFieldType::Byte;
+			else if (fieldType == "Short")
+				return ScriptFieldType::Short;
+			else if (fieldType == "UShort")
+				return ScriptFieldType::UShort;
+			else if (fieldType == "Int")
+				return ScriptFieldType::Int;
+			else if (fieldType == "UInt")
+				return ScriptFieldType::UInt;
+			else if (fieldType == "Long")
+				return ScriptFieldType::Long;
+			else if (fieldType == "ULong")
+				return ScriptFieldType::ULong;
+			else if (fieldType == "String")
+				return ScriptFieldType::String;
+			else if (fieldType == "Vector2")
+				return ScriptFieldType::Vector2;
+			else if (fieldType == "Vector3")
+				return ScriptFieldType::Vector3;
+			else if (fieldType == "Vector4")
+				return ScriptFieldType::Vector4;
+			else if (fieldType == "MonoScript")
+				return ScriptFieldType::MonoScript;
+
+			DD_CORE_ASSERT(false, "Unknow ScriptFieldType");
+			return ScriptFieldType::None;
+		}
+	}
 
 }

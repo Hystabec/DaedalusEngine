@@ -3,6 +3,8 @@
 
 #include "entity.h"
 #include "entityComponents/components.h"
+#include "../scripting/scriptEngine.h"
+#include "application/uuid.h"
 
 #include <fstream>
 #include <yaml-cpp/yaml.h>
@@ -83,6 +85,26 @@ namespace YAML {
 		}
 	};
 
+	template<>
+	struct convert<daedalus::UUID>
+	{
+		static Node encode(const daedalus::UUID& rhs)
+		{
+			Node node;
+			node.push_back((uint64_t)rhs);
+			return node;
+		}
+
+		static bool decode(const Node& node, daedalus::UUID& rhs)
+		{
+			if (!node.IsSequence() || node.size() != 4)
+				return false;
+
+			rhs = node[0].as<uint64_t>();
+			return true;
+		}
+	};
+
 }
 
 namespace daedalus::scene {
@@ -142,8 +164,8 @@ namespace daedalus::scene {
 	{
 	}
 
-	template<typename T>
-	void serialize_component(YAML::Emitter& out, const std::string& componentName, Entity& entity, void(*func)(YAML::Emitter&, T&))
+	template<typename T, typename componentFunction>
+	void serialize_component(YAML::Emitter& out, const std::string& componentName, Entity& entity, componentFunction func)
 	{
 		if (!entity.hasComponent<T>())
 			return;
@@ -179,9 +201,61 @@ namespace daedalus::scene {
 				out << YAML::Key << "Scale" << YAML::Value << tc.scale;
 			});
 
-		serialize_component<ScriptComponent>(out, "ScriptComponent", entity, [](YAML::Emitter& out, ScriptComponent& sc)
+		serialize_component<ScriptComponent>(out, "ScriptComponent", entity, [entity](YAML::Emitter& out, ScriptComponent& sc)
 			{
 				out << YAML::Key << "ClassName" << YAML::Value << sc.className;
+
+				//Fields
+				using namespace scripting;
+				auto entityClass = ScriptEngine::getEntityClass(sc.className);
+				const auto& fields = entityClass->getFields();
+				
+				if(fields.size() > 0)
+				{
+					out << YAML::Key << "ScriptFields" << YAML::Value;
+					out << YAML::BeginSeq;
+					auto& entityFields = scripting::ScriptEngine::getEntityScriptFields(entity.getUUID());
+					for (const auto& [name, field] : fields)
+					{
+						if (entityFields.find(name) == entityFields.end())
+							continue;
+
+						out << YAML::BeginMap;
+						out << YAML::Key << "Name" << YAML::Value << name;
+						out << YAML::Key << "Type" << YAML::Value << utils::script_field_type_to_string(field.type);
+
+						out << YAML::Key << "Data" << YAML::Value;
+						scripting::ScriptFieldInstance& scriptField = entityFields.at(name);
+
+#define FIELD_TYPE_MACRO(FieldType, Type) case ScriptFieldType::FieldType:\
+						out << scriptField.getFieldValue<Type>();\
+						break;
+
+						switch (field.type)
+						{
+						FIELD_TYPE_MACRO(Bool, bool)
+						FIELD_TYPE_MACRO(Float, float)
+						FIELD_TYPE_MACRO(Double, double)
+						FIELD_TYPE_MACRO(Char, char)
+						FIELD_TYPE_MACRO(Byte, byte)
+						FIELD_TYPE_MACRO(Short, short)
+						FIELD_TYPE_MACRO(UShort, uint16_t)
+						FIELD_TYPE_MACRO(Int, int)
+						FIELD_TYPE_MACRO(UInt, uint32_t)
+						FIELD_TYPE_MACRO(Long, long)
+						FIELD_TYPE_MACRO(ULong, uint64_t)
+						FIELD_TYPE_MACRO(String, std::string)
+						FIELD_TYPE_MACRO(Vector2, maths::Vec2)
+						FIELD_TYPE_MACRO(Vector3, maths::Vec3)
+						FIELD_TYPE_MACRO(Vector4, maths::Vec4)
+						FIELD_TYPE_MACRO(MonoScript, UUID)
+						}
+#undef FIELD_TYPE_MACRO
+
+						out << YAML::EndMap;
+					}
+					out << YAML::EndSeq;
+				}
 			});
 
 		serialize_component<CameraComponent>(out, "CameraComponent", entity, [](YAML::Emitter& out, CameraComponent& cc)
@@ -247,7 +321,8 @@ namespace daedalus::scene {
 	{
 		YAML::Emitter out;
 		out << YAML::BeginMap;
-		out << YAML::Key << "Scene" << YAML::Value << "Untitled";
+		out << YAML::Key << "Scene" << YAML::Value << filepath.stem().string();
+		out << YAML::Key << "Format Version" << YAML::Value << m_fileFormatVersion;
 		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 		for (auto entityID : m_scene->m_registry.view<entt::entity>())
 		{
@@ -336,6 +411,61 @@ namespace daedalus::scene {
 				{
 					auto& sc = deserializedEntity.addOrRepalaceComponent<ScriptComponent>();
 					sc.className = component["ClassName"].as<std::string>();
+					using namespace scripting;
+					const auto& scriptFiels = component["ScriptFields"];
+					if (scriptFiels)
+					{
+						Shr_ptr<ScriptClass> entityClass = ScriptEngine::getEntityClass(sc.className);
+						DD_CORE_ASSERT(entityClass);
+						const auto& fields = entityClass->getFields();
+						auto& entityFields = ScriptEngine::getEntityScriptFields(deserializedEntity.getUUID());
+
+						for (auto& scriptFeild : scriptFiels)
+						{
+
+							std::string fieldName = scriptFeild["Name"].as<std::string>();
+							std::string typeAsString = scriptFeild["Type"].as<std::string>();
+							scripting::ScriptFieldType fieldType = scripting::utils::script_field_type_from_string(typeAsString);
+							
+							ScriptFieldInstance& fieldInstance = entityFields[fieldName];
+							if (!fields.contains(fieldName))
+							{
+								DD_LOG_WARN("Entity '{}', Script component field: '{}' not found, while deserializing '{}'", name, fieldName, filepath.filename().string());
+								continue;
+							}
+
+							fieldInstance.field = fields.at(fieldName);
+
+#define FIELD_TYPE_MACRO(FieldType, Type) case ScriptFieldType::FieldType:\
+							{\
+							Type readData = scriptFeild["Data"].as<Type>();\
+							fieldInstance.setFieldValue(readData);\
+							break;\
+							}
+
+							switch (fieldType)
+							{
+							FIELD_TYPE_MACRO(Bool, bool)
+							FIELD_TYPE_MACRO(Float, float)
+							FIELD_TYPE_MACRO(Double, double)
+							FIELD_TYPE_MACRO(Char, char)
+							FIELD_TYPE_MACRO(Byte, byte)
+							FIELD_TYPE_MACRO(Short, short)
+							FIELD_TYPE_MACRO(UShort, uint16_t)
+							FIELD_TYPE_MACRO(Int, int)
+							FIELD_TYPE_MACRO(UInt, uint32_t)
+							FIELD_TYPE_MACRO(Long, long)
+							FIELD_TYPE_MACRO(ULong, uint64_t)
+							FIELD_TYPE_MACRO(String, std::string)
+							FIELD_TYPE_MACRO(Vector2, maths::Vec2)
+							FIELD_TYPE_MACRO(Vector3, maths::Vec3)
+							FIELD_TYPE_MACRO(Vector4, maths::Vec4)
+							FIELD_TYPE_MACRO(MonoScript, UUID)
+							}
+#undef FIELD_TYPE_MACRO
+
+						}
+					}
 				}
 
 				component = entity["CameraComponent"];

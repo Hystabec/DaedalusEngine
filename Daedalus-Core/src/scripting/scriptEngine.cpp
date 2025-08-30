@@ -28,7 +28,7 @@ namespace daedalus::scripting {
 		{ "System.UInt32", ScriptFieldType::UInt },
 		{ "System.Int64", ScriptFieldType::Long },
 		{ "System.UInt64", ScriptFieldType::ULong },
-		{ "System.String", ScriptFieldType::string },
+		{ "System.String", ScriptFieldType::String },
 		{ "Daedalus.Types.Vector2", ScriptFieldType::Vector2 },
 		{ "Daedalus.Types.Vector3", ScriptFieldType::Vector3 },
 		{ "Daedalus.Types.Vector4", ScriptFieldType::Vector4 },
@@ -122,46 +122,6 @@ namespace daedalus::scripting {
 			}
 
 			return it->second;
-		}
-
-		static const char* script_field_type_to_string(ScriptFieldType type)
-		{
-			switch (type)
-			{
-			case daedalus::scripting::ScriptFieldType::Bool:
-				return "Bool";
-			case daedalus::scripting::ScriptFieldType::Float:
-				return "Float";
-			case daedalus::scripting::ScriptFieldType::Double:
-				return "Double";
-			case daedalus::scripting::ScriptFieldType::Char:
-				return "Char";
-			case daedalus::scripting::ScriptFieldType::Byte:
-				return "Byte";
-			case daedalus::scripting::ScriptFieldType::Short:
-				return "Short";
-			case daedalus::scripting::ScriptFieldType::UShort:
-				return "UShort";
-			case daedalus::scripting::ScriptFieldType::Int:
-				return "Int";
-			case daedalus::scripting::ScriptFieldType::UInt:
-				return "UInt";
-			case daedalus::scripting::ScriptFieldType::Long:
-				return "Long";
-			case daedalus::scripting::ScriptFieldType::ULong:
-				return "ULong";
-			case daedalus::scripting::ScriptFieldType::string:
-				return "String";
-			case daedalus::scripting::ScriptFieldType::Vector2:
-				return "Vector2";
-			case daedalus::scripting::ScriptFieldType::Vector3:
-				return "Vector3";
-			case daedalus::scripting::ScriptFieldType::Vector4:
-				return "Vector4";
-			case daedalus::scripting::ScriptFieldType::MonoScript:
-				return "MonoScript";
-			}
-			return "Invalid";
 		}
 	}
 
@@ -272,7 +232,7 @@ namespace daedalus::scripting {
 
 	void ScriptEngine::onRuntimeStop()
 	{
-		s_data->sceneContext = nullptr;
+		s_data->sceneContext = nullptr; 
 		s_data->entityInstances.clear();
 	}
 
@@ -399,7 +359,7 @@ namespace daedalus::scripting {
 			//DD_CORE_LOG_TRACE("{}.{} is a subclass of Daedalus.Types.MonoScript", nameSpace, className);
 
 			int fieldCount = mono_class_num_fields(monoClass);
-			DD_CORE_LOG_TRACE("{} fields[{}]:", className, fieldCount);
+			//DD_CORE_LOG_TRACE("{} fields[{}]:", className, fieldCount);
 			void* iterator = nullptr;
 			while (MonoClassField* field = mono_class_get_fields(monoClass, &iterator))
 			{
@@ -410,8 +370,7 @@ namespace daedalus::scripting {
 					MonoType* type = mono_field_get_type(field);
 					
 					ScriptFieldType fieldType = monoUtils::mono_type_to_script_field_type(type);
-
-					DD_CORE_LOG_TRACE("  {} ({})", fieldName, monoUtils::script_field_type_to_string(fieldType));
+					//DD_CORE_LOG_TRACE("  {} ({})", fieldName, utils::script_field_type_to_string(fieldType));
 					scriptClass->m_fields[fieldName] = { fieldType, fieldName, field };
 				}
 			}

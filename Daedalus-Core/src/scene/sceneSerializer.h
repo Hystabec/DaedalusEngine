@@ -19,6 +19,7 @@ namespace daedalus::scene {
 		bool deserializeRuntime(const std::filesystem::path& filepath);
 	private:
 		Shr_ptr<Scene> m_scene;
+		float m_fileFormatVersion = 1.0f;
 	};
 
 }
