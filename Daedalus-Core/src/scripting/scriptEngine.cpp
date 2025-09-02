@@ -316,10 +316,16 @@ namespace daedalus::scripting {
 		return s_data->entityScriptFields[entityID];
 	}
 
-	MonoObject* ScriptEngine::getManagedInstance(daedalus::UUID uuid)
+	MonoObject* ScriptEngine::getManagedInstance(daedalus::UUID uuid, std::string_view instanceName)
 	{
 		DD_CORE_ASSERT(s_data->entityInstances.contains(uuid));
-		return s_data->entityInstances.at(uuid)->getManagedObject();
+		auto& instance = s_data->entityInstances.at(uuid);
+
+		std::string fullClassName = std::format("{}.{}", instance->m_scriptClass->m_classNamespace, instance->m_scriptClass->m_className);
+		if (fullClassName == instanceName)
+			return instance->getManagedObject();
+		else
+			return nullptr;
 	}
 
 	MonoObject* ScriptEngine::instantiateClass(MonoClass* monoClass)

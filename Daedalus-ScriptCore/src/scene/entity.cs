@@ -58,17 +58,17 @@ namespace Daedalus.Types
 
         public T GetComponent<T>() where T : Component, new()
         {
-            if (typeof(T).IsSubclassOf(typeof(MonoScript)))
+            Type typeT = typeof(T);
+            if (typeT.IsSubclassOf(typeof(MonoScript)))
             {
-                // Currently works but a little unsafe, as regardless of what is found
-                // its cast to a T
+                object instance = InternalCalls.entity_get_script_instance(ID, typeT.ToString(), out bool scriptFound);
 
-                // TO DO: make this function safer:
-                // This should check the type that is found. 
-                // So an arg should probably be the type that is being looked for
-                // as well as an out bool for if it was found or not
-                object instance = InternalCalls.entity_get_script_instance(ID);
-                return instance as T;
+                // This extra check might be pointless.
+                // as if instance is null thats what i would return anyway
+                if(scriptFound)
+                    return instance as T;
+
+                return null;
             }
             else 
             {

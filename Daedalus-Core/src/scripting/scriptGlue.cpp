@@ -64,9 +64,22 @@ namespace daedalus::scripting {
 		return entity.getUUID();
 	}
 
-	static MonoObject* entity_get_script_instance(UUID uuid)
+	static MonoObject* entity_get_script_instance(UUID uuid, MonoString* componentTypeName, bool* scriptFound)
 	{
-		return scripting::ScriptEngine::getManagedInstance(uuid);
+		char* cStr = mono_string_to_utf8(componentTypeName);
+		MonoObject* foundObject = scripting::ScriptEngine::getManagedInstance(uuid, cStr);
+		mono_free(cStr);
+
+		if (foundObject)
+		{
+			*scriptFound = true;
+			return foundObject;
+		}
+		else
+		{
+			*scriptFound = false;
+			return nullptr;
+		}
 	}
 
 	static void transform_component_get_position(UUID uuid, maths::Vec3* outPosition)

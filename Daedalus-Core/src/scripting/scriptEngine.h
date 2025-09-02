@@ -171,7 +171,7 @@ namespace daedalus::scripting {
 		static const std::unordered_map<std::string, Shr_ptr<ScriptClass>>& getEntityClasses();
 		static ScriptFieldMap& getEntityScriptFields(daedalus::UUID entityID);
 
-		static MonoObject* getManagedInstance(daedalus::UUID uuid);
+		static MonoObject* getManagedInstance(daedalus::UUID uuid, std::string_view instanceName);
 	private:
 		static void initMono();
 		static void shutdownMono();

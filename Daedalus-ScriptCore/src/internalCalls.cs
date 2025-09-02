@@ -25,7 +25,7 @@ namespace Daedalus
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static ulong entity_find_entity_by_name(string name);
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static object entity_get_script_instance(ulong entityID);
+        internal extern static object entity_get_script_instance(ulong entityID, string MonoScriptTypeName, out bool scriptFound);
         #endregion
 
         #region transform
