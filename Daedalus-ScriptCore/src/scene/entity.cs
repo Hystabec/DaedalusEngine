@@ -60,6 +60,13 @@ namespace Daedalus.Types
         {
             if (typeof(T).IsSubclassOf(typeof(MonoScript)))
             {
+                // Currently works but a little unsafe, as regardless of what is found
+                // its cast to a T
+
+                // TO DO: make this function safer:
+                // This should check the type that is found. 
+                // So an arg should probably be the type that is being looked for
+                // as well as an out bool for if it was found or not
                 object instance = InternalCalls.entity_get_script_instance(ID);
                 return instance as T;
             }
