@@ -26,7 +26,8 @@ namespace daedalus { namespace debug {
 		enum class Caller
 		{
 			Core,
-			Client
+			Client,
+			Scripting
 		};
 
 		enum class Type

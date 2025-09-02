@@ -316,6 +316,12 @@ namespace daedalus::scripting {
 		return s_data->entityScriptFields[entityID];
 	}
 
+	MonoObject* ScriptEngine::getManagedInstance(daedalus::UUID uuid)
+	{
+		DD_CORE_ASSERT(s_data->entityInstances.contains(uuid));
+		return s_data->entityInstances.at(uuid)->getManagedObject();
+	}
+
 	MonoObject* ScriptEngine::instantiateClass(MonoClass* monoClass)
 	{
 		MonoObject* instance = mono_object_new(s_data->appDomain, monoClass);

@@ -20,6 +20,13 @@
             this.Z = z;
         }
 
+        public Vector3(Vector2 xy, float z)
+        {
+            this.X = xy.X;
+            this.Y = xy.Y;
+            this.Z = z;
+        }
+
         public Vector2 XY
         {
             get => new Vector2(X, Y);

@@ -30,6 +30,8 @@ namespace daedalus::scene {
 		void destroyEntity(Entity entity);
 		void duplicateEntity(Entity entity);
 
+		// prefer finding entity using UUID 
+		Entity findEntityByName(std::string_view name);
 		Entity getEntityByUUID(UUID uuid);
 
 		void onRuntimeStart();

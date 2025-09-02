@@ -17,13 +17,12 @@ namespace daedalus::scripting {
 
 #define DD_ADD_INTERNAL_CALL(FuncName) mono_add_internal_call("Daedalus.InternalCalls::" #FuncName, FuncName)
 
-	static void native_log(MonoString* string)
+	static void native_log(MonoString* string, daedalus::debug::Log::Type logType)
 	{
 		char* cStr = mono_string_to_utf8(string);
-		std::string str(cStr);
+		using namespace daedalus::debug;
+		Log::log(Log::Caller::Scripting, logType, cStr);
 		mono_free(cStr);
-
-		DD_LOG_TRACE(str);
 	}
 
 	static bool input_get_key_up(application::InputCode inputCode)
@@ -47,6 +46,27 @@ namespace daedalus::scripting {
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
 		DD_CORE_ASSERT(s_entityHasComponentFuncs.find(managedType) != s_entityHasComponentFuncs.end());
 		return s_entityHasComponentFuncs.at(managedType)(entity);
+	}
+
+	static uint64_t entity_find_entity_by_name(MonoString* name)
+	{
+		char* cStr = mono_string_to_utf8(name);
+
+		scene::Scene* sceneContext = scripting::ScriptEngine::getSceneContext();
+		DD_CORE_ASSERT(sceneContext);
+		scene::Entity entity = sceneContext->findEntityByName(cStr);
+
+		mono_free(cStr);
+
+		if (!entity)
+			return 0;
+
+		return entity.getUUID();
+	}
+
+	static MonoObject* entity_get_script_instance(UUID uuid)
+	{
+		return scripting::ScriptEngine::getManagedInstance(uuid);
 	}
 
 	static void transform_component_get_position(UUID uuid, maths::Vec3* outPosition)
@@ -171,6 +191,8 @@ namespace daedalus::scripting {
 		DD_ADD_INTERNAL_CALL(input_get_key_down);
 
 		DD_ADD_INTERNAL_CALL(entity_has_component);
+		DD_ADD_INTERNAL_CALL(entity_find_entity_by_name);
+		DD_ADD_INTERNAL_CALL(entity_get_script_instance);
 
 		DD_ADD_INTERNAL_CALL(transform_component_get_position);
 		DD_ADD_INTERNAL_CALL(transform_component_set_position);

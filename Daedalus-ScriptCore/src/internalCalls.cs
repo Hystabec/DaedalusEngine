@@ -1,3 +1,4 @@
+using Daedalus.Types;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -8,7 +9,7 @@ namespace Daedalus
     {
         #region logging
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static void native_log(string text);
+        internal extern static void native_log(string text, Debug.LogLevel logType);
         #endregion
 
         #region input
@@ -21,6 +22,10 @@ namespace Daedalus
         #region entity
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static bool entity_has_component(ulong entityID, Type componentType);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static ulong entity_find_entity_by_name(string name);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static object entity_get_script_instance(ulong entityID);
         #endregion
 
         #region transform

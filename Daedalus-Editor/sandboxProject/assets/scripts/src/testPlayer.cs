@@ -16,15 +16,18 @@ namespace Sandbox
     {
         private TransformComponent m_transform;
         private Rigidbody2DComponent m_rb;
+        private FollowCamera m_camera;
 
         public float speed = 1.0f;
 
         void OnStart()
         {
             //Debug.Log($"Player.OnStart: {ID}");
-            m_transform = GetComponent<TransformComponent>();
+            m_transform = Entity.Transform;
+            //m_transform = Entity.GetComponent<TransformComponent>();
 
-            m_rb = GetComponent<Rigidbody2DComponent>();
+            m_rb = Entity.GetComponent<Rigidbody2DComponent>();
+            m_camera = FindEntityByName("Camera").GetComponent<FollowCamera>();
         }
 
         void OnUpdate(float deltaTime)
@@ -50,6 +53,14 @@ namespace Sandbox
             velocity *= (speed);
 
             m_rb.ApplyForce(velocity.XY);
+
+            if(m_camera)
+            {
+                if (Input.IsKeyDown(InputCode.Key_Z))
+                    m_camera.distanceFromPlayer += 1.0f * deltaTime;
+                else if (Input.IsKeyDown(InputCode.Key_X))
+                    m_camera.distanceFromPlayer -= 1.0f * deltaTime;
+            }
 
             //Vector3 position = m_transform.Position;
             //position += velocity;

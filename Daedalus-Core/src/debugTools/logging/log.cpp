@@ -11,6 +11,7 @@ namespace daedalus { namespace debug {
 
 	static std::shared_ptr<spdlog::logger> s_coreLogger;
 	static std::shared_ptr<spdlog::logger> s_clientLogger;
+	static std::shared_ptr<spdlog::logger> s_scriptingLogger;
 	static bool s_hasInit = false;
 
 
@@ -25,6 +26,9 @@ namespace daedalus { namespace debug {
 
 		s_clientLogger = spdlog::stderr_color_mt("Client");
 		s_clientLogger->set_level(spdlog::level::trace);
+
+		s_scriptingLogger = spdlog::stderr_color_mt("C#");
+		s_scriptingLogger->set_level(spdlog::level::trace);
 
 		s_hasInit = true;
 	}
@@ -75,6 +79,27 @@ namespace daedalus { namespace debug {
 				break;
 			case Type::critical:
 				s_clientLogger->critical(message);
+				break;
+			}
+		}
+		else if (caller == Caller::Scripting)
+		{
+			switch (type)
+			{
+			case Type::trace:
+				s_scriptingLogger->trace(message);
+				break;
+			case Type::info:
+				s_scriptingLogger->info(message);
+				break;
+			case Type::warn:
+				s_scriptingLogger->warn(message);
+				break;
+			case Type::error:
+				s_scriptingLogger->error(message);
+				break;
+			case Type::critical:
+				s_scriptingLogger->critical(message);
 				break;
 			}
 		}

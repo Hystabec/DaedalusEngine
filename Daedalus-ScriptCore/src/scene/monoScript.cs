@@ -4,42 +4,50 @@ namespace Daedalus.Types
 {
     // NOTE: This was originally called 'Entity' then renamed to 'MonoScript'
     // would something like 'Componet'/'BaseComponent' be better?
-    public class MonoScript
+    public class MonoScript : Component
     {
         protected MonoScript()
         {
-            EntityID = 0;
+            Entity = new Entity(0);
         }
 
         internal MonoScript(ulong id)
         {
-            EntityID = id;
+            Entity = new Entity(id);
         }
 
-        public readonly ulong EntityID;
+        //public readonly Entity Entity;
 
-        public TransformComponent Transform
+        // Wrappers for entity functions
+        // so 'Transform' can be used instead of 'Entity.Transform'
+        //public TransformComponent Transform
+        //{
+        //    get
+        //    {
+        //        return Entity.GetComponent<TransformComponent>();
+        //    }
+        //}
+
+        //public bool HasComponent<T>() where T : Component, new()
+        //{
+        //    return Entity.HasComponent<T>();
+        //}
+
+        //public T GetComponent<T>() where T : Component, new()
+        //{
+        //    return Entity.GetComponent<T>();
+        //}
+
+        public Entity FindEntityByName(string name)
         {
-            get
+            ulong id = InternalCalls.entity_find_entity_by_name(name);
+
+            if(id == 0)
             {
-                TransformComponent tc = GetComponent<TransformComponent>();
-                return tc;
-            }
-        }
-
-        public bool HasComponent<T>() where T : Component, new()
-        {
-            Type componentType = typeof(T);
-            return InternalCalls.entity_has_component(EntityID, componentType);
-        }
-
-        public T GetComponent<T>() where T : Component, new()
-        {
-            if(!HasComponent<T>())
                 return null;
+            }
 
-            T component = new T() { MonoScript = this };
-            return component;
+            return new Entity(id);
         }
     }
 }

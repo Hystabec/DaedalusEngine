@@ -9,7 +9,29 @@ namespace Daedalus.Types
 {
     public abstract class Component
     {
-        public MonoScript MonoScript {  get; internal set; }
+        public Entity Entity {  get; internal set; }
+
+        public static bool operator true(Component x)
+        {
+            if (x != null)
+                return x.Entity.ID != 0;
+            else
+                return false;
+        }
+        public static bool operator false(Component x)
+        {
+            if (x == null)
+                return true;
+            else
+                return x.Entity.ID == 0;
+        }
+        public static bool operator !(Component x)
+        {
+            if (x == null)
+                return true;
+            else
+                return x.Entity.ID == 0;
+        }
     }
 
     public class TransformComponent : Component
@@ -18,12 +40,12 @@ namespace Daedalus.Types
         {
             get
             {
-                InternalCalls.transform_component_get_position(MonoScript.EntityID, out Vector3 position);
+                InternalCalls.transform_component_get_position(Entity.ID, out Vector3 position);
                 return position;
             }
             set
             {
-                InternalCalls.transform_component_set_position(MonoScript.EntityID, ref value);
+                InternalCalls.transform_component_set_position(Entity.ID, ref value);
             }
         }
     }
@@ -32,27 +54,27 @@ namespace Daedalus.Types
     {
         public void ApplyForce(Vector2 force, Vector2 worldPoint, bool wake = true)
         {
-            InternalCalls.rigidbody2D_component_apply_force_from_point(MonoScript.EntityID, ref force, ref worldPoint, wake);
+            InternalCalls.rigidbody2D_component_apply_force_from_point(Entity.ID, ref force, ref worldPoint, wake);
         }
 
         public void ApplyForce(Vector2 force, bool wake = true)
         {
-            InternalCalls.rigidbody2D_component_apply_force(MonoScript.EntityID, ref force, wake);
+            InternalCalls.rigidbody2D_component_apply_force(Entity.ID, ref force, wake);
         }
 
         public void AddLinearImpulse(Vector2 linearImpulse, Vector2 worldPoint, bool wake = true)
         {
-            InternalCalls.rigidbody2D_component_add_linear_impulse_from_point(MonoScript.EntityID, ref linearImpulse, ref worldPoint, wake);
+            InternalCalls.rigidbody2D_component_add_linear_impulse_from_point(Entity.ID, ref linearImpulse, ref worldPoint, wake);
         }
 
         public void AddLinearImpulse(Vector2 linearImpulse, bool wake = true)
         {
-            InternalCalls.rigidbody2D_component_add_linear_impulse(MonoScript.EntityID, ref linearImpulse, wake);
+            InternalCalls.rigidbody2D_component_add_linear_impulse(Entity.ID, ref linearImpulse, wake);
         }
 
         public void ApplyTorque(float torque, bool wake = true)
         {
-            InternalCalls.rigidbody2D_component_apply_torque(MonoScript.EntityID, ref torque, wake);
+            InternalCalls.rigidbody2D_component_apply_torque(Entity.ID, ref torque, wake);
         }
     }
 

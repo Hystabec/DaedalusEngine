@@ -135,6 +135,19 @@ namespace daedalus::scene {
 		copy_component_if_exists(AllModifiableComponents{}, newEntity, entity);
 	}
 
+	Entity Scene::findEntityByName(std::string_view name)
+	{
+		auto view = m_registry.view<scene::IDComponent>();
+		for (auto entity : view)
+		{
+			const scene::IDComponent& tc = view.get<scene::IDComponent>(entity);
+			if (tc.name == name)
+				return Entity{ entity, this };
+		}
+
+		return Entity();
+	}
+
 	Entity Scene::getEntityByUUID(UUID uuid)
 	{
 		if (m_entityMap.find(uuid) != m_entityMap.end())

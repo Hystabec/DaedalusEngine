@@ -1,9 +1,5 @@
-﻿using Daedalus.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Daedalus;
+using Daedalus.Types;
 
 namespace Sandbox
 {
@@ -18,7 +14,7 @@ namespace Sandbox
 
         void OnStart()
         {
-            m_rb = GetComponent<Rigidbody2DComponent>();
+            m_rb = Entity.GetComponent<Rigidbody2DComponent>();
         }
 
         void OnUpdate(float deltaTime)

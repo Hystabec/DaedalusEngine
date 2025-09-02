@@ -131,6 +131,8 @@ namespace daedalus::scripting {
 
 			setFieldValueInternal(name, &value);
 		}
+
+		MonoObject* getManagedObject() { return m_instance; }
 	private:
 		bool getFieldValueInternal(const std::string& name, void* buffer);
 		bool setFieldValueInternal(const std::string& name, const void* value);
@@ -168,6 +170,8 @@ namespace daedalus::scripting {
 		static Shr_ptr<ScriptClass> getEntityClass(const std::string& className);
 		static const std::unordered_map<std::string, Shr_ptr<ScriptClass>>& getEntityClasses();
 		static ScriptFieldMap& getEntityScriptFields(daedalus::UUID entityID);
+
+		static MonoObject* getManagedInstance(daedalus::UUID uuid);
 	private:
 		static void initMono();
 		static void shutdownMono();
