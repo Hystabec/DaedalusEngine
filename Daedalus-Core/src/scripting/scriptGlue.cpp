@@ -193,6 +193,7 @@ namespace daedalus::scripting {
 
 	void ScriptGlue::registerComponentTypes()
 	{
+		s_entityHasComponentFuncs.clear();
 		register_component_types_base(scene::AllComponents{}, ScriptEngine::getCoreAssemblyImage());
 	}
 

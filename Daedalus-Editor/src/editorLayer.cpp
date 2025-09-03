@@ -3,6 +3,7 @@
 
 #include "scene/sceneSerializer.h"
 #include "utils/platformUtils.h"
+#include "scripting/scriptEngine.h"
 
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -204,9 +205,37 @@ namespace daedalus::editor
 
 			if (ImGui::BeginMenu("View"))
 			{
+				if (ImGui::BeginMenu("Selection Gizmo"))
+				{
+					if (ImGui::MenuItem("None##seclctionGizmo", "Shift+Q", m_gizmoType == -1))
+						m_gizmoType = -1;
+
+					if (ImGui::MenuItem("Translate##seclctionGizmo", "Shift+W", m_gizmoType == ImGuizmo::OPERATION::TRANSLATE))
+						m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
+
+					const static int RotateGizmoValue = ImGuizmo::OPERATION::ROTATE_X | ImGuizmo::OPERATION::ROTATE_Y | ImGuizmo::OPERATION::ROTATE_Z;
+					if (ImGui::MenuItem("Rotate##seclctionGizmo", "Shift+E", m_gizmoType == RotateGizmoValue))
+						m_gizmoType = RotateGizmoValue;
+
+					if (ImGui::MenuItem("Scale##seclctionGizmo", "Shift+R", m_gizmoType == ImGuizmo::OPERATION::SCALE))
+						m_gizmoType = ImGuizmo::OPERATION::SCALE;
+
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::MenuItem("Toggle collider overlay", "Alt+C", m_showColliderOverlay))
 				{
 					m_showColliderOverlay = !m_showColliderOverlay;
+				}
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Script"))
+			{
+				if (ImGui::MenuItem("Reload assembly"))
+				{
+					scripting::ScriptEngine::reloadAssembly();
 				}
 
 				ImGui::EndMenu();

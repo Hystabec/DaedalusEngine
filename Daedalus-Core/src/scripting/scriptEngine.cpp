@@ -136,6 +136,9 @@ namespace daedalus::scripting {
 		MonoAssembly* clientAssembly = nullptr;
 		MonoImage* clientAssemblyImage = nullptr;
 
+		std::filesystem::path coreAssemblyPath;
+		std::filesystem::path clientAssemblyPath;
+
 		ScriptClass entityClass;
 		std::unordered_map<std::string, Shr_ptr<ScriptClass>> entityClasses;
 		std::unordered_map<UUID, Shr_ptr<ScriptInstance>> entityInstances;
@@ -152,6 +155,7 @@ namespace daedalus::scripting {
 		s_data = new ScriptEngineData();
 		
 		initMono();
+		ScriptGlue::registerFunctions();
 
 		loadAssembly("resources/script-bin/Daedalus-ScriptCore.dll");
 
@@ -160,7 +164,6 @@ namespace daedalus::scripting {
 		loadClientAssembly("sandboxProject/assets/scripts/script-bin/Sandbox.dll");
 		loadAssemblyClasses();
 		
-		ScriptGlue::registerFunctions();
 		ScriptGlue::registerComponentTypes();
 
 		s_data->entityClass = ScriptClass("Daedalus.Types", "MonoScript", true);
@@ -191,17 +194,19 @@ namespace daedalus::scripting {
 
 	void ScriptEngine::shutdownMono()
 	{
-		// NOTE: mono is difficult to shutdown, revisit this
+		mono_domain_set(mono_get_root_domain(), false);
 
-		//mono_domain_unload(s_data->appDomain);
+		mono_domain_unload(s_data->appDomain);
 		s_data->appDomain = nullptr;
 
-		//mono_jit_cleanup(s_data->rootDomain);
+		mono_jit_cleanup(s_data->rootDomain);
 		s_data->rootDomain = nullptr;
 	}
 
 	void ScriptEngine::loadAssembly(const std::filesystem::path& filepath)
 	{
+		s_data->coreAssemblyPath = filepath;
+
 		// Create an App Domain
 		s_data->appDomain = mono_domain_create_appdomain((char*)"DaedalusScriptRuntime", nullptr);
 		mono_domain_set(s_data->appDomain, true);
@@ -219,10 +224,27 @@ namespace daedalus::scripting {
 
 	void ScriptEngine::loadClientAssembly(const std::filesystem::path& filepath)
 	{
+		s_data->clientAssemblyPath = filepath;
 
 		s_data->clientAssembly = monoUtils::load_mono_assembly(filepath);
 		s_data->clientAssemblyImage = mono_assembly_get_image(s_data->clientAssembly);
 		//monoUtils::print_assembly_types(s_data->clientAssembly);
+	}
+
+	void ScriptEngine::reloadAssembly()
+	{
+		mono_domain_set(mono_get_root_domain(), false);
+
+		mono_domain_unload(s_data->appDomain);
+
+		loadAssembly(s_data->coreAssemblyPath);
+		loadClientAssembly(s_data->clientAssemblyPath);
+
+		loadAssemblyClasses();
+
+		ScriptGlue::registerComponentTypes();
+
+		s_data->entityClass = ScriptClass("Daedalus.Types", "MonoScript", true);
 	}
 
 	void ScriptEngine::onRuntimeStart(scene::Scene* scene)

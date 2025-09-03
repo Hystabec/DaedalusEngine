@@ -158,6 +158,8 @@ namespace daedalus::scripting {
 
 		static void loadAssembly(const std::filesystem::path& filepath);
 		static void loadClientAssembly(const std::filesystem::path& filepath);
+		static void reloadAssembly();
+
 		static void onRuntimeStart(scene::Scene* scene);
 		static void onRuntimeStop();
 
