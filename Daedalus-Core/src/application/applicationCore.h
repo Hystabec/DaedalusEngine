@@ -55,12 +55,14 @@ namespace daedalus {
 
 		const ApplicationSpecification& getSpecification() const { return m_specification; }
 
+		void submitToMainThreadQueue(const std::function<void()>& function);
 	protected:
 		Application(const ApplicationSpecification& specification);
 
 	private:
 		bool onWindowClose(event::WindowClosedEvent& e);
 		bool onWindowResize(event::WindowResizedEvent& e);
+		void executeMainThreadQueue();
 
 	private:
 		static Application* s_instance;
@@ -74,6 +76,9 @@ namespace daedalus {
 
 		float m_lastFrameTime = 0.0f;
 		application::Time m_time;
+
+		std::vector<std::function<void()>> m_mainThreadQueue;
+		std::mutex m_mainThreadQueueMutex;
 	};
 
 	//To be defined in client

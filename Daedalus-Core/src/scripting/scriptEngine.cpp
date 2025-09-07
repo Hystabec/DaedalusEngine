@@ -7,6 +7,8 @@
 #include "../scene/scene.h"
 #include "../scene/entity.h"
 #include "../scene/entityComponents/scriptComponent.h"
+#include "../utils/fileWatcher.h"
+#include "../application/applicationCore.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
@@ -145,6 +147,9 @@ namespace daedalus::scripting {
 		
 		std::unordered_map<UUID, ScriptFieldMap> entityScriptFields;
 
+		daedalus::utils::FileWatcher clientAssemblyWatcher;
+		bool clientAsseblyReloadPending = false;
+
 		scene::Scene* sceneContext = nullptr;
 	};
 
@@ -167,6 +172,16 @@ namespace daedalus::scripting {
 		ScriptGlue::registerComponentTypes();
 
 		s_data->entityClass = ScriptClass("Daedalus.Types", "MonoScript", true);
+
+		using namespace daedalus::utils;
+		s_data->clientAssemblyWatcher = daedalus::utils::FileWatcher("sandboxProject/assets/scripts/script-bin/Sandbox.dll",
+			[](const std::filesystem::path& path, FileWatcher::Event eventType) {
+				if (eventType == FileWatcher::Event::Modified && !s_data->clientAsseblyReloadPending)
+				{
+					s_data->clientAsseblyReloadPending = true;
+					daedalus::Application::get().submitToMainThreadQueue(ScriptEngine::reloadAssembly);
+				}
+			});
 	}
 
 	void ScriptEngine::shutdown()
@@ -233,6 +248,8 @@ namespace daedalus::scripting {
 
 	void ScriptEngine::reloadAssembly()
 	{
+		s_data->clientAsseblyReloadPending = false;
+
 		mono_domain_set(mono_get_root_domain(), false);
 
 		mono_domain_unload(s_data->appDomain);

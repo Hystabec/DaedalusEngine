@@ -53,6 +53,8 @@ namespace daedalus {
 			application::DeltaTime dt = m_time.getDeltaTime();
 			m_time.update();
 
+			executeMainThreadQueue();
+
 			if (!m_minimized)
 			{
 				{
@@ -95,6 +97,12 @@ namespace daedalus {
 	void Application::close()
 	{
 		m_running = false;
+	}
+
+	void Application::submitToMainThreadQueue(const std::function<void()>& function)
+	{
+		std::scoped_lock<std::mutex> lock(m_mainThreadQueueMutex);
+		m_mainThreadQueue.emplace_back(function);
 	}
 
 	Application::Application(const ApplicationSpecification& specification)
@@ -157,6 +165,16 @@ namespace daedalus {
 		graphics::Renderer::onWindowResize(e.getWidth(), e.getHeight());
 
 		return false;
+	}
+
+	void Application::executeMainThreadQueue()
+	{
+		std::scoped_lock<std::mutex> lock(m_mainThreadQueueMutex);
+
+		for (auto& func : m_mainThreadQueue)
+			func();
+
+		m_mainThreadQueue.clear();
 	}
 
 }
