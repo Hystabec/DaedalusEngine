@@ -11,6 +11,8 @@
 
 namespace daedalus::editor
 {
+	static constexpr ImVec4 standardTint(1.0f, 1.0f, 1.0f, 1.0f);
+	static constexpr ImVec4 fadeTint(0.5f, 0.5f, 0.5f, 1.0f);
 
 	EditorLayer::EditorLayer()
 	{
@@ -207,39 +209,87 @@ namespace daedalus::editor
 
 			if (ImGui::BeginMenu("Debug"))
 			{
-				// TO DO: implement checks and functionality for the menu items below
+				bool sceneIsPaused = m_activeScene->isPaused();
+				float imageSize = ImGui::GetIO().FontDefault->FontSize;
 
-				if (ImGui::MenuItem("Play"))
 				{
-					DD_LOG_WARN("Debug/Play - not implemented");
+					bool isUsable = m_sceneState == SceneState::Edit || (sceneIsPaused && m_sceneState == SceneState::Play);
+					ImGui::Image((ImTextureID)m_playIcon->getRendererID(), ImVec2(imageSize, imageSize), ImVec2(0, 0), ImVec2(1, 1),
+						isUsable ? standardTint : fadeTint);
+					ImGui::SameLine();
+					if (ImGui::MenuItem("Play", nullptr, false, isUsable))
+					{
+						if (m_sceneState == SceneState::Edit)
+							onScenePlay();
+						else if (sceneIsPaused)
+						{
+							m_activeScene->setPaused(false);
+						}
+					}
 				}
 
-				if (ImGui::MenuItem("Simulate"))
 				{
-					DD_LOG_WARN("Debug/Simulate - not implemented");
+					bool isUsable = m_sceneState == SceneState::Edit || (sceneIsPaused && m_sceneState == SceneState::Simulate);
+					ImGui::Image((ImTextureID)m_simulateIcon->getRendererID(), ImVec2(imageSize, imageSize), ImVec2(0, 0), ImVec2(1, 1),
+						isUsable ? standardTint : fadeTint);
+					ImGui::SameLine();
+					if (ImGui::MenuItem("Simulate", nullptr, false, isUsable))
+					{
+						if (m_sceneState == SceneState::Edit)
+							onSceneSimulate();
+						else if (sceneIsPaused)
+						{
+							m_activeScene->setPaused(false);
+						}
+					}
 				}
 
-				if (ImGui::MenuItem("Pause"))
 				{
-					DD_LOG_WARN("Debug/Pause - not implemented");
+					bool isUsable = m_sceneState != SceneState::Edit && !sceneIsPaused;
+					ImGui::Image((ImTextureID)m_pauseIcon->getRendererID(), ImVec2(imageSize, imageSize), ImVec2(0, 0), ImVec2(1, 1),
+						isUsable ? standardTint : fadeTint);
+					ImGui::SameLine();
+					if (ImGui::MenuItem("Pause", nullptr, false, isUsable))
+					{
+						if (isUsable)
+							m_activeScene->setPaused(true);
+					}
 				}
 
-				if (ImGui::MenuItem("Stop"))
 				{
-					DD_LOG_WARN("Debug/Stop - not implemented");
+					bool isUsable = m_sceneState != SceneState::Edit;
+					ImGui::Image((ImTextureID)m_stopIcon->getRendererID(), ImVec2(imageSize, imageSize), ImVec2(0, 0), ImVec2(1, 1),
+						isUsable ? standardTint : fadeTint);
+					ImGui::SameLine();
+					if (ImGui::MenuItem("Stop", nullptr, false, isUsable))
+					{
+						if (m_sceneState == SceneState::Play || m_sceneState == SceneState::Simulate)
+							onSceneStop();
+					}
 				}
 
-				// TO DO: add checks for the next step button
-				if (ImGui::BeginMenu("Step"))
 				{
-					if (ImGui::MenuItem("Next step"))
+					bool isUsable = sceneIsPaused;
+					ImGui::Image((ImTextureID)m_stepIcon->getRendererID(), ImVec2(imageSize, imageSize), ImVec2(0, 0), ImVec2(1, 1),
+						isUsable ? standardTint : fadeTint);
+					ImGui::SameLine();
+					if (ImGui::MenuItem("Step", nullptr, false, isUsable))
 					{
 						m_activeScene->step(m_framesPerStep);
 					}
+				}
 
-					ImGui::DragInt("Frames per step", &m_framesPerStep);
+				{
+					if (ImGui::BeginMenu("Options"))
+					{
+						// NOTE: A width of 50.0f is a bit of a magic number,
+						// it just resulted in a nice size. Might consider changing later
+						ImGui::PushItemWidth(50.0f);
+						ImGui::DragInt("Frames per step", &m_framesPerStep);
+						ImGui::PopItemWidth();
 
-					ImGui::EndMenu();
+						ImGui::EndMenu();
+					}
 				}
 
 				ImGui::EndMenu();
@@ -389,15 +439,13 @@ namespace daedalus::editor
 		float size = ImGui::GetWindowHeight() - 4.0f;
 		// NOTE: This will need to be updated if/when more controls are added
 		constexpr int numberOfControls = 5;
-		constexpr ImVec4 standardTint(1.0f, 1.0f, 1.0f, 1.0f);
-		constexpr ImVec4 fadeTint(0.5f, 0.5f, 0.5f, 1.0f);
 
 		bool sceneIsPaused = m_activeScene->isPaused();
 		{
 			bool isUsable = m_sceneState == SceneState::Edit || (sceneIsPaused && m_sceneState == SceneState::Play);
 			Shr_ptr<graphics::Texture2D> icon = m_playIcon;
 			ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - ((size * numberOfControls) * 0.5f));
-			if (ImGui::ImageButton("##playStopButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
+			if (ImGui::ImageButton("##playButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
 				!isUsable ? fadeTint : standardTint))
 			{
 				if (m_sceneState == SceneState::Edit)
@@ -420,7 +468,7 @@ namespace daedalus::editor
 		{
 			bool isUsable = m_sceneState == SceneState::Edit || (sceneIsPaused && m_sceneState == SceneState::Simulate);
 			Shr_ptr<graphics::Texture2D> icon = m_simulateIcon;
-			if (ImGui::ImageButton("##simulatePlayStopButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
+			if (ImGui::ImageButton("##simulatePlayButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
 				!isUsable ? fadeTint : standardTint))
 			{
 				if (m_sceneState == SceneState::Edit)
