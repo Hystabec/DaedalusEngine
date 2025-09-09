@@ -33,6 +33,7 @@ namespace daedalus::editor
 		void onScenePlay();
 		void onSceneSimulate();
 		void onSceneStop();
+		void onScenePause();
 
 		void duplicateEntity();
 
@@ -54,13 +55,14 @@ namespace daedalus::editor
 		int m_gizmoType = -1;
 		ContentBrowserPanel m_contentBrowserPanel;
 
-		Shr_ptr<graphics::Texture2D> m_playIcon, m_stopIcon, m_simulateIcon;
+		Shr_ptr<graphics::Texture2D> m_playIcon, m_stopIcon, m_simulateIcon, m_pauseIcon, m_stepIcon;
+		int m_framesPerStep = 1;
 
 		bool m_showColliderOverlay = false;
 
 		enum class SceneState
 		{
-			Edit = 0, Play = 1, Pause = 2, Simulate = 3
+			Edit = 0, Play = 1, Simulate = 2
 		};
 		SceneState m_sceneState = SceneState::Edit;
 

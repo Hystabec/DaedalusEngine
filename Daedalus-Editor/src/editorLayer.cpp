@@ -31,6 +31,8 @@ namespace daedalus::editor
 		m_playIcon = graphics::Texture2D::create("resources\\icons\\playButtonIcon.png");
 		m_stopIcon = graphics::Texture2D::create("resources\\icons\\stopButtonIcon.png");
 		m_simulateIcon = graphics::Texture2D::create("resources\\icons\\simulateButtonIcon.png");
+		m_pauseIcon = graphics::Texture2D::create("resources\\icons\\pauseButtonIcon.png");
+		m_stepIcon = graphics::Texture2D::create("resources\\icons\\stepButtonIcon.png");
 
 		m_editorScene = create_shr_ptr<scene::Scene>();
 		m_activeScene = m_editorScene;
@@ -48,34 +50,6 @@ namespace daedalus::editor
 			Application::get().getWindow()->setWindowName("Daedalus Editor");
 		else
 			Application::get().getWindow()->setWindowName("Daedalus Editor - " + m_currentSceneFilepath.stem().string());
-
-		/*class CameraController : public scene::ScriptableEntity
-		{
-		public:
-			void onCreate()
-			{
-			}
-
-			void onDestroy()
-			{
-			}
-
-			void onUpdate(const application::DeltaTime& dt)
-			{
-				auto& position = getComponent<scene::TransformComponent>().Position;
-				float speed = 5.0f;
-
-				if (application::Input::getKeyDown(application::InputCode::Key_W))
-					position.y += speed * dt;
-				if (application::Input::getKeyDown(application::InputCode::Key_S))
-					position.y -= speed * dt;
-
-				if (application::Input::getKeyDown(application::InputCode::Key_A))
-					position.x -= speed * dt;
-				if (application::Input::getKeyDown(application::InputCode::Key_D))
-					position.x += speed * dt;
-			}
-		};*/
 	}
 
 	void EditorLayer::detach()
@@ -231,6 +205,46 @@ namespace daedalus::editor
 				ImGui::EndMenu();
 			}
 
+			if (ImGui::BeginMenu("Debug"))
+			{
+				// TO DO: implement checks and functionality for the menu items below
+
+				if (ImGui::MenuItem("Play"))
+				{
+					DD_LOG_WARN("Debug/Play - not implemented");
+				}
+
+				if (ImGui::MenuItem("Simulate"))
+				{
+					DD_LOG_WARN("Debug/Simulate - not implemented");
+				}
+
+				if (ImGui::MenuItem("Pause"))
+				{
+					DD_LOG_WARN("Debug/Pause - not implemented");
+				}
+
+				if (ImGui::MenuItem("Stop"))
+				{
+					DD_LOG_WARN("Debug/Stop - not implemented");
+				}
+
+				// TO DO: add checks for the next step button
+				if (ImGui::BeginMenu("Step"))
+				{
+					if (ImGui::MenuItem("Next step"))
+					{
+						m_activeScene->step(m_framesPerStep);
+					}
+
+					ImGui::DragInt("Frames per step", &m_framesPerStep);
+
+					ImGui::EndMenu();
+				}
+
+				ImGui::EndMenu();
+			}
+
 			if (ImGui::BeginMenu("Script"))
 			{
 				if (ImGui::MenuItem("Reload assembly"))
@@ -373,39 +387,112 @@ namespace daedalus::editor
 		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 		float size = ImGui::GetWindowHeight() - 4.0f;
+		// NOTE: This will need to be updated if/when more controls are added
+		constexpr int numberOfControls = 5;
+		constexpr ImVec4 standardTint(1.0f, 1.0f, 1.0f, 1.0f);
+		constexpr ImVec4 fadeTint(0.5f, 0.5f, 0.5f, 1.0f);
+
+		bool sceneIsPaused = m_activeScene->isPaused();
 		{
-			Shr_ptr<graphics::Texture2D> icon = m_sceneState == SceneState::Play ? m_stopIcon : m_playIcon;
-			ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+			bool isUsable = m_sceneState == SceneState::Edit || (sceneIsPaused && m_sceneState == SceneState::Play);
+			Shr_ptr<graphics::Texture2D> icon = m_playIcon;
+			ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - ((size * numberOfControls) * 0.5f));
 			if (ImGui::ImageButton("##playStopButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
-				m_sceneState == SceneState::Simulate ? ImVec4(0.5f, 0.5f, 0.5f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f)))
+				!isUsable ? fadeTint : standardTint))
 			{
 				if (m_sceneState == SceneState::Edit)
 					onScenePlay();
-				else if (m_sceneState == SceneState::Play)
-					onSceneStop();
+				else if (sceneIsPaused)
+				{
+					m_activeScene->setPaused(false);
+				}
 			}
-			if (ImGui::BeginItemTooltip())
+			if (isUsable)
 			{
-				ImGui::Text(m_sceneState == SceneState::Play ? "Stop" : "Start");
-				ImGui::EndTooltip();
+				if (ImGui::BeginItemTooltip())
+				{
+					ImGui::Text(sceneIsPaused ? "Resume" : "Start");
+					ImGui::EndTooltip();
+				}
 			}
 		}
 		ImGui::SameLine();
 		{
-			Shr_ptr<graphics::Texture2D> icon = m_sceneState == SceneState::Simulate ? m_stopIcon : m_simulateIcon;
-			//ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+			bool isUsable = m_sceneState == SceneState::Edit || (sceneIsPaused && m_sceneState == SceneState::Simulate);
+			Shr_ptr<graphics::Texture2D> icon = m_simulateIcon;
 			if (ImGui::ImageButton("##simulatePlayStopButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
-				m_sceneState == SceneState::Play ? ImVec4(0.5f, 0.5f, 0.5f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f)))
+				!isUsable ? fadeTint : standardTint))
 			{
 				if (m_sceneState == SceneState::Edit)
 					onSceneSimulate();
-				else if (m_sceneState == SceneState::Simulate)
+				else if (sceneIsPaused)
+				{
+					m_activeScene->setPaused(false);
+				}
+			}
+			if (isUsable)
+			{
+				if (ImGui::BeginItemTooltip())
+				{
+					ImGui::Text(sceneIsPaused ? "Resume simulation" : "Start simulation");
+					ImGui::EndTooltip();
+				}
+			}
+		}
+		ImGui::SameLine();
+		{
+			bool isUsable = m_sceneState != SceneState::Edit && !sceneIsPaused;
+			Shr_ptr<graphics::Texture2D> icon = m_pauseIcon;
+			if (ImGui::ImageButton("##pauseButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
+				!isUsable ? fadeTint : standardTint))
+			{
+				if (isUsable)
+					m_activeScene->setPaused(true);
+			}
+			if(isUsable)
+			{
+				if (ImGui::BeginItemTooltip())
+				{
+					ImGui::Text("Pause");
+					ImGui::EndTooltip();
+				}
+			}
+		}
+		ImGui::SameLine();
+		{
+			bool isUsable = m_sceneState != SceneState::Edit;
+			Shr_ptr<graphics::Texture2D> icon = m_stopIcon;
+			if (ImGui::ImageButton("##stopButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
+				!isUsable ? fadeTint : standardTint))
+			{
+				if (m_sceneState == SceneState::Play || m_sceneState == SceneState::Simulate)
 					onSceneStop();
 			}
-			if (ImGui::BeginItemTooltip())
+			if (isUsable)
 			{
-				ImGui::Text(m_sceneState == SceneState::Simulate ? "Stop simulation" : "Start simulation");
-				ImGui::EndTooltip();
+				if (ImGui::BeginItemTooltip())
+				{
+					ImGui::Text("Stop");
+					ImGui::EndTooltip();
+				}
+			}
+		}
+		ImGui::SameLine();
+		{
+			bool isUsable = sceneIsPaused;
+			Shr_ptr<graphics::Texture2D> icon = m_stepIcon;
+			if (ImGui::ImageButton("##stepButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
+				!isUsable ? fadeTint : standardTint))
+			{
+				m_activeScene->step(m_framesPerStep);
+			}
+			if (isUsable)
+			{
+				if (ImGui::BeginItemTooltip())
+				{
+					ImGui::Text("Next step");
+					ImGui::EndTooltip();
+				}
 			}
 		}
 		ImGui::End();
@@ -758,6 +845,14 @@ namespace daedalus::editor
 		m_activeScene = m_editorScene;
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
+	}
+
+	void EditorLayer::onScenePause()
+	{
+		if (m_sceneState == SceneState::Edit)
+			return;
+
+		m_activeScene->setPaused(true);
 	}
 
 	void EditorLayer::duplicateEntity()

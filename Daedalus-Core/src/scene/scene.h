@@ -43,6 +43,8 @@ namespace daedalus::scene {
 		void updateSimulation(const application::DeltaTime& dt, graphics::EditorCamera& camera);
 		void updateEditor(const application::DeltaTime& dt, graphics::EditorCamera& camera);
 
+		void step(int frames = 1);
+
 		PhysicsScene2D& getPhysicsScene2D() { return m_physicsScene; }
 
 		void onViewportResize(uint32_t width, uint32_t hegiht);
@@ -50,6 +52,9 @@ namespace daedalus::scene {
 		Entity getPrimaryCameraEntity();
 
 		bool isRunning() const { return m_isRunning; }
+
+		void setPaused(bool paused) { m_isPaused = paused; }
+		bool isPaused() const { return m_isPaused; }
 
 		template<typename... components>
 		auto getAllEntitiesWith()
@@ -74,6 +79,8 @@ namespace daedalus::scene {
 		std::unordered_map<UUID, entt::entity> m_entityMap;
 
 		bool m_isRunning = false;
+		bool m_isPaused = false;
+		int m_stepFrames = 0;
 
 		PhysicsScene2D m_physicsScene;
 

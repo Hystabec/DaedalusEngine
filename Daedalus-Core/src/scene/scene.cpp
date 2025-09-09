@@ -184,33 +184,41 @@ namespace daedalus::scene {
 
 	void Scene::updateRuntime(const application::DeltaTime& dt)
 	{
-		// update scripts
+		if (!m_isPaused || m_stepFrames-- > 0)
 		{
-			auto view = m_registry.view<ScriptComponent>();
-			for (auto e : view)
 			{
-				Entity entity = { e, this };
-				scripting::ScriptEngine::updateEntityInstance(entity, dt);
+				// update scripts
+				auto view = m_registry.view<ScriptComponent>();
+				for (auto e : view)
+				{
+					Entity entity = { e, this };
+					scripting::ScriptEngine::updateEntityInstance(entity, dt);
+				}
+
+				m_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
+					{
+						if (!nsc.scriptBound)
+						{
+							DD_CORE_LOG_WARN("No Script bound to NativeScriptComponent");
+							return;
+						}
+
+						// TO DO: Moveto Scene::onScenePlay
+						if (!nsc.instance)
+						{
+							nsc.instance = nsc.instantiateScript();
+							nsc.instance->m_entity = Entity{ entity, this };
+							nsc.instance->onCreate();
+						}
+
+						nsc.instance->onUpdate(dt);
+					});
 			}
 
-			m_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
-				{
-					if (!nsc.scriptBound)
-					{
-						DD_CORE_LOG_WARN("No Script bound to NativeScriptComponent");
-						return;
-					}
-
-					// TO DO: Moveto Scene::onScenePlay
-					if (!nsc.instance)
-					{
-						nsc.instance = nsc.instantiateScript();
-						nsc.instance->m_entity = Entity{ entity, this };
-						nsc.instance->onCreate();
-					}
-
-					nsc.instance->onUpdate(dt);
-				});
+			// Physics
+			{
+				m_physicsScene.updateScene(dt);
+			}
 		}
 
 		// find main camera
@@ -226,11 +234,6 @@ namespace daedalus::scene {
 						mainCameraTransform = transform.getTransform();
 					}
 				});
-		}
-
-		// Physics
-		{
-			m_physicsScene.updateScene(dt);
 		}
 
 		// Render2D sprites
@@ -263,8 +266,9 @@ namespace daedalus::scene {
 
 	void Scene::updateSimulation(const application::DeltaTime& dt, graphics::EditorCamera& camera)
 	{
-		// Physics
+		if(!m_isPaused || m_stepFrames-- > 0)
 		{
+			// Physics
 			m_physicsScene.updateScene(dt);
 		}
 
@@ -276,6 +280,11 @@ namespace daedalus::scene {
 	{
 		// render
 		renderSceneEditor(camera);
+	}
+
+	void Scene::step(int frames)
+	{
+		m_stepFrames = frames;
 	}
 
 	void Scene::onViewportResize(uint32_t width, uint32_t hegiht)
