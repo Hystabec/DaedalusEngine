@@ -855,8 +855,8 @@ namespace daedalus::editor
 	void EditorLayer::serializeScene(Shr_ptr<scene::Scene> scene, const std::filesystem::path& path)
 	{
 		scene::SceneSerializer serializer(scene);
-		serializer.serialize(path.string());
-		DD_LOG_INFO("Scene saved [{}]", path.string());
+		serializer.serialize(path);
+		DD_LOG_INFO("Scene saved [{}]", path);
 	}
 
 	void EditorLayer::onScenePlay()

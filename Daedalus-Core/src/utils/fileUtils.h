@@ -35,7 +35,7 @@ namespace daedalus::utils {
 			else
 			{
 				if(!noErrors)
-					DD_CORE_LOG_ERROR("Could not read file '{}'", filePath.string());
+					DD_CORE_LOG_ERROR("Could not read file '{}'", filePath);
 
 				if (checkBool)
 					(*checkBool) = false;
@@ -45,7 +45,7 @@ namespace daedalus::utils {
 		else
 		{
 			if (!noErrors)
-				DD_CORE_LOG_ERROR("Could not open file '{}'", filePath.string());
+				DD_CORE_LOG_ERROR("Could not open file '{}'", filePath);
 
 			if(checkBool)
 				(*checkBool) = false;
@@ -70,7 +70,7 @@ namespace daedalus::utils {
 		}
 		else
 		{
-			DD_CORE_LOG_ERROR("Could not write to file: {}", filepath.string());
+			DD_CORE_LOG_ERROR("Could not write to file: {}", filepath);
 
 			if (checkBool)
 				(*checkBool) = false;
@@ -92,7 +92,7 @@ namespace daedalus::utils {
 		}
 		catch (std::filesystem::filesystem_error& e)
 		{
-			DD_CORE_LOG_ERROR("Could not read file data modified: Error: {}, Path: {}", e.what(), filepath.string());
+			DD_CORE_LOG_ERROR("Could not read file data modified: Error: {}, Path: {}", e.what(), filepath);
 		}
 
 		if (checkBool)

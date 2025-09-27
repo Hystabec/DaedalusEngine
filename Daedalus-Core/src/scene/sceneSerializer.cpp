@@ -354,7 +354,7 @@ namespace daedalus::scene {
 		}
 		catch (YAML::Exception e)
 		{
-			DD_CORE_LOG_ERROR("Failed to load scene file '{}'\n{}", filepath.string(), e.what());
+			DD_CORE_LOG_ERROR("Failed to load scene file '{}'\n{}", filepath, e.what());
 			return false;
 		}
 
@@ -363,13 +363,13 @@ namespace daedalus::scene {
 		{
 			if (!data["Scene"])
 			{
-				DD_CORE_LOG_ERROR("Deserialization Error: file contains no scene data '{}'", filepath.string());
+				DD_CORE_LOG_ERROR("Deserialization Error: file contains no scene data '{}'", filepath);
 				return false;
 			}
 		}
 		catch (YAML::Exception e)
 		{
-			DD_CORE_LOG_ERROR("Failed to load scene file '{}'\n{}", filepath.string(), e.what());
+			DD_CORE_LOG_ERROR("Failed to load scene file '{}'\n{}", filepath, e.what());
 			return false;
 		}
 
@@ -430,7 +430,7 @@ namespace daedalus::scene {
 							ScriptFieldInstance& fieldInstance = entityFields[fieldName];
 							if (!fields.contains(fieldName))
 							{
-								DD_LOG_WARN("Entity '{}', Script component field: '{}' not found, while deserializing '{}'", name, fieldName, filepath.filename().string());
+								DD_LOG_WARN("Entity '{}', Script component field: '{}' not found, while deserializing '{}'", name, fieldName, filepath.filename());
 								continue;
 							}
 

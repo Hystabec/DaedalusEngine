@@ -1,6 +1,7 @@
 #pragma once
 
 #include "logFormatMacro.h"
+#include "filesystemPathFormat.h"
 
 //included here for application
 #include <string>

@@ -97,7 +97,7 @@ namespace daedalus::graphics {
 		
 		if(!wasReadCorrectly)
 		{
-			DD_CORE_LOG_ERROR("Failed to read shader file : path - {}", filePath.string());
+			DD_CORE_LOG_ERROR("Failed to read shader file : path - {}", filePath);
 			m_name = "Invalid shader";
 			m_shaderID = 0;
 		}
@@ -111,7 +111,7 @@ namespace daedalus::graphics {
 			compileOrGetVulkanBinaries(shaderSources, cacheDataChange);
 			compileOrGetOpenGLBinaries(cacheDataChange);
 			createProgram();
-			DD_CORE_LOG_INFO("Shader creation took {} ms", timer.elapsedMilliseconds());
+			DD_CORE_LOG_WARN("Shader creation took {} ms", timer.elapsedMilliseconds());
 		}
 	}
 
@@ -444,12 +444,12 @@ namespace daedalus::graphics {
 		spirv_cross::Compiler compiler(shaderData);
 		spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
-		DD_CORE_LOG_INFO("OpenGLShader::Reflect - {} {}", utils::glShaderStageToString(stage), m_filePath.string());
-		DD_CORE_LOG_INFO("{} uniform buffers", resources.uniform_buffers.size());
-		DD_CORE_LOG_INFO("{} resources", resources.sampled_images.size());
+		DD_CORE_LOG_TRACE("OpenGLShader::Reflect - {} {}", utils::glShaderStageToString(stage), m_filePath);
+		DD_CORE_LOG_TRACE("{} uniform buffers", resources.uniform_buffers.size());
+		DD_CORE_LOG_TRACE("{} resources", resources.sampled_images.size());
 
 		if(!(resources.uniform_buffers.empty()))
-			DD_CORE_LOG_INFO("Uniform buffers:");
+			DD_CORE_LOG_TRACE("Uniform buffers:");
 		for (const auto& resource : resources.uniform_buffers)
 		{
 			const auto& bufferType = compiler.get_type(resource.base_type_id);
@@ -457,10 +457,10 @@ namespace daedalus::graphics {
 			uint32_t binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
 			int memberCount = (int)bufferType.member_types.size();
 
-			DD_CORE_LOG_INFO("    {}", resource.name);
-			DD_CORE_LOG_INFO("    Size = {}", bufferSize);
-			DD_CORE_LOG_INFO("    Binding = {}", binding);
-			DD_CORE_LOG_INFO("    Members = {}", memberCount);
+			DD_CORE_LOG_TRACE("    {}", resource.name);
+			DD_CORE_LOG_TRACE("    Size = {}", bufferSize);
+			DD_CORE_LOG_TRACE("    Binding = {}", binding);
+			DD_CORE_LOG_TRACE("    Members = {}", memberCount);
 		}
 	}
 
