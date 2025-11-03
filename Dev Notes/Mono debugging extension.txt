@@ -1,0 +1,8 @@
+Currently to debug the mono runtime the Unity visual studio debugging extension can be used
+
+In VS: Debug -> Attach Unity Debugger
+Click Input IP and use 127.0.0.1:2550
+
+I do plan to make my own extension for the engine but after a few week of trying to build one with little success this is the current solution
+
+Note to self: Could try to find the source code for the unity extension and see what they did to get it to work

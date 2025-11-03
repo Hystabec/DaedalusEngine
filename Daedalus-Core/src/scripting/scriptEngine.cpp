@@ -14,6 +14,8 @@
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/object.h>
 #include <mono/metadata/tabledefs.h>
+#include <mono/metadata/mono-debug.h>
+#include <mono/metadata/threads.h>
 
 namespace daedalus::scripting {
 
@@ -68,7 +70,7 @@ namespace daedalus::scripting {
 			return buffer;
 		}
 
-		static MonoAssembly* load_mono_assembly(const std::filesystem::path& assemblyPath)
+		static MonoAssembly* load_mono_assembly(const std::filesystem::path& assemblyPath, bool loadPDB = false)
 		{
 			uint32_t fileSize = 0;
 			char* fileData = read_bytes(assemblyPath, &fileSize);
@@ -81,7 +83,23 @@ namespace daedalus::scripting {
 			{
 				const char* errorMessage = mono_image_strerror(status);
 				// Log some error message using the errorMessage data
+				DD_CORE_LOG_ERROR("load_mono_assembly: {}", errorMessage);
 				return nullptr;
+			}
+
+			if (loadPDB)
+			{
+				std::filesystem::path pdbPath = assemblyPath;
+				pdbPath.replace_extension(".pdb");
+
+				if (std::filesystem::exists(pdbPath))
+				{
+					uint32_t pdbFileSize = 0;
+					char* pdbFileData = read_bytes(pdbPath, &pdbFileSize);
+					mono_debug_open_image_from_memory(image, (const mono_byte*)pdbFileData, pdbFileSize);
+					DD_CORE_LOG_INFO("Script Engine: Loaded PDB {}", pdbPath);
+					delete[] pdbFileData;
+				}
 			}
 
 			MonoAssembly* assembly = mono_assembly_load_from_full(image, assemblyPath.string().c_str(), &status, 0);
@@ -150,6 +168,9 @@ namespace daedalus::scripting {
 		daedalus::utils::FileWatcher clientAssemblyWatcher;
 		bool clientAsseblyReloadPending = false;
 
+		bool enableDebugging = true;
+
+		// Runtime
 		scene::Scene* sceneContext = nullptr;
 	};
 
@@ -200,19 +221,43 @@ namespace daedalus::scripting {
 			mono_set_assemblies_path(path.string().c_str());
 		}
 
+		// create the logs dir or mono will exit
+		if (!std::filesystem::exists("logs"))
+			std::filesystem::create_directories("logs");
+
+		if (s_data->enableDebugging)
+		{
+			const char* argv[2] = {
+				"--debugger-agent=transport=dt_socket,address=127.0.0.1:2550,server=y,suspend=n,loglevel=3,logfile=logs/MonoDebugger.log",
+				"--soft-breakpoints"
+			};
+
+			mono_jit_parse_options(2, (char**)argv);
+			mono_debug_init(MONO_DEBUG_FORMAT_MONO);
+		}
+
 		MonoDomain* rootDomain = mono_jit_init("DaedalusJitRuntime");
 		DD_CORE_ASSERT(rootDomain);
 
 		// Store the root domain pointer
 		s_data->rootDomain = rootDomain;
+
+		if (s_data->enableDebugging)
+			mono_debug_domain_create(s_data->rootDomain);
+
+		mono_thread_set_main(mono_thread_current());
 	}
 
 	void ScriptEngine::shutdownMono()
 	{
 		mono_domain_set(mono_get_root_domain(), false);
 
+
 		mono_domain_unload(s_data->appDomain);
 		s_data->appDomain = nullptr;
+
+		/*if (s_data->enableDebugging)
+			mono_debug_domain_unload(s_data->rootDomain);*/
 
 		mono_jit_cleanup(s_data->rootDomain);
 		s_data->rootDomain = nullptr;
@@ -229,7 +274,7 @@ namespace daedalus::scripting {
 		auto [path, result] = daedalus::utils::get_core_file_location(filepath);
 		if (result)
 		{
-			s_data->coreAssembly = monoUtils::load_mono_assembly(path);
+			s_data->coreAssembly = monoUtils::load_mono_assembly(path, s_data->enableDebugging);
 			s_data->coreAssemblyImage = mono_assembly_get_image(s_data->coreAssembly);
 			//monoUtils::print_assembly_types(s_data->coreAssembly);
 		}
@@ -241,7 +286,7 @@ namespace daedalus::scripting {
 	{
 		s_data->clientAssemblyPath = filepath;
 
-		s_data->clientAssembly = monoUtils::load_mono_assembly(filepath);
+		s_data->clientAssembly = monoUtils::load_mono_assembly(filepath, s_data->enableDebugging);
 		s_data->clientAssemblyImage = mono_assembly_get_image(s_data->clientAssembly);
 		//monoUtils::print_assembly_types(s_data->clientAssembly);
 	}
@@ -451,7 +496,8 @@ namespace daedalus::scripting {
 
 	MonoObject* ScriptClass::invokeMethod(MonoObject* instance, MonoMethod* method, void** params)
 	{
-		return mono_runtime_invoke(method, instance, params, nullptr);
+		MonoObject* exeption = nullptr;
+		return mono_runtime_invoke(method, instance, params, &exeption);
 	}
 
 	ScriptInstance::ScriptInstance(Shr_ptr<ScriptClass> scriptClass, scene::Entity entity)
