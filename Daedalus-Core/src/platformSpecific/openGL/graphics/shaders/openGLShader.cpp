@@ -93,7 +93,7 @@ namespace daedalus::graphics {
 		utils::createCacheDirectoryIfNeeded();
 
 		bool wasReadCorrectly = true;
-		std::string shaderSrc = daedalus::utils::read_file_string(filePath, &wasReadCorrectly);
+		std::string shaderSrc = daedalus::utils::FileSystem::readFileString(filePath, &wasReadCorrectly);
 		
 		if(!wasReadCorrectly)
 		{
@@ -238,7 +238,8 @@ namespace daedalus::graphics {
 
 		std::filesystem::path metaFilePath = utils::getCacheDirectory() + ("\\" + m_name + ".cache.meta");
 		bool fileReadCorrect;
-		std::stringstream filesstream(daedalus::utils::read_file_string(metaFilePath, &fileReadCorrect, true));
+		daedalus::utils::FileSystem::suppressErrorsForNextOperation();
+		std::stringstream filesstream(daedalus::utils::FileSystem::readFileString(metaFilePath, &fileReadCorrect));
 		size_t hashFromFile;
 		filesstream >> hashFromFile;
 
@@ -249,7 +250,7 @@ namespace daedalus::graphics {
 		{
 			std::stringstream hashsstream;
 			hashsstream << newShaderHash;
-			daedalus::utils::write_file_string(metaFilePath, hashsstream.str());
+			daedalus::utils::FileSystem::writeFileString(metaFilePath, hashsstream.str());
 		}
 
 		return fileChanged;

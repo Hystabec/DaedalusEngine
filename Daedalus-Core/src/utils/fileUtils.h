@@ -1,6 +1,6 @@
 #pragma once
 
-#include <fstream>
+#include "buffer.h"
 #include <filesystem>
 
 // TO DO: Currently when outputting the filepath in error messages it get passed as a string,
@@ -9,96 +9,30 @@
 
 namespace daedalus::utils {
 
-	/// @brief 'noErrors' with stop the console logs. An example of use is when checking shaders:
-	/// the cache file may or may not exist; if it doesnt, it is handled and the user doesnt need to know the was an error reading the file.
-	static std::string read_file_string(const std::filesystem::path& filePath, bool* checkBool = nullptr, bool noErrors = false)
+	class FileSystem
 	{
-		DD_PROFILE_FUNCTION();
-
-		std::string result;
-		std::ifstream in(filePath, std::ios::in | std::ios::binary);
-
-		if (in)
-		{
-			in.seekg(0, std::ios::end);
-
-			size_t size = in.tellg();
-			if (size != -1)
-			{
-				result.resize(size);
-				in.seekg(0, std::ios::beg);
-				in.read(&result[0], result.size());
-
-				if (checkBool)
-					(*checkBool) = true;
-			}
-			else
-			{
-				if(!noErrors)
-					DD_CORE_LOG_ERROR("Could not read file '{}'", filePath);
-
-				if (checkBool)
-					(*checkBool) = false;
-			}
-			in.close();
-		}
-		else
-		{
-			if (!noErrors)
-				DD_CORE_LOG_ERROR("Could not open file '{}'", filePath);
-
-			if(checkBool)
-				(*checkBool) = false;
-		}
-
-		return result;
-	}
-	
-	static void write_file_string(const std::filesystem::path& filepath, const std::string& data, bool* checkBool = nullptr)
-	{
-		DD_PROFILE_FUNCTION();
-
-		std::ofstream out(filepath, std::ios::out | std::ios::binary);
-		if (out.is_open())
-		{
-			out.write((const char*)data.data(), data.size() * sizeof(char));
-			out.flush();
-			out.close();
-
-			if (checkBool)
-				(*checkBool) = true;
-		}
-		else
-		{
-			DD_CORE_LOG_ERROR("Could not write to file: {}", filepath);
-
-			if (checkBool)
-				(*checkBool) = false;
-		}
-	}
-
-	static std::filesystem::file_time_type file_data_modified(const std::filesystem::path& filepath, bool* checkBool = nullptr)
-	{
-		DD_PROFILE_FUNCTION();
-
-		try
-		{
-			auto ftime = std::filesystem::last_write_time(filepath);
-
-			if (checkBool)
-				(*checkBool) = true;
-
-			return ftime;
-		}
-		catch (std::filesystem::filesystem_error& e)
-		{
-			DD_CORE_LOG_ERROR("Could not read file data modified: Error: {}, Path: {}", e.what(), filepath);
-		}
-
-		if (checkBool)
-			(*checkBool) = false;
+		// NOTE: You could argue that the checkBool is unecessary as you could just check the size of the
+		// returned buffer/string. But I like the option of being able to check if something explicity when
+		// wrong e.g. not being able to open the file
+	public:
 		
-		return std::filesystem::file_time_type();
-	}
+		static std::string readFileString(const std::filesystem::path& filepath, bool* checkBool = nullptr);
+	
+		static void writeFileString(const std::filesystem::path& filepath, const std::string& data, bool* checkBool = nullptr);
+
+		static Buffer readFileBinary(const std::filesystem::path& filepath, bool* checkBool = nullptr);
+
+		static void writeFileBinary(const std::filesystem::path& filepath, Buffer data, bool* checkBool = nullptr);
+
+		/// @brief Used to check the date a file was last modified
+		/// @brief Used for the old filewatching system
+		/// @brief NOTE: Consider removing as this is no longer used anywhere
+		static std::filesystem::file_time_type fileDateModified(const std::filesystem::path& filepath, bool* checkBool = nullptr);
+
+		/// @brief This will stop errors from being logged (if they occure) for the next FileSystem operation
+		/// @brief An example of use is when checking shaders:
+		/// the cache file may or may not exist; if it doesnt, it is handled and the user doesnt need to know there was an error reading the file.
+		static void suppressErrorsForNextOperation();
+	};
 
 }

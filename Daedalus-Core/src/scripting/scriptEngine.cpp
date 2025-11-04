@@ -1,13 +1,13 @@
 #include "ddpch.h"
 #include "scriptEngine.h"
 
-#include "utils/findFileLocation.h"
 #include "scriptGlue.h"
-
+#include "utils/findFileLocation.h"
 #include "../scene/scene.h"
 #include "../scene/entity.h"
 #include "../scene/entityComponents/scriptComponent.h"
 #include "../utils/fileWatcher.h"
+#include "../utils/fileUtils.h"
 #include "../application/applicationCore.h"
 
 #include <mono/jit/jit.h>
@@ -41,43 +41,13 @@ namespace daedalus::scripting {
 
 	namespace monoUtils {
 
-		// TO DO: Move this to file utils
-		static char* read_bytes(const std::filesystem::path& filepath, uint32_t* outSize)
-		{
-			std::ifstream stream(filepath, std::ios::binary | std::ios::ate);
-
-			if (!stream)
-			{
-				// Failed to open the file
-				return nullptr;
-			}
-
-			std::streampos end = stream.tellg();
-			stream.seekg(0, std::ios::beg);
-			uint32_t size = (uint32_t)(end - stream.tellg());
-
-			if (size == 0)
-			{
-				// File is empty
-				return nullptr;
-			}
-
-			char* buffer = new char[size];
-			stream.read((char*)buffer, size);
-			stream.close();
-
-			*outSize = size;
-			return buffer;
-		}
-
 		static MonoAssembly* load_mono_assembly(const std::filesystem::path& assemblyPath, bool loadPDB = false)
 		{
-			uint32_t fileSize = 0;
-			char* fileData = read_bytes(assemblyPath, &fileSize);
+			daedalus::utils::ScopedBuffer fileData = daedalus::utils::FileSystem::readFileBinary(assemblyPath);
 
 			// NOTE: We can't use this image for anything other than loading the assembly because this image doesn't have a reference to the assembly
 			MonoImageOpenStatus status;
-			MonoImage* image = mono_image_open_from_data_full(fileData, fileSize, 1, &status, 0);
+			MonoImage* image = mono_image_open_from_data_full(fileData.as<char>(), (uint32_t)fileData.size(), 1, &status, 0);
 
 			if (status != MONO_IMAGE_OK)
 			{
@@ -94,11 +64,9 @@ namespace daedalus::scripting {
 
 				if (std::filesystem::exists(pdbPath))
 				{
-					uint32_t pdbFileSize = 0;
-					char* pdbFileData = read_bytes(pdbPath, &pdbFileSize);
-					mono_debug_open_image_from_memory(image, (const mono_byte*)pdbFileData, pdbFileSize);
+					daedalus::utils::ScopedBuffer pdbFileData = daedalus::utils::FileSystem::readFileBinary(pdbPath);
+					mono_debug_open_image_from_memory(image, pdbFileData.as<const mono_byte>(), (uint32_t)pdbFileData.size());
 					DD_CORE_LOG_INFO("Script Engine: Loaded PDB {}", pdbPath);
-					delete[] pdbFileData;
 				}
 			}
 
@@ -106,7 +74,7 @@ namespace daedalus::scripting {
 			mono_image_close(image);
 
 			// Don't forget to free the file data
-			delete[] fileData;
+			//fileData.release();
 
 			return assembly;
 		}
