@@ -5,6 +5,7 @@
 
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/fmt/ostr.h>
 
 namespace daedalus { namespace debug {
@@ -20,15 +21,28 @@ namespace daedalus { namespace debug {
 		if (s_hasInit)
 			return;
 
-		spdlog::set_pattern("%^[%T][%n][%l] %v%$");
-		s_coreLogger = spdlog::stdout_color_mt("Core");
+		spdlog::sink_ptr stdoutSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+		spdlog::sink_ptr mainFileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/Deadalus.log", true);
+		spdlog::sink_ptr scriptingFileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/Deadalus-Scripting.log", true);
+
+		stdoutSink->set_pattern("%^[%T][%n][%l] %v%$");
+		mainFileSink->set_pattern("[%T][%n][%l] %v%$");
+		scriptingFileSink->set_pattern("[%T][%l] %v%$");
+		
+		s_coreLogger = std::make_shared<spdlog::logger>("Core", spdlog::sinks_init_list{ stdoutSink, mainFileSink });
+		spdlog::register_logger(s_coreLogger);
 		s_coreLogger->set_level(spdlog::level::trace);
+		s_coreLogger->flush_on(spdlog::level::trace);
 
-		s_clientLogger = spdlog::stderr_color_mt("Client");
+		s_clientLogger = std::make_shared<spdlog::logger>("Client", spdlog::sinks_init_list{ stdoutSink, mainFileSink });
+		spdlog::register_logger(s_clientLogger);
 		s_clientLogger->set_level(spdlog::level::trace);
+		s_clientLogger->flush_on(spdlog::level::trace);
 
-		s_scriptingLogger = spdlog::stderr_color_mt("C#");
+		s_scriptingLogger = std::make_shared<spdlog::logger>("C#", spdlog::sinks_init_list{ stdoutSink, scriptingFileSink });
+		spdlog::register_logger(s_scriptingLogger);
 		s_scriptingLogger->set_level(spdlog::level::trace);
+		s_scriptingLogger->flush_on(spdlog::level::trace);
 
 		s_hasInit = true;
 	}
