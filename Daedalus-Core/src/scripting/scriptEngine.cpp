@@ -53,7 +53,7 @@ namespace daedalus::scripting {
 			{
 				const char* errorMessage = mono_image_strerror(status);
 				// Log some error message using the errorMessage data
-				DD_CORE_LOG_ERROR("load_mono_assembly: {}", errorMessage);
+				DD_CORE_LOG_ERROR("[Script Engine] load_mono_assembly: {}", errorMessage);
 				return nullptr;
 			}
 
@@ -66,7 +66,7 @@ namespace daedalus::scripting {
 				{
 					daedalus::utils::ScopedBuffer pdbFileData = daedalus::utils::FileSystem::readFileBinary(pdbPath);
 					mono_debug_open_image_from_memory(image, pdbFileData.as<const mono_byte>(), (uint32_t)pdbFileData.size());
-					DD_CORE_LOG_INFO("Script Engine: Loaded PDB {}", pdbPath);
+					DD_CORE_LOG_INFO("[Script Engine] Loaded PDB {}", pdbPath);
 				}
 			}
 
@@ -105,7 +105,7 @@ namespace daedalus::scripting {
 
 			if (it == s_ScriptFieldTypeMap.end())
 			{
-				DD_CORE_LOG_WARN("Script Engine: Unknown type: '{}'", typeName);
+				DD_CORE_LOG_WARN("[Script Engine] Unknown type: '{}'", typeName);
 				return ScriptFieldType::None;
 			}
 
@@ -151,11 +151,22 @@ namespace daedalus::scripting {
 		initMono();
 		ScriptGlue::registerFunctions();
 
-		loadAssembly("resources/script-bin/Daedalus-ScriptCore.dll");
+		bool status = loadAssembly("resources/script-bin/Daedalus-ScriptCore.dll");
+		if (!status)
+		{
+			DD_CORE_LOG_ERROR("[Script Engine] Could not load core assembly. (resources/script-bin/Daedalus-ScriptCore.dll)");
+			return;
+		}
 
 		// NOTE: This will need to be made more expanable in the future, project DIR as arg(?)
 		// but it is fine for testing currently (24/08/25)
-		loadClientAssembly("sandboxProject/assets/scripts/script-bin/Sandbox.dll");
+		status = loadClientAssembly("sandboxProject/assets/scripts/script-bin/Sandbox.dll");
+		if (!status)
+		{
+			DD_CORE_LOG_ERROR("[Script Engine] Could not load client assembly. ({})", "sandboxProject/assets/scripts/script-bin/Sandbox.dll");
+			return;
+		}
+
 		loadAssemblyClasses();
 		
 		ScriptGlue::registerComponentTypes();
@@ -163,6 +174,7 @@ namespace daedalus::scripting {
 		s_data->entityClass = ScriptClass("Daedalus.Types", "MonoScript", true);
 
 		using namespace daedalus::utils;
+		// TO DO: Make the filename/path ("sandboxProject/assets/scripts/script-bin/Sandbox.dll") not hardcoded
 		s_data->clientAssemblyWatcher = daedalus::utils::FileWatcher("sandboxProject/assets/scripts/script-bin/Sandbox.dll",
 			[](const std::filesystem::path& path, FileWatcher::Event eventType) {
 				if (eventType == FileWatcher::Event::Modified && !s_data->clientAsseblyReloadPending)
@@ -231,7 +243,7 @@ namespace daedalus::scripting {
 		s_data->rootDomain = nullptr;
 	}
 
-	void ScriptEngine::loadAssembly(const std::filesystem::path& filepath)
+	bool ScriptEngine::loadAssembly(const std::filesystem::path& filepath)
 	{
 		s_data->coreAssemblyPath = filepath;
 
@@ -239,24 +251,43 @@ namespace daedalus::scripting {
 		s_data->appDomain = mono_domain_create_appdomain((char*)"DaedalusScriptRuntime", nullptr);
 		mono_domain_set(s_data->appDomain, true);
 
-		auto [path, result] = daedalus::utils::get_core_file_location(filepath);
+		auto [path, result] = daedalus::utils::get_core_file_location(filepath, false);
 		if (result)
 		{
 			s_data->coreAssembly = monoUtils::load_mono_assembly(path, s_data->enableDebugging);
+			if (s_data->coreAssembly == nullptr)
+			{
+				DD_CORE_LOG_ERROR("[Script Engine] core assembly could not be loaded");
+				return false;
+			}
+
 			s_data->coreAssemblyImage = mono_assembly_get_image(s_data->coreAssembly);
 			//monoUtils::print_assembly_types(s_data->coreAssembly);
 		}
 		else
-			DD_ASSERT(false, "failed to load assembly (file could not be found)");
+		{
+			DD_CORE_LOG_ERROR("[Script Engine] failed to load core assembly (file could not be found)");
+			return false;
+		}
+
+		return true;
 	}
 
-	void ScriptEngine::loadClientAssembly(const std::filesystem::path& filepath)
+	bool ScriptEngine::loadClientAssembly(const std::filesystem::path& filepath)
 	{
 		s_data->clientAssemblyPath = filepath;
 
 		s_data->clientAssembly = monoUtils::load_mono_assembly(filepath, s_data->enableDebugging);
+		if (s_data->clientAssembly == nullptr)
+		{
+			DD_CORE_LOG_ERROR("[Script Engine] client assembly could not be loaded. tried loading: {}", filepath);
+			return false;
+		}
+
 		s_data->clientAssemblyImage = mono_assembly_get_image(s_data->clientAssembly);
 		//monoUtils::print_assembly_types(s_data->clientAssembly);
+
+		return true;
 	}
 
 	void ScriptEngine::reloadAssembly()
@@ -320,11 +351,13 @@ namespace daedalus::scripting {
 	void ScriptEngine::updateEntityInstance(scene::Entity entity, float dt)
 	{
 		UUID entityUUID = entity.getUUID();
-		DD_CORE_ASSERT(s_data->entityInstances.find(entityUUID) != s_data->entityInstances.end());
-
-		Shr_ptr<ScriptInstance> instance = s_data->entityInstances[entityUUID];
-
-		instance->invokeOnUpdate(dt);
+		if(s_data->entityInstances.find(entityUUID) != s_data->entityInstances.end())
+		{
+			Shr_ptr<ScriptInstance> instance = s_data->entityInstances[entityUUID];
+			instance->invokeOnUpdate(dt);
+		}
+		else
+			DD_CORE_LOG_ERROR("[Script Engine] Could not find Script Instance for entity {}", entity.getUUID());
 	}
 
 	scene::Scene* ScriptEngine::getSceneContext()

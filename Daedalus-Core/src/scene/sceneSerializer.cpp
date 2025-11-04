@@ -416,25 +416,26 @@ namespace daedalus::scene {
 					if (scriptFiels)
 					{
 						Shr_ptr<ScriptClass> entityClass = ScriptEngine::getEntityClass(sc.className);
-						DD_CORE_ASSERT(entityClass);
-						const auto& fields = entityClass->getFields();
-						auto& entityFields = ScriptEngine::getEntityScriptFields(deserializedEntity.getUUID());
-
-						for (auto& scriptFeild : scriptFiels)
+						if (entityClass)
 						{
+							const auto& fields = entityClass->getFields();
+							auto& entityFields = ScriptEngine::getEntityScriptFields(deserializedEntity.getUUID());
 
-							std::string fieldName = scriptFeild["Name"].as<std::string>();
-							std::string typeAsString = scriptFeild["Type"].as<std::string>();
-							scripting::ScriptFieldType fieldType = scripting::utils::script_field_type_from_string(typeAsString);
-							
-							ScriptFieldInstance& fieldInstance = entityFields[fieldName];
-							if (!fields.contains(fieldName))
+							for (auto& scriptFeild : scriptFiels)
 							{
-								DD_LOG_WARN("Entity '{}', Script component field: '{}' not found, while deserializing '{}'", name, fieldName, filepath.filename());
-								continue;
-							}
 
-							fieldInstance.field = fields.at(fieldName);
+								std::string fieldName = scriptFeild["Name"].as<std::string>();
+								std::string typeAsString = scriptFeild["Type"].as<std::string>();
+								scripting::ScriptFieldType fieldType = scripting::utils::script_field_type_from_string(typeAsString);
+
+								ScriptFieldInstance& fieldInstance = entityFields[fieldName];
+								if (!fields.contains(fieldName))
+								{
+									DD_LOG_WARN("Entity '{}', Script component field: '{}' not found, while deserializing '{}'", name, fieldName, filepath.filename());
+									continue;
+								}
+
+								fieldInstance.field = fields.at(fieldName);
 
 #define FIELD_TYPE_MACRO(FieldType, Type) case ScriptFieldType::FieldType:\
 							{\
@@ -443,27 +444,28 @@ namespace daedalus::scene {
 							break;\
 							}
 
-							switch (fieldType)
-							{
-							FIELD_TYPE_MACRO(Bool, bool)
-							FIELD_TYPE_MACRO(Float, float)
-							FIELD_TYPE_MACRO(Double, double)
-							FIELD_TYPE_MACRO(Char, char)
-							FIELD_TYPE_MACRO(Byte, byte)
-							FIELD_TYPE_MACRO(Short, short)
-							FIELD_TYPE_MACRO(UShort, uint16_t)
-							FIELD_TYPE_MACRO(Int, int)
-							FIELD_TYPE_MACRO(UInt, uint32_t)
-							FIELD_TYPE_MACRO(Long, long)
-							FIELD_TYPE_MACRO(ULong, uint64_t)
-							FIELD_TYPE_MACRO(String, std::string)
-							FIELD_TYPE_MACRO(Vector2, maths::Vec2)
-							FIELD_TYPE_MACRO(Vector3, maths::Vec3)
-							FIELD_TYPE_MACRO(Vector4, maths::Vec4)
-							FIELD_TYPE_MACRO(MonoScript, UUID)
-							}
+								switch (fieldType)
+								{
+									FIELD_TYPE_MACRO(Bool, bool)
+										FIELD_TYPE_MACRO(Float, float)
+										FIELD_TYPE_MACRO(Double, double)
+										FIELD_TYPE_MACRO(Char, char)
+										FIELD_TYPE_MACRO(Byte, byte)
+										FIELD_TYPE_MACRO(Short, short)
+										FIELD_TYPE_MACRO(UShort, uint16_t)
+										FIELD_TYPE_MACRO(Int, int)
+										FIELD_TYPE_MACRO(UInt, uint32_t)
+										FIELD_TYPE_MACRO(Long, long)
+										FIELD_TYPE_MACRO(ULong, uint64_t)
+										FIELD_TYPE_MACRO(String, std::string)
+										FIELD_TYPE_MACRO(Vector2, maths::Vec2)
+										FIELD_TYPE_MACRO(Vector3, maths::Vec3)
+										FIELD_TYPE_MACRO(Vector4, maths::Vec4)
+										FIELD_TYPE_MACRO(MonoScript, UUID)
+								}
 #undef FIELD_TYPE_MACRO
 
+							}
 						}
 					}
 				}

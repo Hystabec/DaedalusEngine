@@ -8,7 +8,7 @@ namespace daedalus::utils {
 	/// @brief Returns the file path to the file name argument.
 	/// @brief While unbuild/using IDE will be in core project
 	/// @brief When launching built .exe will be next to it
-	static std::pair<std::filesystem::path, bool> get_core_file_location(const std::filesystem::path& file)
+	static inline std::pair<std::filesystem::path, bool> get_core_file_location(const std::filesystem::path& file, bool canAssert = true)
 	{
         // NOTE: This functions is not the best as it finds the file relative to this one (This is always in the core)
         // but if this file ever moves then it will need to be altered
@@ -16,8 +16,6 @@ namespace daedalus::utils {
         // NOTE: This function is currently (19.08.25) only used in constuction/init functions
         // if this function need to be called regularly, it should be made into a constexpr to remove any
         // preformance overhead
-
-        DD_PROFILE_FUNCTION();
 
 #ifndef DD_DISTRO
 
@@ -46,9 +44,12 @@ namespace daedalus::utils {
 
 #ifndef DD_DISTRO
         //doesnt support launching from different dir that executable
-        DD_CORE_ASSERT(false, DD_ASSERT_FORMAT_MESSAGE("{} not found in {} or {}", file, defaultPath, file));
+        if (canAssert)
+            DD_CORE_ASSERT(false, DD_ASSERT_FORMAT_MESSAGE("{} not found in {} or {}", file.filename(), defaultPath, file))
+        else
+            DD_CORE_LOG_ERROR("{} not found in {} or {}", file.filename(), defaultPath, file);
 #else
-        DD_CORE_LOG_CRITICAL("{} not found", file);
+        DD_CORE_LOG_ERROR("{} not found", file);
         return { "", false };
 #endif
 
