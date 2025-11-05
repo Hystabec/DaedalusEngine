@@ -1,9 +1,9 @@
 [submodule "Daedalus-Core/Dependencies/yaml-cpp"]
-	path = Daedalus-Core/Dependencies/yaml-cpp
+	path = Daedalus-Core/dependencies/yaml-cpp
 	url = https://github.com/Hystabec/yaml-cpp
 [submodule "Daedalus-Core/Dependencies/ImGuizmo"]
-	path = Daedalus-Core/Dependencies/ImGuizmo
+	path = Daedalus-Core/dependencies/ImGuizmo
 	url = https://github.com/Hystabec/ImGuizmo
 [submodule "Daedalus-Core/Dependencies/Box2D"]
-	path = Daedalus-Core/Dependencies/Box2D
+	path = Daedalus-Core/dependencies/Box2D
 	url = https://github.com/Hystabec/box2d
