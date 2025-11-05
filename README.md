@@ -10,16 +10,16 @@ Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW]
 ## Current Features
 * Custom maths library.  
 * Event system.  
-* Rendering with `OpenGL` .  
+* Rendering with `OpenGL`.  
 * 2D batch rendering.  
 * Texture/Image rendering.  
 * User Interface using `Dear ImGui`.  
 * Custom Logging library primarily using `spdlog`.  
 * Performance profiling using `chrome://tracing`.  
 * Entity component system using `Entt`.  
-* 2D physics using `Box2D`  
+* 2D physics using `Box2D`.  
 * Shader cross compilation using `SPIR-V`.  
-* Scripting support (C#) using `Mono`  
+* Scripting support (C#) using `Mono`.  
 * An Editor application (in development).  
 
 ## Planned Features
@@ -30,7 +30,7 @@ Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW]
 * Rendering with `Metal`.  
 * 3D batch rendering.  
 * 3D physics engine.  
-* A debugging extension for visual studio to debug scripts during runtime  
+* A debugging extension for visual studio to debug scripts during runtime.  
 * A complete editor application.  
 * A standalone runtime environment.  
     * That can run projects built in the editor.  
