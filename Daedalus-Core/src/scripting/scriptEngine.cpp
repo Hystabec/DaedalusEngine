@@ -180,7 +180,15 @@ namespace daedalus::scripting {
 				if (eventType == FileWatcher::Event::Modified && !s_data->clientAsseblyReloadPending)
 				{
 					s_data->clientAsseblyReloadPending = true;
-					daedalus::Application::get().submitToMainThreadQueue(ScriptEngine::reloadAssembly);
+
+					// currently running
+					if(s_data->sceneContext != nullptr)
+						DD_CORE_LOG_INFO("[Script Engine] Client assembly changed. Assembly reload queued until runtime is stopped");
+					else
+					{
+						// if not running do now
+						daedalus::Application::get().submitToMainThreadQueue(ScriptEngine::reloadAssembly);
+					}
 				}
 			});
 	}
@@ -317,6 +325,13 @@ namespace daedalus::scripting {
 	{
 		s_data->sceneContext = nullptr; 
 		s_data->entityInstances.clear();
+
+		if (s_data->clientAsseblyReloadPending)
+		{
+			// Submitting to the main thread should no longer be needed as this should be ran on the main thread
+			//daedalus::Application::get().submitToMainThreadQueue(ScriptEngine::reloadAssembly);
+			reloadAssembly();
+		}
 	}
 
 	bool ScriptEngine::entityClassExists(const std::string& fullClassName)
