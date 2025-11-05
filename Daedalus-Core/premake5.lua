@@ -17,10 +17,10 @@ project "Daedalus-Core"
 		"src/**.h",
 		"src/**.cpp",
 
-		"Dependencies/stb_image/**.h",
-		"Dependencies/stb_image/**.cpp",
-		"Dependencies/ImGuizmo/ImGuizmo.h",
-		"Dependencies/ImGuizmo/ImGuizmo.cpp"
+		"dependencies/stb_image/**.h",
+		"dependencies/stb_image/**.cpp",
+		"dependencies/ImGuizmo/ImGuizmo.h",
+		"dependencies/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	defines
@@ -64,7 +64,7 @@ project "Daedalus-Core"
 
 	buildoptions "/utf-8"
 
-	filter "files:Dependencies/ImGuizmo/**.cpp"
+	filter "files:dependencies/ImGuizmo/**.cpp"
 		flags { "NoPCH" }
 
 	filter "system:windows"

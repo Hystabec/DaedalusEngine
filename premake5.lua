@@ -19,9 +19,9 @@ workspace "DaedalusEngine"
 outputdir = "%{cfg.buildcfg}/%{cfg.system}-%{cfg.architecture}"
 
 group "Dependecies"
-	include "Daedalus-Core/Dependencies/ImGui"
-	include "Daedalus-Core/Dependencies/yaml-cpp"
-	include "Daedalus-Core/Dependencies/Box2D"
+	include "Daedalus-Core/dependencies/ImGui"
+	include "Daedalus-Core/dependencies/yaml-cpp"
+	include "Daedalus-Core/dependencies/Box2D"
 group ""
 
 group "Core"

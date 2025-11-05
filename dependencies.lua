@@ -2,16 +2,16 @@
 VULKAN_SDK = os.getenv("VULKAN_SDK")
 
 dependDir = {}
-dependDir["GLFW"] =         "%{wks.location}/Daedalus-Core/Dependencies/GLFW"
-dependDir["GLEW"] =         "%{wks.location}/Daedalus-Core/Dependencies/GLEW"
-dependDir["spdlog"] =       "%{wks.location}/Daedalus-Core/Dependencies/spdlog"
-dependDir["ImGui"] =        "%{wks.location}/Daedalus-Core/Dependencies/ImGui"
-dependDir["stb_image"] =    "%{wks.location}/Daedalus-Core/Dependencies/stb_image"
-dependDir["entt"] =         "%{wks.location}/Daedalus-Core/Dependencies/Entt"
-dependDir["yaml_cpp"] =     "%{wks.location}/Daedalus-Core/Dependencies/yaml-cpp"
-dependDir["ImGuizmo"] =     "%{wks.location}/Daedalus-Core/Dependencies/ImGuizmo"
-dependDir["Box2D"] =        "%{wks.location}/Daedalus-Core/Dependencies/Box2D"
-dependDir["mono"] =         "%{wks.location}/Daedalus-Core/Dependencies/mono"
+dependDir["GLFW"] =         "%{wks.location}/Daedalus-Core/dependencies/GLFW"
+dependDir["GLEW"] =         "%{wks.location}/Daedalus-Core/dependencies/GLEW"
+dependDir["spdlog"] =       "%{wks.location}/Daedalus-Core/dependencies/spdlog"
+dependDir["ImGui"] =        "%{wks.location}/Daedalus-Core/dependencies/ImGui"
+dependDir["stb_image"] =    "%{wks.location}/Daedalus-Core/dependencies/stb_image"
+dependDir["entt"] =         "%{wks.location}/Daedalus-Core/dependencies/Entt"
+dependDir["yaml_cpp"] =     "%{wks.location}/Daedalus-Core/dependencies/yaml-cpp"
+dependDir["ImGuizmo"] =     "%{wks.location}/Daedalus-Core/dependencies/ImGuizmo"
+dependDir["Box2D"] =        "%{wks.location}/Daedalus-Core/dependencies/Box2D"
+dependDir["mono"] =         "%{wks.location}/Daedalus-Core/dependencies/mono"
 dependDir["VulkanSDK"] =    "%{VULKAN_SDK}"
 
 libraryDir = {}
