@@ -5,7 +5,7 @@ Daedalus Engine is a personal game engine project that i'm developing using tuto
 
 Primarily following [The Cherno's - "Game Engine" series](https://www.youtube.com/playlist?list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT) when developing the engine.  
 
-Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW](https://www.glfw.org), [GLEW](https://glew.sourceforge.net), [stb](https://github.com/nothings/stb), [spdlog](https://github.com/gabime/spdlog), [Dear ImGui](https://github.com/ocornut/imgui), [Entt](https://github.com/skypjack/entt), [yaml-cpp](https://github.com/jbeder/yaml-cpp), [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo), SPIR-V ([Vulkan](https://www.vulkan.org)), [box2d](https://github.com/erincatto/box2d)  
+Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW](https://www.glfw.org), [GLEW](https://glew.sourceforge.net), [stb](https://github.com/nothings/stb), [spdlog](https://github.com/gabime/spdlog), [Dear ImGui](https://github.com/ocornut/imgui), [Entt](https://github.com/skypjack/entt), [yaml-cpp](https://github.com/jbeder/yaml-cpp), [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo), SPIR-V ([Vulkan](https://www.vulkan.org)), [box2d](https://github.com/erincatto/box2d), [Mono](https://www.mono-project.com)  
 
 ## Current Features
 * Custom maths library.  
@@ -17,22 +17,34 @@ Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW]
 * Custom Logging library primarily using `spdlog`.  
 * Performance profiling using `chrome://tracing`.  
 * Entity component system using `Entt`.  
-* 2D physics using `Box2D`
+* 2D physics using `Box2D`  
 * Shader cross compilation using `SPIR-V`.  
+* Scripting support (C#) using `Mono`  
 * An Editor application (in development).  
 
 ## Planned Features
 * Suppot for Mac and Linux.  
 * Audio system.  
-* Scripting support (C#)
 * Rendering with `Vulkan`.  
 * Rendering with `DirectX`.  
 * Rendering with `Metal`.  
 * 3D batch rendering.  
 * 3D physics engine.  
+* A debugging extension for visual studio to debug scripts during runtime  
 * A complete editor application.  
 * A standalone runtime environment.  
     * That can run projects built in the editor.  
+
+## Making and Editing scripts
+Currently the C# scripts are located in `DaedalusEngine/Daedalus-Editor/sandboxProject/assets/scripts`.  
+Running `win-GenerateProject-VS22.bat` will generate as VS solution file that will open the C# solution.  
+Note: The C# solution will need to be built before any of the default script can be ran (On a new clone of this repository).  
+
+## Debugging Scritps
+The visual studio debugger can be attached to a running instance of Daedalus to allow for the stepping of script and viewing of active variables.  
+Currently to achive this `Unity`'s visual studio 2022 debugger can be used.  
+To attach the unity debugger while using visual studio 2022: On the Top Menu click `Debug -> Attach Unity Debugger` then click `Input IP` and used the IP:`127.0.0.1:2550` then click OK.  
+Eventually I plan to create my own extension for visual studio, but after unsuccessfuly trying to make one I have decided this will do for now.  
 
 ## Getting Started
 <ins>1. Downloading the project files:</ins>
