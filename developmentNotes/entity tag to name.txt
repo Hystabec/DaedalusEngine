@@ -1,7 +1,0 @@
-should probably rename tag to name.
-as a tag could be something like "enemy" or "bullet" etc.
-
-could rename tag component to name component
-
-or could consolidate the tag component to store general id data
-such as: the name, the UUID, any tags it has, etc.
