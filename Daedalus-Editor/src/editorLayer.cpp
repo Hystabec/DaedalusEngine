@@ -42,8 +42,17 @@ namespace daedalus::editor
 		auto& commandLineArgs = Application::get().getSpecification().commandLineArgs;
 		if (commandLineArgs.count > 1)
 		{
-			auto sceneFilePath = commandLineArgs[1];
-			openScene(sceneFilePath);
+			auto projectFilePath = commandLineArgs[1];
+			openProject(projectFilePath);
+		}
+		else
+		{
+			// TO DO: prompt the user to select a directory (to load/create project into)
+			//newProject();
+
+			// temporary while there is no new project
+			if (!openProject())
+				Application::get().close();
 		}
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
@@ -151,25 +160,19 @@ namespace daedalus::editor
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("New", "Ctrl+N"))
-				{
+				if (ImGui::MenuItem("Open Project ...", "Ctrl+O"))
+					openProject();
+
+				ImGui::Separator();
+
+				if (ImGui::MenuItem("New Scene", "Ctrl+N"))
 					newScene();
-				}
 
-				if (ImGui::MenuItem("Open...", "Ctrl+O"))
-				{
-					openScene();
-				}
-
-				if (ImGui::MenuItem("Save", "Ctrl+S"))
-				{
+				if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
 					saveScene();
-				}
 
-				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
-				{
+				if (ImGui::MenuItem("Save Scene As...", "Ctrl+Shift+S"))
 					saveSceneAs();
-				}
 
 				ImGui::Separator();
 
@@ -603,7 +606,7 @@ namespace daedalus::editor
 		case InputCode::Key_O:
 		{
 			if (ctrl)
-				openScene();
+				openProject();
 
 			break;
 		}
@@ -759,6 +762,44 @@ namespace daedalus::editor
 		return m_viewportHovered && m_viewportFocused && !ImGuizmo::IsUsing() && !ImGuizmo::IsOver() && !cameraInUse;
 	}
 
+	void EditorLayer::newProject()
+	{
+		Project::newProject();
+	}
+
+	bool EditorLayer::openProject()
+	{
+		if (m_sceneState != SceneState::Edit)
+			return false;
+
+		// open file returns a string - here is getting cast/constucted into a filepath
+		std::filesystem::path filepath = utils::FileDialog::openFile("Daedalus Project (*.ddproj)\0*.ddproj\0");
+		if (!filepath.empty())
+		{
+			return openProject(filepath);
+		}
+		
+		return false;
+	}
+
+	bool EditorLayer::openProject(const std::filesystem::path& path)
+	{
+		if (Project::Load(path))
+		{
+			auto startScenePath = Project::getAssetFileSystemPath(Project::getActive()->getConfig().startScene);
+			openScene(startScenePath);
+			m_contentBrowserPanel.setProjectAssetDirectory(Project::getActiveAssetDirectory());
+			return true;
+		}
+
+		return false;
+	}
+
+	void EditorLayer::saveProject()
+	{
+		// Project::saveActive();
+	}
+
 	void EditorLayer::newScene()
 	{
 		if (m_sceneState != SceneState::Edit)
@@ -834,7 +875,7 @@ namespace daedalus::editor
 
 		std::string defaultFileName;
 		if (m_currentSceneFilepath.empty())
-			defaultFileName = "newScene.Daedalus";
+			defaultFileName = "newScene.daedalus";
 		else
 			defaultFileName = m_currentSceneFilepath.filename().string();
 
@@ -844,7 +885,7 @@ namespace daedalus::editor
 			// NOTE: Could just change the file extension regardless of what it is
 			// currently it only sets to .Daedalus if it is empty
 			if (filepath.extension().empty())
-				filepath.replace_extension(".Daedalus");
+				filepath.replace_extension(".daedalus");
 
 			serializeScene(m_activeScene, filepath);
 			m_currentSceneFilepath = filepath;

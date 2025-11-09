@@ -12,8 +12,8 @@ Gizmos:
 Hold 'Shift' while manipulating a gizmo to enable snapping
 
 Shortcuts:
+'Ctrl + O' = Opens the 'open project' dialog
 'Ctrl + N' = new scene
-'Ctrl + O' = Opens the 'open scene' dialog
 'Ctrl + S' = Save the current scene, if the scene wasn't opened from a file will open the 'Save as' dialog
 'Ctrl + Shift + S' = Opens the 'Save as' dialog
 'Alt + C' = toggles physics collider overlay

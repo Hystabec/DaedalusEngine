@@ -1,0 +1,78 @@
+#include "ddpch.h"
+#include "projectSerializer.h"
+
+#include <fstream>
+#include <yaml-cpp/yaml.h>
+
+namespace daedalus {
+
+	ProjectSerializer::ProjectSerializer(Shr_ptr<Project> project)
+		: m_project(project)
+	{
+	}
+
+	bool ProjectSerializer::serialize(const std::filesystem::path& path)
+	{
+		const auto& config = m_project->getConfig();
+
+		YAML::Emitter out;
+		out << YAML::BeginMap;
+		out << YAML::Key << "FormatVersion" << YAML::Value << m_currentFileFormatVersion;
+		out << YAML::Key << "Project" << YAML::Value;
+		out << YAML::BeginMap;
+		out << YAML::Key << "Name" << YAML::Value << config.name;
+		out << YAML::Key << "AssetDirectory" << YAML::Value << config.assetDirectory.string();
+		out << YAML::Key << "ScriptModuleBin" << YAML::Value << config.scriptModuleBin.string();
+		out << YAML::Key << "StartScene" << YAML::Value << config.startScene.string();
+		out << YAML::EndMap;
+		out << YAML::EndMap;
+
+		std::ofstream fout(path);
+		fout << out.c_str();
+
+		return true;
+	}
+
+	bool ProjectSerializer::deserialize(const std::filesystem::path& path)
+	{
+		auto& config = m_project->getConfig();
+
+		YAML::Node data;
+		try
+		{
+			data = YAML::LoadFile(path.string());
+		}
+		catch (YAML::Exception e)
+		{
+			DD_CORE_LOG_ERROR("Failed to load project file '{}'\n{}", path, e.what());
+			return false;
+		}
+
+		YAML::Node projectNode;
+		try
+		{
+			if (!data["Project"])
+			{
+				DD_CORE_LOG_ERROR("Deserialization Error: file contains no project data '{}'", path);
+				return false;
+			}
+			else
+				projectNode = data["Project"];
+		}
+		catch (YAML::Exception e)
+		{
+			DD_CORE_LOG_ERROR("Failed to load project file '{}'\n{}", path, e.what());
+			return false;
+		}
+
+		uint32_t fileVersion = data["FormatVersion"].as<uint32_t>();
+
+		config.name = projectNode["Name"].as<std::string>();
+		config.assetDirectory = projectNode["AssetDirectory"].as<std::string>();
+		config.scriptModuleBin = projectNode["ScriptModuleBin"].as<std::string>();
+		config.startScene = projectNode["StartScene"].as<std::string>();
+
+		return true;
+	}
+
+}

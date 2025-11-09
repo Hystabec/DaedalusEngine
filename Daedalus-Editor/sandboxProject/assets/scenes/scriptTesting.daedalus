@@ -1,25 +1,43 @@
+FormatVersion: 1
 Scene: scriptTesting
-Format Version: 1
 Entities:
-  - Entity: 11615390249985835402
-    Name: Jumper
+  - Entity: 15466296278067097890
+    Name: Player
     TagComponent:
       Tag: ""
     TransformComponent:
-      Position: [-3, -0.74, 0]
+      Position: [0, -0.27636528, 0]
       Rotation: [0, 0, 0]
-      Scale: [0.25, 0.25, 1]
+      Scale: [1, 1, 1]
     ScriptComponent:
-      ClassName: Sandbox.Jumper
+      ClassName: Sandbox.PlayerScript
       ScriptFields:
-        - Name: jumpForce
-          Type: Float
-          Data: 0.25
+        []
     SpriteRendererComponent:
-      Colour: [0.23579152, 0.050714802, 0.4864865, 1]
+      Colour: [1, 1, 1, 1]
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: Dynamic
+      FixedRotation: false
+      Desity: 0.15
+      Friction: 0.01
+      Restitution: 0
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+  - Entity: 15466296278067097891
+    Name: Platform
+    TagComponent:
+      Tag: ""
+    TransformComponent:
+      Position: [0, -1.3723323, 0]
+      Rotation: [0, 0, 0]
+      Scale: [43.56957, 1, 1]
+    SpriteRendererComponent:
+      Colour: [0.24324322, 0.24324322, 0.24324322, 1]
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: Static
       FixedRotation: false
       Desity: 1
       Friction: 0.5
@@ -52,46 +70,28 @@ Entities:
         OrthographicFar: 1
       Primary: true
       FixedAspectRatio: false
-  - Entity: 15466296278067097891
-    Name: Platform
+  - Entity: 11615390249985835402
+    Name: Jumper
     TagComponent:
       Tag: ""
     TransformComponent:
-      Position: [0, -1.3723323, 0]
+      Position: [-3, -0.74, 0]
       Rotation: [0, 0, 0]
-      Scale: [43.56957, 1, 1]
-    SpriteRendererComponent:
-      Colour: [0.24324322, 0.24324322, 0.24324322, 1]
-      TilingFactor: 1
-    Rigidbody2DComponent:
-      BodyType: Static
-      FixedRotation: false
-      Desity: 1
-      Friction: 0.5
-      Restitution: 0
-    BoxCollider2DComponent:
-      Offset: [0, 0]
-      Size: [0.5, 0.5]
-  - Entity: 15466296278067097890
-    Name: Player
-    TagComponent:
-      Tag: ""
-    TransformComponent:
-      Position: [0, -0.27636528, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
+      Scale: [0.25, 0.25, 1]
     ScriptComponent:
-      ClassName: Sandbox.PlayerScript
+      ClassName: Sandbox.Jumper
       ScriptFields:
-        []
+        - Name: jumpForce
+          Type: Float
+          Data: 0.25
     SpriteRendererComponent:
-      Colour: [1, 1, 1, 1]
+      Colour: [0.23579152, 0.050714802, 0.4864865, 1]
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: Dynamic
       FixedRotation: false
-      Desity: 0.15
-      Friction: 0.01
+      Desity: 1
+      Friction: 0.5
       Restitution: 0
     BoxCollider2DComponent:
       Offset: [0, 0]

@@ -1,6 +1,8 @@
 #include "editorpch.h"
 #include "contentBrowserPanel.h"
 
+#include "project/Project.h"
+
 #include <imgui.h> 
 #include <filesystem>
 
@@ -13,11 +15,7 @@
 
 namespace daedalus::editor
 {
-
-	static const std::filesystem::path s_assetPath = "assets";
-
 	ContentBrowserPanel::ContentBrowserPanel()
-		: m_currentDirectory(s_assetPath)
 	{
 		m_directoryIcon = graphics::Texture2D::create("resources/icons/contentBrowser/directoryIcon.png");
 		m_fileIcon = graphics::Texture2D::create("resources/icons/contentBrowser/fileIcon.png");
@@ -25,7 +23,6 @@ namespace daedalus::editor
 
 	void ContentBrowserPanel::onImGuiRender()
 	{
-		static std::string currentDirPath = s_assetPath.string();
 		static float padding = 16.0f;
 		static float thumbnailSize = 96.0f;
 #if ENABLE_FONT_SCALING
@@ -34,34 +31,57 @@ namespace daedalus::editor
 #endif
 		ImGui::Begin("Content Browser");
 
-		// TO DO: make this more visually apearling, currently function in generally the way i want
-		ImGui::Text("Path:");
-		ImGui::SameLine();
-		std::string currentSubStr = "";
-		for (uint32_t i = 0; i < currentDirPath.size(); i++)
+		// No valid project
+		if (m_projectAssetDirectory.empty())
 		{
-			char& c = currentDirPath[i];
-			if (c == '/' || c == '\\')
+			ImGui::End();
+			return;
+		}
+
+		// TO DO: make this more visually apearling, currently function in generally the way i want
+		{
+			std::string currentDirPath = m_currentDirectory.string();
+			ImGui::Text("Path:");
+			ImGui::SameLine();
+
+			if (ImGui::Button("assets"))
 			{
-				if (ImGui::Button(currentSubStr.c_str()))
-				{
-					m_currentDirectory = std::filesystem::path(currentDirPath.substr(0, currentDirPath.find(currentSubStr) + currentSubStr.size()));
-					currentDirPath = m_currentDirectory.string();
-					ImGui::SameLine();	// this is here so there isnt a little jump when clicking a button
-					break;
-				}
+				m_currentDirectory = "";
+				currentDirPath = ""; // this is made empty so the for loop doesnt run
+			}
+			if (!currentDirPath.empty())
+			{
 				ImGui::SameLine();
 				ImGui::Text("/");
 				ImGui::SameLine();
-
-				currentSubStr = "";
 			}
-			else
-				currentSubStr += c;
-		}
-		if (currentSubStr != "")
-		{
-			ImGui::Button(currentSubStr.c_str());
+
+			std::string currentSubStr = "";
+			for (uint32_t i = 0; i < currentDirPath.size(); i++)
+			{
+				char& c = currentDirPath[i];
+				if (c == '/' || c == '\\')
+				{
+					if (ImGui::Button(currentSubStr.c_str()))
+					{
+						m_currentDirectory = std::filesystem::path(currentDirPath.substr(0, currentDirPath.find(currentSubStr) + currentSubStr.size()));
+						currentDirPath = m_currentDirectory.string();
+						ImGui::SameLine();	// this is here so there isnt a little jump when clicking a button
+						break;
+					}
+					ImGui::SameLine();
+					ImGui::Text("/");
+					ImGui::SameLine();
+
+					currentSubStr = "";
+				}
+				else
+					currentSubStr += c;
+			}
+			if (currentSubStr != "")
+			{
+				ImGui::Button(currentSubStr.c_str());
+			}
 		}
 
 		ImGui::Separator();
@@ -79,11 +99,23 @@ namespace daedalus::editor
 		ImGuiIO& io = ImGui::GetIO();
 		io.FontDefault->FontSize /= fontScale;
 #endif
-		for (auto& directoryElement : std::filesystem::directory_iterator(m_currentDirectory))
+
+		for (auto& directoryElement : std::filesystem::directory_iterator(m_projectAssetDirectory / m_currentDirectory))
 		{
 			const auto& path = directoryElement.path();
 			std::string filenameStr = path.filename().string();
 			
+			if (directoryElement.is_directory())
+			{
+				if (contentBrowserDirectoryFilters.contains(filenameStr))
+					continue;
+			}
+			else
+			{
+				if (contentBrowserFileFilters.contains(filenameStr))
+					continue;
+			}
+
 			ImGui::PushID(filenameStr.c_str());
 
 			auto& elementIcon = directoryElement.is_directory() ? m_directoryIcon : m_fileIcon;
@@ -107,7 +139,7 @@ namespace daedalus::editor
 				if (directoryElement.is_directory())
 				{
 					m_currentDirectory /= path.filename();
-					currentDirPath = m_currentDirectory.string();
+					//currentDirPath = m_currentDirectory.string();
 				}
 			}
 

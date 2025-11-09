@@ -177,7 +177,7 @@ namespace daedalus::scripting {
 
 				if (!managedType)
 				{
-					DD_CORE_LOG_ERROR("Could not find component type '{}'", managedTypeName);
+					DD_CORE_LOG_ERROR("[Script Glue] Could not find component type '{}'", managedTypeName);
 					return;
 				}
 

@@ -5,6 +5,7 @@
 #include "entityComponents/components.h"
 #include "../scripting/scriptEngine.h"
 #include "application/uuid.h"
+#include "../project/project.h"
 
 #include <fstream>
 #include <yaml-cpp/yaml.h>
@@ -281,8 +282,9 @@ namespace daedalus::scene {
 			{
 				out << YAML::Key << "Colour" << YAML::Value << src.colour;
 
-				if(src.material.texture)
-					out << YAML::Key << "Texture" << YAML::Value << src.material.texture->getSrcFilePath().string();
+				if (src.material.texture)
+					out << YAML::Key << "Texture" << YAML::Value << std::filesystem::relative(src.material.texture->getSrcFilePath().string(), Project::getActiveAssetDirectory()).string();
+
 				out << YAML::Key << "TilingFactor" << YAML::Value << src.material.tilingFactor;
  			});
 
@@ -321,8 +323,8 @@ namespace daedalus::scene {
 	{
 		YAML::Emitter out;
 		out << YAML::BeginMap;
+		out << YAML::Key << "FormatVersion" << YAML::Value << m_currentFileFormatVersion;
 		out << YAML::Key << "Scene" << YAML::Value << filepath.stem().string();
-		out << YAML::Key << "Format Version" << YAML::Value << m_fileFormatVersion;
 		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 		for (auto entityID : m_scene->m_registry.view<entt::entity>())
 		{
@@ -373,6 +375,7 @@ namespace daedalus::scene {
 			return false;
 		}
 
+		uint32_t fileVersion = data["FormatVersion"].as<uint32_t>();
 		std::string sceneName = data["Scene"].as<std::string>();
 #if LOG_SERIALIZATION_TO_CONSOLE
 		DD_CORE_LOG_TRACE("Deserializing scene {}", sceneName);
@@ -495,7 +498,10 @@ namespace daedalus::scene {
 					auto& src = deserializedEntity.addOrRepalaceComponent<SpriteRendererComponent>();
 					src.colour = component["Colour"].as<maths::Vec4>();
 					if (component["Texture"])
-						src.material.texture = graphics::Texture2D::create(component["Texture"].as<std::string>());
+					{
+						std::filesystem::path texutrePath = component["Texture"].as<std::string>();
+						src.material.texture = graphics::Texture2D::create(Project::getActiveAssetDirectory() / texutrePath);
+					}
 					if(component["TilingFactor"])
 						src.material.tilingFactor = component["TilingFactor"].as<float>();
 				}

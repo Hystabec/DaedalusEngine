@@ -1,0 +1,6 @@
+FormatVersion: 1
+Project:
+  Name: Untitled
+  AssetDirectory: "assets"
+  ScriptModuleBin: "scripts/script-bin/Sandbox.dll"
+  StartScene: "scenes/physics2D.daedalus"

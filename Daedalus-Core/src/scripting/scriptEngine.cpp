@@ -136,7 +136,11 @@ namespace daedalus::scripting {
 		daedalus::utils::FileWatcher clientAssemblyWatcher;
 		bool clientAsseblyReloadPending = false;
 
+#ifdef DD_DEBUG
 		bool enableDebugging = true;
+#else
+		bool enableDebugging = false;
+#endif // DD_DEBUG
 
 		// Runtime
 		scene::Scene* sceneContext = nullptr;

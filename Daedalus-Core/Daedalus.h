@@ -50,6 +50,9 @@
 #include "src/scene/entity.h"
 #include "src/scene/scriptableEntity.h"
 
+// -- Project
+#include "src/project/project.h"
+
 // ---utils
 #include "src/utils/timer.h"
 #include "src/utils/colourConversionUtils.h"
