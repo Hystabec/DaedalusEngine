@@ -8,11 +8,14 @@ namespace daedalus::editor
 {
 	// TO DO: Consider using regex expressions to filter files and directories
 	// check how fast regex is as it will be doing it many times each update
+	// look into using glob, which is used for thing like the .gitignore
 
 	/// @brief Any files in the set will be filtered out
-	static const std::unordered_set<std::string> contentBrowserFileFilters = { "premake5.lua", "Sandbox.csproj", "Sandbox.sln", "win-GenerateProject-VS22.bat" };
-	/// @brief Any directories in the set will be filtered out
-	static const std::unordered_set<std::string> contentBrowserDirectoryFilters = { ".vs", "script-bin" };
+	static const std::unordered_set<std::string> contentBrowserFileFilters = 
+	{ 
+		".vs", "script-bin",
+		".lua", ".csproj", ".sln", ".bat"
+	};
 
 	class ContentBrowserPanel
 	{

@@ -107,12 +107,12 @@ namespace daedalus::editor
 			
 			if (directoryElement.is_directory())
 			{
-				if (contentBrowserDirectoryFilters.contains(filenameStr))
+				if (contentBrowserFileFilters.contains(filenameStr))
 					continue;
 			}
 			else
 			{
-				if (contentBrowserFileFilters.contains(filenameStr))
+				if (contentBrowserFileFilters.contains(path.extension().string()))
 					continue;
 			}
 
