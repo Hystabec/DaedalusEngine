@@ -174,19 +174,16 @@ namespace daedalus::editor
 
 					for (char c : str)
 					{
-						// TO DO: Add the remainder of the special chars that regex uses
 						switch (c)
 						{
 						// special regex chars
-						case '.':
-						case '*':
+						case '.': case '?': case '*': case '+': case '`':
+						case '^': case '$': case '\\': case '[': case ']':
+						case '(': case ')':
 							parsedFilters.push_back('\\');
-							parsedFilters.push_back(c);
-							break;
-						default:
-							parsedFilters.push_back(c);
 							break;
 						}
+						parsedFilters.push_back(c);
 					}
 				}
 
