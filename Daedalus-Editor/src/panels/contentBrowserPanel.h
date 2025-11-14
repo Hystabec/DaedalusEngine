@@ -6,16 +6,11 @@
 
 namespace daedalus::editor
 {
-	// TO DO: Consider using regex expressions to filter files and directories
-	// check how fast regex is as it will be doing it many times each update
-	// look into using glob, which is used for thing like the .gitignore
+	// NOTE: To filter directories/files a regex is used, this might not be the best way
+	// but i wanted to use more regexs as I havent used many before
 
-	/// @brief Any files in the set will be filtered out
-	static const std::unordered_set<std::string> contentBrowserFileFilters = 
-	{ 
-		".vs", "script-bin",
-		".lua", ".csproj", ".sln", ".bat"
-	};
+	// NOTE: could store the filters in a file or something and load them in to make them easier to use
+	// currently the filtes just sit inside of ContentBrowserPanel
 
 	class ContentBrowserPanel
 	{
@@ -24,9 +19,21 @@ namespace daedalus::editor
 
 		void onImGuiRender();
 
-		void setProjectAssetDirectory(const std::filesystem::path& projectAssetPath) { m_projectAssetDirectory = projectAssetPath; m_currentDirectory = ""; }
+		void setProjectAssetDirectory(const std::filesystem::path& projectAssetPath) 
+		{
+			m_projectAssetDirectory = projectAssetPath;
+			m_currentDirectory = "";
+			m_filtedFilePathMap.clear(); // clear the map so it doesnt contain lots of (potentially) useless file paths
+		}
 
 	private:
+		void filterDirectory(const std::filesystem::path& directoryPath);
+
+	private:
+		const std::vector<std::string> m_directoryFilters = { ".vs", "script-bin" };
+		const std::vector<std::string> m_fileFilters =		{ ".lua", ".csproj", ".sln", ".bat" };
+		std::unordered_map<std::filesystem::path, bool> m_filtedFilePathMap;
+
 		std::filesystem::path m_projectAssetDirectory;
 		std::filesystem::path m_currentDirectory;
 

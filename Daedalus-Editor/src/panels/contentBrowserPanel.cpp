@@ -5,6 +5,7 @@
 
 #include <imgui.h> 
 #include <filesystem>
+#include <regex>
 
 // TO DO: When testing is finished remove macros and statements
 
@@ -104,17 +105,12 @@ namespace daedalus::editor
 		{
 			const auto& path = directoryElement.path();
 			std::string filenameStr = path.filename().string();
-			
-			if (directoryElement.is_directory())
-			{
-				if (contentBrowserFileFilters.contains(filenameStr))
-					continue;
-			}
-			else
-			{
-				if (contentBrowserFileFilters.contains(path.extension().string()))
-					continue;
-			}
+
+			if (!m_filtedFilePathMap.contains(path))
+				filterDirectory(m_projectAssetDirectory / m_currentDirectory);
+
+			if (!m_filtedFilePathMap[path])
+				continue;
 
 			ImGui::PushID(filenameStr.c_str());
 
@@ -148,6 +144,7 @@ namespace daedalus::editor
 
 			ImGui::NextColumn();
 		}
+
 #if ENABLE_FONT_SCALING
 		io.FontDefault->FontSize *= fontScale;
 #endif
@@ -159,6 +156,53 @@ namespace daedalus::editor
 #endif
 
 		ImGui::End();
+	}
+
+	void ContentBrowserPanel::filterDirectory(const std::filesystem::path& directoryPath)
+	{
+		static const auto& lambaFilters = [](const std::vector<std::string>& filters)
+			{
+				std::string parsedFilters = "";
+
+				for (const auto& str : filters)
+				{
+					if (str.empty())
+						continue;
+
+					if (!parsedFilters.empty())
+						parsedFilters.push_back('|');
+
+					for (char c : str)
+					{
+						// TO DO: Add the remainder of the special chars that regex uses
+						switch (c)
+						{
+						// special regex chars
+						case '.':
+						case '*':
+							parsedFilters.push_back('\\');
+							parsedFilters.push_back(c);
+							break;
+						default:
+							parsedFilters.push_back(c);
+							break;
+						}
+					}
+				}
+
+				return parsedFilters;
+			};
+
+		//R"((?:(?:(?=.*?\\).*?\\|^)(?=(script-bin|\.vs))\1($|(?=\\)\\.*))|(.*?(\.lua|\.csproj|\.sln|\.bat)))"
+		static std::regex reg(R"((?:(?:(?=.*?\\).*?\\|^)(?=()" + lambaFilters(m_directoryFilters) + R"())\1($|(?=\\)\\.*))|(.*?()" + lambaFilters(m_fileFilters) + R"()))", std::regex_constants::icase);
+
+		for (auto& directoryElement : std::filesystem::directory_iterator(directoryPath))
+		{
+			if (m_filtedFilePathMap.contains(directoryElement.path()))
+				continue;
+
+			m_filtedFilePathMap.insert(std::pair<std::filesystem::path,bool>(directoryElement.path(), !std::regex_match(directoryElement.path().string(), reg)));
+		}
 	}
 
 }
