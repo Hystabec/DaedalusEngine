@@ -178,10 +178,13 @@ namespace daedalus::editor
 						{
 						// special regex chars
 						case '.': case '?': case '*': case '+': case '`':
-						case '^': case '$': case '\\': case '[': case ']':
-						case '(': case ')':
+						case '^': case '$':
+						case '[': case ']': case '(': case ')':
 							parsedFilters.push_back('\\');
 							break;
+						case '\\': case '/':
+							parsedFilters += R"((?:\\|\/))";
+							continue;
 						}
 						parsedFilters.push_back(c);
 					}
@@ -191,7 +194,7 @@ namespace daedalus::editor
 			};
 
 		//R"((?:(?:(?=.*?\\).*?\\|^)(?=(script-bin|\.vs))\1($|(?=\\)\\.*))|(.*?(\.lua|\.csproj|\.sln|\.bat)))"
-		static std::regex reg(R"((?:(?:(?=.*?\\).*?\\|^)(?=()" + lambaFilters(m_directoryFilters) + R"())\1($|(?=\\)\\.*))|(.*?()" + lambaFilters(m_fileFilters) + R"()))", std::regex_constants::icase);
+		static std::regex reg(R"((?:(?:(?=.*?(?:\\|\/)).*?(?:\\|\/)|^)(?=()" + lambaFilters(m_directoryFilters) + R"())\1($|(?=\\|\/)(?:\\|\/).*))|(.*?()" + lambaFilters(m_fileFilters) + R"()))", std::regex_constants::icase);
 
 		for (auto& directoryElement : std::filesystem::directory_iterator(directoryPath))
 		{
