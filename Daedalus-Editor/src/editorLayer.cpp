@@ -359,7 +359,7 @@ namespace daedalus::editor
 					std::filesystem::path path = (const wchar_t*)payload->Data;
 					std::string extension = path.extension().string();
 					std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-					if (extension == ".daedalus")
+					if (extension == ".ddscene")
 						openScene(path);
 				}
 
@@ -820,7 +820,7 @@ namespace daedalus::editor
 			return;
 
 		// open file returns a string - here is getting cast/constucted into a filepath
-		std::filesystem::path filepath = utils::FileDialog::openFile("Daedalus Scene (*.daedalus)\0*.daedalus\0");
+		std::filesystem::path filepath = utils::FileDialog::openFile("Daedalus Scene (*.ddscene)\0*.ddscene\0");
 		if (!filepath.empty())
 		{
 			openScene(filepath);
@@ -875,17 +875,17 @@ namespace daedalus::editor
 
 		std::string defaultFileName;
 		if (m_currentSceneFilepath.empty())
-			defaultFileName = "newScene.daedalus";
+			defaultFileName = "newScene.ddscene";
 		else
 			defaultFileName = m_currentSceneFilepath.filename().string();
 
-		std::filesystem::path filepath = utils::FileDialog::saveFile("Daedalus Scene (*.Daedalus)\0*.Daedalus\0", defaultFileName.c_str());
+		std::filesystem::path filepath = utils::FileDialog::saveFile("Daedalus Scene (*.ddscene)\0*.ddscene\0", defaultFileName.c_str());
 		if (!filepath.empty())
 		{
 			// NOTE: Could just change the file extension regardless of what it is
-			// currently it only sets to .Daedalus if it is empty
+			// currently it only sets to .ddscene if it is empty
 			if (filepath.extension().empty())
-				filepath.replace_extension(".daedalus");
+				filepath.replace_extension(".ddscene");
 
 			serializeScene(m_activeScene, filepath);
 			m_currentSceneFilepath = filepath;

@@ -3,4 +3,4 @@ Project:
   Name: Untitled
   AssetDirectory: "assets"
   ScriptModuleBin: "scripts/script-bin/Sandbox.dll"
-  StartScene: "scenes/physics2D.daedalus"
+  StartScene: "scenes/physics2D.ddscene"

@@ -1,3 +1,0 @@
-currently scene file extensions are .daedalus
-however it might be better to call them something like : .ddscene
-this would be to make them similar to the project extensions (.ddproj)

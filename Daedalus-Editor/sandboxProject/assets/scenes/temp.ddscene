@@ -1,0 +1,33 @@
+FormatVersion: 1
+Scene: temp
+Entities:
+  - Entity: 1339231685165688497
+    Name: Camera
+    TagComponent:
+      Tag: ""
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 1
+        PerspectiveFOV: 0.7853982
+        PerspectiveNear: 0.01
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: true
+      FixedAspectRatio: false
+  - Entity: 10474324268492157423
+    Name: Block
+    TagComponent:
+      Tag: ""
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [3.6, 2.9, 1]
+    SpriteRendererComponent:
+      Colour: [0.4015444, 0.103874415, 0.103874415, 1]
+      TilingFactor: 1
