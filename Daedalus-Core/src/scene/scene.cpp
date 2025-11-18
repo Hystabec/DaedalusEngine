@@ -128,11 +128,12 @@ namespace daedalus::scene {
 		m_registry.destroy(entity);
 	}
 
-	void Scene::duplicateEntity(Entity entity)
+	Entity Scene::duplicateEntity(Entity entity)
 	{
 		Entity newEntity = createEntity(entity.getName());
 		newEntity.getComponent<IDComponent>().name = entity.getName();
 		copy_component_if_exists(AllModifiableComponents{}, newEntity, entity);
+		return newEntity;
 	}
 
 	Entity Scene::findEntityByName(std::string_view name)

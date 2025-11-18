@@ -28,7 +28,7 @@ namespace daedalus::scene {
 		Entity createEntity(const std::string& name = std::string());
 		Entity createEntityWithUUID(UUID uuid, const std::string& name = std::string());
 		void destroyEntity(Entity entity);
-		void duplicateEntity(Entity entity);
+		Entity duplicateEntity(Entity entity);
 
 		// prefer finding entity using UUID 
 		Entity findEntityByName(std::string_view name);

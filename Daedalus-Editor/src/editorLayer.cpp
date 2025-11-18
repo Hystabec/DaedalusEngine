@@ -951,7 +951,10 @@ namespace daedalus::editor
 
 		scene::Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
 		if (selectedEntity)
-			m_editorScene->duplicateEntity(selectedEntity);
+		{
+			scene::Entity newEntity = m_editorScene->duplicateEntity(selectedEntity);
+			m_sceneHierarchyPanel.setSelectedEntity(newEntity);
+		}
 	}
 
 }
