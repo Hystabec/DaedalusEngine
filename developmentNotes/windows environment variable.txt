@@ -1,0 +1,5 @@
+Custom windows environment variable
+
+When running the setup scripts add a windows environment variable so that the C# project can use it to link to the script core
+
+Eventually this could be handled by an installer that runs and checks the environment variables

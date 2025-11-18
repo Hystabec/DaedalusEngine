@@ -1,4 +1,5 @@
-local DaedalusRootDir = "../../../.."
+--local DaedalusRootDir = "../../../.."
+local DaedalusRootDir = os.getenv("DAEDALUS_DIR")
 
 workspace "Sandbox"
 	architecture "x64"

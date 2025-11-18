@@ -124,8 +124,8 @@ namespace daedalus::scene {
 
 	void Scene::destroyEntity(Entity entity)
 	{
-		m_registry.destroy(entity);
 		m_entityMap.erase(entity.getUUID());
+		m_registry.destroy(entity);
 	}
 
 	void Scene::duplicateEntity(Entity entity)
