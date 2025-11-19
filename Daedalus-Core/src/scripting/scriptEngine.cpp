@@ -9,6 +9,7 @@
 #include "../utils/fileWatcher.h"
 #include "../utils/fileUtils.h"
 #include "../application/applicationCore.h"
+#include "../project/project.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
@@ -150,6 +151,41 @@ namespace daedalus::scripting {
 
 	void ScriptEngine::init()
 	{
+		if (s_data != nullptr)
+		{
+			//init has already been called. reload assembilies
+
+			std::filesystem::path clientAssemblyPath = Project::getActiveAssetDirectory() / Project::getActive()->getConfig().scriptModuleBin;
+			// check the project paths 
+			if (!std::filesystem::equivalent(s_data->clientAssemblyPath, clientAssemblyPath))
+			{
+				// reload assemblies
+				s_data->clientAssemblyPath = clientAssemblyPath;
+				reloadAssembly();
+
+				// reset file watcher if path is different
+				using namespace daedalus::utils;
+				s_data->clientAssemblyWatcher = daedalus::utils::FileWatcher(clientAssemblyPath,
+					[](const std::filesystem::path& path, FileWatcher::Event eventType) {
+						if (eventType == FileWatcher::Event::Modified && !s_data->clientAsseblyReloadPending)
+						{
+							s_data->clientAsseblyReloadPending = true;
+
+							// currently running
+							if (s_data->sceneContext != nullptr)
+								DD_CORE_LOG_INFO("[Script Engine] Client assembly changed. Assembly reload queued until runtime is stopped");
+							else
+							{
+								// if not running do now
+								daedalus::Application::get().submitToMainThreadQueue(ScriptEngine::reloadAssembly);
+							}
+						}
+					});
+			}
+
+			return;
+		}
+
 		s_data = new ScriptEngineData();
 		
 		initMono();
@@ -162,12 +198,11 @@ namespace daedalus::scripting {
 			return;
 		}
 
-		// NOTE: This will need to be made more expanable in the future, project DIR as arg(?)
-		// but it is fine for testing currently (24/08/25)
-		status = loadClientAssembly("sandboxProject/assets/scripts/script-bin/Sandbox.dll");
+		std::filesystem::path clientAssemblyPath = Project::getActiveAssetDirectory() / Project::getActive()->getConfig().scriptModuleBin;
+		status = loadClientAssembly(clientAssemblyPath);
 		if (!status)
 		{
-			DD_CORE_LOG_ERROR("[Script Engine] Could not load client assembly. ({})", "sandboxProject/assets/scripts/script-bin/Sandbox.dll");
+			DD_CORE_LOG_ERROR("[Script Engine] Could not load client assembly. ({})", clientAssemblyPath);
 			return;
 		}
 
@@ -178,8 +213,8 @@ namespace daedalus::scripting {
 		s_data->entityClass = ScriptClass("Daedalus.Types", "MonoScript", true);
 
 		using namespace daedalus::utils;
-		// TO DO: Make the filename/path ("sandboxProject/assets/scripts/script-bin/Sandbox.dll") not hardcoded
-		s_data->clientAssemblyWatcher = daedalus::utils::FileWatcher("sandboxProject/assets/scripts/script-bin/Sandbox.dll",
+		
+		s_data->clientAssemblyWatcher = daedalus::utils::FileWatcher(clientAssemblyPath,
 			[](const std::filesystem::path& path, FileWatcher::Event eventType) {
 				if (eventType == FileWatcher::Event::Modified && !s_data->clientAsseblyReloadPending)
 				{
@@ -363,8 +398,20 @@ namespace daedalus::scripting {
 				}
 			}
 
+			//instance->invokeOnStart();
+		}
+	}
+
+	void ScriptEngine::startEntityInstance(scene::Entity entity)
+	{
+		UUID entityUUID = entity.getUUID();
+		if (s_data->entityInstances.find(entityUUID) != s_data->entityInstances.end())
+		{
+			Shr_ptr<ScriptInstance> instance = s_data->entityInstances[entityUUID];
 			instance->invokeOnStart();
 		}
+		else
+			DD_CORE_LOG_ERROR("[Script Engine] Could not find Script Instance for entity {}", entity.getUUID());
 	}
 
 	void ScriptEngine::updateEntityInstance(scene::Entity entity, float dt)

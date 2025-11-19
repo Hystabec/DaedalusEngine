@@ -165,6 +165,7 @@ namespace daedalus::scripting {
 
 		static bool entityClassExists(const std::string& fullClassName);
 		static void createEntityInstance(scene::Entity entity);
+		static void startEntityInstance(scene::Entity entity);
 		static void updateEntityInstance(scene::Entity entity, float dt);
 
 		static scene::Scene* getSceneContext();

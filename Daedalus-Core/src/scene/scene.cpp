@@ -346,6 +346,14 @@ namespace daedalus::scene {
 			Entity entity = { e, this };
 			ScriptEngine::createEntityInstance(entity);
 		}
+
+		// looping again now that all entity script instances are created 
+		// so if an OnStart refs another entity there wont be an issue
+		for (auto e : view)
+		{
+			Entity entity = { e, this };
+			ScriptEngine::startEntityInstance(entity);
+		}
 	}
 
 	void Scene::scriptingStop()

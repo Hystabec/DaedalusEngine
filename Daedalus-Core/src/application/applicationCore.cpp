@@ -138,7 +138,6 @@ namespace daedalus {
 			m_window->setWindowIcon(path);
 
 		graphics::Renderer::init();
-		scripting::ScriptEngine::init();
 
 		m_ImGuiLayer = new application::ImGuiLayer;
 		pushOverlay(m_ImGuiLayer);

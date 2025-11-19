@@ -786,6 +786,8 @@ namespace daedalus::editor
 	{
 		if (Project::Load(path))
 		{
+			scripting::ScriptEngine::init();
+
 			auto startScenePath = Project::getAssetFileSystemPath(Project::getActive()->getConfig().startScene);
 			openScene(startScenePath);
 			m_contentBrowserPanel.setProjectAssetDirectory(Project::getActiveAssetDirectory());
