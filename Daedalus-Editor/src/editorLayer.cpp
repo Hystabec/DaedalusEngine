@@ -788,8 +788,16 @@ namespace daedalus::editor
 		{
 			scripting::ScriptEngine::init();
 
-			auto startScenePath = Project::getAssetFileSystemPath(Project::getActive()->getConfig().startScene);
-			openScene(startScenePath);
+			if (Project::getActive()->getConfig().startScene.empty())
+				newScene();
+			else
+			{
+				auto startScenePath = Project::getAssetFileSystemPath(Project::getActive()->getConfig().startScene);
+
+				if (!openScene(startScenePath))
+					newScene();
+			}
+
 			m_contentBrowserPanel.setProjectAssetDirectory(Project::getActiveAssetDirectory());
 			return true;
 		}
@@ -816,23 +824,25 @@ namespace daedalus::editor
 		Application::get().getWindow()->setWindowName("Daedalus Editor");
 	}
 
-	void EditorLayer::openScene()
+	bool EditorLayer::openScene()
 	{
 		if (m_sceneState != SceneState::Edit)
-			return;
+			return false;
 
 		// open file returns a string - here is getting cast/constucted into a filepath
 		std::filesystem::path filepath = utils::FileDialog::openFile("Daedalus Scene (*.ddscene)\0*.ddscene\0");
 		if (!filepath.empty())
 		{
-			openScene(filepath);
+			return openScene(filepath);
 		}
+
+		return false;
 	}
 
-	void EditorLayer::openScene(const std::filesystem::path& path)
+	bool EditorLayer::openScene(const std::filesystem::path& path)
 	{
 		if (m_sceneState != SceneState::Edit)
-			return;
+			return false;
 
 		auto newScene = create_shr_ptr<scene::Scene>();
 
@@ -847,7 +857,11 @@ namespace daedalus::editor
 			Application::get().getWindow()->setWindowName("Daedalus Editor - " + m_currentSceneFilepath.stem().string());
 
 			m_activeScene = m_editorScene;
+
+			return true;
 		}
+
+		return false;
 	}
 
 	void EditorLayer::saveScene()

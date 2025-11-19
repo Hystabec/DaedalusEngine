@@ -29,8 +29,8 @@ namespace daedalus::editor
 		void saveProject();
 
 		void newScene();
-		void openScene();
-		void openScene(const std::filesystem::path& path);
+		bool openScene();
+		bool openScene(const std::filesystem::path& path);
 		void saveScene();
 		void saveSceneAs();
 		void serializeScene(Shr_ptr<scene::Scene> scene, const std::filesystem::path& path);
