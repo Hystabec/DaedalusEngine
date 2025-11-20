@@ -1,4 +1,6 @@
-﻿namespace Daedalus.Types
+﻿using System;
+
+namespace Daedalus.Types
 {
     public struct Vector2
     {
@@ -36,6 +38,16 @@
         public static Vector2 operator /(Vector2 vector, float scalar)
         {
             return new Vector2(vector.X / scalar, vector.Y / scalar);
+        }
+
+        public float LengthSquared()
+        {
+            return (X * X) + (Y * Y);
+        }
+
+        public float Length()
+        {
+            return (float)Math.Sqrt(LengthSquared());
         }
 
         public override string ToString()

@@ -20,6 +20,8 @@ namespace Sandbox
 
         public float speed = 1.0f;
 
+        bool canSwitch = true;
+
         void OnStart()
         {
             //Debug.Log($"Player.OnStart: {ID}");
@@ -28,6 +30,8 @@ namespace Sandbox
 
             m_rb = Entity.GetComponent<Rigidbody2DComponent>();
             m_camera = FindEntityByName("Camera").GetComponent<FollowCamera>();
+
+            Debug.Log($"Rigidbody Type: {m_rb.Type}");
         }
 
         void OnUpdate(float deltaTime)
@@ -61,6 +65,20 @@ namespace Sandbox
                 else if (Input.IsKeyDown(InputCode.Key_X))
                     m_camera.distanceFromPlayer -= 1.0f * deltaTime;
             }
+
+            if (Input.IsKeyDown(InputCode.Key_P) && canSwitch)
+            {
+                canSwitch = false;
+
+                if (m_rb.Type == Rigidbody2DComponent.BodyType.Dynamic)
+                    m_rb.Type = Rigidbody2DComponent.BodyType.Static;
+                else
+                    m_rb.Type = Rigidbody2DComponent.BodyType.Dynamic;
+
+                Debug.Log($"Rigidbody Type: {m_rb.Type}");
+            }
+            else if(Input.IsKeyUp(InputCode.Key_P))
+                canSwitch = true;
 
             //Vector3 position = m_transform.Position;
             //position += velocity;

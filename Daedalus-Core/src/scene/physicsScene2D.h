@@ -4,6 +4,7 @@
 #include "../application/time/deltaTime.h"
 
 #include "../maths/vec2.h"
+#include "../scene/entityComponents/rigidbody2DComponent.h"
 
 struct b2WorldId;
 struct b2BodyId;
@@ -27,6 +28,10 @@ namespace daedalus::scene {
 		void applyLinearImpulseToEntity(Entity entity, maths::Vec2 impulse, maths::Vec2 worldPoint, bool wake);
 		void applyLinearImpulseCentreToEntity(Entity entity, maths::Vec2 impulse, bool wake);
 		void applyTorqueToEntity(Entity entity, float torque, bool wake);
+		maths::Vec2 getLinearVelocityOfEntity(Entity entity);
+
+		Rigidbody2DComponent::BodyType getPhysicsBodyTypeOfEntity(Entity entity);
+		void setPhysicsBodyTypeOfEntity(Entity entity, Rigidbody2DComponent::BodyType bodyType);
 
 		void registerEntity(Entity entity);
 

@@ -161,6 +161,42 @@ namespace daedalus::scripting {
 		auto& pScene2D = sceneContext->getPhysicsScene2D();
 		pScene2D.applyTorqueToEntity(entity, *torque, wake);
 	}
+	
+	static void rigidbody2D_component_get_linear_velocity(UUID uuid, maths::Vec2* outLinearVelocity)
+	{
+		using namespace scene;
+		Scene* sceneContext = scripting::ScriptEngine::getSceneContext();
+		DD_CORE_ASSERT(sceneContext);
+		Entity entity = sceneContext->getEntityByUUID(uuid);
+		DD_CORE_ASSERT(entity);
+
+		auto& pScene2D = sceneContext->getPhysicsScene2D();
+		*outLinearVelocity = pScene2D.getLinearVelocityOfEntity(entity);
+	}
+
+	static scene::Rigidbody2DComponent::BodyType rigidbody2D_component_get_body_type(UUID uuid)
+	{
+		using namespace scene;
+		Scene* sceneContext = scripting::ScriptEngine::getSceneContext();
+		DD_CORE_ASSERT(sceneContext);
+		Entity entity = sceneContext->getEntityByUUID(uuid);
+		DD_CORE_ASSERT(entity);
+
+		auto& pScene2D = sceneContext->getPhysicsScene2D();
+		return pScene2D.getPhysicsBodyTypeOfEntity(entity);
+	}
+
+	static void rigidbody2D_component_set_body_type(UUID uuid, scene::Rigidbody2DComponent::BodyType bodyType)
+	{
+		using namespace scene;
+		Scene* sceneContext = scripting::ScriptEngine::getSceneContext();
+		DD_CORE_ASSERT(sceneContext);
+		Entity entity = sceneContext->getEntityByUUID(uuid);
+		DD_CORE_ASSERT(entity);
+
+		auto& pScene2D = sceneContext->getPhysicsScene2D();
+		pScene2D.setPhysicsBodyTypeOfEntity(entity, bodyType);
+	}
 
 	template<typename... Component>
 	static void register_component_types_base(MonoImage* assemblyImage)
@@ -216,6 +252,9 @@ namespace daedalus::scripting {
 		DD_ADD_INTERNAL_CALL(rigidbody2D_component_add_linear_impulse_from_point);
 		DD_ADD_INTERNAL_CALL(rigidbody2D_component_add_linear_impulse);
 		DD_ADD_INTERNAL_CALL(rigidbody2D_component_apply_torque);
+		DD_ADD_INTERNAL_CALL(rigidbody2D_component_get_linear_velocity);
+		DD_ADD_INTERNAL_CALL(rigidbody2D_component_get_body_type);
+		DD_ADD_INTERNAL_CALL(rigidbody2D_component_set_body_type);
 	}
 
 }

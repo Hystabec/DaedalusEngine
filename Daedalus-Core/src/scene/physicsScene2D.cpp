@@ -11,20 +11,36 @@
 
 namespace daedalus::scene {
 
-	static b2BodyType rigid_body_type_to_box2D_body_type(scene::Rigidbody2DComponent::BodyType bodyType)
+	static b2BodyType rigid_body_type_to_box2D_body_type(Rigidbody2DComponent::BodyType bodyType)
 	{
 		switch (bodyType)
 		{
-		case daedalus::scene::Rigidbody2DComponent::BodyType::Static:
+		case Rigidbody2DComponent::BodyType::Static:
 			return b2BodyType::b2_staticBody;
-		case daedalus::scene::Rigidbody2DComponent::BodyType::Dynamic:
+		case Rigidbody2DComponent::BodyType::Dynamic:
 			return b2BodyType::b2_dynamicBody;
-		case daedalus::scene::Rigidbody2DComponent::BodyType::Kinematic:
+		case Rigidbody2DComponent::BodyType::Kinematic:
 			return b2BodyType::b2_kinematicBody;
 		}
 
 		DD_CORE_ASSERT(false, "Unknown body type");
 		return b2BodyType::b2_staticBody;
+	}
+
+	static Rigidbody2DComponent::BodyType box2D_body_type_to_rigid_body_type(b2BodyType bodyType)
+	{
+		switch (bodyType)
+		{
+		case b2_staticBody:
+			return Rigidbody2DComponent::BodyType::Static;
+		case b2_kinematicBody:
+			return Rigidbody2DComponent::BodyType::Kinematic;
+		case b2_dynamicBody:
+			return Rigidbody2DComponent::BodyType::Dynamic;;
+		}
+
+		DD_CORE_ASSERT(false, "Unknown body type");
+		return Rigidbody2DComponent::BodyType::Static;
 	}
 
 	PhysicsScene2D::PhysicsScene2D(Scene* sceneContext)
@@ -97,6 +113,25 @@ namespace daedalus::scene {
 	{
 		DD_CORE_ASSERT(bodyMapContainsEntity(entity));
 		b2Body_ApplyTorque(m_entityBox2DBodyMap[entity.getUUID()], torque, wake);
+	}
+
+	maths::Vec2 PhysicsScene2D::getLinearVelocityOfEntity(Entity entity)
+	{
+		DD_CORE_ASSERT(bodyMapContainsEntity(entity));
+		auto[x, y] = b2Body_GetLinearVelocity(m_entityBox2DBodyMap[entity.getUUID()]);
+		return {x, y};
+	}
+
+	Rigidbody2DComponent::BodyType PhysicsScene2D::getPhysicsBodyTypeOfEntity(Entity entity)
+	{
+		DD_CORE_ASSERT(bodyMapContainsEntity(entity));
+		return box2D_body_type_to_rigid_body_type(b2Body_GetType(m_entityBox2DBodyMap[entity.getUUID()]));
+	}
+
+	void PhysicsScene2D::setPhysicsBodyTypeOfEntity(Entity entity, Rigidbody2DComponent::BodyType bodyType)
+	{
+		DD_CORE_ASSERT(bodyMapContainsEntity(entity));
+		b2Body_SetType(m_entityBox2DBodyMap[entity.getUUID()], rigid_body_type_to_box2D_body_type(bodyType));
 	}
 
 	void PhysicsScene2D::registerEntity(Entity entity)

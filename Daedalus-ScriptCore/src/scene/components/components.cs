@@ -52,6 +52,29 @@ namespace Daedalus.Types
 
     public class Rigidbody2DComponent : Component
     {
+        public enum BodyType { Static = 0, Dynamic, Kinematic };
+
+        public BodyType Type
+        {
+            get
+            {
+                return InternalCalls.rigidbody2D_component_get_body_type(Entity.ID);
+            }
+            set
+            {
+                InternalCalls.rigidbody2D_component_set_body_type(Entity.ID, value);
+            }
+        }
+
+        public Vector2 LinearVelocity
+        {
+            get
+            {
+                InternalCalls.rigidbody2D_component_get_linear_velocity(Entity.ID, out Vector2 linearVelocity);
+                return linearVelocity;
+            }
+        }
+
         public void ApplyForce(Vector2 force, Vector2 worldPoint, bool wake = true)
         {
             InternalCalls.rigidbody2D_component_apply_force_from_point(Entity.ID, ref force, ref worldPoint, wake);

@@ -48,6 +48,15 @@ namespace Daedalus
         internal extern static void rigidbody2D_component_add_linear_impulse(ulong entityID, ref Types.Vector2 linearImpulse, bool wake);
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static void rigidbody2D_component_apply_torque(ulong entityID, ref float torque, bool wake);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void rigidbody2D_component_get_linear_velocity(ulong entityID, out Types.Vector2 linearVelocity);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static Rigidbody2DComponent.BodyType rigidbody2D_component_get_body_type(ulong entityID);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void rigidbody2D_component_set_body_type(ulong entityID, Rigidbody2DComponent.BodyType bodyType);
+
         #endregion
     }
 }
