@@ -20,6 +20,8 @@ namespace daedalus::editor
 	{
 		m_directoryIcon = graphics::Texture2D::create("resources/icons/contentBrowser/directoryIcon.png");
 		m_fileIcon = graphics::Texture2D::create("resources/icons/contentBrowser/fileIcon.png");
+		m_scriptFileIcon = graphics::Texture2D::create("resources/icons/contentBrowser/scriptFileIcon.png");
+		m_sceneFileIcon = graphics::Texture2D::create("resources/icons/contentBrowser/sceneFileIcon.png");
 	}
 
 	void ContentBrowserPanel::onImGuiRender()
@@ -114,7 +116,18 @@ namespace daedalus::editor
 
 			ImGui::PushID(filenameStr.c_str());
 
-			auto& elementIcon = directoryElement.is_directory() ? m_directoryIcon : m_fileIcon;
+			Shr_ptr<graphics::Texture2D> elementIcon;
+			if (directoryElement.is_directory())
+				elementIcon = m_directoryIcon;
+			else
+			{
+				if (path.extension() == ".cs")
+					elementIcon = m_scriptFileIcon;
+				else if (path.extension() == ".ddscene")
+					elementIcon = m_sceneFileIcon;
+				else
+					elementIcon = m_fileIcon;
+			}
 
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
 			ImGui::ImageButton("##ImageButton", (ImTextureID)elementIcon->getRendererID(), {thumbnailSize, thumbnailSize}, {0, 1}, {1, 0});

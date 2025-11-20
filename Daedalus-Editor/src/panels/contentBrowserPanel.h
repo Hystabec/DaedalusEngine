@@ -37,8 +37,7 @@ namespace daedalus::editor
 		std::filesystem::path m_projectAssetDirectory;
 		std::filesystem::path m_currentDirectory;
 
-		Shr_ptr<graphics::Texture2D> m_directoryIcon;
-		Shr_ptr<graphics::Texture2D> m_fileIcon;
+		Shr_ptr<graphics::Texture2D> m_directoryIcon, m_fileIcon, m_scriptFileIcon, m_sceneFileIcon;
 	};
 
 }
