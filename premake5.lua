@@ -22,6 +22,7 @@ group "Dependecies"
 	include "Daedalus-Core/dependencies/ImGui"
 	include "Daedalus-Core/dependencies/yaml-cpp"
 	include "Daedalus-Core/dependencies/Box2D"
+	include "Daedalus-Core/dependencies/msdf-atlas-gen"
 group ""
 
 group "Core"
