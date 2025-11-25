@@ -42,6 +42,8 @@ project "Daedalus-Core"
 		"%{dependDir.ImGuizmo}",
 		"%{dependDir.Box2D}/include",
 		"%{dependDir.mono}/include",
+		"%{dependDir.msdfgen}",
+		"%{dependDir.msdfgen_atlas_gen}",
 		"%{dependDir.VulkanSDK}/Include"
 	}
 
@@ -59,6 +61,7 @@ project "Daedalus-Core"
 		"glew32s.lib",
 		"yaml-cpp",
 		"Box2D",
+		"msdf-atlas-gen",
 		"%{library.mono}"
 	}
 

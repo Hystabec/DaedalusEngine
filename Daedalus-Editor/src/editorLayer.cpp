@@ -4,6 +4,7 @@
 #include "scene/sceneSerializer.h"
 #include "utils/platformUtils.h"
 #include "scripting/scriptEngine.h"
+#include "graphics/rendering/font.h"
 
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -16,6 +17,7 @@ namespace daedalus::editor
 
 	EditorLayer::EditorLayer()
 	{
+		graphics::Font font("C:\\Windows\\Fonts\\Arial.ttf");
 	}
 
 	void EditorLayer::attach()

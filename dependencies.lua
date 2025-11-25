@@ -2,17 +2,19 @@
 VULKAN_SDK = os.getenv("VULKAN_SDK")
 
 dependDir = {}
-dependDir["GLFW"] =         "%{wks.location}/Daedalus-Core/dependencies/GLFW"
-dependDir["GLEW"] =         "%{wks.location}/Daedalus-Core/dependencies/GLEW"
-dependDir["spdlog"] =       "%{wks.location}/Daedalus-Core/dependencies/spdlog"
-dependDir["ImGui"] =        "%{wks.location}/Daedalus-Core/dependencies/ImGui"
-dependDir["stb_image"] =    "%{wks.location}/Daedalus-Core/dependencies/stb_image"
-dependDir["entt"] =         "%{wks.location}/Daedalus-Core/dependencies/Entt"
-dependDir["yaml_cpp"] =     "%{wks.location}/Daedalus-Core/dependencies/yaml-cpp"
-dependDir["ImGuizmo"] =     "%{wks.location}/Daedalus-Core/dependencies/ImGuizmo"
-dependDir["Box2D"] =        "%{wks.location}/Daedalus-Core/dependencies/Box2D"
-dependDir["mono"] =         "%{wks.location}/Daedalus-Core/dependencies/mono"
-dependDir["VulkanSDK"] =    "%{VULKAN_SDK}"
+dependDir["GLFW"] =                 "%{wks.location}/Daedalus-Core/dependencies/GLFW"
+dependDir["GLEW"] =                 "%{wks.location}/Daedalus-Core/dependencies/GLEW"
+dependDir["spdlog"] =               "%{wks.location}/Daedalus-Core/dependencies/spdlog"
+dependDir["ImGui"] =                "%{wks.location}/Daedalus-Core/dependencies/ImGui"
+dependDir["stb_image"] =            "%{wks.location}/Daedalus-Core/dependencies/stb_image"
+dependDir["entt"] =                 "%{wks.location}/Daedalus-Core/dependencies/Entt"
+dependDir["yaml_cpp"] =             "%{wks.location}/Daedalus-Core/dependencies/yaml-cpp"
+dependDir["ImGuizmo"] =             "%{wks.location}/Daedalus-Core/dependencies/ImGuizmo"
+dependDir["Box2D"] =                "%{wks.location}/Daedalus-Core/dependencies/Box2D"
+dependDir["mono"] =                 "%{wks.location}/Daedalus-Core/dependencies/mono"
+dependDir["msdfgen"] =              "%{wks.location}/Daedalus-Core/dependencies/msdf-atlas-gen/msdfgen"
+dependDir["msdfgen_atlas_gen"] =    "%{wks.location}/Daedalus-Core/dependencies/msdf-atlas-gen/msdf-atlas-gen"
+dependDir["VulkanSDK"] =            "%{VULKAN_SDK}"
 
 libraryDir = {}
 libraryDir["mono"] =        "%{dependDir.mono}/lib/%{cfg.buildcfg}"
