@@ -4,15 +4,47 @@
 #include <stb_image.h>
 #include <GL/glew.h>
 
-namespace daedalus { namespace graphics {
+namespace daedalus::graphics {
 
-	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
-		: m_width(width), m_height(height)
+	namespace utils {
+
+		static GLenum DD_image_format_to_openGL_data_format(ImageFormat format)
+		{
+			switch (format)
+			{
+			case daedalus::graphics::ImageFormat::RGB8:
+				return GL_RGB;
+			case daedalus::graphics::ImageFormat::RGBA8:
+				return GL_RGBA;
+			}
+
+			DD_CORE_ASSERT(false, "Unsupported format");
+			return 0;
+		}
+
+		static GLenum DD_image_format_to_openGL_internal_format(ImageFormat format)
+		{
+			switch (format)
+			{
+			case daedalus::graphics::ImageFormat::RGB8:
+				return GL_RGB8;
+			case daedalus::graphics::ImageFormat::RGBA8:
+				return GL_RGBA8;
+			}
+
+			DD_CORE_ASSERT(false, "Unsupported format");
+			return 0;
+		}
+
+	}
+
+	OpenGLTexture2D::OpenGLTexture2D(const TextureSpecification& specification)
+		: m_specification(specification), m_width(m_specification.width), m_height(m_specification.height)
 	{
 		DD_PROFILE_FUNCTION();
 
-		m_internalFormat = GL_RGBA8;
-		m_dataFormat = GL_RGBA;
+		m_internalFormat = utils::DD_image_format_to_openGL_internal_format(m_specification.format);
+		m_dataFormat = utils::DD_image_format_to_openGL_data_format(m_specification.format);
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererID);
 		glTextureStorage2D(m_rendererID, 1, m_internalFormat, m_width, m_height);
@@ -93,4 +125,4 @@ namespace daedalus { namespace graphics {
 		glBindTextureUnit(slot, m_rendererID);
 	}
 
-} }
+}

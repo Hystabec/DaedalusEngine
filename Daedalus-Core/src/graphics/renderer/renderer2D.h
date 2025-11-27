@@ -6,6 +6,8 @@
 
 #include "graphics/rendering/texture.h"
 #include "graphics/rendering/primative2DProperties.h"
+#include "graphics/rendering/font.h"
+
 #include "scene/entityComponents/spriteRendererComponent.h"
 
 namespace daedalus { namespace graphics {
@@ -45,6 +47,8 @@ namespace daedalus { namespace graphics {
 		/// @brief draw a rect using a given transform, Should be used for debug purposes
 		static void drawRect(const maths::Mat4& transform, const maths::Vec4& colour);
 
+		static void drawString(const std::string& string, Shr_ptr<graphics::Font> font, const maths::Mat4& transform, const maths::Vec4& colour);
+
 		static float getLineThickness();
 		static void setLineThickness(float thickness);
 
@@ -57,8 +61,15 @@ namespace daedalus { namespace graphics {
 			uint32_t drawCalls = 0;
 			uint32_t quadCount = 0;
 
+			// tracks text seperatly as it could potentially be quite different (depending on how much text is on screen)
+			uint32_t textDrawCalls = 0;
+			uint32_t textQuadCount = 0;
+
 			uint32_t getTotalVertexCount() { return quadCount * 4; }
 			uint32_t getTotalIndexCount() { return quadCount * 6; }
+
+			uint32_t getTotalTextVertexCount() { return textQuadCount * 4; }
+			uint32_t getTotalTextIndexCount() { return textQuadCount * 6; }
 		};
 		static void resetStats();
 		static Statistics getStats();
@@ -69,14 +80,17 @@ namespace daedalus { namespace graphics {
 		static void startBatchQuads();
 		static void startBatchCircles();
 		static void startBatchLines();
+		static void startBatchText();
 
 		static void flushQuads();
 		static void flushCircles();
 		static void flushLines();
+		static void flushText();
 
 		static void flushAndResetQuads();
 		static void flushAndResetCircles();
 		static void flushAndResetLines();
+		static void flushAndResetText();
 	};
 
 } }

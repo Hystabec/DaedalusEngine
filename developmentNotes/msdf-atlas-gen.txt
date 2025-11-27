@@ -1,0 +1,2 @@
+In order to make the msdf-atlas-gen repo work I used an older back dated version.
+In the future I should look into getting the newest version to work, but this current version is fine for now

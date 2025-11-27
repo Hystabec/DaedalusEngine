@@ -3,14 +3,16 @@
 #include "graphics/rendering/texture.h"
 #include <GL/glew.h>
 
-namespace daedalus { namespace graphics {
+namespace daedalus::graphics {
 
 	class OpenGLTexture2D : public Texture2D
 	{
 	public:
-		OpenGLTexture2D(uint32_t width, uint32_t height);
+		OpenGLTexture2D(const TextureSpecification& specification);
 		OpenGLTexture2D(const std::filesystem::path& filePath);
 		~OpenGLTexture2D();
+
+		const TextureSpecification& getSpecification() const override { return m_specification; }
 
 		uint32_t getWdith() const override { return m_width; }
 		uint32_t getHeight() const  override {return m_height; }
@@ -28,6 +30,8 @@ namespace daedalus { namespace graphics {
 		};
 
 	private:
+		TextureSpecification m_specification;
+
 		std::filesystem::path m_path;
 
 		uint32_t m_width;
@@ -36,4 +40,4 @@ namespace daedalus { namespace graphics {
 		GLenum m_internalFormat, m_dataFormat;
 	};
 
-} }
+}

@@ -6,9 +6,9 @@
 #include "platformSpecific/openGL/graphics/rendering/openGLTexture.h"
 #endif
 
-namespace daedalus { namespace graphics {
+namespace daedalus::graphics {
 
-	Shr_ptr<Texture2D> Texture2D::create(uint32_t width, uint32_t height)
+	Shr_ptr<Texture2D> Texture2D::create(const TextureSpecification& specification)
 	{
 		switch (Renderer::getCurrentAPI())
 		{
@@ -16,7 +16,7 @@ namespace daedalus { namespace graphics {
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
 #ifdef DD_RENDER_USING_OPENGL
 		case RendererAPI::API::OpenGL:
-			return create_shr_ptr<OpenGLTexture2D>(width, height);
+			return create_shr_ptr<OpenGLTexture2D>(specification);
 #endif
 		}
 
@@ -40,4 +40,4 @@ namespace daedalus { namespace graphics {
 		return nullptr;
     }
 
-} }
+}

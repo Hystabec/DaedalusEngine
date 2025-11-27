@@ -234,6 +234,9 @@ namespace daedalus::scripting {
 
 	void ScriptEngine::shutdown()
 	{
+		if (s_data == nullptr)
+			return;
+
 		shutdownMono();
 
 		delete s_data;

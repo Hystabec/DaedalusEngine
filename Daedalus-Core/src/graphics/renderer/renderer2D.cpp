@@ -7,6 +7,7 @@
 #include "renderCommands.h"
 
 #include "utils/findFileLocation.h"
+#include "graphics/rendering/msdfData.h"
 
 namespace daedalus { namespace graphics {
 
@@ -38,6 +39,18 @@ namespace daedalus { namespace graphics {
 	{
 		maths::Vec3 position;
 		maths::Vec4 colour;
+	};
+
+	struct TextVertex
+	{
+		maths::Vec3 position;
+		maths::Vec4 colour;
+		maths::Vec2 texCoord;
+
+		// TO DO: bg colour for outline/bg
+
+		// Editor only
+		uint32_t entityID;
 	};
 
 	struct Renderer2DData
@@ -82,6 +95,16 @@ namespace daedalus { namespace graphics {
 		LineVertex* lineVertexBufferPtr = nullptr;
 
 		float lineThickness = 2.0f;
+
+		// Text
+		Shr_ptr<buffers::VertexArray> textVertexArray;
+		Shr_ptr<buffers::VertexBuffer> textVertexBuffer;
+		Shr_ptr<Shader> defaultTextShader;
+
+		uint32_t textIndexCount = 0;
+		TextVertex* textVertexBufferBase = nullptr;
+		TextVertex* textVertexBufferPtr = nullptr;
+		Shr_ptr<Texture2D> fontAtlasTexture;
 
 		Shr_ptr<Texture2D> whiteTexture;
 		std::array<Shr_ptr<Texture2D>, maxTextureSlots> textureSlots;
@@ -170,30 +193,47 @@ namespace daedalus { namespace graphics {
 		s_data.lineVertexArray->addVertexBuffer(s_data.lineVertexBuffer);
 		s_data.lineVertexBufferBase = new LineVertex[s_data.maxVertices];
 
+		// Text
+		s_data.textVertexArray = buffers::VertexArray::Create();
+
+		s_data.textVertexBuffer = buffers::VertexBuffer::create(s_data.maxVertices * sizeof(TextVertex));
+		s_data.textVertexBuffer->setLayout({
+			{ DD_BUFFERS_VEC3,	 "a_position"	  },
+			{ DD_BUFFERS_VEC4,	 "a_colour"		  },
+			{ DD_BUFFERS_VEC2,	 "a_texCoord"	  },
+			{ DD_BUFFERS_UINT,	 "a_entityID"	  }
+			});
+		s_data.textVertexArray->addVertexBuffer(s_data.textVertexBuffer);
+
+		s_data.textVertexBufferBase = new TextVertex[s_data.maxVertices];
+		s_data.textVertexArray->setIndexBuffer(quadIndexBuff); // Use quad IB - as the data is the same
+		
+
 		// Textures
-		s_data.whiteTexture = graphics::Texture2D::create(1, 1);
+		s_data.whiteTexture = graphics::Texture2D::create(TextureSpecification());
 		uint32_t whiteTextureData = 0xffffffff;
 		s_data.whiteTexture->setData(&whiteTextureData, sizeof(whiteTextureData));
 
-		int32_t samplers[s_data.maxTextureSlots];
-		for (uint32_t i = 0; i < s_data.maxTextureSlots; i++)
-			samplers[i] = i;
-
 		// Shaders
 		{
-			auto [shaderPath, testBool] = utils::get_core_file_location("resources\\shaders\\defaultQuad2DShader.glsl");
+			auto [shaderPath, testBool] = utils::get_core_file_location("resources\\shaders\\defaultQuad_Renderer2D.glsl");
 			DD_CORE_ASSERT(testBool, "Default quad shader file not found");
 			s_data.defaultQuadShader = Shader::create(shaderPath);
 		}
 		{
-			auto [shaderPath, testBool] = utils::get_core_file_location("resources\\shaders\\defaultCircle2DShader.glsl");
+			auto [shaderPath, testBool] = utils::get_core_file_location("resources\\shaders\\defaultCircle_Renderer2D.glsl");
 			DD_CORE_ASSERT(testBool, "Default circle shader file not found");
 			s_data.defaultCircleShader = Shader::create(shaderPath);
 		}
 		{
-			auto [shaderPath, testBool] = utils::get_core_file_location("resources\\shaders\\defaultLine2DShader.glsl");
+			auto [shaderPath, testBool] = utils::get_core_file_location("resources\\shaders\\defaultLine_Renderer2D.glsl");
 			DD_CORE_ASSERT(testBool, "Default line shader file not found");
 			s_data.defaultLineShader = Shader::create(shaderPath);
+		}
+		{
+			auto [shaderPath, testBool] = utils::get_core_file_location("resources\\shaders\\defaultText_Renderer2D.glsl");
+			DD_CORE_ASSERT(testBool, "Default text shader file not found");
+			s_data.defaultTextShader = Shader::create(shaderPath);
 		}
 
 		s_data.textureSlots[0] = s_data.whiteTexture;
@@ -264,6 +304,7 @@ namespace daedalus { namespace graphics {
 		flushQuads();
 		flushCircles();
 		flushLines();
+		flushText();
 	}
 
 	void Renderer2D::startBatch()
@@ -272,6 +313,7 @@ namespace daedalus { namespace graphics {
 		startBatchQuads();
 		startBatchCircles();
 		startBatchLines();
+		startBatchText();
 	}
 
 	void Renderer2D::startBatchQuads()
@@ -291,6 +333,12 @@ namespace daedalus { namespace graphics {
 	{
 		s_data.lineVertexCount = 0;
 		s_data.lineVertexBufferPtr = s_data.lineVertexBufferBase;
+	}
+
+	void Renderer2D::startBatchText()
+	{
+		s_data.textIndexCount = 0;
+		s_data.textVertexBufferPtr = s_data.textVertexBufferBase;
 	}
 
 	void Renderer2D::flushQuads()
@@ -350,6 +398,25 @@ namespace daedalus { namespace graphics {
 		}
 	}
 
+	void Renderer2D::flushText()
+	{
+		DD_PROFILE_FUNCTION();
+		if (s_data.textIndexCount)
+		{
+			//size of buffer in bytes
+			uint32_t dataSize = (uint32_t)((uint8_t*)s_data.textVertexBufferPtr - (uint8_t*)s_data.textVertexBufferBase);
+			s_data.textVertexBuffer->setData(s_data.textVertexBufferBase, dataSize);
+
+			s_data.fontAtlasTexture->bind(0);
+			s_data.defaultTextShader->bind();
+
+			RenderCommands::drawIndexed(s_data.textVertexArray, s_data.textIndexCount);
+#ifndef DD_DISTRO
+			s_data.stats.textDrawCalls++;
+#endif 
+		}
+	}
+
 	void Renderer2D::flushAndResetQuads()
 	{
 		flushQuads();
@@ -366,6 +433,12 @@ namespace daedalus { namespace graphics {
 	{
 		flushLines();
 		startBatchLines();
+	}
+
+	void Renderer2D::flushAndResetText()
+	{
+		flushText();
+		startBatchText();
 	}
 
 	void Renderer2D::drawQuad(const primatives2D::QuadProperties& quadProps, uint32_t entityID)
@@ -641,6 +714,106 @@ namespace daedalus { namespace graphics {
 		drawLine(lineVertices[1], lineVertices[2], colour);
 		drawLine(lineVertices[2], lineVertices[3], colour);
 		drawLine(lineVertices[3], lineVertices[0], colour);
+	}
+
+	void Renderer2D::drawString(const std::string& string, Shr_ptr<graphics::Font> font, const maths::Mat4& transform, const maths::Vec4& colour)
+	{
+		const auto& fontGeometry = font->getMSDFData()->fontGeometry;
+		const auto& metrics = fontGeometry.getMetrics();
+		Shr_ptr<Texture2D> fontAtlas = font->getAtlasTexture();
+
+		// TO DO: if the font is differnet flush and reset
+		s_data.fontAtlasTexture = fontAtlas;
+
+		double x = 0.0;
+		double fsScale = 1.0 / (metrics.ascenderY - metrics.descenderY);
+		double y = 0.0;
+
+		float lineHeightOffset = 0.0f;
+		for (size_t i = 0; i < string.size(); i++)
+		{
+			char character = string[i];
+
+			if (character == '\r')
+				continue;
+
+			if (character == '\n')
+			{
+				x = 0;
+				y -= fsScale * metrics.lineHeight + lineHeightOffset;
+				continue;
+			}
+
+			auto glyph = fontGeometry.getGlyph(character);
+			if (!glyph)
+				glyph = fontGeometry.getGlyph('?');
+			if (!glyph)
+				return;
+
+			// TO DO: Handle tabs properly: e.g. render 4 space characters
+			// currently it just renders a single space
+			if (character == '\t')
+				glyph = fontGeometry.getGlyph(' ');
+
+			double al, ab, ar, at;
+			glyph->getQuadAtlasBounds(al, ab, ar, at);
+			maths::Vec2 texCoordMin((float)al, (float)ab);
+			maths::Vec2 texCoordMax((float)ar, (float)at);
+
+			double pl, pb, pr, pt;
+			glyph->getQuadPlaneBounds(pl, pb, pr, pt);
+			maths::Vec2 quadMin((float)pl, (float)pb);
+			maths::Vec2 quadMax((float)pr, (float)pt);
+
+			quadMin *= (float)fsScale, quadMax *= (float)fsScale;
+			quadMin += maths::Vec2((float)x, (float)y);
+			quadMax += maths::Vec2((float)x, (float)y);
+
+			float texelWidth = 1.0f / fontAtlas->getWdith();
+			float texelHeight = 1.0f / fontAtlas->getHeight();
+			texCoordMin *= maths::Vec2(texelWidth, texelHeight);
+			texCoordMax *= maths::Vec2(texelWidth, texelHeight);
+
+			// render here
+			s_data.textVertexBufferPtr->position = transform * maths::Vec4(quadMin, 0.0f, 1.0f);
+			s_data.textVertexBufferPtr->texCoord = texCoordMin;
+			s_data.textVertexBufferPtr->colour = colour;
+			s_data.textVertexBufferPtr->entityID = UINT_MAX; // TO DO: get id of owning entity
+			s_data.textVertexBufferPtr++;
+
+			s_data.textVertexBufferPtr->position = transform * maths::Vec4(quadMin.x, quadMax.y, 0.0f, 1.0f);
+			s_data.textVertexBufferPtr->texCoord = { texCoordMin.x, texCoordMax.y };
+			s_data.textVertexBufferPtr->colour = colour;
+			s_data.textVertexBufferPtr->entityID = UINT_MAX; // TO DO: get id of owning entity
+			s_data.textVertexBufferPtr++;
+
+			s_data.textVertexBufferPtr->position = transform * maths::Vec4(quadMax.x, quadMax.y, 0.0f, 1.0f);
+			s_data.textVertexBufferPtr->texCoord = texCoordMax;
+			s_data.textVertexBufferPtr->colour = colour;
+			s_data.textVertexBufferPtr->entityID = UINT_MAX; // TO DO: get id of owning entity
+			s_data.textVertexBufferPtr++;
+
+			s_data.textVertexBufferPtr->position = transform * maths::Vec4(quadMax.x, quadMin.y, 0.0f, 1.0f);
+			s_data.textVertexBufferPtr->texCoord = { texCoordMax.x, texCoordMin.y };
+			s_data.textVertexBufferPtr->colour = colour;
+			s_data.textVertexBufferPtr->entityID = UINT_MAX; // TO DO: get id of owning entity
+			s_data.textVertexBufferPtr++;
+
+			s_data.textIndexCount += 6;
+#ifndef DD_DISTRO
+			s_data.stats.textQuadCount++;
+#endif 
+
+			if (i < string.size() - 1)
+			{
+				double advance = glyph->getAdvance();
+				char nextCharacter = string[i + 1];
+				fontGeometry.getAdvance(advance, character, nextCharacter);
+
+				float kerningOffset = 0.0f;
+				x += fsScale * advance + kerningOffset;
+			}
+		}
 	}
 
 	float Renderer2D::getLineThickness()

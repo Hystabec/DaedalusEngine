@@ -15,9 +15,11 @@ namespace daedalus::editor
 	static constexpr ImVec4 standardTint(1.0f, 1.0f, 1.0f, 1.0f);
 	static constexpr ImVec4 fadeTint(0.5f, 0.5f, 0.5f, 1.0f);
 
+	static Shr_ptr<graphics::Font> s_font;
+
 	EditorLayer::EditorLayer()
 	{
-		graphics::Font font("C:\\Windows\\Fonts\\Arial.ttf");
+		s_font = graphics::Font::getDefault();
 	}
 
 	void EditorLayer::attach()
@@ -324,6 +326,13 @@ namespace daedalus::editor
 		ImGui::Text("Quads: %d", stats.quadCount);
 		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
+
+		ImGui::Separator();
+
+		ImGui::Text("Text draw calls: %d", stats.textDrawCalls);
+		ImGui::Text("Text Quads: %d", stats.textQuadCount);
+		ImGui::Text("Text Vertices: %d", stats.getTotalTextVertexCount());
+		ImGui::Text("Text Indices: %d", stats.getTotalTextIndexCount());
 #endif
 		ImGui::End();
 
