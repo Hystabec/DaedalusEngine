@@ -2,7 +2,9 @@
 #include "font.h"
 
 #include "texture.h"
+#include "utils/fileUtils.h"
 #include "utils/findFileLocation.h"
+#include "utils/timer.h"
 #include "msdfData.h"
 
 // Undef INFINITE or there could be a clash with windows.h
@@ -13,9 +15,26 @@
 
 namespace daedalus::graphics {
 
-	template<typename T, typename S, int N, msdf_atlas::GeneratorFunction<S, N> GenFunc>
-	static Shr_ptr<Texture2D> create_and_cache_atlas(const std::string& fontName, float fontSize, const std::vector<msdf_atlas::GlyphGeometry>& glyphs, const msdf_atlas::FontGeometry& fontGeometry, uint32_t width, uint32_t height)
+	static const char* getCacheDirectory()
 	{
+		return "resources\\cache\\fonts";
+	}
+
+	static void createCacheDirectoryIfNeeded()
+	{
+		std::string cacheDirectory = getCacheDirectory();
+		if (!std::filesystem::exists(cacheDirectory))
+			std::filesystem::create_directories(cacheDirectory);
+	}
+
+	// Cache file layout
+	// uint32_t width, uint32_t height, void* start of data, EOF end of data
+
+	template<typename T, typename S, int N, msdf_atlas::GeneratorFunction<S, N> GenFunc>
+	static Shr_ptr<Texture2D> create_and_cache_atlas(const std::filesystem::path& cacheFileLocation, float fontSize, const std::vector<msdf_atlas::GlyphGeometry>& glyphs, const msdf_atlas::FontGeometry& fontGeometry, uint32_t width, uint32_t height)
+	{
+		createCacheDirectoryIfNeeded();
+
 		msdf_atlas::GeneratorAttributes attributes;
 		attributes.config.overlapSupport = true;
 		attributes.scanlinePass = true;
@@ -35,13 +54,28 @@ namespace daedalus::graphics {
 
 		Shr_ptr<Texture2D> texture = Texture2D::create(spec);
 		texture->setData((void*)bitmap.pixels, bitmap.width * bitmap.height * 3);
+
+		// cache
+		{
+			utils::ScopedBuffer fileBuffer((sizeof(uint32_t) * 2) + (bitmap.width * bitmap.height * 3));
+			uint32_t* memPtr = fileBuffer.as<uint32_t>();
+			*memPtr = width;
+			memPtr++;
+			*memPtr = height;
+			memPtr++;
+			memcpy(memPtr, (const void*)bitmap.pixels, (bitmap.width * bitmap.height * 3));
+
+			utils::FileSystem::writeFileBinary(cacheFileLocation, fileBuffer.buffer());
+		}
+
 		return texture;
-		// TO DO: Add cahcing for the texture atlas so that they dont need to be regenerated each time
 	}
 
 	Font::Font(const std::filesystem::path& fontPath)
 		: m_data(new MSDFData())
 	{
+		utils::Timer timer;
+
 		msdfgen::FreetypeHandle* ft = msdfgen::initializeFreetype();
 		DD_CORE_ASSERT(ft);
 
@@ -117,10 +151,44 @@ namespace daedalus::graphics {
 			}
 		}
 
-		m_atlasTexture = create_and_cache_atlas<uint8_t, float, 3, msdf_atlas::msdfGenerator>("Test", (float)emSize, m_data->glyphs, m_data->fontGeometry, width, height);
+		// Check for / load cache file
+		std::string cacheFilePathStr = getCacheDirectory();
+		cacheFilePathStr += "\\";
+		cacheFilePathStr += fontPath.filename().string();
+		cacheFilePathStr += ".cache";
+		std::filesystem::path cacheFileLocation = cacheFilePathStr;
+		if (std::filesystem::exists(cacheFileLocation))
+		{
+			bool checkBool = false;
+			utils::ScopedBuffer dataBuffer = utils::FileSystem::readFileBinary(cacheFileLocation, &checkBool);
+
+			DD_CORE_ASSERT(checkBool, "unable to read cache file");
+			uint32_t* dataPtr = dataBuffer.as<uint32_t>();
+
+			uint32_t width = *dataPtr;
+			dataPtr++;
+			uint32_t height = *dataPtr;
+			dataPtr++;
+
+			TextureSpecification spec;
+			spec.width = width;
+			spec.height = height;
+			spec.format = ImageFormat::RGB8;
+			spec.generateMips = false;
+
+			Shr_ptr<Texture2D> texture = Texture2D::create(spec);
+			texture->setData((void*)dataPtr, width * height * 3);
+			m_atlasTexture = texture;
+			DD_CORE_LOG_WARN("Font generation took {} ms", timer.elapsedMilliseconds());
+			return;
+		}
+
+		m_atlasTexture = create_and_cache_atlas<uint8_t, float, 3, msdf_atlas::msdfGenerator>(cacheFileLocation, (float)emSize, m_data->glyphs, m_data->fontGeometry, width, height);
 
 		msdfgen::destroyFont(font);
 		msdfgen::deinitializeFreetype(ft);
+
+		DD_CORE_LOG_WARN("Font generation took {} ms", timer.elapsedMilliseconds());
 	}
 
 	Font::~Font()

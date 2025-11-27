@@ -718,6 +718,8 @@ namespace daedalus { namespace graphics {
 
 	void Renderer2D::drawString(const std::string& string, Shr_ptr<graphics::Font> font, const maths::Mat4& transform, const maths::Vec4& colour)
 	{
+		static float kerningOffset = 0.0f;
+
 		const auto& fontGeometry = font->getMSDFData()->fontGeometry;
 		const auto& metrics = fontGeometry.getMetrics();
 		Shr_ptr<Texture2D> fontAtlas = font->getAtlasTexture();
@@ -750,10 +752,19 @@ namespace daedalus { namespace graphics {
 			if (!glyph)
 				return;
 
-			// TO DO: Handle tabs properly: e.g. render 4 space characters
-			// currently it just renders a single space
+			// Might not be the best way to do this, but works fine for now
 			if (character == '\t')
+			{
 				glyph = fontGeometry.getGlyph(' ');
+				double advance = glyph->getAdvance();
+				fontGeometry.getAdvance(advance, character, character);
+
+				// * 4 as there is 4 spaces per tab
+				x += (fsScale * advance + kerningOffset) * 4;
+
+				drawString("    ", font, transform * maths::Mat4::translate({ (float)x, (float)y, 0.0f }), colour);
+				continue;
+			}
 
 			double al, ab, ar, at;
 			glyph->getQuadAtlasBounds(al, ab, ar, at);
@@ -809,8 +820,6 @@ namespace daedalus { namespace graphics {
 				double advance = glyph->getAdvance();
 				char nextCharacter = string[i + 1];
 				fontGeometry.getAdvance(advance, character, nextCharacter);
-
-				float kerningOffset = 0.0f;
 				x += fsScale * advance + kerningOffset;
 			}
 		}
