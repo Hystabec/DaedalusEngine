@@ -7,6 +7,7 @@
 //#include "scene/components.h"
 #include <imgui.h> 
 #include <imgui_internal.h>
+#include <misc/cpp/imgui_stdlib.h>
 
 namespace daedalus::editor
 {
@@ -190,6 +191,7 @@ namespace daedalus::editor
 			displayAddComponentEntry<scene::CameraComponent>("Camera");
 			displayAddComponentEntry<scene::SpriteRendererComponent>("Sprite Renderer");
 			displayAddComponentEntry<scene::CircleRendererComponent>("Circle Renderer");
+			displayAddComponentEntry<scene::TextComponent>("Text");
 			displayAddComponentEntry<scene::Rigidbody2DComponent>("Rigidbody 2D");
 			displayAddComponentEntry<scene::BoxCollider2DComponent>("Box Collider 2D");
 			displayAddComponentEntry<scene::CircleCollider2DComponent>("Circle Collider 2D");
@@ -398,6 +400,15 @@ namespace daedalus::editor
 				ImGui::DragFloat("Thickness", &cRenderer.thickness, 0.025f, 0.0f, 1.0f);
 				ImGui::DragFloat("Fade", &cRenderer.fade, 0.00025f, 0.0f, 5.0f);
 
+			}, entity);
+
+		draw_component<scene::TextComponent>("Text",
+			[](scene::TextComponent& textComp)
+			{
+				ImGui::InputTextMultiline("Text String", &textComp.text);
+				ImGui::ColorEdit4("Colour", textComp.colour);
+				ImGui::DragFloat("Kerning", &textComp.kerning, 0.05f);
+				ImGui::DragFloat("Line spacing", &textComp.lineSpacing, 0.05f);
 			}, entity);
 
 		draw_component<scene::Rigidbody2DComponent>("Rigidbody 2D",

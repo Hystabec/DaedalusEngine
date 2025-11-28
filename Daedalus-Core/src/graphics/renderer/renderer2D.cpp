@@ -716,10 +716,8 @@ namespace daedalus { namespace graphics {
 		drawLine(lineVertices[3], lineVertices[0], colour);
 	}
 
-	void Renderer2D::drawString(const std::string& string, Shr_ptr<graphics::Font> font, const maths::Mat4& transform, const maths::Vec4& colour)
+	void Renderer2D::drawString(const std::string& string, Shr_ptr<graphics::Font> font, const maths::Mat4& transform, const TextParams& textParams, uint32_t entityID)
 	{
-		static float kerningOffset = 0.0f;
-
 		const auto& fontGeometry = font->getMSDFData()->fontGeometry;
 		const auto& metrics = fontGeometry.getMetrics();
 		Shr_ptr<Texture2D> fontAtlas = font->getAtlasTexture();
@@ -731,7 +729,8 @@ namespace daedalus { namespace graphics {
 		double fsScale = 1.0 / (metrics.ascenderY - metrics.descenderY);
 		double y = 0.0;
 
-		float lineHeightOffset = 0.0f;
+		double spaceGlyphAdvance = fontGeometry.getGlyph(' ')->getAdvance();
+
 		for (size_t i = 0; i < string.size(); i++)
 		{
 			char character = string[i];
@@ -742,7 +741,7 @@ namespace daedalus { namespace graphics {
 			if (character == '\n')
 			{
 				x = 0;
-				y -= fsScale * metrics.lineHeight + lineHeightOffset;
+				y -= fsScale * metrics.lineHeight + textParams.lineSpacing;
 				continue;
 			}
 
@@ -752,17 +751,26 @@ namespace daedalus { namespace graphics {
 			if (!glyph)
 				return;
 
-			// Might not be the best way to do this, but works fine for now
+			if (character == ' ')
+			{
+				float advance = (float)spaceGlyphAdvance;
+				if (i < string.size() - 1)
+				{
+					double advance = glyph->getAdvance();
+					char nextCharacter = string[i + 1];
+					fontGeometry.getAdvance(advance, character, nextCharacter);
+				}
+				x += fsScale * advance + textParams.kerning;
+				continue;
+			}
+
 			if (character == '\t')
 			{
-				glyph = fontGeometry.getGlyph(' ');
-				double advance = glyph->getAdvance();
-				fontGeometry.getAdvance(advance, character, character);
+				// NOTE: is this correct? should you take into accout the
+				// spacing of the next character?
 
 				// * 4 as there is 4 spaces per tab
-				x += (fsScale * advance + kerningOffset) * 4;
-
-				drawString("    ", font, transform * maths::Mat4::translate({ (float)x, (float)y, 0.0f }), colour);
+				x += (fsScale * spaceGlyphAdvance + textParams.kerning) * 4;
 				continue;
 			}
 
@@ -788,26 +796,26 @@ namespace daedalus { namespace graphics {
 			// render here
 			s_data.textVertexBufferPtr->position = transform * maths::Vec4(quadMin, 0.0f, 1.0f);
 			s_data.textVertexBufferPtr->texCoord = texCoordMin;
-			s_data.textVertexBufferPtr->colour = colour;
-			s_data.textVertexBufferPtr->entityID = UINT_MAX; // TO DO: get id of owning entity
+			s_data.textVertexBufferPtr->colour = textParams.colour;
+			s_data.textVertexBufferPtr->entityID = entityID; // TO DO: get id of owning entity
 			s_data.textVertexBufferPtr++;
 
 			s_data.textVertexBufferPtr->position = transform * maths::Vec4(quadMin.x, quadMax.y, 0.0f, 1.0f);
 			s_data.textVertexBufferPtr->texCoord = { texCoordMin.x, texCoordMax.y };
-			s_data.textVertexBufferPtr->colour = colour;
-			s_data.textVertexBufferPtr->entityID = UINT_MAX; // TO DO: get id of owning entity
+			s_data.textVertexBufferPtr->colour = textParams.colour;
+			s_data.textVertexBufferPtr->entityID = entityID; // TO DO: get id of owning entity
 			s_data.textVertexBufferPtr++;
 
 			s_data.textVertexBufferPtr->position = transform * maths::Vec4(quadMax.x, quadMax.y, 0.0f, 1.0f);
 			s_data.textVertexBufferPtr->texCoord = texCoordMax;
-			s_data.textVertexBufferPtr->colour = colour;
-			s_data.textVertexBufferPtr->entityID = UINT_MAX; // TO DO: get id of owning entity
+			s_data.textVertexBufferPtr->colour = textParams.colour;
+			s_data.textVertexBufferPtr->entityID = entityID; // TO DO: get id of owning entity
 			s_data.textVertexBufferPtr++;
 
 			s_data.textVertexBufferPtr->position = transform * maths::Vec4(quadMax.x, quadMin.y, 0.0f, 1.0f);
 			s_data.textVertexBufferPtr->texCoord = { texCoordMax.x, texCoordMin.y };
-			s_data.textVertexBufferPtr->colour = colour;
-			s_data.textVertexBufferPtr->entityID = UINT_MAX; // TO DO: get id of owning entity
+			s_data.textVertexBufferPtr->colour = textParams.colour;
+			s_data.textVertexBufferPtr->entityID = entityID; // TO DO: get id of owning entity
 			s_data.textVertexBufferPtr++;
 
 			s_data.textIndexCount += 6;
@@ -820,9 +828,19 @@ namespace daedalus { namespace graphics {
 				double advance = glyph->getAdvance();
 				char nextCharacter = string[i + 1];
 				fontGeometry.getAdvance(advance, character, nextCharacter);
-				x += fsScale * advance + kerningOffset;
+				x += fsScale * advance + textParams.kerning;
 			}
 		}
+	}
+
+	void Renderer2D::drawString(const scene::TextComponent& textComponent, const maths::Mat4& transform, uint32_t entityID)
+	{
+		TextParams params;
+		params.colour = textComponent.colour;
+		params.kerning = textComponent.kerning;
+		params.lineSpacing = textComponent.lineSpacing;
+
+		drawString(textComponent.text, textComponent.fontAsset, transform, params, entityID);
 	}
 
 	float Renderer2D::getLineThickness()

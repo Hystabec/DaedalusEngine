@@ -161,3 +161,16 @@ Entities:
     BoxCollider2DComponent:
       Offset: [0, 0]
       Size: [0.5, 0.5]
+  - Entity: 2053932889680726774
+    Name: Text
+    TagComponent:
+      Tag: ""
+    TransformComponent:
+      Position: [4.917351, 3.0885894, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    TextComponent:
+      Text: "Hello world.\nHow is it going?"
+      Colour: [0.16019437, 0.3527347, 0.76833975, 1]
+      Kerning: -0.05
+      LineSpacing: -0.3

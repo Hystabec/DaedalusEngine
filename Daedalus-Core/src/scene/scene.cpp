@@ -261,6 +261,15 @@ namespace daedalus::scene {
 					});
 			}
 
+			{
+				auto view = m_registry.view<TransformComponent, TextComponent>();
+				view.each([](const auto entity, const auto& transform, const scene::TextComponent& textComp)
+					{
+						if (textComp.colour.a != 0.0f)
+							graphics::Renderer2D::drawString(textComp, transform.getTransform(), (uint32_t)entity);
+					});
+			}
+
 			graphics::Renderer2D::end();
 		}
 	}
@@ -384,6 +393,15 @@ namespace daedalus::scene {
 				});
 		}
 
+		{
+			auto view = m_registry.view<TransformComponent, TextComponent>();
+			view.each([](const auto entity, const auto& transform, const scene::TextComponent& textComp)
+				{
+					if (textComp.colour.a != 0.0f)
+						graphics::Renderer2D::drawString(textComp, transform.getTransform(), (uint32_t)entity);
+				});
+		}
+
 		graphics::Renderer2D::end();
 	}
 
@@ -424,6 +442,11 @@ namespace daedalus::scene {
 
 	template<>
 	void scene::Scene::onComponentAdded<scene::CircleRendererComponent>(Entity entity, scene::CircleRendererComponent& component)
+	{
+	}
+
+	template<>
+	void scene::Scene::onComponentAdded<scene::TextComponent>(Entity entity, scene::TextComponent& component)
 	{
 	}
 

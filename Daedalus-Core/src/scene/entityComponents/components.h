@@ -13,6 +13,7 @@
 #include "cameraComponent.h"
 #include "spriteRendererComponent.h"
 #include "circleRendererComponent.h"
+#include "textComponent.h"
 
 // Physics components
 #include "rigidbody2DComponent.h"
@@ -29,7 +30,7 @@ namespace daedalus::scene {
 	using AllComponents = 
 		ComponentGroup<IDComponent, TagComponent, TransformComponent,
 		NativeScriptComponent, ScriptComponent,
-		CameraComponent, SpriteRendererComponent, CircleRendererComponent,
+		CameraComponent, SpriteRendererComponent, CircleRendererComponent, TextComponent,
 		Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent>;
 
 	/// @brief A group for all components (minus ID component). As when duplicating entities
@@ -37,12 +38,12 @@ namespace daedalus::scene {
 	using AllModifiableComponents =
 		ComponentGroup<TagComponent, TransformComponent, 
 		NativeScriptComponent, ScriptComponent,
-		CameraComponent, SpriteRendererComponent, CircleRendererComponent,
+		CameraComponent, SpriteRendererComponent, CircleRendererComponent, TextComponent,
 		Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent>;
 
 	using AllOptionalComponents =
 		ComponentGroup<NativeScriptComponent, ScriptComponent,
-		CameraComponent, SpriteRendererComponent, CircleRendererComponent,
+		CameraComponent, SpriteRendererComponent, CircleRendererComponent, TextComponent,
 		Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent>;
 
 }

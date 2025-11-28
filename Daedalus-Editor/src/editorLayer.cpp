@@ -15,11 +15,8 @@ namespace daedalus::editor
 	static constexpr ImVec4 standardTint(1.0f, 1.0f, 1.0f, 1.0f);
 	static constexpr ImVec4 fadeTint(0.5f, 0.5f, 0.5f, 1.0f);
 
-	static Shr_ptr<graphics::Font> s_font;
-
 	EditorLayer::EditorLayer()
 	{
-		s_font = graphics::Font::getDefault();
 	}
 
 	void EditorLayer::attach()

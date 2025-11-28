@@ -9,6 +9,7 @@
 #include "graphics/rendering/font.h"
 
 #include "scene/entityComponents/spriteRendererComponent.h"
+#include "scene/entityComponents/textComponent.h"
 
 namespace daedalus { namespace graphics {
 
@@ -47,7 +48,15 @@ namespace daedalus { namespace graphics {
 		/// @brief draw a rect using a given transform, Should be used for debug purposes
 		static void drawRect(const maths::Mat4& transform, const maths::Vec4& colour);
 
-		static void drawString(const std::string& string, Shr_ptr<graphics::Font> font, const maths::Mat4& transform, const maths::Vec4& colour);
+		struct TextParams
+		{
+			maths::Vec4 colour{0.0f, 0.0f, 0.0f, 1.0f};
+			float kerning = 0.0f;
+			float lineSpacing = 0.0f;
+		};
+		static void drawString(const std::string& string, Shr_ptr<graphics::Font> font, const maths::Mat4& transform, const TextParams& textParams = TextParams(), uint32_t entityID = UINT32_MAX);
+
+		static void drawString(const scene::TextComponent& textComponent, const maths::Mat4& transform, uint32_t entityID);
 
 		static float getLineThickness();
 		static void setLineThickness(float thickness);

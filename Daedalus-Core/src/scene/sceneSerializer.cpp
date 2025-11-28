@@ -295,6 +295,15 @@ namespace daedalus::scene {
 				out << YAML::Key << "Fade" << YAML::Value << src.fade;
 			});
 
+		serialize_component<TextComponent>(out, "TextComponent", entity, [](YAML::Emitter& out, TextComponent& src)
+			{
+				out << YAML::Key << "Text" << YAML::Value << src.text;
+				// TO DO: fontAsset
+				out << YAML::Key << "Colour" << YAML::Value << src.colour;
+				out << YAML::Key << "Kerning" << YAML::Value << src.kerning;
+				out << YAML::Key << "LineSpacing" << YAML::Value << src.lineSpacing;
+			});
+
 		serialize_component<Rigidbody2DComponent>(out, "Rigidbody2DComponent", entity, [](YAML::Emitter& out, Rigidbody2DComponent& src)
 			{
 				out << YAML::Key << "BodyType" << YAML::Value << rigidbody2D_body_type_to_string(src.type);
@@ -513,6 +522,17 @@ namespace daedalus::scene {
 					src.colour = component["Colour"].as<maths::Vec4>();
 					src.thickness = component["Thickness"].as<float>();
 					src.fade = component["Fade"].as<float>();
+				}
+
+				component = entity["TextComponent"];
+				if (component)
+				{
+					auto& src = deserializedEntity.addOrRepalaceComponent<TextComponent>();
+					src.text = component["Text"].as<std::string>();
+					// TO DO: FontAsset
+					src.colour = component["Colour"].as<maths::Vec4>();
+					src.kerning = component["Kerning"].as<float>();
+					src.lineSpacing = component["LineSpacing"].as<float>();
 				}
 
 				component = entity["Rigidbody2DComponent"];

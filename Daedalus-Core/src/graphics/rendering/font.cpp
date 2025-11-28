@@ -22,13 +22,10 @@ namespace daedalus::graphics {
 
 	static void createCacheDirectoryIfNeeded()
 	{
-		std::string cacheDirectory = getCacheDirectory();
+		const char* cacheDirectory = getCacheDirectory();
 		if (!std::filesystem::exists(cacheDirectory))
 			std::filesystem::create_directories(cacheDirectory);
 	}
-
-	// Cache file layout
-	// uint32_t width, uint32_t height, void* start of data, EOF end of data
 
 	template<typename T, typename S, int N, msdf_atlas::GeneratorFunction<S, N> GenFunc>
 	static Shr_ptr<Texture2D> create_and_cache_atlas(const std::filesystem::path& cacheFileLocation, float fontSize, const std::vector<msdf_atlas::GlyphGeometry>& glyphs, const msdf_atlas::FontGeometry& fontGeometry, uint32_t width, uint32_t height)
@@ -57,6 +54,8 @@ namespace daedalus::graphics {
 
 		// cache
 		{
+			// Cache file layout
+			// [width(uint32_t)][height(uint32_t)][texture2D Data(void* : size(width * height * 3(RGB)))][EOF]
 			utils::ScopedBuffer fileBuffer((sizeof(uint32_t) * 2) + (bitmap.width * bitmap.height * 3));
 			uint32_t* memPtr = fileBuffer.as<uint32_t>();
 			*memPtr = width;
@@ -141,7 +140,7 @@ namespace daedalus::graphics {
 				unsigned long long glyphSeed = (LCG_MULTIPLIER * (coloringSeed ^ i) + LCG_INCREMENT) * !!coloringSeed;
 				glyphs[i].edgeColoring(msdfgen::edgeColoringInkTrap, DEFAULT_ANGLE_THRESHOLD, glyphSeed);
 				return true;
-				}, m_data->glyphs.size()).finish(THREAD_COUNT);
+				}, (int)m_data->glyphs.size()).finish(THREAD_COUNT);
 		}
 		else {
 			unsigned long long glyphSeed = coloringSeed;
@@ -159,6 +158,8 @@ namespace daedalus::graphics {
 		std::filesystem::path cacheFileLocation = cacheFilePathStr;
 		if (std::filesystem::exists(cacheFileLocation))
 		{
+			// Cache file layout
+			// [width(uint32_t)][height(uint32_t)][texture2D Data(void* : size(width * height * 3(RGB)))][EOF]
 			bool checkBool = false;
 			utils::ScopedBuffer dataBuffer = utils::FileSystem::readFileBinary(cacheFileLocation, &checkBool);
 
