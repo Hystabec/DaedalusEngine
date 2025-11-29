@@ -14,8 +14,8 @@ namespace daedalus::graphics {
 
 	Shr_ptr<SubTexture2D> SubTexture2D::createFromCoords(const Shr_ptr<Texture2D>& texture, const maths::Vec2& coords, const maths::Vec2& spriteSize)
 	{
-		maths::Vec2 min = { coords.x / texture->getWdith(), coords.y / texture->getHeight() };
-		maths::Vec2 max = { (coords.x + spriteSize.x) / texture->getWdith(), (coords.y + spriteSize.y) / texture->getHeight() };
+		maths::Vec2 min = { coords.x / texture->getWidth(), coords.y / texture->getHeight() };
+		maths::Vec2 max = { (coords.x + spriteSize.x) / texture->getWidth(), (coords.y + spriteSize.y) / texture->getHeight() };
 		return  create_shr_ptr<SubTexture2D>(texture, min, max);
 	}
 

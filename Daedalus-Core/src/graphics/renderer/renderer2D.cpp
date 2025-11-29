@@ -788,7 +788,7 @@ namespace daedalus { namespace graphics {
 			quadMin += maths::Vec2((float)x, (float)y);
 			quadMax += maths::Vec2((float)x, (float)y);
 
-			float texelWidth = 1.0f / fontAtlas->getWdith();
+			float texelWidth = 1.0f / fontAtlas->getWidth();
 			float texelHeight = 1.0f / fontAtlas->getHeight();
 			texCoordMin *= maths::Vec2(texelWidth, texelHeight);
 			texCoordMax *= maths::Vec2(texelWidth, texelHeight);

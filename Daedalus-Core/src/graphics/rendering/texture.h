@@ -26,7 +26,7 @@ namespace daedalus::graphics {
 
 		virtual const TextureSpecification& getSpecification() const = 0;
 
-		virtual uint32_t getWdith() const = 0;
+		virtual uint32_t getWidth() const = 0;
 		virtual uint32_t getHeight() const = 0;
 		virtual uint32_t getRendererID() const = 0;
 

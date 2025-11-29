@@ -14,7 +14,7 @@ namespace daedalus::graphics {
 
 		const TextureSpecification& getSpecification() const override { return m_specification; }
 
-		uint32_t getWdith() const override { return m_width; }
+		uint32_t getWidth() const override { return m_width; }
 		uint32_t getHeight() const  override {return m_height; }
 		uint32_t getRendererID() const override { return m_rendererID; }
 
