@@ -5,7 +5,7 @@ Daedalus Engine is a personal game engine project that i'm developing using tuto
 
 Primarily following [The Cherno's - "Game Engine" series](https://www.youtube.com/playlist?list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT) when developing the engine.  
 
-Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW](https://www.glfw.org), [GLEW](https://glew.sourceforge.net), [stb](https://github.com/nothings/stb), [spdlog](https://github.com/gabime/spdlog), [Dear ImGui](https://github.com/ocornut/imgui), [Entt](https://github.com/skypjack/entt), [yaml-cpp](https://github.com/jbeder/yaml-cpp), [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo), SPIR-V ([Vulkan](https://www.vulkan.org)), [box2d](https://github.com/erincatto/box2d), [Mono](https://www.mono-project.com)  
+Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW](https://www.glfw.org), [GLEW](https://glew.sourceforge.net), [stb](https://github.com/nothings/stb), [spdlog](https://github.com/gabime/spdlog), [Dear ImGui](https://github.com/ocornut/imgui), [Entt](https://github.com/skypjack/entt), [yaml-cpp](https://github.com/jbeder/yaml-cpp), [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo), SPIR-V ([Vulkan](https://www.vulkan.org)), [box2d](https://github.com/erincatto/box2d), [Mono](https://www.mono-project.com), [msdf-atlas-gen](https://github.com/Chlumsky/msdf-atlas-gen)  
 
 ## Current Features
 * Custom maths library.  
@@ -13,6 +13,7 @@ Additional Libraries: [Premake](https://github.com/premake/premake-core), [GLFW]
 * Rendering with `OpenGL`.  
 * 2D batch rendering.  
 * Texture/Image rendering.  
+* Text rendering using `msdf-atlas-gen`.  
 * User Interface using `Dear ImGui`.  
 * Custom Logging library primarily using `spdlog`.  
 * Performance profiling using `chrome://tracing`.  
