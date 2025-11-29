@@ -124,31 +124,11 @@ namespace daedalus::graphics {
 		atlasPacker.getDimensions(width, height);
 		emSize = atlasPacker.getScale();
 
-		// if MSDF || MTSDF
-
-		// Temporary
-#define LCG_MULTIPLIER 6364136223846793005ull
-#define LCG_INCREMENT 1442695040888963407ull
-#define DEFAULT_ANGLE_THRESHOLD 3.0
-#define THREAD_COUNT 8
-
-		uint64_t coloringSeed = 0;
-
-		bool expensiveColoring = false;
-		if (expensiveColoring) {
-			msdf_atlas::Workload([&glyphs = m_data->glyphs, &coloringSeed](int i, int threadNo) -> bool {
-				unsigned long long glyphSeed = (LCG_MULTIPLIER * (coloringSeed ^ i) + LCG_INCREMENT) * !!coloringSeed;
-				glyphs[i].edgeColoring(msdfgen::edgeColoringInkTrap, DEFAULT_ANGLE_THRESHOLD, glyphSeed);
-				return true;
-				}, (int)m_data->glyphs.size()).finish(THREAD_COUNT);
-		}
-		else {
-			unsigned long long glyphSeed = coloringSeed;
-			for (msdf_atlas::GlyphGeometry& glyph : m_data->glyphs) {
-				glyphSeed *= LCG_MULTIPLIER;
-				glyph.edgeColoring(msdfgen::edgeColoringInkTrap, DEFAULT_ANGLE_THRESHOLD, glyphSeed);
-			}
-		}
+		// NOTE: I did try to also cache the glyphs (as they have about a 13ms generation time)
+		// but they have an underlying std::vector which makes them difficult to cache
+		// as they dont have a standard size, with this current implementation of caching 
+		// it drastically decrease the generation time (3000ish ms -> 15ish ms)
+		// TLDR: It's probably fine without a more complex caching system (28.11.25). 
 
 		// Check for / load cache file
 		std::string cacheFilePathStr = getCacheDirectory();
@@ -182,6 +162,31 @@ namespace daedalus::graphics {
 			m_atlasTexture = texture;
 			DD_CORE_LOG_WARN("Font generation took {} ms", timer.elapsedMilliseconds());
 			return;
+		}
+
+		// if MSDF || MTSDF
+		// Temporary
+#define LCG_MULTIPLIER 6364136223846793005ull
+#define LCG_INCREMENT 1442695040888963407ull
+#define DEFAULT_ANGLE_THRESHOLD 3.0
+#define THREAD_COUNT 8
+
+		uint64_t coloringSeed = 0;
+
+		bool expensiveColoring = false;
+		if (expensiveColoring) {
+			msdf_atlas::Workload([&glyphs = m_data->glyphs, &coloringSeed](int i, int threadNo) -> bool {
+				unsigned long long glyphSeed = (LCG_MULTIPLIER * (coloringSeed ^ i) + LCG_INCREMENT) * !!coloringSeed;
+				glyphs[i].edgeColoring(msdfgen::edgeColoringInkTrap, DEFAULT_ANGLE_THRESHOLD, glyphSeed);
+				return true;
+				}, (int)m_data->glyphs.size()).finish(THREAD_COUNT);
+		}
+		else {
+			unsigned long long glyphSeed = coloringSeed;
+			for (msdf_atlas::GlyphGeometry& glyph : m_data->glyphs) {
+				glyphSeed *= LCG_MULTIPLIER;
+				glyph.edgeColoring(msdfgen::edgeColoringInkTrap, DEFAULT_ANGLE_THRESHOLD, glyphSeed);
+			}
 		}
 
 		m_atlasTexture = create_and_cache_atlas<uint8_t, float, 3, msdf_atlas::msdfGenerator>(cacheFileLocation, (float)emSize, m_data->glyphs, m_data->fontGeometry, width, height);
