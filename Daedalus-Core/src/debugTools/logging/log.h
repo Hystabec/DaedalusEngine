@@ -9,8 +9,6 @@
 
 /*
 TO DO: 
-expand to log to file
-
 log to custom console if added?
 
 

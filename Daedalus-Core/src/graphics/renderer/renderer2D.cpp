@@ -446,8 +446,6 @@ namespace daedalus { namespace graphics {
 		DD_PROFILE_FUNCTION();
 		DD_CORE_ASSERT((s_data.beginCalled), "Renderer2D::begin not called");
 
-		// TO DO: flush and reset if all texture slots are taken
-
 		//flush and reset if all the indices are used
 		if (s_data.quadIndexCount >= Renderer2DData::maxIndices)
 			flushAndResetQuads();
@@ -473,6 +471,10 @@ namespace daedalus { namespace graphics {
 
 			if (textureIndex == 0.0f)
 			{
+				// all texture slot filled flush and reset
+				if (s_data.textureSlotIndex >= s_data.maxTextureSlots)
+					flushAndResetQuads();
+
 				textureIndex = (float)s_data.textureSlotIndex;
 				s_data.textureSlots[s_data.textureSlotIndex] = quadProps.texture;
 				s_data.textureSlotIndex++;
@@ -550,8 +552,6 @@ namespace daedalus { namespace graphics {
 		DD_PROFILE_FUNCTION();
 		DD_CORE_ASSERT((s_data.beginCalled), "Renderer2D::begin not called");
 
-		// TO DO: flush if the textureSlots are all full
-
 		//flush and reset if all the indices are used
 		if (s_data.quadIndexCount >= Renderer2DData::maxIndices)
 			flushAndResetQuads();
@@ -577,6 +577,10 @@ namespace daedalus { namespace graphics {
 
 			if (textureIndex == 0.0f)
 			{
+				// all texture slot filled flush and reset
+				if (s_data.textureSlotIndex >= s_data.maxTextureSlots)
+					flushAndResetQuads();
+
 				textureIndex = (float)s_data.textureSlotIndex;
 				s_data.textureSlots[s_data.textureSlotIndex] = rotQuadProps.texture;
 				s_data.textureSlotIndex++;
@@ -722,8 +726,13 @@ namespace daedalus { namespace graphics {
 		const auto& metrics = fontGeometry.getMetrics();
 		Shr_ptr<Texture2D> fontAtlas = font->getAtlasTexture();
 
-		// TO DO: if the font is differnet flush and reset
-		s_data.fontAtlasTexture = fontAtlas;
+		if (s_data.fontAtlasTexture != fontAtlas)
+		{
+			s_data.fontAtlasTexture = fontAtlas;
+
+			if(s_data.textIndexCount != 0)
+				flushAndResetText();
+		}
 
 		double x = 0.0;
 		double fsScale = 1.0 / (metrics.ascenderY - metrics.descenderY);
@@ -797,25 +806,25 @@ namespace daedalus { namespace graphics {
 			s_data.textVertexBufferPtr->position = transform * maths::Vec4(quadMin, 0.0f, 1.0f);
 			s_data.textVertexBufferPtr->texCoord = texCoordMin;
 			s_data.textVertexBufferPtr->colour = textParams.colour;
-			s_data.textVertexBufferPtr->entityID = entityID; // TO DO: get id of owning entity
+			s_data.textVertexBufferPtr->entityID = entityID;
 			s_data.textVertexBufferPtr++;
 
 			s_data.textVertexBufferPtr->position = transform * maths::Vec4(quadMin.x, quadMax.y, 0.0f, 1.0f);
 			s_data.textVertexBufferPtr->texCoord = { texCoordMin.x, texCoordMax.y };
 			s_data.textVertexBufferPtr->colour = textParams.colour;
-			s_data.textVertexBufferPtr->entityID = entityID; // TO DO: get id of owning entity
+			s_data.textVertexBufferPtr->entityID = entityID;
 			s_data.textVertexBufferPtr++;
 
 			s_data.textVertexBufferPtr->position = transform * maths::Vec4(quadMax.x, quadMax.y, 0.0f, 1.0f);
 			s_data.textVertexBufferPtr->texCoord = texCoordMax;
 			s_data.textVertexBufferPtr->colour = textParams.colour;
-			s_data.textVertexBufferPtr->entityID = entityID; // TO DO: get id of owning entity
+			s_data.textVertexBufferPtr->entityID = entityID;
 			s_data.textVertexBufferPtr++;
 
 			s_data.textVertexBufferPtr->position = transform * maths::Vec4(quadMax.x, quadMin.y, 0.0f, 1.0f);
 			s_data.textVertexBufferPtr->texCoord = { texCoordMax.x, texCoordMin.y };
 			s_data.textVertexBufferPtr->colour = textParams.colour;
-			s_data.textVertexBufferPtr->entityID = entityID; // TO DO: get id of owning entity
+			s_data.textVertexBufferPtr->entityID = entityID;
 			s_data.textVertexBufferPtr++;
 
 			s_data.textIndexCount += 6;
