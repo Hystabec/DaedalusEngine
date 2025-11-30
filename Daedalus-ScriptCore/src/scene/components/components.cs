@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 // NOTE: this file might want to be split into seperate files, if it gets to big
 namespace Daedalus.Types
 {
@@ -46,6 +41,58 @@ namespace Daedalus.Types
             set
             {
                 InternalCalls.transform_component_set_position(Entity.ID, ref value);
+            }
+        }
+    }
+
+    public class TextComponent : Component
+    {
+        public string Text
+        {
+            get
+            {
+                return InternalCalls.text_component_get_text(Entity.ID);
+            }
+            set
+            {
+                InternalCalls.text_component_set_text(Entity.ID, value);
+            }
+        }
+
+        public Vector4 Colour
+        {
+            get
+            {
+                InternalCalls.text_component_get_colour(Entity.ID, out Vector4 outColour);
+                return outColour;
+            }
+            set
+            {
+                InternalCalls.text_component_set_colour(Entity.ID, ref value);
+            }
+        }
+
+        public float Kerning
+        {
+            get
+            {
+                return InternalCalls.text_component_get_kerning(Entity.ID);
+            }
+            set
+            {
+                InternalCalls.text_component_set_kerning(Entity.ID, value);
+            }
+        }
+
+        public float LineSpacing
+        {
+            get
+            {
+                return InternalCalls.text_component_get_line_spacing(Entity.ID);
+            }
+            set
+            {
+                InternalCalls.text_component_set_line_spacing(Entity.ID, value);
             }
         }
     }

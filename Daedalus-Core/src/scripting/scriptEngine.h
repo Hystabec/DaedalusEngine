@@ -10,6 +10,7 @@ extern "C" {
 	typedef struct _MonoAssembly MonoAssembly;
 	typedef struct _MonoImage MonoImage;
 	typedef struct _MonoClassField MonoClassField;
+	typedef struct _MonoString MonoString;
 }
 
 namespace daedalus::scene {
@@ -175,6 +176,7 @@ namespace daedalus::scripting {
 		static ScriptFieldMap& getEntityScriptFields(daedalus::UUID entityID);
 
 		static MonoObject* getManagedInstance(daedalus::UUID uuid, std::string_view instanceName);
+		static MonoString* createString(const char* string);
 	private:
 		static void initMono();
 		static void shutdownMono();

@@ -482,6 +482,11 @@ namespace daedalus::scripting {
 			return nullptr;
 	}
 
+	MonoString* ScriptEngine::createString(const char* string)
+	{
+		return mono_string_new(s_data->appDomain, string);
+	}
+
 	MonoObject* ScriptEngine::instantiateClass(MonoClass* monoClass)
 	{
 		MonoObject* instance = mono_object_new(s_data->appDomain, monoClass);

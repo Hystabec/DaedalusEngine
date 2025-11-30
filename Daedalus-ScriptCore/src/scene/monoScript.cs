@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Daedalus.Types
 {
     // NOTE: This was originally called 'Entity' then renamed to 'MonoScript'

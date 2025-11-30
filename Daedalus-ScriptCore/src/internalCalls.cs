@@ -28,11 +28,32 @@ namespace Daedalus
         internal extern static object entity_get_script_instance(ulong entityID, string MonoScriptTypeName, out bool scriptFound);
         #endregion
 
+        #region Components
+
         #region transform
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static void transform_component_get_position(ulong entityID, out Types.Vector3 position);
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static void transform_component_set_position(ulong entityID, ref Types.Vector3 position);
+        #endregion
+
+        #region Text
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static string text_component_get_text(ulong entityID);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void text_component_set_text(ulong entityID, string text);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void text_component_get_colour(ulong entityID, out Vector4 outColour);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void text_component_set_colour(ulong entityID, ref Vector4 colour);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static float text_component_get_kerning(ulong entityID);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void text_component_set_kerning(ulong entityID, float kerning);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static float text_component_get_line_spacing (ulong entityID);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void text_component_set_line_spacing(ulong entityID, float lineSpacing);
         #endregion
 
         #region rigidbody2D
@@ -56,6 +77,8 @@ namespace Daedalus
         internal extern static Rigidbody2DComponent.BodyType rigidbody2D_component_get_body_type(ulong entityID);
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static void rigidbody2D_component_set_body_type(ulong entityID, Rigidbody2DComponent.BodyType bodyType);
+
+        #endregion
 
         #endregion
     }

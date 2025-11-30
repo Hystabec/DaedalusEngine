@@ -13,17 +13,36 @@
 
 namespace daedalus::scripting {
 
+	namespace utils
+	{
+		static std::string mono_string_to_string(MonoString* string)
+		{
+			char* cStr = mono_string_to_utf8(string);
+			std::string str(cStr);
+			mono_free(cStr);
+			return str;
+		}
+	}
+
 	static std::unordered_map<MonoType*, std::function<bool(scene::Entity)>> s_entityHasComponentFuncs;
 
 #define DD_ADD_INTERNAL_CALL(FuncName) mono_add_internal_call("Daedalus.InternalCalls::" #FuncName, FuncName)
 
+// Finds and checks (scene::Entity) entity is valid using a UUID
+#define DD_GET_ENTITY_WITH_UUID_MACRO(entity, UUID) {\
+		scene::Scene* sceneContext = scripting::ScriptEngine::getSceneContext();\
+		DD_CORE_ASSERT(sceneContext);\
+		entity = sceneContext->getEntityByUUID(uuid);\
+	} \
+	DD_CORE_ASSERT(entity)
+
 	static void native_log(MonoString* string, daedalus::debug::Log::Type logType)
 	{
-		char* cStr = mono_string_to_utf8(string);
 		using namespace daedalus::debug;
-		Log::log(Log::Caller::Scripting, logType, cStr);
-		mono_free(cStr);
+		Log::log(Log::Caller::Scripting, logType, utils::mono_string_to_string(string));
 	}
+
+#pragma region Input
 
 	static bool input_get_key_up(application::InputCode inputCode)
 	{
@@ -35,13 +54,14 @@ namespace daedalus::scripting {
 		return application::Input::getKeyDown(inputCode);
 	}
 
+#pragma endregion
+
+#pragma region Entity
+
 	static bool entity_has_component(UUID uuid, MonoReflectionType* componentType)
 	{
-		using namespace scene;
-		Scene* sceneContext = scripting::ScriptEngine::getSceneContext();
-		DD_CORE_ASSERT(sceneContext);
-		Entity entity = sceneContext->getEntityByUUID(uuid);
-		DD_CORE_ASSERT(entity);
+		scene::Entity entity;
+		DD_GET_ENTITY_WITH_UUID_MACRO(entity, uuid);
 
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
 		DD_CORE_ASSERT(s_entityHasComponentFuncs.find(managedType) != s_entityHasComponentFuncs.end());
@@ -82,25 +102,87 @@ namespace daedalus::scripting {
 		}
 	}
 
+#pragma endregion
+
+#pragma region Transform
+
 	static void transform_component_get_position(UUID uuid, maths::Vec3* outPosition)
 	{
-		using namespace scene;
-		Scene* sceneContext = scripting::ScriptEngine::getSceneContext();
-		DD_CORE_ASSERT(sceneContext);
-		Entity entity = sceneContext->getEntityByUUID(uuid);
-		DD_CORE_ASSERT(entity);
+		scene::Entity entity;
+		DD_GET_ENTITY_WITH_UUID_MACRO(entity, uuid);
 		*outPosition = entity.getTransformComponent().position;
 	}
 
 	static void transform_component_set_position(UUID uuid, maths::Vec3* inPosition)
 	{
-		using namespace scene;
-		Scene* sceneContext = scripting::ScriptEngine::getSceneContext();
-		DD_CORE_ASSERT(sceneContext);
-		Entity entity = sceneContext->getEntityByUUID(uuid);
-		DD_CORE_ASSERT(entity);
+		scene::Entity entity;
+		DD_GET_ENTITY_WITH_UUID_MACRO(entity, uuid);
 		entity.getTransformComponent().position = *inPosition;
 	}
+
+#pragma endregion
+
+#pragma region Text
+
+	static MonoString* text_component_get_text(UUID uuid)
+	{
+		scene::Entity entity;
+		DD_GET_ENTITY_WITH_UUID_MACRO(entity, uuid);
+		return ScriptEngine::createString(entity.getComponent<scene::TextComponent>().text.c_str());
+	}
+
+	static void text_component_set_text(UUID uuid, MonoString* string)
+	{
+		scene::Entity entity;
+		DD_GET_ENTITY_WITH_UUID_MACRO(entity, uuid);
+		entity.getComponent<scene::TextComponent>().text = utils::mono_string_to_string(string);
+	}
+
+	static void text_component_get_colour(UUID uuid, maths::Vec4* outColour)
+	{
+		scene::Entity entity;
+		DD_GET_ENTITY_WITH_UUID_MACRO(entity, uuid);
+		*outColour = entity.getComponent<scene::TextComponent>().colour;
+	}
+
+	static void text_component_set_colour(UUID uuid, maths::Vec4* colour)
+	{
+		scene::Entity entity;
+		DD_GET_ENTITY_WITH_UUID_MACRO(entity, uuid);
+		entity.getComponent<scene::TextComponent>().colour = *colour;
+	}
+
+	static float text_component_get_kerning(UUID uuid)
+	{
+		scene::Entity entity;
+		DD_GET_ENTITY_WITH_UUID_MACRO(entity, uuid);
+		return entity.getComponent<scene::TextComponent>().kerning;
+	}
+
+	static void text_component_set_kerning(UUID uuid, float kerning)
+	{
+		scene::Entity entity;
+		DD_GET_ENTITY_WITH_UUID_MACRO(entity, uuid);
+		entity.getComponent<scene::TextComponent>().kerning = kerning;
+	}
+
+	static float text_component_get_line_spacing(UUID uuid)
+	{
+		scene::Entity entity;
+		DD_GET_ENTITY_WITH_UUID_MACRO(entity, uuid);
+		return entity.getComponent<scene::TextComponent>().lineSpacing;
+	}
+
+	static void text_component_set_line_spacing(UUID uuid, float lineSpacing)
+	{
+		scene::Entity entity;
+		DD_GET_ENTITY_WITH_UUID_MACRO(entity, uuid);
+		entity.getComponent<scene::TextComponent>().lineSpacing = lineSpacing;
+	}
+
+#pragma endregion
+
+#pragma region rigidbody2D
 
 	static void rigidbody2D_component_apply_force_from_point(UUID uuid, maths::Vec2* force, maths::Vec2* worldPoint, bool wake)
 	{
@@ -198,6 +280,8 @@ namespace daedalus::scripting {
 		pScene2D.setPhysicsBodyTypeOfEntity(entity, bodyType);
 	}
 
+#pragma endregion
+
 	template<typename... Component>
 	static void register_component_types_base(MonoImage* assemblyImage)
 	{
@@ -246,6 +330,15 @@ namespace daedalus::scripting {
 
 		DD_ADD_INTERNAL_CALL(transform_component_get_position);
 		DD_ADD_INTERNAL_CALL(transform_component_set_position);
+
+		DD_ADD_INTERNAL_CALL(text_component_get_text);
+		DD_ADD_INTERNAL_CALL(text_component_set_text);
+		DD_ADD_INTERNAL_CALL(text_component_get_colour);
+		DD_ADD_INTERNAL_CALL(text_component_set_colour);
+		DD_ADD_INTERNAL_CALL(text_component_get_kerning);
+		DD_ADD_INTERNAL_CALL(text_component_set_kerning);
+		DD_ADD_INTERNAL_CALL(text_component_get_line_spacing);
+		DD_ADD_INTERNAL_CALL(text_component_set_line_spacing);
 
 		DD_ADD_INTERNAL_CALL(rigidbody2D_component_apply_force_from_point);
 		DD_ADD_INTERNAL_CALL(rigidbody2D_component_apply_force);
