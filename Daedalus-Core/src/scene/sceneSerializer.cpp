@@ -98,10 +98,10 @@ namespace YAML {
 
 		static bool decode(const Node& node, daedalus::UUID& rhs)
 		{
-			if (!node.IsSequence() || node.size() != 4)
+			if (!node.IsScalar())
 				return false;
 
-			rhs = node[0].as<uint64_t>();
+			rhs = node.as<uint64_t>();
 			return true;
 		}
 	};
@@ -396,7 +396,7 @@ namespace daedalus::scene {
 		{
 			for (auto entity : entites)
 			{
-				uint64_t uuid = entity["Entity"].as<uint64_t>();
+				UUID uuid = entity["Entity"].as<UUID>();
 				std::string name = entity["Name"].as<std::string>();
 
 
@@ -510,7 +510,7 @@ namespace daedalus::scene {
 					auto material = component["Material"];
 
 					if (material["TextureHandle"])
-						src.material.texture = material["TextureHandle"].as<uint64_t>();
+						src.material.texture = material["TextureHandle"].as<AssetHandle>();
 					
 					if(material["TilingFactor"])
 						src.material.tilingFactor = material["TilingFactor"].as<float>();
