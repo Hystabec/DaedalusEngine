@@ -9,7 +9,7 @@ EditorLayer::EditorLayer()
 void EditorLayer::attach()
 {
 	DD_PROFILE_FUNCTION();
-	m_texture = daedalus::graphics::Texture2D::create("assets/testImage.png");
+	//m_texture = daedalus::graphics::Texture2D::create("assets/testImage.png");
 
 	daedalus::graphics::FramebufferSpecification fbSpec;
 	fbSpec.width = 1280;
@@ -52,7 +52,7 @@ void EditorLayer::update(const daedalus::application::DeltaTime& dt)
 			}
 		}
 
-		daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{ 2, 0 }, { 0.5f, 0.5f }, m_texture });
+		//daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{ 2, 0 }, { 0.5f, 0.5f }, m_texture });
 
 		daedalus::graphics::Renderer2D::end();
 		m_framebuffer->unbind();

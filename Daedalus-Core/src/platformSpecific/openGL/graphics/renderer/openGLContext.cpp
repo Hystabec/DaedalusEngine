@@ -19,7 +19,7 @@ namespace daedalus { namespace graphics {
 		if (!s_GLEWInitialized)
 		{
 			if (glewInit() != GLEW_OK)
-				DD_CORE_ASSERT(false, "GLEW failed to initialize");
+				DD_CORE_ASSERT(false, "GLEW failed to initialize")
 		}
 
 #ifdef DD_USING_ASSERTS

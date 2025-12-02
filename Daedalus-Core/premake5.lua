@@ -94,7 +94,6 @@ project "Daedalus-Core"
 		defines
 		{
 			"DD_DEBUG",
-			"DD_USING_ASSERTS",
 			"DD_USING_PROFILING"
 		}
 		
@@ -111,7 +110,6 @@ project "Daedalus-Core"
 		defines
 		{
 			"DD_RELEASE",
-			"DD_USING_ASSERTS",
 			"DD_USING_PROFILING"
 		}
 

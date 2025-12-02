@@ -50,7 +50,6 @@ project "Sandbox"
 		defines 
 		{
 			"DD_DEBUG",
-			"DD_USING_ASSERTS",
 			"DD_USING_PROFILING"
 		}
 		symbols "on"
@@ -59,7 +58,6 @@ project "Sandbox"
 		defines
 		{
 			"DD_RELEASE",
-			"DD_USING_ASSERTS",
 			"DD_USING_PROFILING"
 		} 
 		optimize "on"

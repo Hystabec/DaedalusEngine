@@ -3,6 +3,8 @@
 
 #include "scripting/scriptEngine.h"
 #include "ui/ui.h"
+#include "asset/editorAssetManager.h"
+#include "asset/textureImporter.h"
 
 //#include "scene/components.h"
 #include <imgui.h> 
@@ -383,8 +385,13 @@ namespace daedalus::editor
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 					{
 						std::filesystem::path path = (const wchar_t*)payload->Data;
-						if (path.extension().string() == ".png")
-							spriteRenderer.material.texture = graphics::Texture2D::create(path.string());
+						if (path.extension() == ".png")
+						{
+							auto relativePath = std::filesystem::relative(path, Project::getActiveAssetDirectory());
+							AssetHandle handle = Project::getActive()->getEditorAssetManager()->importAsset(relativePath);
+							if (handle)
+								spriteRenderer.material.texture = handle;
+						}
 					}
 					ImGui::EndDragDropTarget();
 				}

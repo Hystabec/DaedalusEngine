@@ -22,6 +22,7 @@ namespace daedalus {
 		out << YAML::BeginMap;
 		out << YAML::Key << "Name" << YAML::Value << config.name;
 		out << YAML::Key << "AssetDirectory" << YAML::Value << config.assetDirectory.string();
+		out << YAML::Key << "AssetRegistryPath" << YAML::Value << config.assetRegistryPath.string();
 		out << YAML::Key << "ScriptModuleBin" << YAML::Value << config.scriptModuleBin.string();
 		out << YAML::Key << "StartScene" << YAML::Value << config.startScene.string();
 		out << YAML::EndMap;
@@ -69,6 +70,8 @@ namespace daedalus {
 
 		config.name = projectNode["Name"].as<std::string>();
 		config.assetDirectory = projectNode["AssetDirectory"].as<std::string>();
+		if (projectNode["AssetRegistryPath"])
+			config.assetRegistryPath = projectNode["AssetRegistryPath"].as<std::string>();
 		config.scriptModuleBin = projectNode["ScriptModuleBin"].as<std::string>();
 		config.startScene = projectNode["StartScene"].as<std::string>();
 

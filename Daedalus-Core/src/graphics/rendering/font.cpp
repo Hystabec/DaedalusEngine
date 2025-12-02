@@ -15,14 +15,14 @@
 
 namespace daedalus::graphics {
 
-	static const char* getCacheDirectory()
+	static const char* get_cache_directory()
 	{
 		return "resources\\cache\\fonts";
 	}
 
-	static void createCacheDirectoryIfNeeded()
+	static void create_cache_directory_if_needed()
 	{
-		const char* cacheDirectory = getCacheDirectory();
+		const char* cacheDirectory = get_cache_directory();
 		if (!std::filesystem::exists(cacheDirectory))
 			std::filesystem::create_directories(cacheDirectory);
 	}
@@ -30,7 +30,7 @@ namespace daedalus::graphics {
 	template<typename T, typename S, int N, msdf_atlas::GeneratorFunction<S, N> GenFunc>
 	static Shr_ptr<Texture2D> create_and_cache_atlas(const std::filesystem::path& cacheFileLocation, float fontSize, const std::vector<msdf_atlas::GlyphGeometry>& glyphs, const msdf_atlas::FontGeometry& fontGeometry, uint32_t width, uint32_t height)
 	{
-		createCacheDirectoryIfNeeded();
+		create_cache_directory_if_needed();
 
 		msdf_atlas::GeneratorAttributes attributes;
 		attributes.config.overlapSupport = true;
@@ -50,7 +50,7 @@ namespace daedalus::graphics {
 		spec.generateMips = false;
 
 		Shr_ptr<Texture2D> texture = Texture2D::create(spec);
-		texture->setData((void*)bitmap.pixels, bitmap.width * bitmap.height * 3);
+		texture->setData(utils::Buffer((void*)bitmap.pixels, bitmap.width * bitmap.height * 3));
 
 		// cache
 		{
@@ -131,7 +131,7 @@ namespace daedalus::graphics {
 		// TLDR: It's probably fine without a more complex caching system (28.11.25). 
 
 		// Check for / load cache file
-		std::string cacheFilePathStr = getCacheDirectory();
+		std::string cacheFilePathStr = get_cache_directory();
 		cacheFilePathStr += "\\";
 		cacheFilePathStr += fontPath.filename().string();
 		cacheFilePathStr += ".cache";
@@ -158,7 +158,7 @@ namespace daedalus::graphics {
 			spec.generateMips = false;
 
 			Shr_ptr<Texture2D> texture = Texture2D::create(spec);
-			texture->setData((void*)dataPtr, width * height * 3);
+			texture->setData(utils::Buffer((void*)dataPtr, width * height * 3));
 			m_atlasTexture = texture;
 			DD_CORE_LOG_WARN("Font generation took {} ms", timer.elapsedMilliseconds());
 			return;

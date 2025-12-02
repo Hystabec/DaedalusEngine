@@ -223,7 +223,7 @@ namespace daedalus::scene {
 
 						out << YAML::BeginMap;
 						out << YAML::Key << "Name" << YAML::Value << name;
-						out << YAML::Key << "Type" << YAML::Value << utils::script_field_type_to_string(field.type);
+						out << YAML::Key << "Type" << YAML::Value << conversions::script_field_type_to_string(field.type);
 
 						out << YAML::Key << "Data" << YAML::Value;
 						scripting::ScriptFieldInstance& scriptField = entityFields.at(name);
@@ -282,10 +282,11 @@ namespace daedalus::scene {
 			{
 				out << YAML::Key << "Colour" << YAML::Value << src.colour;
 
-				if (src.material.texture)
-					out << YAML::Key << "Texture" << YAML::Value << std::filesystem::relative(src.material.texture->getSrcFilePath().string(), Project::getActiveAssetDirectory()).string();
-
+				out << YAML::Key << "Material" << YAML::Value;
+				out << YAML::BeginMap;
+				out << YAML::Key << "TextureHandle" << YAML::Value << src.material.texture;
 				out << YAML::Key << "TilingFactor" << YAML::Value << src.material.tilingFactor;
+				out << YAML::EndMap;
  			});
 
 		serialize_component<CircleRendererComponent>(out, "CircleRendererComponent", entity, [](YAML::Emitter& out, CircleRendererComponent& src)
@@ -438,7 +439,7 @@ namespace daedalus::scene {
 
 								std::string fieldName = scriptFeild["Name"].as<std::string>();
 								std::string typeAsString = scriptFeild["Type"].as<std::string>();
-								scripting::ScriptFieldType fieldType = scripting::utils::script_field_type_from_string(typeAsString);
+								scripting::ScriptFieldType fieldType = conversions::script_field_type_from_string(typeAsString);
 
 								ScriptFieldInstance& fieldInstance = entityFields[fieldName];
 								if (!fields.contains(fieldName))
@@ -506,13 +507,13 @@ namespace daedalus::scene {
 				{
 					auto& src = deserializedEntity.addOrRepalaceComponent<SpriteRendererComponent>();
 					src.colour = component["Colour"].as<maths::Vec4>();
-					if (component["Texture"])
-					{
-						std::filesystem::path texutrePath = component["Texture"].as<std::string>();
-						src.material.texture = graphics::Texture2D::create(Project::getActiveAssetDirectory() / texutrePath);
-					}
-					if(component["TilingFactor"])
-						src.material.tilingFactor = component["TilingFactor"].as<float>();
+					auto material = component["Material"];
+
+					if (material["TextureHandle"])
+						src.material.texture = material["TextureHandle"].as<uint64_t>();
+					
+					if(material["TilingFactor"])
+						src.material.tilingFactor = material["TilingFactor"].as<float>();
 				}
 
 				component = entity["CircleRendererComponent"];

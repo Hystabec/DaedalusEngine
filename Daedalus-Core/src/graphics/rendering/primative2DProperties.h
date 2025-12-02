@@ -26,13 +26,13 @@ namespace daedalus { namespace graphics { namespace primatives2D {
 			transform *= maths::Mat4::translate(position);
 			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
 		}
-		QuadProperties(const maths::Vec3& position, const maths::Vec2& size, const Shr_ptr<Texture2D>& texture, const maths::Vec4& colourTint = { 1.0f })
+		QuadProperties(const maths::Vec3& position, const maths::Vec2& size, AssetHandle texture, const maths::Vec4& colourTint = { 1.0f })
 			: texture(texture), colour(colourTint)
 		{
 			transform *= maths::Mat4::translate(position);
 			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
 		}
-		QuadProperties(const maths::Vec3& position, const maths::Vec2& size, const Shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::Vec4& colourTint = { 1.0f })
+		QuadProperties(const maths::Vec3& position, const maths::Vec2& size, AssetHandle texture, const float& tilingFactor, const maths::Vec4& colourTint = { 1.0f })
 			: texture(texture), tilingFactor(tilingFactor), colour(colourTint)
 		{
 			transform *= maths::Mat4::translate(position);
@@ -54,10 +54,10 @@ namespace daedalus { namespace graphics { namespace primatives2D {
 		QuadProperties(const maths::Mat4& matrix, const maths::Vec4& colour)
 			: transform(matrix), colour(colour)
 		{ }
-		QuadProperties(const maths::Mat4& matrix, const Shr_ptr<Texture2D>& texture, const maths::Vec4& colourTint = { 1.0f })
+		QuadProperties(const maths::Mat4& matrix, AssetHandle texture, const maths::Vec4& colourTint = { 1.0f })
 			: transform(matrix), texture(texture), colour(colourTint)
 		{ }
-		QuadProperties(const maths::Mat4& matrix, const Shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::Vec4& colourTint = { 1.0f })
+		QuadProperties(const maths::Mat4& matrix, AssetHandle texture, const float& tilingFactor, const maths::Vec4& colourTint = { 1.0f })
 			: transform(matrix), texture(texture), tilingFactor(tilingFactor), colour(colourTint)
 		{ }
 		QuadProperties(const maths::Mat4& matrix, const Shr_ptr<SubTexture2D>& subTexture, const maths::Vec4& colourTint = { 1.0f })
@@ -72,7 +72,7 @@ namespace daedalus { namespace graphics { namespace primatives2D {
 		// specify a rotation during the other construction options
 
 		maths::Mat4 transform = maths::Mat4::identity();
-		Shr_ptr<Texture2D> texture = nullptr;
+		AssetHandle texture = AssetHandle(0);
 		Shr_ptr<SubTexture2D> subTexture = nullptr;
 		float tilingFactor = 1.0f;
 		maths::Vec4 colour = { 1.0f };
@@ -105,14 +105,14 @@ namespace daedalus { namespace graphics { namespace primatives2D {
 			transform *= maths::Mat4::rotate(rotation, { 0,0,1 }, true);
 			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
 		}
-		RotatedQuadProperties(const maths::Vec3& position, const maths::Vec2& size, const float& rotation, const Shr_ptr<Texture2D>& texture, const maths::Vec4& colourTint = { 1.0f })
+		RotatedQuadProperties(const maths::Vec3& position, const maths::Vec2& size, const float& rotation, AssetHandle texture, const maths::Vec4& colourTint = { 1.0f })
 			: texture(texture), colour(colourTint)
 		{
 			transform *= maths::Mat4::translate(position);
 			transform *= maths::Mat4::rotate(rotation, { 0,0,1 }, true);
 			transform *= maths::Mat4::scale({ size.x, size.y, 1.0f });
 		}
-		RotatedQuadProperties(const maths::Vec3& position, const maths::Vec2& size, const float& rotation, const Shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::Vec4& colourTint = { 1.0f })
+		RotatedQuadProperties(const maths::Vec3& position, const maths::Vec2& size, const float& rotation, AssetHandle texture, const float& tilingFactor, const maths::Vec4& colourTint = { 1.0f })
 			: texture(texture), tilingFactor(tilingFactor), colour(colourTint)
 		{
 			transform *= maths::Mat4::translate(position);
@@ -138,11 +138,11 @@ namespace daedalus { namespace graphics { namespace primatives2D {
 			: transform(matrix), colour(colour)
 		{
 		}
-		RotatedQuadProperties(const maths::Mat4& matrix, const Shr_ptr<Texture2D>& texture, const maths::Vec4& colourTint = { 1.0f })
+		RotatedQuadProperties(const maths::Mat4& matrix, AssetHandle texture, const maths::Vec4& colourTint = { 1.0f })
 			: transform(matrix), texture(texture), colour(colourTint)
 		{
 		}
-		RotatedQuadProperties(const maths::Mat4& matrix, const Shr_ptr<Texture2D>& texture, const float& tilingFactor, const maths::Vec4& colourTint = { 1.0f })
+		RotatedQuadProperties(const maths::Mat4& matrix, AssetHandle texture, const float& tilingFactor, const maths::Vec4& colourTint = { 1.0f })
 			: transform(matrix), texture(texture), tilingFactor(tilingFactor), colour(colourTint)
 		{
 		}
@@ -156,7 +156,7 @@ namespace daedalus { namespace graphics { namespace primatives2D {
 		}
 
 		maths::Mat4 transform = maths::Mat4::identity();
-		Shr_ptr<Texture2D> texture = nullptr;
+		AssetHandle texture = AssetHandle(0);
 		Shr_ptr<SubTexture2D> subTexture = nullptr;
 		float tilingFactor = 1.0f;
 		maths::Vec4 colour = { 1.0f };

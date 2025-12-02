@@ -11,7 +11,7 @@
 
 namespace daedalus::graphics {
 
-	namespace utils
+	namespace helpers
 	{
 		static GLenum shaderTypeFromString(const std::string& type)
 		{
@@ -90,7 +90,7 @@ namespace daedalus::graphics {
 		// Getting name from file path - needs to be done first to check meta data file
 		m_name = filePath.stem().string();
 
-		utils::createCacheDirectoryIfNeeded();
+		helpers::createCacheDirectoryIfNeeded();
 
 		bool wasReadCorrectly = true;
 		std::string shaderSrc = daedalus::utils::FileSystem::readFileString(filePath, &wasReadCorrectly);
@@ -218,12 +218,12 @@ namespace daedalus::graphics {
 			DD_CORE_ASSERT(eol != std::string::npos, "Syntax error");
 			size_t begin = pos + typeTokenLength + 1;
 			std::string type = source.substr(begin, eol - begin);
-			DD_CORE_ASSERT(utils::shaderTypeFromString(type), "Invalid shader type specifier");
+			DD_CORE_ASSERT(helpers::shaderTypeFromString(type), "Invalid shader type specifier");
 
 			size_t nextLinePos = source.find_first_not_of("\r\n", eol);
 			DD_CORE_ASSERT(nextLinePos != std::string::npos, "Syntax error");
 			pos = source.find(typeToken, nextLinePos);
-			shaderSources[utils::shaderTypeFromString(type)] = source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.size() - 1 : nextLinePos));
+			shaderSources[helpers::shaderTypeFromString(type)] = source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.size() - 1 : nextLinePos));
 		}
 
 		return shaderSources;
@@ -236,7 +236,7 @@ namespace daedalus::graphics {
 		// compiled shaders will be regenerated
 		size_t newShaderHash = std::hash<std::string>{}(shaderSrc);
 
-		std::filesystem::path metaFilePath = utils::getCacheDirectory() + ("\\" + m_name + ".cache.meta");
+		std::filesystem::path metaFilePath = helpers::getCacheDirectory() + ("\\" + m_name + ".cache.meta");
 		bool fileReadCorrect;
 		daedalus::utils::FileSystem::suppressErrorsForNextOperation();
 		std::stringstream filesstream(daedalus::utils::FileSystem::readFileString(metaFilePath, &fileReadCorrect));
@@ -270,14 +270,14 @@ namespace daedalus::graphics {
 		if (optimize)
 			options.SetOptimizationLevel(shaderc_optimization_level_performance);
 
-		std::filesystem::path cacheDirectory = utils::getCacheDirectory();
+		std::filesystem::path cacheDirectory = helpers::getCacheDirectory();
 
 		auto& shaderData = m_vulkanSPIRV;
 		shaderData.clear();
 		for (auto&& [stage, source] : shaderSources)
 		{
 			std::filesystem::path shaderFilePath = m_filePath;
-			std::filesystem::path cachePath = cacheDirectory / (shaderFilePath.filename().string() + utils::glShaderStageCachedVulkanFileExtension(stage));
+			std::filesystem::path cachePath = cacheDirectory / (shaderFilePath.filename().string() + helpers::glShaderStageCachedVulkanFileExtension(stage));
 
 			std::ifstream in(cachePath, std::ios::in | std::ios::binary);
 			if (in.is_open() && !cacheDataChange)
@@ -293,10 +293,10 @@ namespace daedalus::graphics {
 			else
 			{
 				DD_ASSERT(!m_filePath.empty(), "File path is invalid");
-				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, utils::glShaderStageToShaderC(stage), m_filePath.string().c_str(), options);
+				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, helpers::glShaderStageToShaderC(stage), m_filePath.string().c_str(), options);
 				if (module.GetCompilationStatus() != shaderc_compilation_status_success)
 				{
-					DD_CORE_LOG_ERROR("Shader compilation failed in stage: {}", utils::glShaderStageToString(stage));
+					DD_CORE_LOG_ERROR("Shader compilation failed in stage: {}", helpers::glShaderStageToString(stage));
 					DD_CORE_LOG_ERROR(module.GetErrorMessage());
 					DD_CORE_ASSERT(false);
 				}
@@ -331,14 +331,14 @@ namespace daedalus::graphics {
 		if (optimize)
 			options.SetOptimizationLevel(shaderc_optimization_level_performance);
 
-		std::filesystem::path cacheDirectory = utils::getCacheDirectory();
+		std::filesystem::path cacheDirectory = helpers::getCacheDirectory();
 
 		shaderData.clear();
 		m_openGLSourceCode.clear();
 		for (auto&& [stage, spirv] : m_vulkanSPIRV)
 		{
 			std::filesystem::path shaderFilePath = m_filePath;
-			std::filesystem::path cachedPath = cacheDirectory / (shaderFilePath.filename().string() + utils::glShaderStageCachedOpenGLFileExtension(stage));
+			std::filesystem::path cachedPath = cacheDirectory / (shaderFilePath.filename().string() + helpers::glShaderStageCachedOpenGLFileExtension(stage));
 
 			std::ifstream in(cachedPath, std::ios::in | std::ios::binary);
 			if (in.is_open() && !cacheDataChange)
@@ -366,10 +366,10 @@ namespace daedalus::graphics {
 				auto& source = m_openGLSourceCode[stage];
 
 				DD_ASSERT(!m_filePath.empty(), "File path is invalid");
-				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, utils::glShaderStageToShaderC(stage), m_filePath.string().c_str(), options);
+				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, helpers::glShaderStageToShaderC(stage), m_filePath.string().c_str(), options);
 				if (module.GetCompilationStatus() != shaderc_compilation_status_success)
 				{
-					DD_CORE_LOG_ERROR("Shader compilation failed in stage: {}", utils::glShaderStageToString(stage));
+					DD_CORE_LOG_ERROR("Shader compilation failed in stage: {}", helpers::glShaderStageToString(stage));
 					DD_CORE_LOG_ERROR(module.GetErrorMessage());
 					DD_CORE_ASSERT(false);
 				}
@@ -445,7 +445,7 @@ namespace daedalus::graphics {
 		spirv_cross::Compiler compiler(shaderData);
 		spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
-		DD_CORE_LOG_TRACE("OpenGLShader::Reflect - {} {}", utils::glShaderStageToString(stage), m_filePath);
+		DD_CORE_LOG_TRACE("OpenGLShader::Reflect - {} {}", helpers::glShaderStageToString(stage), m_filePath);
 		DD_CORE_LOG_TRACE("{} uniform buffers", resources.uniform_buffers.size());
 		DD_CORE_LOG_TRACE("{} resources", resources.sampled_images.size());
 

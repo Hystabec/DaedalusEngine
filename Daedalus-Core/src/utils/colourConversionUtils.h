@@ -2,7 +2,7 @@
 
 #include "maths/vec4.h"
 
-namespace daedalus { namespace utils {
+namespace daedalus::utils {
 
 	/*static maths::Vec4 colour_uint_to_vec4(uint32_t colour)
 	{
@@ -28,4 +28,4 @@ namespace daedalus { namespace utils {
 		return maths::Vec4(colour.x / 255, colour.y / 255, colour.z / 255, colour.w / 255);
 	}
 
-} }
+}

@@ -31,7 +31,7 @@ namespace daedalus::editor
 
 	private:
 		const std::vector<std::string> m_directoryFilters = { ".vs", "script-bin" };
-		const std::vector<std::string> m_fileFilters =		{ ".lua", ".csproj", ".sln", ".bat" };
+		const std::vector<std::string> m_fileFilters =		{ ".lua", ".csproj", ".sln", ".bat", ".ddreg" };
 		std::unordered_map<std::filesystem::path, bool> m_filtedFilePathMap;
 
 		std::filesystem::path m_projectAssetDirectory;

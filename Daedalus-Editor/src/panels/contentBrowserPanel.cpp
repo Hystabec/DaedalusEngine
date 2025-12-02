@@ -2,6 +2,7 @@
 #include "contentBrowserPanel.h"
 
 #include "project/Project.h"
+#include "asset/textureImporter.h"
 
 #include <imgui.h> 
 #include <filesystem>
@@ -18,10 +19,10 @@ namespace daedalus::editor
 {
 	ContentBrowserPanel::ContentBrowserPanel()
 	{
-		m_directoryIcon = graphics::Texture2D::create("resources/icons/contentBrowser/directoryIcon.png");
-		m_fileIcon = graphics::Texture2D::create("resources/icons/contentBrowser/fileIcon.png");
-		m_scriptFileIcon = graphics::Texture2D::create("resources/icons/contentBrowser/scriptFileIcon.png");
-		m_sceneFileIcon = graphics::Texture2D::create("resources/icons/contentBrowser/sceneFileIcon.png");
+		m_directoryIcon = TextureImporter::loadTexture2D("resources/icons/contentBrowser/directoryIcon.png");
+		m_fileIcon = TextureImporter::loadTexture2D("resources/icons/contentBrowser/fileIcon.png");
+		m_scriptFileIcon = TextureImporter::loadTexture2D("resources/icons/contentBrowser/scriptFileIcon.png");
+		m_sceneFileIcon = TextureImporter::loadTexture2D("resources/icons/contentBrowser/sceneFileIcon.png");
 	}
 
 	void ContentBrowserPanel::onImGuiRender()

@@ -6,6 +6,8 @@
 #include "scripting/scriptEngine.h"
 #include "graphics/rendering/font.h"
 
+#include "asset/textureImporter.h"
+
 #include <imgui.h>
 #include <ImGuizmo.h>
 #include <limits>
@@ -31,11 +33,11 @@ namespace daedalus::editor
 		fbSpec.height = 900;
 		m_framebuffer = graphics::Framebuffer::create(fbSpec);
 
-		m_playIcon = graphics::Texture2D::create("resources\\icons\\playButtonIcon.png");
-		m_stopIcon = graphics::Texture2D::create("resources\\icons\\stopButtonIcon.png");
-		m_simulateIcon = graphics::Texture2D::create("resources\\icons\\simulateButtonIcon.png");
-		m_pauseIcon = graphics::Texture2D::create("resources\\icons\\pauseButtonIcon.png");
-		m_stepIcon = graphics::Texture2D::create("resources\\icons\\stepButtonIcon.png");
+		m_playIcon = TextureImporter::loadTexture2D("resources\\icons\\playButtonIcon.png");
+		m_stopIcon = TextureImporter::loadTexture2D("resources\\icons\\stopButtonIcon.png");
+		m_simulateIcon = TextureImporter::loadTexture2D("resources\\icons\\simulateButtonIcon.png");
+		m_pauseIcon = TextureImporter::loadTexture2D("resources\\icons\\pauseButtonIcon.png");
+		m_stepIcon = TextureImporter::loadTexture2D("resources\\icons\\stepButtonIcon.png");
 
 		m_editorScene = create_shr_ptr<scene::Scene>();
 		m_activeScene = m_editorScene;

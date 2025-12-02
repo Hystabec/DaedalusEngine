@@ -1,0 +1,7 @@
+AssetRegistry:
+  - Handle: 1870961900794947576
+    Filepath: textures/alphaTestingImage.png
+    Type: AssetType::Texture2D
+  - Handle: 13205347447342033097
+    Filepath: textures/DD_testImage.png
+    Type: AssetType::Texture2D
