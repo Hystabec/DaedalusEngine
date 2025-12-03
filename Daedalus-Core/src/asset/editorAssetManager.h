@@ -7,6 +7,7 @@
 
 namespace daedalus {
 
+	// NOTE: This could potentialy be made into an unordered_map (and probably should)
 	using AssetRegistry = std::map<AssetHandle, AssetMetadata>;
 
 	class EditorAssetManager : public AssetManagerBase

@@ -7,6 +7,7 @@
 
 namespace daedalus {
 
+	// NOTE: This could potentialy be made into an unordered_map (and probably should)
 	using AssetMap = std::map<AssetHandle, Shr_ptr<Asset>>;
 
 	class AssetManagerBase

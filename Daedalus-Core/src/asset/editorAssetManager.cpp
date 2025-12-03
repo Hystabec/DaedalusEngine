@@ -41,6 +41,9 @@ namespace daedalus {
 
 	AssetHandle EditorAssetManager::importAsset(const std::filesystem::path& filepath)
 	{
+		// TO DO: Multi-thread this to speed up the importing of assets - openGL makes this 
+		// currently a little complicated as openGL commands need to be run by the main thread
+
 		// check that the asset doesnt already exist in the registy
 		{
 			AssetHandle foundHandle = getHandleWithFilepath(filepath);

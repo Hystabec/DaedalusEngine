@@ -1,0 +1,8 @@
+Uni_ptr -> scoped_ptr    || scp_ptr (could use scp as a shortened version of scoped)
+
+Shr_ptr -> intrusive_ptr || ref_ptr (make sense as std::shr_ptr are also ref counted?) || int_ptr (maybe get confused with int(type)?)
+
+
+One of the next things I should do is implement a proper version of these types instead of using the temporary type def std::unique / std::shared
+
+Consider looking at the boost implentation so see how they work: https://www.boost.org/doc/libs/latest/libs/smart_ptr/doc/html/smart_ptr.html
