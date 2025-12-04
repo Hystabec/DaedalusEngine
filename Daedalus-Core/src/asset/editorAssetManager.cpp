@@ -108,12 +108,19 @@ namespace daedalus {
 	bool EditorAssetManager::deserializeAssetRegistry()
 	{
 		auto path = Project::getActiveAssetRegistryPath();
+
+		if (!std::filesystem::exists(path))
+		{
+			DD_CORE_LOG_WARN("Asset registry file not found at {}", path);
+			return false;
+		}
+
 		YAML::Node data;
 		try
 		{
 			data = YAML::LoadFile(path.string());
 		}
-		catch(YAML::ParserException e)
+		catch(YAML::Exception e)
 		{
 			DD_CORE_LOG_ERROR("Failed to load project asset registry ({}): {}", path, e.what());
 			return false;

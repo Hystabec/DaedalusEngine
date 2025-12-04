@@ -19,6 +19,8 @@ namespace daedalus::editor
 	private:
 		bool onKeyPressed(event::KeyPressedEvent& e);
 		bool onMouseButtonPressed(event::MouseButtonPressedEvent& e);
+		bool onWindowDrop(event::WindowDropEvent& e);
+
 		void renderOverlays();
 
 		bool canMousePick() const;

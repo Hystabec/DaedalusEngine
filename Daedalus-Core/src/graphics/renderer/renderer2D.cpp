@@ -463,6 +463,8 @@ namespace daedalus { namespace graphics {
 		if (quadProps.texture)
 		{
 			DD_CORE_VERIFY(quadProps.texture);
+			// TO DO: Might want the try to seperate the assetManager from the render. When rendering submit 
+			// with a texture not a texture handle
 			Shr_ptr<Texture2D> texture = AssetManager::getAsset<graphics::Texture2D>(quadProps.texture);
 			if (texture)
 			{
@@ -575,7 +577,9 @@ namespace daedalus { namespace graphics {
 		float textureIndex = 0.0f;
 		if (rotQuadProps.texture) //might need to also check if the shr_ptr is still valid
 		{
-			DD_CORE_VERIFY(quadProps.texture);
+			DD_CORE_VERIFY(rotQuadProps.texture);
+			// TO DO: Might want the try to seperate the assetManager from the render. When rendering submit 
+			// with a texture not a texture handle
 			Shr_ptr<Texture2D> texture = AssetManager::getAsset<graphics::Texture2D>(rotQuadProps.texture);
 			if (texture)
 			{

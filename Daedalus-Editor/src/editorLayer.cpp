@@ -574,6 +574,7 @@ namespace daedalus::editor
 		event::EventDispatcher dispatcher(e);
 		dispatcher.dispatch<event::KeyPressedEvent>(DD_BIND_EVENT_FUN(EditorLayer::onKeyPressed));
 		dispatcher.dispatch<event::MouseButtonPressedEvent>(DD_BIND_EVENT_FUN(EditorLayer::onMouseButtonPressed));
+		dispatcher.dispatch<event::WindowDropEvent>(DD_BIND_EVENT_FUN(EditorLayer::onWindowDrop));
 	}
 
 	bool EditorLayer::onKeyPressed(event::KeyPressedEvent& e)
@@ -693,6 +694,23 @@ namespace daedalus::editor
 				m_sceneHierarchyPanel.setSelectedEntity(pickedEntity);
 			}
 		}
+
+		return false;
+	}
+
+	bool EditorLayer::onWindowDrop(event::WindowDropEvent& e)
+	{
+		// TO DO: if a project is dropped in, open it / promt the user to save and open
+		std::vector<std::filesystem::path> droppedPaths = e.getPaths();
+		for (std::filesystem::path path : droppedPaths)
+		{
+			if (path.extension() == ".ddproj")
+			{
+				// TO DO: prompt user to save the current project
+				openProject(path);
+			}
+		}
+		//AssetManager::importAsset();
 
 		return false;
 	}
