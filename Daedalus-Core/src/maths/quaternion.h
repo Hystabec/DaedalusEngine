@@ -14,12 +14,12 @@ namespace daedalus::maths::experimental{
 	{
 		float x, y, z, w;
 
-		constexpr Quaternion()
+		constexpr Quaternion() noexcept
 			: x(0.0f), y(0.0f), z(0.0f), w(1.0f)
 		{
 		}
 
-		inline Quaternion(const Vec3& euler)
+		inline Quaternion(const Vec3& euler) noexcept
 		{
 			// cant be constexpr due to use of con & sin
 
@@ -33,7 +33,7 @@ namespace daedalus::maths::experimental{
 		}
 	};
 
-	inline Mat4 quaterion_to_mat4(const Quaternion& quat)
+	static [[nodiscard]] constexpr Mat4 quaterion_to_mat4(const Quaternion& quat) noexcept
 	{
 		Mat4 result(1.0f);
 
@@ -63,7 +63,7 @@ namespace daedalus::maths::experimental{
 		return result;
 	}
 
-	inline Vec3 rotate_vec3_by_quaternion(const Quaternion& quat, const Vec3& vec)
+	static [[nodiscard]] constexpr Vec3 rotate_vec3_by_quaternion(const Quaternion& quat, const Vec3& vec) noexcept
 	{
 		const Vec3 quatVec(quat.x, quat.y, quat.z);
 		const Vec3 uv(Vec3::cross(quatVec, vec));

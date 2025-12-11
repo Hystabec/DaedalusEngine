@@ -17,7 +17,7 @@ namespace daedalus::maths {
 			Vec4 columns[4];
 		};
 
-		constexpr Mat4()
+		constexpr Mat4() noexcept
 		{
 			//memset(elements, 0, sizeof(float) * 16);
 			columns[0] = Vec4(0);
@@ -26,7 +26,7 @@ namespace daedalus::maths {
 			columns[3] = Vec4(0);
 		}
 
-		constexpr Mat4(float diagonal)
+		constexpr Mat4(float diagonal) noexcept
 		{
 			columns[0] = Vec4(0);
 			columns[1] = Vec4(0);
@@ -39,7 +39,7 @@ namespace daedalus::maths {
 			elements[3 + 3 * 4] = diagonal;
 		}
 
-		constexpr Mat4(float* elements)
+		constexpr Mat4(float* elements) noexcept
 		{
 			//memcpy(this->elements, elements, sizeof(float) * 16);
 			for (int i = 0; i < 16; i++)
@@ -48,7 +48,7 @@ namespace daedalus::maths {
 			}
 		}
 
-		constexpr Mat4(const Vec4& column0, const Vec4& column1, const Vec4& column2, const Vec4& column3)
+		constexpr Mat4(const Vec4& column0, const Vec4& column1, const Vec4& column2, const Vec4& column3) noexcept
 		{
 			columns[0] = column0;
 			columns[1] = column1;
@@ -56,7 +56,7 @@ namespace daedalus::maths {
 			columns[3] = column3;
 		}
 
-		constexpr Mat4(const Mat4& other)
+		constexpr Mat4(const Mat4& other) noexcept
 		{
 			//memcpy(this->elements, other.elements, sizeof(float) * 16);
 			this->columns[0] = other.columns[0];
@@ -67,7 +67,7 @@ namespace daedalus::maths {
 
 		// Locical Operators
 
-		constexpr bool operator ==(const Mat4& other)
+		[[nodiscard]] constexpr bool operator ==(const Mat4& other) noexcept
 		{
 			for (int i = 0; i < 4 * 4; i++)
 				if (this->elements[i] != other.elements[i])
@@ -76,7 +76,7 @@ namespace daedalus::maths {
 			return true;
 		}
 
-		constexpr bool operator !=(const Mat4& other)
+		[[nodiscard]] constexpr bool operator !=(const Mat4& other) noexcept
 		{
 			for (int i = 0; i < 4 * 4; i++)
 				if (this->elements[i] != other.elements[i])
@@ -88,7 +88,7 @@ namespace daedalus::maths {
 		// Binary Arithmetic Operators
 
 		/// @brief Modifies caller and returns result
-		constexpr Mat4& multiply(const Mat4& other)
+		constexpr Mat4& multiply(const Mat4& other) noexcept
 		{
 			float data[16];
 			for (int col = 0; col < 4; col++)
@@ -113,7 +113,7 @@ namespace daedalus::maths {
 			return *this;
 		}
 		/// @brief Modifies caller and returns result
-		constexpr Mat4& multiply(float other)
+		constexpr Mat4& multiply(float other) noexcept
 		{
 			float data[16];
 			for (int col = 0; col < 4; col++)
@@ -138,14 +138,14 @@ namespace daedalus::maths {
 			return *this;
 		}
 
-		friend constexpr Mat4 operator *(const Mat4& left, const Mat4& right)
+		friend [[nodiscard]] constexpr Mat4 operator *(const Mat4& left, const Mat4& right) noexcept
 		{
 			Mat4 result(left);
 			result.multiply(right);
 			return result;
 		}
 
-		friend constexpr Mat4 operator *(const Mat4& left, float right)
+		friend [[nodiscard]] constexpr Mat4 operator *(const Mat4& left, float right) noexcept
 		{
 			return {
 				left.columns[0] * right,
@@ -155,7 +155,7 @@ namespace daedalus::maths {
 			};
 		}
 
-		friend constexpr Vec3 operator *(const Mat4& left, const Vec3& right)
+		friend [[nodiscard]] constexpr Vec3 operator *(const Mat4& left, const Vec3& right) noexcept
 		{
 			return Vec3
 			(
@@ -165,7 +165,7 @@ namespace daedalus::maths {
 			);
 		}
 
-		friend constexpr Vec4 operator *(const Mat4& left, const Vec4& right)
+		friend [[nodiscard]] constexpr Vec4 operator *(const Mat4& left, const Vec4& right) noexcept
 		{
 			return Vec4
 			(
@@ -178,7 +178,7 @@ namespace daedalus::maths {
 
 		// assignment operators
 
-		constexpr Mat4& operator  =(const Mat4& other)
+		constexpr Mat4& operator  =(const Mat4& other) noexcept
 		{
 			this->columns[0] = other.columns[0];
 			this->columns[1] = other.columns[1];
@@ -187,41 +187,49 @@ namespace daedalus::maths {
 			return *this;
 		}
 
-		constexpr Mat4& operator *=(const Mat4& other)
+		constexpr Mat4& operator *=(const Mat4& other) noexcept
 		{
 			return this->multiply(other);
 		}
 
-		constexpr Mat4& operator *=(float other)
+		constexpr Mat4& operator *=(float other) noexcept
 		{
 			return this->multiply(other);
 		}
 
 		// Cast Operators
 
-		constexpr operator float* () { return elements; }
-		constexpr operator const float* () const { return elements; }
+		constexpr operator float* () noexcept { return elements; }
+		constexpr operator const float* () const noexcept { return elements; }
 
-		constexpr float& operator[](int index)
+		constexpr float& operator[](int index) noexcept(false)
 		{
-			DD_CORE_ASSERT(!(index < 0 || index > 15), "Index out of range");
+			if ((index < 0 || index > 15))
+			{
+				DD_CORE_ASSERT(false, "Index out of range");
+				throw std::out_of_range("Index out of range");
+			}
 			return elements[index];
 		}
 
-		constexpr const float& operator[](int index) const
+		constexpr const float& operator[](int index) const noexcept(false)
 		{
-			DD_CORE_ASSERT(!(index < 0 || index > 15), "Index out of range");
+			if ((index < 0 || index > 15))
+			{
+				DD_CORE_ASSERT(false, "Index out of range");
+				throw std::out_of_range("Index out of range");
+			}
 			return elements[index];
 		}
 
 		// Extras / Helpers
 
-		static constexpr Mat4 identity()
+		static [[nodiscard]] constexpr Mat4 identity() noexcept
 		{
 			return Mat4(1.0f);
 		}
 
-		inline Mat4& invert()
+		constexpr Mat4& invert() noexcept
 		{
 			// Copied from GLM
 
@@ -289,7 +297,7 @@ namespace daedalus::maths {
 			return *this;
 		}
 
-		static inline Mat4 invert(const Mat4& matrix)
+		static [[nodiscard]] constexpr Mat4 invert(const Mat4& matrix) noexcept
 		{
 			// Copied from GLM
 
@@ -350,7 +358,7 @@ namespace daedalus::maths {
 			return inverse * oneOverDeterminant;
 		}
 
-		static inline Mat4 orthographic(float left, float right, float botton, float top, float nearPlane, float farPlane)
+		static [[nodiscard]] constexpr Mat4 orthographic(float left, float right, float botton, float top, float nearPlane, float farPlane) noexcept
 		{
 			Mat4 result(1.0f);
 
@@ -365,10 +373,9 @@ namespace daedalus::maths {
 			return result;
 		}
 		/// @param fov - in radians
-		static inline Mat4 perspective(float fov, float aspectRatio, float nearPlane, float farPlane)
+		static [[nodiscard]] inline Mat4 perspective(float fov, float aspectRatio, float nearPlane, float farPlane) noexcept
 		{
 			// cant be constexpr due to use of tan
-
 			Mat4 result(1.0f);
 
 			float q = 1.0f / tan(fov / 2);
@@ -383,7 +390,7 @@ namespace daedalus::maths {
 			return result;
 		}
 
-		static inline Mat4 translate(const Vec3& translation)
+		static [[nodiscard]] constexpr Mat4 translate(const Vec3& translation) noexcept
 		{
 			Mat4 result(1.0f);
 
@@ -395,10 +402,9 @@ namespace daedalus::maths {
 		}
 		/// @brief Returns an indenty matrix rotated by the specified angle and axis. 
 		/// A bool can be passed in as the final peramiter to pass angle as degrees.
-		static inline Mat4 rotate(float angle, const Vec3& axis, bool inRadians = true)
+		static [[nodiscard]] inline Mat4 rotate(float angle, const Vec3& axis, bool inRadians = true) noexcept
 		{
 			// cant be constexpr due to use of cos & sin
-
 			Mat4 result(1.0f);
 
 			float asRads = inRadians ? angle : degrees_to_radians(angle);
@@ -421,7 +427,7 @@ namespace daedalus::maths {
 			return result;
 		}
 
-		static inline Mat4 scale(const Vec3& scale)
+		static [[nodiscard]] constexpr Mat4 scale(const Vec3& scale) noexcept
 		{
 			Mat4 result(1.0f);
 
@@ -432,7 +438,7 @@ namespace daedalus::maths {
 			return result;
 		}
 
-		static inline bool decomposeTransform(const Mat4& transform, Vec3& outPosition, Vec3& outRotation, Vec3& outScale)
+		static [[nodiscard]] inline bool decomposeTransform(const Mat4& transform, Vec3& outPosition, Vec3& outRotation, Vec3& outScale) noexcept
 		{
 			// cant be constexpr due to use of cos & asin & atan2
 
@@ -440,6 +446,7 @@ namespace daedalus::maths {
 
 			if (epsilon_equal(localMatix.columns[3][3], 0.0f))
 			{
+				// NOTE: could assert / throw here
 				DD_CORE_LOG_ERROR("Could not decompose transform from [{}]", transform);
 				return false;
 			}
