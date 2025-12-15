@@ -2,6 +2,7 @@
 #include "contentBrowserPanel.h"
 
 #include "project/Project.h"
+#include "asset/importers/textureImporter.h"
 
 #include <imgui.h> 
 #include <filesystem>
@@ -18,10 +19,10 @@ namespace daedalus::editor
 {
 	ContentBrowserPanel::ContentBrowserPanel()
 	{
-		m_directoryIcon = graphics::Texture2D::create("resources/icons/contentBrowser/directoryIcon.png");
-		m_fileIcon = graphics::Texture2D::create("resources/icons/contentBrowser/fileIcon.png");
-		m_scriptFileIcon = graphics::Texture2D::create("resources/icons/contentBrowser/scriptFileIcon.png");
-		m_sceneFileIcon = graphics::Texture2D::create("resources/icons/contentBrowser/sceneFileIcon.png");
+		m_directoryIcon = TextureImporter::loadTexture2D("resources/icons/contentBrowser/directoryIcon.png");
+		m_fileIcon = TextureImporter::loadTexture2D("resources/icons/contentBrowser/fileIcon.png");
+		m_scriptFileIcon = TextureImporter::loadTexture2D("resources/icons/contentBrowser/scriptFileIcon.png");
+		m_sceneFileIcon = TextureImporter::loadTexture2D("resources/icons/contentBrowser/sceneFileIcon.png");
 	}
 
 	void ContentBrowserPanel::onImGuiRender()
@@ -42,7 +43,15 @@ namespace daedalus::editor
 		}
 
 		// TO DO: make this more visually apearling, currently function in generally the way i want
+		if(ImGui::BeginTable("NavigationBar", 2))
 		{
+			float itemWidth = ImGui::GetContentRegionAvail().x;
+			ImGui::TableSetupColumn("Dir", ImGuiTableColumnFlags_WidthFixed, itemWidth * 0.75f);
+			ImGui::TableSetupColumn("Mode", ImGuiTableColumnFlags_WidthFixed, itemWidth * 0.25f);
+
+			ImGui::TableNextRow();
+
+			ImGui::TableNextColumn();
 			std::string currentDirPath = m_currentDirectory.string();
 			ImGui::Text("Path:");
 			ImGui::SameLine();
@@ -85,6 +94,15 @@ namespace daedalus::editor
 			{
 				ImGui::Button(currentSubStr.c_str());
 			}
+
+			ImGui::TableNextColumn();
+
+			//constexpr float modeBoxPadding = 50.0f;
+			//ImGui::SetCursorPosX(ImGui::GetCursorPosX() + std::max(0.0f, ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize("AssetRegisty").x) - modeBoxPadding);
+			const static char* modeItems[] = { "AssetRegisty", "FileSystem" };
+			ImGui::Combo("Mode", (int*)&m_mode, modeItems, 2);
+
+			ImGui::EndTable();
 		}
 
 		ImGui::Separator();
@@ -103,13 +121,16 @@ namespace daedalus::editor
 		io.FontDefault->FontSize /= fontScale;
 #endif
 
-		for (auto& directoryElement : std::filesystem::directory_iterator(m_projectAssetDirectory / m_currentDirectory))
+		refreshRegistyAssets(); // TEMP
+		
+		std::filesystem::path currentDir = m_projectAssetDirectory / m_currentDirectory;
+		for (auto& directoryElement : std::filesystem::directory_iterator(currentDir))
 		{
 			const auto& path = directoryElement.path();
-			std::string filenameStr = path.filename().string();
+			std::string filenameStr = path.stem().string();
 
 			if (!m_filtedFilePathMap.contains(path))
-				filterDirectory(m_projectAssetDirectory / m_currentDirectory);
+				filterDirectory(currentDir);
 
 			if (!m_filtedFilePathMap[path])
 				continue;
@@ -121,6 +142,15 @@ namespace daedalus::editor
 				elementIcon = m_directoryIcon;
 			else
 			{
+				if (m_mode == Mode::AssetRegisty)
+				{
+					if (!m_registyAssets.contains(std::filesystem::proximate(path, Project::getActiveAssetDirectory())))
+					{
+						ImGui::PopID();
+						continue;
+					}
+				}
+
 				if (path.extension() == ".cs")
 					elementIcon = m_scriptFileIcon;
 				else if (path.extension() == ".ddscene")
@@ -130,7 +160,7 @@ namespace daedalus::editor
 			}
 
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-			ImGui::ImageButton("##ImageButton", (ImTextureID)elementIcon->getRendererID(), {thumbnailSize, thumbnailSize}, {0, 1}, {1, 0});
+			ImGui::ImageButton("##ImageButton", (ImTextureID)elementIcon->getRendererID(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
 
 			if (ImGui::BeginDragDropSource())
 			{
@@ -168,6 +198,7 @@ namespace daedalus::editor
 		ImGui::SliderFloat("Padding", &padding, 0, 32);
 #endif
 
+		// TO DO: status bar
 		ImGui::End();
 	}
 
@@ -215,6 +246,15 @@ namespace daedalus::editor
 				continue;
 
 			m_filtedFilePathMap.insert(std::pair<std::filesystem::path,bool>(directoryElement.path(), !std::regex_match(directoryElement.path().string(), reg)));
+		}
+	}
+
+	void ContentBrowserPanel::refreshRegistyAssets()
+	{
+		const auto& assetRegistry = Project::getActive()->getEditorAssetManager()->getAssetRegistry();
+		for (const auto& [handle, metadata] : assetRegistry)
+		{
+			m_registyAssets.insert(metadata.filepath);
 		}
 	}
 

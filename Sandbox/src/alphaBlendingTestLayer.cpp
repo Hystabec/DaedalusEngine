@@ -11,11 +11,11 @@ void AlphaBlendingTestLayer::attach()
 {
 	DD_PROFILE_FUNCTION();
 
-	m_texture = daedalus::graphics::Texture2D::create("assets/alphaTesting_1.png");
-	m_texture2 = daedalus::graphics::Texture2D::create("assets/alphaTesting_2.png");
+	//m_texture = daedalus::graphics::Texture2D::create("assets/alphaTesting_1.png");
+	//m_texture2 = daedalus::graphics::Texture2D::create("assets/alphaTesting_2.png");
 
-	ro1 = { {-1.0f,0.0f, -0.1f},{1.0f}, m_texture };
-	ro2 = { {1.0f,0.0f, -0.1f},{1.0f}, m_texture2 };
+	//ro1 = { {-1.0f,0.0f, -0.1f},{1.0f}, m_texture };
+	//ro2 = { {1.0f,0.0f, -0.1f},{1.0f}, m_texture2 };
 	ro3 = { {0.0f, -0.2f,0.0f}, {2.5f, 1.0f}, {1.0f,0.6f,0.6f,0.75f} };
 }
 
@@ -73,8 +73,8 @@ void AlphaBlendingTestLayer::imGuiRender()
 
 		if (ImGui::Selectable("quad 1, quad 2, alpha", selected == 0))
 		{
-			ro1 = { {-1.0f,0.0f, -0.1f},{1.0f}, m_texture };
-			ro2 = { {1.0f,0.0f, -0.1f},{1.0f}, m_texture2 };
+			//ro1 = { {-1.0f,0.0f, -0.1f},{1.0f}, m_texture };
+			//ro2 = { {1.0f,0.0f, -0.1f},{1.0f}, m_texture2 };
 			ro3 = { {0.0f, -0.2f,0.0f}, {2.5f, 1.0f}, {1.0f,0.6f,0.6f,0.75f} };
 
 			selected = 0;
@@ -82,9 +82,9 @@ void AlphaBlendingTestLayer::imGuiRender()
 
 		if (ImGui::Selectable("quad 1, alpha, quad 2", selected == 1))
 		{
-			ro1 = { {-1.0f,0.0f, -0.1f},{1.0f}, m_texture };
+			//ro1 = { {-1.0f,0.0f, -0.1f},{1.0f}, m_texture };
 			ro2 = { {0.0f, -0.2f,0.0f}, {2.5f, 1.0f}, {1.0f,0.6f,0.6f,0.75f} };
-			ro3 = { {1.0f,0.0f, -0.1f},{1.0f}, m_texture2 };
+			//ro3 = { {1.0f,0.0f, -0.1f},{1.0f}, m_texture2 };
 
 			selected = 1;
 		}
@@ -92,8 +92,8 @@ void AlphaBlendingTestLayer::imGuiRender()
 		if (ImGui::Selectable("alpha, quad 1, quad 2", selected == 2))
 		{
 			ro1 = { {0.0f, -0.2f,0.0f}, {2.5f, 1.0f}, {1.0f,0.6f,0.6f,0.75f} };
-			ro2 = { {-1.0f,0.0f, -0.1f},{1.0f}, m_texture };
-			ro3 = { {1.0f,0.0f, -0.1f},{1.0f}, m_texture2 };
+			//ro2 = { {-1.0f,0.0f, -0.1f},{1.0f}, m_texture };
+			//ro3 = { {1.0f,0.0f, -0.1f},{1.0f}, m_texture2 };
 
 			selected = 2;
 		}

@@ -53,7 +53,6 @@ project "Daedalus-Editor"
 		defines 
 		{
 			"DD_DEBUG",
-			"DD_USING_ASSERTS",
 			"DD_USING_PROFILING"
 		}
 		symbols "on"
@@ -62,7 +61,6 @@ project "Daedalus-Editor"
 		defines
 		{
 			"DD_RELEASE",
-			"DD_USING_ASSERTS",
 			"DD_USING_PROFILING"
 		} 
 		optimize "on"

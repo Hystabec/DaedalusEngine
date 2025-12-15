@@ -15,6 +15,11 @@ namespace daedalus::utils {
 			allocate(size);
 		}
 
+		Buffer(const void* data, uint64_t size)
+			: m_data((uint8_t*)data), m_size(size)
+		{
+		}
+
 		Buffer(const Buffer&) = default;
 
 		static Buffer Copy(Buffer other)
@@ -24,20 +29,22 @@ namespace daedalus::utils {
 			return result;
 		}
 
-		uint8_t* data() { return m_data; }
-		uint64_t size() const { return m_size; }
+		uint8_t*& data() { return m_data; }
+		const uint8_t* const& data() const { return m_data; }
+		uint64_t& size() { return m_size; }
+		const uint64_t& size() const { return m_size; }
 
 		void allocate(uint64_t size)
 		{
 			release();
 
-			m_data = new uint8_t[size];
+			m_data = (uint8_t*)malloc(size);
 			this->m_size = size;
 		}
 
 		void release()
 		{
-			delete[] m_data;
+			free(m_data);
 			m_data = nullptr;
 			m_size = 0;
 		}

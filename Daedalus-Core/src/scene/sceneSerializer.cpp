@@ -6,107 +6,12 @@
 #include "../scripting/scriptEngine.h"
 #include "application/uuid.h"
 #include "../project/project.h"
+#include "../utils/engineYAMLSerializers.h"
 
 #include <fstream>
 #include <yaml-cpp/yaml.h>
 
 #define LOG_SERIALIZATION_TO_CONSOLE 0
-
-namespace YAML {
-
-	template<>
-	struct convert<daedalus::maths::Vec2>
-	{
-		static Node encode(const daedalus::maths::Vec2& rhs)
-		{
-			Node node;
-			node.push_back(rhs.x);
-			node.push_back(rhs.y);
-			return node;
-		}
-
-		static bool decode(const Node& node, daedalus::maths::Vec2& rhs)
-		{
-			if (!node.IsSequence() || node.size() != 2)
-				return false;
-
-			rhs.x = node[0].as<float>();
-			rhs.y = node[1].as<float>();
-			return true;
-		}
-	};
-
-	template<>
-	struct convert<daedalus::maths::Vec3>
-	{
-		static Node encode(const daedalus::maths::Vec3& rhs)
-		{
-			Node node;
-			node.push_back(rhs.x);
-			node.push_back(rhs.y);
-			node.push_back(rhs.z);
-			return node;
-		}
-
-		static bool decode(const Node& node, daedalus::maths::Vec3& rhs)
-		{
-			if (!node.IsSequence() || node.size() != 3)
-				return false;
-
-			rhs.x = node[0].as<float>();
-			rhs.y = node[1].as<float>();
-			rhs.z = node[2].as<float>();
-			return true;
-		}
-	};
-
-	template<>
-	struct convert<daedalus::maths::Vec4>
-	{
-		static Node encode(const daedalus::maths::Vec4& rhs)
-		{
-			Node node;
-			node.push_back(rhs.x);
-			node.push_back(rhs.y);
-			node.push_back(rhs.z);
-			node.push_back(rhs.w);
-			return node;
-		}
-
-		static bool decode(const Node& node, daedalus::maths::Vec4& rhs)
-		{
-			if (!node.IsSequence() || node.size() != 4)
-				return false;
-
-			rhs.x = node[0].as<float>();
-			rhs.y = node[1].as<float>();
-			rhs.z = node[2].as<float>();
-			rhs.w = node[3].as<float>();
-			return true;
-		}
-	};
-
-	template<>
-	struct convert<daedalus::UUID>
-	{
-		static Node encode(const daedalus::UUID& rhs)
-		{
-			Node node;
-			node.push_back((uint64_t)rhs);
-			return node;
-		}
-
-		static bool decode(const Node& node, daedalus::UUID& rhs)
-		{
-			if (!node.IsSequence() || node.size() != 4)
-				return false;
-
-			rhs = node[0].as<uint64_t>();
-			return true;
-		}
-	};
-
-}
 
 namespace daedalus::scene {
 
@@ -223,7 +128,7 @@ namespace daedalus::scene {
 
 						out << YAML::BeginMap;
 						out << YAML::Key << "Name" << YAML::Value << name;
-						out << YAML::Key << "Type" << YAML::Value << utils::script_field_type_to_string(field.type);
+						out << YAML::Key << "Type" << YAML::Value << conversions::script_field_type_to_string(field.type);
 
 						out << YAML::Key << "Data" << YAML::Value;
 						scripting::ScriptFieldInstance& scriptField = entityFields.at(name);
@@ -282,10 +187,11 @@ namespace daedalus::scene {
 			{
 				out << YAML::Key << "Colour" << YAML::Value << src.colour;
 
-				if (src.material.texture)
-					out << YAML::Key << "Texture" << YAML::Value << std::filesystem::relative(src.material.texture->getSrcFilePath().string(), Project::getActiveAssetDirectory()).string();
-
+				out << YAML::Key << "Material" << YAML::Value;
+				out << YAML::BeginMap;
+				out << YAML::Key << "TextureHandle" << YAML::Value << src.material.texture;
 				out << YAML::Key << "TilingFactor" << YAML::Value << src.material.tilingFactor;
+				out << YAML::EndMap;
  			});
 
 		serialize_component<CircleRendererComponent>(out, "CircleRendererComponent", entity, [](YAML::Emitter& out, CircleRendererComponent& src)
@@ -395,7 +301,7 @@ namespace daedalus::scene {
 		{
 			for (auto entity : entites)
 			{
-				uint64_t uuid = entity["Entity"].as<uint64_t>();
+				UUID uuid = entity["Entity"].as<UUID>();
 				std::string name = entity["Name"].as<std::string>();
 
 
@@ -438,7 +344,7 @@ namespace daedalus::scene {
 
 								std::string fieldName = scriptFeild["Name"].as<std::string>();
 								std::string typeAsString = scriptFeild["Type"].as<std::string>();
-								scripting::ScriptFieldType fieldType = scripting::utils::script_field_type_from_string(typeAsString);
+								scripting::ScriptFieldType fieldType = conversions::script_field_type_from_string(typeAsString);
 
 								ScriptFieldInstance& fieldInstance = entityFields[fieldName];
 								if (!fields.contains(fieldName))
@@ -506,13 +412,13 @@ namespace daedalus::scene {
 				{
 					auto& src = deserializedEntity.addOrRepalaceComponent<SpriteRendererComponent>();
 					src.colour = component["Colour"].as<maths::Vec4>();
-					if (component["Texture"])
-					{
-						std::filesystem::path texutrePath = component["Texture"].as<std::string>();
-						src.material.texture = graphics::Texture2D::create(Project::getActiveAssetDirectory() / texutrePath);
-					}
-					if(component["TilingFactor"])
-						src.material.tilingFactor = component["TilingFactor"].as<float>();
+					auto material = component["Material"];
+
+					if (material["TextureHandle"])
+						src.material.texture = material["TextureHandle"].as<AssetHandle>();
+					
+					if(material["TilingFactor"])
+						src.material.tilingFactor = material["TilingFactor"].as<float>();
 				}
 
 				component = entity["CircleRendererComponent"];

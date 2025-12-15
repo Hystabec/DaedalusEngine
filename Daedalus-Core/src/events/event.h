@@ -9,7 +9,7 @@ namespace daedalus { namespace event {
 	enum class EventType
 	{
 		None = 0,
-		WindowClosed, WindowResized, WindowFocused, WindowUnfocused, WindowMoved,
+		WindowClosed, WindowResized, WindowFocused, WindowUnfocused, WindowMoved, WindowDrop,
 		KeyPressed, KeyReleased, KeyHeld, KeyTyped,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};

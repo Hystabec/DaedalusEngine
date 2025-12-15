@@ -116,8 +116,8 @@ public:
 
 		m_shaderLib.load("texSha", "assets/shaders/textureShader.glsl");
 
-		m_texture = daedalus::graphics::Texture2D::create("assets/testImage.png");
-		m_DDTestImage = daedalus::graphics::Texture2D::create("assets/DD_testImage.png");
+		//m_texture = daedalus::graphics::Texture2D::create("assets/testImage.png");
+		//m_DDTestImage = daedalus::graphics::Texture2D::create("assets/DD_testImage.png");
 
 		m_shaderLib.get("texSha")->setUniform1i(0, "u_texture");
 	}

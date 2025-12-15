@@ -191,7 +191,7 @@ namespace daedalus::scripting {
 		friend struct ScriptFieldInstance;
 	};
 
-	namespace utils
+	namespace conversions
 	{
 		inline const char* script_field_type_to_string(ScriptFieldType fieldType)
 		{

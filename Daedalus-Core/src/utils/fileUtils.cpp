@@ -172,6 +172,17 @@ namespace daedalus::utils {
 		return std::filesystem::file_time_type();
 	}
 
+	std::filesystem::path FileSystem::fileExtensionToLower(const std::filesystem::path& extension)
+	{
+		// NOTE: This will probably not work with wchar strings aka std::filesystem::path. It also
+		// might not be the best solution
+		// TO DO: Revist this and check if there is a better method to do this
+		std::string extensionStr = extension.string();
+		std::transform(extensionStr.begin(), extensionStr.end(), extensionStr.begin(), ::tolower);
+		s_suppressOpErrors = false; // cant log an error but to keep consistent
+		return std::filesystem::path(extensionStr);
+	}
+
 	void FileSystem::suppressErrorsForNextOperation()
 	{
 		s_suppressOpErrors = true;

@@ -73,4 +73,25 @@ namespace daedalus { namespace event {
 		uint32_t m_x, m_y;
 	};
 
+	class WindowDropEvent : public Event
+	{
+	public:
+		WindowDropEvent(std::vector<std::filesystem::path>& paths)
+			: m_paths(paths)
+		{
+		}
+
+		WindowDropEvent(std::vector<std::filesystem::path>&& paths)
+			: m_paths(std::move(paths))
+		{
+		}
+
+		const std::vector<std::filesystem::path>& getPaths() const { return m_paths; }
+
+		EVENT_CLASS_CATEGORY(EventCategory::Window)
+		EVENT_CLASS_TYPE(EventType::WindowDrop)
+	private:
+		std::vector<std::filesystem::path> m_paths;
+	};
+
 } }

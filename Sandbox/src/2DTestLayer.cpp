@@ -11,9 +11,9 @@ void Layer2D::attach()
 {
 	DD_PROFILE_FUNCTION();
 
-	m_texture = daedalus::graphics::Texture2D::create("assets/DD_testImage.png");
-	m_texture2 = daedalus::graphics::Texture2D::create("assets/testImage.png");
-	m_fullSubTextureTesting = daedalus::graphics::Texture2D::create("assets/subTextureTesting.png");
+	//m_texture = daedalus::graphics::Texture2D::create("assets/DD_testImage.png");
+	//m_texture2 = daedalus::graphics::Texture2D::create("assets/testImage.png");
+	//m_fullSubTextureTesting = daedalus::graphics::Texture2D::create("assets/subTextureTesting.png");
 	m_subTexture = daedalus::graphics::SubTexture2D::createFromCoords(m_fullSubTextureTesting, { 24, 12 }, { 110, 240 });
 	m_subTexture2 = daedalus::graphics::SubTexture2D::createFromCoords(m_fullSubTextureTesting, { 300, 16 }, {194, 213});
 }
@@ -57,9 +57,9 @@ void Layer2D::update(const daedalus::application::DeltaTime& dt)
 
 		daedalus::graphics::Renderer2D::drawRotatedQuad(m_squareProps);
 		daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{ -2, 0 }, { 0.75f, 0.75f }, { 0.3f, 0.8f, 0.2f, 1.0f } });
-		daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{ 2, 0 }, { 0.5f, 0.5f }, m_texture });
-		daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{ 2, 2 }, { 1.5f, 1.0f }, m_texture2 });
-		daedalus::graphics::Renderer2D::drawRotatedQuad({ daedalus::maths::Vec2{0, 1},{0.25f, 0.25f}, rotation, m_texture2, {1.0f, 0.6f, 0.6f, 1.0f}});
+		//daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{ 2, 0 }, { 0.5f, 0.5f }, m_texture });
+		//daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{ 2, 2 }, { 1.5f, 1.0f }, m_texture2 });
+		//daedalus::graphics::Renderer2D::drawRotatedQuad({ daedalus::maths::Vec2{0, 1},{0.25f, 0.25f}, rotation, m_texture2, {1.0f, 0.6f, 0.6f, 1.0f}});
 		daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{-1, 0}, {0.5f, 0.5f}, m_subTexture });
 		daedalus::graphics::Renderer2D::drawQuad({ daedalus::maths::Vec2{-1, -0.5f }, {0.5f, 0.5f}, m_subTexture2 });
 

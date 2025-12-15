@@ -145,6 +145,18 @@ namespace daedalus { namespace application {
 				event::MouseMovedEvent event((float)xPos, (float)yPos);
 				data.EventCallBack(event);
 			});
+
+		glfwSetDropCallback(m_window, [](GLFWwindow* window, int pathCount, const char* paths[])
+			{
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+				std::vector<std::filesystem::path> filePaths(pathCount);
+				for (int i = 0; i < pathCount; i++)
+					filePaths[i] = paths[i];
+
+				event::WindowDropEvent event(std::move(filePaths));
+				data.EventCallBack(event);
+			});
 	}
 
 	WindowsWindow::~WindowsWindow()

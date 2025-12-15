@@ -1,0 +1,19 @@
+AssetRegistry:
+  - Handle: 4621205380451972668
+    Filepath: scenes/scriptTesting.ddscene
+    Type: AssetType::Scene
+  - Handle: 4645357865146492131
+    Filepath: scenes/Example.ddscene
+    Type: AssetType::Scene
+  - Handle: 9231259634350151897
+    Filepath: scenes/physics2D.ddscene
+    Type: AssetType::Scene
+  - Handle: 12882065861053609686
+    Filepath: textures/testImage2.png
+    Type: AssetType::Texture2D
+  - Handle: 16932188350182791860
+    Filepath: textures/alphaTestingImage.png
+    Type: AssetType::Texture2D
+  - Handle: 17723370495237797354
+    Filepath: textures/DD_testImage.png
+    Type: AssetType::Texture2D

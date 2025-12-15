@@ -6,6 +6,8 @@
 #include "../shaders/shader.h"
 #include "renderCommands.h"
 
+#include "../../asset/assetManager.h"
+
 #include "utils/findFileLocation.h"
 #include "graphics/rendering/msdfData.h"
 
@@ -212,7 +214,7 @@ namespace daedalus { namespace graphics {
 		// Textures
 		s_data.whiteTexture = graphics::Texture2D::create(TextureSpecification());
 		uint32_t whiteTextureData = 0xffffffff;
-		s_data.whiteTexture->setData(&whiteTextureData, sizeof(whiteTextureData));
+		s_data.whiteTexture->setData(utils::Buffer(&whiteTextureData, sizeof(whiteTextureData)));
 
 		// Shaders
 		{
@@ -458,27 +460,36 @@ namespace daedalus { namespace graphics {
 		};
 
 		float textureIndex = 0.0f;
-		if (quadProps.texture) //might need to also check if the shr_ptr is still valid
+		if (quadProps.texture)
 		{
-			for (uint32_t i = 1; i < s_data.textureSlotIndex; i++)
+			DD_CORE_VERIFY(quadProps.texture);
+			// TO DO: Might want the try to seperate the assetManager from the render. When rendering submit 
+			// with a texture not a texture handle
+			Shr_ptr<Texture2D> texture = AssetManager::getAsset<graphics::Texture2D>(quadProps.texture);
+			if (texture)
 			{
-				if (*s_data.textureSlots[i].get() == *quadProps.texture.get())
+				for (uint32_t i = 1; i < s_data.textureSlotIndex; i++)
 				{
-					textureIndex = (float)i;
-					break;
+					if (*s_data.textureSlots[i].get() == *texture.get())
+					{
+						textureIndex = (float)i;
+						break;
+					}
+				}
+
+				if (textureIndex == 0.0f)
+				{
+					// all texture slot filled flush and reset
+					if (s_data.textureSlotIndex >= s_data.maxTextureSlots)
+						flushAndResetQuads();
+
+					textureIndex = (float)s_data.textureSlotIndex;
+					s_data.textureSlots[s_data.textureSlotIndex] = texture;
+					s_data.textureSlotIndex++;
 				}
 			}
-
-			if (textureIndex == 0.0f)
-			{
-				// all texture slot filled flush and reset
-				if (s_data.textureSlotIndex >= s_data.maxTextureSlots)
-					flushAndResetQuads();
-
-				textureIndex = (float)s_data.textureSlotIndex;
-				s_data.textureSlots[s_data.textureSlotIndex] = quadProps.texture;
-				s_data.textureSlotIndex++;
-			}
+			else
+				DD_CORE_LOG_ERROR("Renderer2D::drawQuad - texture could not be found with handle {}", quadProps.texture);
 		}
 		else if (quadProps.subTexture)
 		{
@@ -566,25 +577,34 @@ namespace daedalus { namespace graphics {
 		float textureIndex = 0.0f;
 		if (rotQuadProps.texture) //might need to also check if the shr_ptr is still valid
 		{
-			for (uint32_t i = 1; i < s_data.textureSlotIndex; i++)
+			DD_CORE_VERIFY(rotQuadProps.texture);
+			// TO DO: Might want the try to seperate the assetManager from the render. When rendering submit 
+			// with a texture not a texture handle
+			Shr_ptr<Texture2D> texture = AssetManager::getAsset<graphics::Texture2D>(rotQuadProps.texture);
+			if (texture)
 			{
-				if (*s_data.textureSlots[i].get() == *rotQuadProps.texture.get())
+				for (uint32_t i = 1; i < s_data.textureSlotIndex; i++)
 				{
-					textureIndex = (float)i;
-					break;
+					if (*s_data.textureSlots[i].get() == *texture.get())
+					{
+						textureIndex = (float)i;
+						break;
+					}
+				}
+
+				if (textureIndex == 0.0f)
+				{
+					// all texture slot filled flush and reset
+					if (s_data.textureSlotIndex >= s_data.maxTextureSlots)
+						flushAndResetQuads();
+
+					textureIndex = (float)s_data.textureSlotIndex;
+					s_data.textureSlots[s_data.textureSlotIndex] = texture;
+					s_data.textureSlotIndex++;
 				}
 			}
-
-			if (textureIndex == 0.0f)
-			{
-				// all texture slot filled flush and reset
-				if (s_data.textureSlotIndex >= s_data.maxTextureSlots)
-					flushAndResetQuads();
-
-				textureIndex = (float)s_data.textureSlotIndex;
-				s_data.textureSlots[s_data.textureSlotIndex] = rotQuadProps.texture;
-				s_data.textureSlotIndex++;
-			}
+			else
+				DD_CORE_LOG_ERROR("Renderer2D::drawRotatedQuad - texture could not be found with handle {}", rotQuadProps.texture);
 		}
 		else if (rotQuadProps.subTexture)
 		{

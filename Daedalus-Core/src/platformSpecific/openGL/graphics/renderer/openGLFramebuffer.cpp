@@ -7,7 +7,7 @@ namespace daedalus::graphics {
 
 	static const uint32_t s_maxFramebufferSize = 8192;
 
-	namespace utils
+	namespace helpers
 	{
 		static GLenum texture_target(bool multisampled)
 		{
@@ -100,7 +100,7 @@ namespace daedalus::graphics {
 	{
 		for (auto& spec : m_specification.attachments.textureSpecifications)
 		{
-			if (!utils::is_depth_format(spec.textureFormat))
+			if (!helpers::is_depth_format(spec.textureFormat))
 				m_colourAttachmentSpecification.emplace_back(spec);
 			else
 				m_depthAttachmentsSpecification = spec;
@@ -137,21 +137,21 @@ namespace daedalus::graphics {
 		if (m_colourAttachmentSpecification.size())
 		{
 			m_colourAttachmentIDs.resize(m_colourAttachmentSpecification.size());
-			utils::create_textures(multisample, m_colourAttachmentIDs.data(), (uint32_t)m_colourAttachmentIDs.size());
+			helpers::create_textures(multisample, m_colourAttachmentIDs.data(), (uint32_t)m_colourAttachmentIDs.size());
 
 			for (size_t i = 0; i < m_colourAttachmentIDs.size(); i++)
 			{
-				utils::bind_texture(multisample, m_colourAttachmentIDs[i]);
+				helpers::bind_texture(multisample, m_colourAttachmentIDs[i]);
 				switch (m_colourAttachmentSpecification[i].textureFormat)
 				{
 				case FramebufferTextureFormat::RGBA8:
-					utils::attach_colour_texture(m_colourAttachmentIDs[i], m_specification.samples, GL_RGBA8, GL_RGBA, m_specification.width, m_specification.height, (int)i);
+					helpers::attach_colour_texture(m_colourAttachmentIDs[i], m_specification.samples, GL_RGBA8, GL_RGBA, m_specification.width, m_specification.height, (int)i);
 					break;
 				case FramebufferTextureFormat::RED_INTEGER:
-					utils::attach_colour_texture(m_colourAttachmentIDs[i], m_specification.samples, GL_R32I, GL_RED_INTEGER, m_specification.width, m_specification.height, (int)i);
+					helpers::attach_colour_texture(m_colourAttachmentIDs[i], m_specification.samples, GL_R32I, GL_RED_INTEGER, m_specification.width, m_specification.height, (int)i);
 					break;
 				case FramebufferTextureFormat::RED_UNSIGNED_INTEGER:
-					utils::attach_colour_texture(m_colourAttachmentIDs[i], m_specification.samples, GL_R32UI, GL_RED_INTEGER, m_specification.width, m_specification.height, (int)i);
+					helpers::attach_colour_texture(m_colourAttachmentIDs[i], m_specification.samples, GL_R32UI, GL_RED_INTEGER, m_specification.width, m_specification.height, (int)i);
 					break;
 				}
 			}
@@ -159,12 +159,12 @@ namespace daedalus::graphics {
 
 		if (m_depthAttachmentsSpecification.textureFormat != FramebufferTextureFormat::None)
 		{
-			utils::create_textures(multisample, &m_depthAttachmentID, 1);
-			utils::bind_texture(multisample, m_depthAttachmentID);
+			helpers::create_textures(multisample, &m_depthAttachmentID, 1);
+			helpers::bind_texture(multisample, m_depthAttachmentID);
 			switch (m_depthAttachmentsSpecification.textureFormat)
 			{
 			case FramebufferTextureFormat::DEPTH24STENCIL8:
-				utils::attach_depth_texture(m_depthAttachmentID, m_specification.samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_specification.width, m_specification.height);
+				helpers::attach_depth_texture(m_depthAttachmentID, m_specification.samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_specification.width, m_specification.height);
 				break;
 			}
 		}
@@ -229,7 +229,7 @@ namespace daedalus::graphics {
 		auto& spec = m_colourAttachmentSpecification[attachmentIndex];
 
 		glClearTexImage(m_colourAttachmentIDs[attachmentIndex], 0,
-			utils::DD_FB_texture_format_to_GL(spec.textureFormat), GL_UNSIGNED_INT, &value);
+			helpers::DD_FB_texture_format_to_GL(spec.textureFormat), GL_UNSIGNED_INT, &value);
 	}
 
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "../../utils/buffer.h"
+#include "../../asset/asset.h"
+
 namespace daedalus::graphics {
 
 	enum class ImageFormat
@@ -19,7 +22,7 @@ namespace daedalus::graphics {
 		bool generateMips = true;
 	};
 
-	class Texture
+	class Texture : public Asset
 	{
 	public:
 		virtual ~Texture() = default;
@@ -30,9 +33,7 @@ namespace daedalus::graphics {
 		virtual uint32_t getHeight() const = 0;
 		virtual uint32_t getRendererID() const = 0;
 
-		virtual const std::filesystem::path& getSrcFilePath() const = 0;
-
-		virtual void setData(void* data, uint32_t size) = 0;
+		virtual void setData(utils::Buffer data) = 0;
 
 		virtual void bind(uint32_t slot = 0) const = 0;
 
@@ -42,8 +43,10 @@ namespace daedalus::graphics {
 	class Texture2D : public Texture
 	{
 	public:
-		static Shr_ptr<Texture2D> create(const TextureSpecification& specification);
-		static Shr_ptr<Texture2D> create(const std::filesystem::path& filePath);
+		static Shr_ptr<Texture2D> create(const TextureSpecification& specification, utils::Buffer data = utils::Buffer());
+		
+		static AssetType getStaticType() { return AssetType::Texture2D; }
+		virtual AssetType getType() const { return getStaticType(); }
 	};
 
 }

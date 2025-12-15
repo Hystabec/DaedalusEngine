@@ -14,44 +14,44 @@ namespace daedalus::maths {
 		};
 
 
-		constexpr Vec4()
+		constexpr Vec4() noexcept
 			: x(0.0f), y(0.0f), z(0.0f), w(0.0f)
 		{
 		}
 
-		constexpr Vec4(float scalar)
+		constexpr Vec4(float scalar) noexcept
 			: x(scalar), y(scalar), z(scalar), w(scalar)
 		{
 		}
 
-		constexpr Vec4(float x, float y, float z, float w)
+		constexpr Vec4(float x, float y, float z, float w) noexcept
 			: x(x), y(y), z(z), w(w)
 		{
 		}
 
-		constexpr Vec4(const Vec4& other)
+		constexpr Vec4(const Vec4& other) noexcept
 			: x(other.x), y(other.y), z(other.z), w(other.w)
 		{
 		}
 
-		constexpr Vec4(const Vec2& other, float z = 0.0f, float w = 0.0f)
+		constexpr Vec4(const Vec2& other, float z = 0.0f, float w = 0.0f) noexcept
 			: x(other.x), y(other.y), z(z), w(w)
 		{
 		}
 
-		constexpr Vec4(const Vec3& other, float w = 0.0f)
+		constexpr Vec4(const Vec3& other, float w = 0.0f) noexcept
 			: x(other.x), y(other.y), z(other.z), w(w)
 		{
 		}
 
 		// Locical Operators
 
-		constexpr bool operator ==(const Vec4& other) const
+		[[nodiscard]] constexpr bool operator ==(const Vec4& other) const noexcept
 		{
 			return x == other.x && y == other.y && z == other.z && w == other.w;
 		}
 
-		constexpr bool operator !=(const Vec4& other) const
+		[[nodiscard]] constexpr bool operator !=(const Vec4& other) const noexcept
 		{
 			return !(x == other.x && y == other.y && z == other.z && w == other.w);
 		}
@@ -59,7 +59,7 @@ namespace daedalus::maths {
 		// Binary Arithmetic Operators
 
 		/// @brief Modifies caller and returns result
-		constexpr Vec4& add(const Vec4& other)
+		constexpr Vec4& add(const Vec4& other) noexcept
 		{
 			x += other.x;
 			y += other.y;
@@ -68,7 +68,7 @@ namespace daedalus::maths {
 			return *this;
 		}
 		/// @brief Modifies caller and returns result
-		constexpr Vec4& subtract(const Vec4& other)
+		constexpr Vec4& subtract(const Vec4& other) noexcept
 		{
 			x -= other.x;
 			y -= other.y;
@@ -77,7 +77,7 @@ namespace daedalus::maths {
 			return *this;
 		}
 		/// @brief Modifies caller and returns result
-		constexpr Vec4& multiply(const Vec4& other)
+		constexpr Vec4& multiply(const Vec4& other) noexcept
 		{
 			x *= other.x;
 			y *= other.y;
@@ -86,7 +86,7 @@ namespace daedalus::maths {
 			return *this;
 		}
 		/// @brief Modifies caller and returns result
-		constexpr Vec4& multiply(float scalar)
+		constexpr Vec4& multiply(float scalar) noexcept
 		{
 			x *= scalar;
 			y *= scalar;
@@ -95,7 +95,7 @@ namespace daedalus::maths {
 			return *this;
 		}
 		/// @brief Modifies caller and returns result
-		constexpr Vec4& divide(const Vec4& other)
+		constexpr Vec4& divide(const Vec4& other) noexcept
 		{
 			x /= other.x;
 			y /= other.y;
@@ -104,7 +104,7 @@ namespace daedalus::maths {
 			return *this;
 		}
 		/// @brief Modifies caller and returns result
-		constexpr Vec4& divide(float scalar)
+		constexpr Vec4& divide(float scalar) noexcept
 		{
 			x /= scalar;
 			y /= scalar;
@@ -113,7 +113,7 @@ namespace daedalus::maths {
 			return *this;
 		}
 
-		friend constexpr Vec4 operator +(const Vec4& left, const Vec4& right)
+		friend [[nodiscard]] constexpr Vec4 operator +(const Vec4& left, const Vec4& right) noexcept
 		{
 			return {
 			left.x + right.x,
@@ -123,7 +123,7 @@ namespace daedalus::maths {
 			};
 		}
 
-		friend constexpr Vec4 operator -(const Vec4& left, const Vec4& right)
+		friend [[nodiscard]] constexpr Vec4 operator -(const Vec4& left, const Vec4& right) noexcept
 		{
 			return {
 			left.x - right.x,
@@ -133,7 +133,7 @@ namespace daedalus::maths {
 			};
 		}
 
-		friend constexpr Vec4 operator *(const Vec4& left, const Vec4& right)
+		friend [[nodiscard]] constexpr Vec4 operator *(const Vec4& left, const Vec4& right) noexcept
 		{
 			return {
 			left.x * right.x,
@@ -143,7 +143,7 @@ namespace daedalus::maths {
 			};
 		}
 
-		friend constexpr Vec4 operator *(const Vec4& left, float scalar)
+		friend [[nodiscard]] constexpr Vec4 operator *(const Vec4& left, float scalar) noexcept
 		{
 			return {
 			left.x * scalar,
@@ -153,7 +153,7 @@ namespace daedalus::maths {
 			};
 		}
 
-		friend constexpr Vec4 operator /(const Vec4& left, const Vec4& right)
+		friend [[nodiscard]] constexpr Vec4 operator /(const Vec4& left, const Vec4& right) noexcept
 		{
 			return {
 			left.x / right.x,
@@ -163,7 +163,7 @@ namespace daedalus::maths {
 			};
 		}
 
-		friend constexpr Vec4 operator /(const Vec4& left, float scalar)
+		friend [[nodiscard]] constexpr Vec4 operator /(const Vec4& left, float scalar) noexcept
 		{
 			return {
 			left.x / scalar,
@@ -175,7 +175,7 @@ namespace daedalus::maths {
 
 		// assignment operators
 
-		constexpr Vec4& operator  =(const Vec4& other)
+		constexpr Vec4& operator  =(const Vec4& other) noexcept
 		{
 			this->x = other.x;
 			this->y = other.y;
@@ -184,37 +184,37 @@ namespace daedalus::maths {
 			return *this;
 		}
 
-		constexpr Vec4& operator +=(const Vec4& other)
+		constexpr Vec4& operator +=(const Vec4& other) noexcept
 		{
 			this->add(other);
 			return *this;
 		}
 		
-		constexpr Vec4& operator -=(const Vec4& other)
+		constexpr Vec4& operator -=(const Vec4& other) noexcept
 		{
 			this->subtract(other);
 			return *this;
 		}
 
-		constexpr Vec4& operator *=(const Vec4& other)
+		constexpr Vec4& operator *=(const Vec4& other) noexcept
 		{
 			this->multiply(other);
 			return *this;
 		}
 
-		constexpr Vec4& operator *=(float scalar)
+		constexpr Vec4& operator *=(float scalar) noexcept
 		{
 			this->multiply(scalar);
 			return *this;
 		}
 
-		constexpr Vec4& operator /=(const Vec4& other)
+		constexpr Vec4& operator /=(const Vec4& other) noexcept
 		{
 			this->divide(other);
 			return *this;
 		}
 
-		constexpr Vec4& operator /=(float scalar)
+		constexpr Vec4& operator /=(float scalar) noexcept
 		{
 			this->divide(scalar);
 			return *this;
@@ -222,48 +222,56 @@ namespace daedalus::maths {
 
 		// Unary Operators
 
-		constexpr Vec4 operator +() const
+		[[nodiscard]] constexpr Vec4 operator +() const noexcept
 		{
 			return Vec4(+(this->x), +(this->y), +(this->z), +(this->w));
 		}
 
-		constexpr Vec4 operator -() const
+		[[nodiscard]]  constexpr Vec4 operator -() const noexcept
 		{
 			return Vec4(-(this->x), -(this->y), -(this->z), -(this->w));
 		}
 
 		// Cast Operators
 
-		constexpr operator float* () { return &x; }
-		constexpr operator const float* () const { return &x; }
+		constexpr operator float* () noexcept { return &x; }
+		constexpr operator const float* () const noexcept { return &x; }
 
-		constexpr float& operator[](int index)
+		constexpr float& operator[](int index) noexcept(false)
 		{
-			DD_CORE_ASSERT(!(index < 0 || index > 3), "Index out of range");
+			if ((index < 0 || index > 3))
+			{
+				DD_CORE_ASSERT(false, "Index out of range");
+				throw std::out_of_range("Index out of range");
+			}
 			return (&x)[index];
 		}
 
-		constexpr const float& operator[](int index) const
+		constexpr const float& operator[](int index) const noexcept(false)
 		{
-			DD_CORE_ASSERT(!(index < 0 || index > 3), "Index out of range");
+			if ((index < 0 || index > 3))
+			{
+				DD_CORE_ASSERT(false, "Index out of range");
+				throw std::out_of_range("Index out of range");
+			}
 			return (&x)[index];
 		}
 
 		// Extras / Helpers
 
-		static inline float dot(const Vec4& left, const Vec4& right)
+		static [[nodiscard]] constexpr float dot(const Vec4& left, const Vec4& right) noexcept
 		{
 			return (left.x * right.x) + (left.y * right.y) + (left.z * right.z) + (left.w * right.w);
 		}
 
 	};
 
-	constexpr Vec2::Vec2(const Vec4& other)
+	constexpr Vec2::Vec2(const Vec4& other) noexcept
 		: x(other.x), y(other.y)
 	{
 	}
 
-	constexpr Vec3::Vec3(const Vec4& other)
+	constexpr Vec3::Vec3(const Vec4& other) noexcept
 		: x(other.x), y(other.y), z(other.z)
 	{
 	}

@@ -25,5 +25,7 @@
 #include <unordered_set>
 
 #include "core.h"
+#include "utils/buffer.h"
+
 #include "debugTools/logging/log.h"
 #include "debugTools/profiling/instrumentor.h"

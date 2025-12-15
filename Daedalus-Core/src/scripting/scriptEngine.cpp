@@ -44,7 +44,7 @@ namespace daedalus::scripting {
 
 		static MonoAssembly* load_mono_assembly(const std::filesystem::path& assemblyPath, bool loadPDB = false)
 		{
-			daedalus::utils::ScopedBuffer fileData = daedalus::utils::FileSystem::readFileBinary(assemblyPath);
+			utils::ScopedBuffer fileData = daedalus::utils::FileSystem::readFileBinary(assemblyPath);
 
 			// NOTE: We can't use this image for anything other than loading the assembly because this image doesn't have a reference to the assembly
 			MonoImageOpenStatus status;
@@ -65,7 +65,7 @@ namespace daedalus::scripting {
 
 				if (std::filesystem::exists(pdbPath))
 				{
-					daedalus::utils::ScopedBuffer pdbFileData = daedalus::utils::FileSystem::readFileBinary(pdbPath);
+					utils::ScopedBuffer pdbFileData = daedalus::utils::FileSystem::readFileBinary(pdbPath);
 					mono_debug_open_image_from_memory(image, pdbFileData.as<const mono_byte>(), (uint32_t)pdbFileData.size());
 					DD_CORE_LOG_INFO("[Script Engine] Loaded PDB {}", pdbPath);
 				}

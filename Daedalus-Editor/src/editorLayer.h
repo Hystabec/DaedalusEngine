@@ -19,6 +19,8 @@ namespace daedalus::editor
 	private:
 		bool onKeyPressed(event::KeyPressedEvent& e);
 		bool onMouseButtonPressed(event::MouseButtonPressedEvent& e);
+		bool onWindowDrop(event::WindowDropEvent& e);
+
 		void renderOverlays();
 
 		bool canMousePick() const;
@@ -30,7 +32,7 @@ namespace daedalus::editor
 
 		void newScene();
 		bool openScene();
-		bool openScene(const std::filesystem::path& path);
+		bool openScene(AssetHandle handle);
 		void saveScene();
 		void saveSceneAs();
 		void serializeScene(Shr_ptr<scene::Scene> scene, const std::filesystem::path& path);
