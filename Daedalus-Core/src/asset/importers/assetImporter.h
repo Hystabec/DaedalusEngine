@@ -1,6 +1,6 @@
 #pragma once
 
-#include "assetMetadata.h"
+#include "../assetMetadata.h"
 
 namespace daedalus {
 

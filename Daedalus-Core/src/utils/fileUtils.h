@@ -29,6 +29,9 @@ namespace daedalus::utils {
 		/// @brief NOTE: Consider removing as this is no longer used anywhere
 		static std::filesystem::file_time_type fileDateModified(const std::filesystem::path& filepath, bool* checkBool = nullptr);
 
+		/// @brief Returns the lower case version of a file extension
+		static std::filesystem::path fileExtensionToLower(const std::filesystem::path& extension);
+
 		/// @brief This will stop errors from being logged (if they occure) for the next FileSystem operation
 		/// @brief An example of use is when checking shaders:
 		/// the cache file may or may not exist; if it doesnt, it is handled and the user doesnt need to know there was an error reading the file.

@@ -1,6 +1,7 @@
 #include "ddpch.h"
 #include "assetImporter.h"
 
+#include "sceneImporter.h"
 #include "textureImporter.h"
 
 #include <map>
@@ -9,6 +10,7 @@ namespace daedalus {
 
 	using AssetImporterFunction = std::function<Shr_ptr<Asset>(AssetHandle, const AssetMetadata&)>;
 	static std::map<AssetType, AssetImporterFunction> s_assetImporterFunctions = {
+		{ AssetType::Scene, SceneImporter::importScene },
 		{ AssetType::Texture2D , TextureImporter::importTexture2D }
 	};
 

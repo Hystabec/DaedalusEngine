@@ -13,9 +13,10 @@ namespace daedalus {
 	class AssetManagerBase
 	{
 	public:
-		virtual Shr_ptr<Asset> getAsset(AssetHandle handle) const = 0;
-
 		virtual bool isAssetHandleValid(AssetHandle handle) const = 0;
+
+		virtual Shr_ptr<Asset> getAsset(AssetHandle handle) = 0;
+		virtual AssetType getAssetType(AssetHandle handle) const = 0;
 		virtual bool isAssetLoaded(AssetHandle handle) const = 0;
 	};
 

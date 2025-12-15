@@ -1,15 +1,31 @@
 #include "ddpch.h"
 #include "editorAssetManager.h"
 
-#include "assetImporter.h"
+#include "importers/assetImporter.h"
 #include "../project/project.h"
+#include "../utils/fileUtils.h"
 
 #include <fstream>
 #include <yaml-cpp/yaml.h>
 
 namespace daedalus {
 
-	Shr_ptr<Asset> daedalus::EditorAssetManager::getAsset(AssetHandle handle) const
+	static std::map<std::filesystem::path, AssetType> s_assetExtensionMap = {
+		{ ".ddscene", AssetType::Scene },
+		{ ".png", AssetType::Texture2D }, { ".jpg", AssetType::Texture2D }, { ".jpeg", AssetType::Texture2D }
+	};
+
+	static AssetType get_asset_type_from_extension(const std::filesystem::path& extension)
+	{
+		std::filesystem::path lowerExtension = utils::FileSystem::fileExtensionToLower(extension);
+		if (s_assetExtensionMap.contains(lowerExtension))
+			return s_assetExtensionMap[lowerExtension];
+
+		DD_CORE_LOG_WARN("could not find asset type for extension {}", extension);
+		return AssetType::None;
+	}
+
+	Shr_ptr<Asset> daedalus::EditorAssetManager::getAsset(AssetHandle handle)
 	{
 		if (!isAssetHandleValid(handle))
 			return nullptr;
@@ -23,10 +39,22 @@ namespace daedalus {
 			asset = AssetImporter::importAsset(handle, metadata);
 			if (!asset)
 				DD_CORE_LOG_ERROR("EditorAssetManager::getAsset - Import failed");
-
+			else
+				m_loadedAssets[handle] = asset;
 		}
 
 		return asset;
+	}
+
+	AssetType EditorAssetManager::getAssetType(AssetHandle handle) const
+	{
+		if (!isAssetHandleValid(handle))
+		{
+			DD_CORE_LOG_ERROR("EditorAssetManager::getAssetType - Invalid asset handle {}", handle);
+			return AssetType::None;
+		}
+
+		return m_assetRegistry.at(handle).type;
 	}
 
 	bool daedalus::EditorAssetManager::isAssetHandleValid(AssetHandle handle) const
@@ -39,22 +67,26 @@ namespace daedalus {
 		return m_loadedAssets.contains(handle);
 	}
 
-	AssetHandle EditorAssetManager::importAsset(const std::filesystem::path& filepath)
+	AssetHandle EditorAssetManager::importAsset(const std::filesystem::path& filepath, bool overridePrevious)
 	{
 		// TO DO: Multi-thread this to speed up the importing of assets - openGL makes this 
 		// currently a little complicated as openGL commands need to be run by the main thread
 
 		// check that the asset doesnt already exist in the registy
-		{
-			AssetHandle foundHandle = getHandleWithFilepath(filepath);
-			if (foundHandle)
+		AssetHandle foundHandle = getHandleWithFilepath(filepath);
+		AssetHandle handle; // generate a new handle
+
+		if(foundHandle) {
+			if (!overridePrevious)
 				return foundHandle;
+			else
+				handle = foundHandle;
 		}
 
-		AssetHandle handle; // generate a new handle
 		AssetMetadata metadata;
 		metadata.filepath = filepath;
-		metadata.type = AssetType::Texture2D; // TO DO: get from file extension
+		metadata.type = get_asset_type_from_extension(filepath.extension());
+		DD_CORE_ASSERT(metadata.type != AssetType::None);
 		Shr_ptr<Asset> asset = AssetImporter::importAsset(handle, metadata);
 		if (asset)
 		{
@@ -67,6 +99,22 @@ namespace daedalus {
 		return AssetHandle(0);
 	}
 
+	bool EditorAssetManager::reimportAsset(AssetHandle handle)
+	{
+		if (handle == 0)
+			return false;
+
+		const AssetMetadata& metadata = getMetadata(handle);
+		Shr_ptr<Asset> asset = AssetImporter::importAsset(handle, metadata);
+		if (asset)
+		{
+			m_loadedAssets[handle] = asset;
+			return true;
+		}
+
+		return false;
+	}
+
 	const AssetMetadata& daedalus::EditorAssetManager::getMetadata(AssetHandle handle) const
 	{
 		static AssetMetadata s_nullMetadata;
@@ -75,6 +123,12 @@ namespace daedalus {
 			return s_nullMetadata;
 
 		return it->second;
+	}
+
+	const std::filesystem::path& EditorAssetManager::getFilepath(AssetHandle handle) const
+	{
+		const AssetMetadata& metadata = getMetadata(handle);
+		return metadata.filepath;
 	}
 
 	void EditorAssetManager::serializeAssetRegistry()
@@ -93,8 +147,7 @@ namespace daedalus {
 		{
 			out << YAML::BeginMap;
 			out << YAML::Key << "Handle" << YAML::Value << handle;
-			std::string filePathStr = metadata.filepath.generic_string();
-			out << YAML::Key << "Filepath" << YAML::Value << filePathStr;
+			out << YAML::Key << "Filepath" << YAML::Value << metadata.filepath.generic_string();
 			out << YAML::Key << "Type" << YAML::Value << asset_type_to_string(metadata.type);
 			out << YAML::EndMap;
 		}

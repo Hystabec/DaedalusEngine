@@ -19,7 +19,7 @@ struct std::formatter<std::filesystem::path>
 
 	auto format(const std::filesystem::path& name, std::format_context& ctx) const
 	{
-		return std::format_to(ctx.out(), "{}", name.string());
+		return std::format_to(ctx.out(), "{}", name.generic_string());
 	}
 
 };

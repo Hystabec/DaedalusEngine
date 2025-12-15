@@ -1,5 +1,6 @@
 #include "ddpch.h"
 #include "projectSerializer.h"
+#include "../utils/engineYAMLSerializers.h"
 
 #include <fstream>
 #include <yaml-cpp/yaml.h>
@@ -21,10 +22,12 @@ namespace daedalus {
 		out << YAML::Key << "Project" << YAML::Value;
 		out << YAML::BeginMap;
 		out << YAML::Key << "Name" << YAML::Value << config.name;
-		out << YAML::Key << "AssetDirectory" << YAML::Value << config.assetDirectory.string();
-		out << YAML::Key << "AssetRegistryPath" << YAML::Value << config.assetRegistryPath.string();
-		out << YAML::Key << "ScriptModuleBin" << YAML::Value << config.scriptModuleBin.string();
-		out << YAML::Key << "StartScene" << YAML::Value << config.startScene.string();
+
+		out << YAML::Key << "AssetDirectory" << YAML::Value << config.assetDirectory.generic_string();
+		out << YAML::Key << "AssetRegistryPath" << YAML::Value << config.assetRegistryPath.generic_string();
+		out << YAML::Key << "ScriptModuleBin" << YAML::Value << config.scriptModuleBin.generic_string();
+		out << YAML::Key << "StartScene" << YAML::Value << config.startScene;
+
 		out << YAML::EndMap;
 		out << YAML::EndMap;
 
@@ -75,7 +78,7 @@ namespace daedalus {
 		else
 			config.assetRegistryPath = "assetsRegistry.ddreg"; // Default reg pat/name
 		config.scriptModuleBin = projectNode["ScriptModuleBin"].as<std::string>();
-		config.startScene = projectNode["StartScene"].as<std::string>();
+		config.startScene = projectNode["StartScene"].as<AssetHandle>();
 
 		return true;
 	}

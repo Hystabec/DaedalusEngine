@@ -1,8 +1,8 @@
 #include "ddpch.h"
 #include "textureImporter.h"
 
-#include "../utils/buffer.h"
-#include "../project/project.h"
+#include "../../utils/buffer.h"
+#include "../../project/project.h"
 
 #include <stb_image.h>
 

@@ -3,8 +3,9 @@
 
 #include "scripting/scriptEngine.h"
 #include "ui/ui.h"
+#include "asset/assetManager.h"
 #include "asset/editorAssetManager.h"
-#include "asset/textureImporter.h"
+#include "asset/importers/textureImporter.h"
 
 //#include "scene/components.h"
 #include <imgui.h> 
@@ -378,14 +379,32 @@ namespace daedalus::editor
 			{
 				ImGui::ColorEdit4("Colour", spriteRenderer.colour);
 				// Texture
-				ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
+				std::string label = "None";
+				const AssetHandle& textureHandle = spriteRenderer.material.texture;
+				bool isTextureValid = false;
+				if (textureHandle != 0)
+				{
+					if (AssetManager::isAssetHandleValid(textureHandle) && AssetManager::getAssetType(textureHandle) == AssetType::Texture2D)
+					{
+						const auto& metadata = Project::getActive()->getEditorAssetManager()->getMetadata(textureHandle);
+						label = metadata.filepath.filename().string();
+						isTextureValid = true;
+					}
+					else
+						label = "Invalid";
+				}
+				
+				ImVec2 buttonLabelSize = ImGui::CalcTextSize(label.c_str());
+				buttonLabelSize.x += 20.0f;
+				float buttonLabelWidth = maths::max(100.0f, buttonLabelSize.x);
 
+				ImGui::Button(label.c_str(), ImVec2(buttonLabelWidth, 0.0f));
 				if (ImGui::BeginDragDropTarget())
 				{
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 					{
 						std::filesystem::path path = (const wchar_t*)payload->Data;
-						if (path.extension() == ".png")
+						if (utils::FileSystem::fileExtensionToLower(path.extension()) == ".png")
 						{
 							auto relativePath = std::filesystem::relative(path, Project::getActiveAssetDirectory());
 							AssetHandle handle = Project::getActive()->getEditorAssetManager()->importAsset(relativePath);
@@ -395,6 +414,19 @@ namespace daedalus::editor
 					}
 					ImGui::EndDragDropTarget();
 				}
+
+				if (isTextureValid)
+				{
+					ImGui::SameLine();
+					ImVec2 xLabelSize = ImGui::CalcTextSize("X");
+					float buttonSize = xLabelSize.y + ImGui::GetStyle().FramePadding.y * 2.0f;
+					if(ImGui::Button("X", ImVec2(buttonSize, buttonSize)))
+					{
+						spriteRenderer.material.texture = 0;
+					}
+				}
+				ImGui::SameLine();
+				ImGui::Text("Texture");
 
 				ImGui::DragFloat("Tiling Factor", &spriteRenderer.material.tilingFactor, 0.1f, 0.0f);
 

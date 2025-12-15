@@ -4,4 +4,4 @@ Project:
   AssetDirectory: "assets"
   AssetRegistryPath: "assetsRegistry.ddreg"
   ScriptModuleBin: "scripts\\script-bin\\Sandbox.dll"
-  StartScene: "scenes\\physics2D.ddscene"
+  StartScene: 9231259634350151897

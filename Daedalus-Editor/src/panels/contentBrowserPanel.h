@@ -28,6 +28,7 @@ namespace daedalus::editor
 
 	private:
 		void filterDirectory(const std::filesystem::path& directoryPath);
+		void refreshRegistyAssets();
 
 	private:
 		const std::vector<std::string> m_directoryFilters = { ".vs", "script-bin" };
@@ -38,6 +39,17 @@ namespace daedalus::editor
 		std::filesystem::path m_currentDirectory;
 
 		Shr_ptr<graphics::Texture2D> m_directoryIcon, m_fileIcon, m_scriptFileIcon, m_sceneFileIcon;
+
+		// AssetRegisty shows all the assets in the asset registy, items that have been imported
+		// FileSytem will show what is on disk regardless of what it is, so items can be imported
+		// NOTE: With the fileSystem mode I could have a little conext symbol that shows if its imported or not
+		enum class Mode
+		{
+			AssetRegisty = 0, FileSystem = 1
+		};
+
+		Mode m_mode = Mode::AssetRegisty;
+		std::set<std::filesystem::path> m_registyAssets;
 	};
 
 }

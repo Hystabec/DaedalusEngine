@@ -32,7 +32,7 @@ namespace daedalus::editor
 
 		void newScene();
 		bool openScene();
-		bool openScene(const std::filesystem::path& path);
+		bool openScene(AssetHandle handle);
 		void saveScene();
 		void saveSceneAs();
 		void serializeScene(Shr_ptr<scene::Scene> scene, const std::filesystem::path& path);

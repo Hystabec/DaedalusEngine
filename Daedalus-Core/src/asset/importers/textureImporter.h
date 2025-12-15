@@ -1,9 +1,9 @@
 #pragma once
 
-#include "asset.h"
-#include "assetMetadata.h"
+#include "../asset.h"
+#include "../assetMetadata.h"
 
-#include "../graphics/rendering/texture.h"
+#include "../../graphics/rendering/texture.h"
 
 namespace daedalus {
 

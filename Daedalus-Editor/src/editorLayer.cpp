@@ -6,7 +6,9 @@
 #include "scripting/scriptEngine.h"
 #include "graphics/rendering/font.h"
 
-#include "asset/textureImporter.h"
+#include "asset/importers/sceneImporter.h"
+#include "asset/importers/textureImporter.h"
+#include "asset/assetManager.h"
 
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -367,10 +369,14 @@ namespace daedalus::editor
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 				{
 					std::filesystem::path path = (const wchar_t*)payload->Data;
-					std::string extension = path.extension().string();
-					std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+					std::filesystem::path extension = utils::FileSystem::fileExtensionToLower(path.extension());
 					if (extension == ".ddscene")
-						openScene(path);
+					{
+						auto relativePath = std::filesystem::relative(path, Project::getActiveAssetDirectory());
+						AssetHandle handle = Project::getActive()->getEditorAssetManager()->importAsset(relativePath);
+						if (handle)
+							openScene(handle);
+					}
 				}
 
 				ImGui::EndDragDropTarget();
@@ -816,13 +822,13 @@ namespace daedalus::editor
 		{
 			scripting::ScriptEngine::init();
 
-			if (Project::getActive()->getConfig().startScene.empty())
+			AssetHandle startScene = Project::getActive()->getConfig().startScene;
+
+			if (!startScene)
 				newScene();
 			else
 			{
-				auto startScenePath = Project::getAssetFileSystemPath(Project::getActive()->getConfig().startScene);
-
-				if (!openScene(startScenePath))
+				if (!openScene(startScene))
 					newScene();
 			}
 
@@ -861,27 +867,30 @@ namespace daedalus::editor
 		std::filesystem::path filepath = utils::FileDialog::openFile("Daedalus Scene (*.ddscene)\0*.ddscene\0");
 		if (!filepath.empty())
 		{
-			return openScene(filepath);
+			AssetHandle sceneHandle = Project::getActive()->getEditorAssetManager()->importAsset(filepath);
+			return openScene(sceneHandle);
 		}
 
 		return false;
 	}
 
-	bool EditorLayer::openScene(const std::filesystem::path& path)
+	bool EditorLayer::openScene(AssetHandle handle)
 	{
+		DD_CORE_ASSERT(handle);
+
 		if (m_sceneState != SceneState::Edit)
 			return false;
 
-		auto newScene = create_shr_ptr<scene::Scene>();
+		 auto ROScene = AssetManager::getAsset<scene::Scene>(handle);
 
-		scene::SceneSerializer serializer(newScene);
-		if (serializer.deserialize(path.string()))
+		if (ROScene)
 		{
+			auto newScene = scene::Scene::copy(ROScene);
 			m_editorScene = newScene;
 
 			m_editorScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 			m_sceneHierarchyPanel.setContext(m_editorScene);
-			m_currentSceneFilepath = path.string();
+			m_currentSceneFilepath = Project::getActive()->getEditorAssetManager()->getFilepath(handle);
 			Application::get().getWindow()->setWindowName("Daedalus Editor - " + m_currentSceneFilepath.stem().string());
 
 			m_activeScene = m_editorScene;
@@ -939,9 +948,10 @@ namespace daedalus::editor
 
 	void EditorLayer::serializeScene(Shr_ptr<scene::Scene> scene, const std::filesystem::path& path)
 	{
-		scene::SceneSerializer serializer(scene);
-		serializer.serialize(path);
-		DD_LOG_INFO("Scene saved [{}]", path);
+		auto relPath = std::filesystem::relative(path, Project::getActiveAssetDirectory());
+		if (relPath.empty())
+			relPath = path;
+		SceneImporter::saveScene(scene, Project::getActiveAssetDirectory() / relPath);
 	}
 
 	void EditorLayer::onScenePlay()

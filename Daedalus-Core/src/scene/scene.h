@@ -1,5 +1,6 @@
 #pragma once
 
+#include "asset/asset.h"
 #include "application/time/deltaTime.h"
 #include "graphics/camera/editorCamera.h"
 #include "application/uuid.h"
@@ -17,11 +18,14 @@ namespace daedalus::scene {
 
 	class Entity;
 
-	class Scene
+	class Scene : public Asset
 	{
 	public:
 		Scene();
 		~Scene();
+
+		static AssetType getStaticType() { return AssetType::Scene; }
+		virtual AssetType getType() const { return getStaticType(); }
 
 		static Shr_ptr<Scene> copy(Shr_ptr<Scene> src);
 

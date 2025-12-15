@@ -16,7 +16,7 @@ namespace daedalus {
 		std::filesystem::path assetRegistryPath; // relative to assetDirectory
 		std::filesystem::path scriptModuleBin;
 
-		std::filesystem::path startScene;
+		AssetHandle startScene;
 	};
 
 	class Project
