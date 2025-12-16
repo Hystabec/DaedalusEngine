@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.h"
+#include "ddCore.h"
 
 #include "debugTools/logging/logFormatMacro.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "src/core.h"
+#include "src/ddCore.h"
 
 #ifdef DD_PLATFORM_WINDOWS
 

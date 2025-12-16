@@ -1,7 +1,6 @@
 #pragma once
 
 #include "texture.h"
-#include "core.h"
 
 namespace daedalus::graphics {
 

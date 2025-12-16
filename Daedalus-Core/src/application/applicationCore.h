@@ -1,6 +1,5 @@
 #pragma once
 
-#include "core.h"
 #include "application/window.h"
 
 #include "application/time/time.h"

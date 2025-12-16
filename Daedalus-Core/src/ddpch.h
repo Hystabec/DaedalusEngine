@@ -24,7 +24,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "core.h"
+#include "ddCore.h"
 #include "utils/buffer.h"
 
 #include "debugTools/logging/log.h"

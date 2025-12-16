@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../../core.h"
-#include "../../maths/vec2.h"
 #include "inputCodes.h"
+#include "../../maths/vec2.h"
 
 namespace daedalus::application {
 

@@ -1,7 +1,7 @@
 #pragma once
 
 //for use by application
-#include "src/core.h"
+#include "src/ddCore.h"
 
 // ---application
 #include "src/application/applicationCore.h"

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "asset.h"
-#include "../core.h"
 
 #include <map>
 

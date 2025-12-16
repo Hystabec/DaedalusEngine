@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../../graphics/rendering/font.h"
-#include "../../core.h"
 
 #include <string>
 
