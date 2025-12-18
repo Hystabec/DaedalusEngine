@@ -8,13 +8,16 @@
 
 namespace daedalus {
 #pragma region IntrusivePtr
+
+	// consider changing the namespace name.
+	// counters -> intrusive || counters -> intrusiveCounters
+	// could make the namespace more clear for what its used for
 	namespace counters {
 		namespace internals { template<class> struct IntrusiveCounter; }
 
 		struct ReferenceCounter
 		{
-			template<class>friend struct internals::IntrusiveCounter;
-
+			template<class> friend struct internals::IntrusiveCounter;
 		protected:
 			ReferenceCounter() = default;
 		private:
@@ -24,7 +27,6 @@ namespace daedalus {
 		struct AtomicReferenceCounter
 		{
 			template<class> friend struct internals::IntrusiveCounter;
-
 		protected:
 			AtomicReferenceCounter() = default;
 		private:
@@ -60,54 +62,101 @@ namespace daedalus {
 	template<class T>
 	class IntrusivePtr
 	{
-		static_assert(std::is_base_of_v<counters::ReferenceCounter, T> || std::is_base_of_v<counters::AtomicReferenceCounter,T>,
-			"IntrusivePtr::T must derive from either counters::ReferenceCounter or counters::AtomicReferenceCounter");
+		static_assert(std::is_base_of_v<counters::ReferenceCounter, T> != std::is_base_of_v<counters::AtomicReferenceCounter,T>,
+			"IntrusivePtr::T must derive from either counters::ReferenceCounter or counters::AtomicReferenceCounter.");
 
 	public:
-		IntrusivePtr(T* ptr = nullptr)
+		IntrusivePtr(T* ptr = nullptr) noexcept
 			: m_ptr(ptr)
 		{
 			if (m_ptr)
 				counters::internals::IntrusiveCounter<T>::increment(this->get());
 		};
 
-		IntrusivePtr(const IntrusivePtr& other)
+		IntrusivePtr(const IntrusivePtr& other) noexcept
 			: m_ptr(other.m_ptr)
 		{
 			if (m_ptr)
 				counters::internals::IntrusiveCounter<T>::increment(this->get());
 		}
 
-		~IntrusivePtr()
+		~IntrusivePtr() noexcept
 		{
 			if (m_ptr)
 				counters::internals::IntrusiveCounter<T>::decrement(this->get());
 		}
 
-		T* get() { return m_ptr; }
+		IntrusivePtr& operator =(IntrusivePtr&& other) noexcept
+		{
+			IntrusivePtr(std::move(other)).swap(*this);
+			return *this;
+		}
 
-		void swap(IntrusivePtr& other)
+		IntrusivePtr& operator =(const IntrusivePtr& other) noexcept
+		{
+			IntrusivePtr(other).swap(*this);
+			return *this;
+		}
+
+		T* get() noexcept
+		{
+			return m_ptr;
+		}
+
+		void swap(IntrusivePtr& other) noexcept
 		{
 			T* temp = other.m_ptr;
 			other.m_ptr = m_ptr;
 			m_ptr = temp;
 		}
 
-		IntrusivePtr& operator =(const IntrusivePtr& other)
+		constexpr void reset(T* ptr = nullptr) noexcept
 		{
-			IntrusivePtr(other).swap(*this);
-			return *this;
+			IntrusivePtr(ptr).swap(*this);
 		}
 
-		IntrusivePtr& operator =(IntrusivePtr&& other)
+		constexpr T& operator *() const noexcept
 		{
-			IntrusivePtr(std::move(other)).swap(*this);
-			return *this;
+			return *m_ptr;
+		}
+
+		constexpr T* operator ->() const noexcept
+		{
+			return m_ptr;
+		}
+
+		constexpr explicit operator bool() const noexcept
+		{
+			return m_ptr != nullptr;
 		}
 
 	private:
 		T* m_ptr;
 	};
+
+	template<class T>
+	constexpr bool operator==(const IntrusivePtr<T>& ptr, std::nullptr_t) noexcept
+	{
+		return ptr.get() == nullptr;
+	}
+
+	template<class T>
+	constexpr bool operator==(std::nullptr_t, const IntrusivePtr<T>& ptr) noexcept
+	{
+		return ptr.get() == nullptr;
+	}
+
+	template<class T>
+	constexpr bool operator!=(const IntrusivePtr<T>& ptr, std::nullptr_t) noexcept
+	{
+		return ptr.get() != nullptr;
+	}
+
+	template<class T>
+	constexpr bool operator!=(std::nullptr_t, const IntrusivePtr<T>& ptr) noexcept
+	{
+		return ptr.get() != nullptr;
+	}
 
 #pragma endregion
 #pragma region ScopedPtr
