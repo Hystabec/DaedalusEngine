@@ -47,6 +47,7 @@ namespace daedalus {
 			template<class BT>
 			static void decrement(IntrusiveCounter<ThreadUnsafeCounterType>* ptr)
 			{
+				static_assert(sizeof(BT) != 0, "Type must be complete");
 				ptr->count--;
 				if (!count(ptr))
 					delete static_cast<const BT*>(ptr);
@@ -54,6 +55,7 @@ namespace daedalus {
 			template<class BT>
 			static void decrement(IntrusiveCounter<ThreadSafeCounterType>* ptr)
 			{
+				static_assert(sizeof(BT) != 0, "Type must be complete");
 				ptr->count.fetch_sub(1, std::memory_order_acq_rel);
 				if (!count(ptr))
 					delete static_cast<const BT*>(ptr);
