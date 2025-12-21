@@ -2,11 +2,134 @@
 
 #include <atomic>
 #include <type_traits>
-
-// TO DO: Move buffer into this file as it is similarly a memory holder class
-// add should probably also being included inside core
+#include <stdint.h>
+#include <cstring>
 
 namespace daedalus {
+#pragma region Buffers
+
+	struct ScopedBuffer;
+
+	/// @brief Non-owning raw data buffer
+	struct Buffer
+	{
+		friend struct ScopedBuffer;
+
+		constexpr Buffer() noexcept = default;
+
+		inline Buffer(uint64_t size) noexcept
+		{
+			allocate(size);
+		}
+
+		constexpr Buffer(void* data, uint64_t size) noexcept
+			: m_data((uint8_t*)data), m_size(size)
+		{
+		}
+
+		constexpr Buffer(const Buffer&) noexcept = default;
+
+		constexpr Buffer(Buffer&&) noexcept = default;
+
+		static inline Buffer Copy(const Buffer& other) noexcept
+		{
+			Buffer result(other.m_size);
+			memcpy(result.m_data, other.m_data, other.m_size);
+			return result;
+		}
+
+		constexpr uint8_t*& data() noexcept { return m_data; }
+		constexpr const uint8_t* const& data() const noexcept { return m_data; }
+		constexpr uint64_t size() const noexcept { return m_size; }
+
+		inline void allocate(uint64_t size) noexcept
+		{
+			release();
+
+			m_data = (uint8_t*)malloc(size);
+			this->m_size = size;
+		}
+
+		inline void release() noexcept
+		{
+			free(m_data);
+			m_data = nullptr;
+			m_size = 0;
+		}
+
+		template<typename T>
+		constexpr T* as() noexcept
+		{
+			return (T*)m_data;
+		}
+
+		constexpr operator bool() const noexcept
+		{
+			return (bool)m_data;
+		}
+
+	private:
+		// Private as using this would most likely leave the memory hanging
+		constexpr Buffer& operator =(const Buffer& other) noexcept
+		{
+			m_data = other.m_data;
+			m_size = other.m_size;
+			return *this;
+		}
+
+	private:
+		uint8_t* m_data = nullptr;
+		uint64_t m_size = 0;
+	};
+
+	struct ScopedBuffer
+	{
+		constexpr ScopedBuffer(Buffer buffer) noexcept
+			: m_buffer(buffer)
+		{
+		}
+
+		inline ScopedBuffer(uint64_t size) noexcept
+			: m_buffer(size)
+		{
+		}
+
+		inline ~ScopedBuffer() noexcept
+		{
+			m_buffer.release();
+		}
+
+		constexpr uint8_t*& data() noexcept { return m_buffer.data(); }
+		constexpr const uint8_t* const& data() const noexcept { return m_buffer.data(); }
+		constexpr uint64_t size() const noexcept { return m_buffer.size(); }
+		constexpr const Buffer& buffer() const noexcept { return m_buffer; }
+
+		/// @brief This will return the detached "raw" buffer.
+		/// @brief Warning: As the buffer will now be detached automatic deletion of
+		/// the buffer will not occure.
+		constexpr Buffer detach() noexcept
+		{
+			Buffer temp = m_buffer;
+			m_buffer = Buffer();
+			return temp;
+		}
+
+		template<typename T>
+		constexpr T* as() noexcept
+		{
+			return m_buffer.as<T>();
+		}
+
+		constexpr operator bool() const noexcept
+		{
+			return m_buffer;
+		}
+
+	private:
+		Buffer m_buffer;
+	};
+
+#pragma endregion
 #pragma region IntrusivePtr
 
 	namespace intrusivePtrInternal {
