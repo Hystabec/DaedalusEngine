@@ -6,10 +6,12 @@
 	#error Daedalus only supports windows
 #endif
 
-#include "ddAssert.h"
-#include <memory>
-
 #define BIT(x) (1 << x)
+
+#include "ddAssert.h"
+#include "ddMemory.h"
+
+#include <memory>
 
 namespace daedalus {
 

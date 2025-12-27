@@ -1,7 +1,6 @@
 #include "ddpch.h"
 #include "textureImporter.h"
 
-#include "../../utils/buffer.h"
 #include "../../project/project.h"
 
 #include <stb_image.h>
@@ -16,14 +15,14 @@ namespace daedalus {
 	Shr_ptr<graphics::Texture2D> TextureImporter::loadTexture2D(const std::filesystem::path& path)
 	{
 		DD_PROFILE_FUNCTION();
-		utils::Buffer data;
+		Buffer data;
 
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
 		{
 			DD_PROFILE_SCOPE("stbi_load - TextureImporter::importTexture2D");
 			void* loadedImgPtr = stbi_load(path.string().c_str(), &width, &height, &channels, 0);
-			data = utils::Buffer(loadedImgPtr, width * height * channels);
+			data.replace(Buffer(loadedImgPtr, width * height * channels));
 		}
 
 		if (data.data() == nullptr)

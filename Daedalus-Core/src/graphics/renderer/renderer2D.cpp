@@ -214,7 +214,7 @@ namespace daedalus { namespace graphics {
 		// Textures
 		s_data.whiteTexture = graphics::Texture2D::create(TextureSpecification());
 		uint32_t whiteTextureData = 0xffffffff;
-		s_data.whiteTexture->setData(utils::Buffer(&whiteTextureData, sizeof(whiteTextureData)));
+		s_data.whiteTexture->setData(Buffer(&whiteTextureData, sizeof(whiteTextureData)));
 
 		// Shaders
 		{

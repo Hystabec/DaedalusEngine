@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../../utils/buffer.h"
 #include "../../asset/asset.h"
 
 namespace daedalus::graphics {
@@ -33,7 +32,7 @@ namespace daedalus::graphics {
 		virtual uint32_t getHeight() const = 0;
 		virtual uint32_t getRendererID() const = 0;
 
-		virtual void setData(utils::Buffer data) = 0;
+		virtual void setData(Buffer data) = 0;
 
 		virtual void bind(uint32_t slot = 0) const = 0;
 
@@ -43,7 +42,7 @@ namespace daedalus::graphics {
 	class Texture2D : public Texture
 	{
 	public:
-		static Shr_ptr<Texture2D> create(const TextureSpecification& specification, utils::Buffer data = utils::Buffer());
+		static Shr_ptr<Texture2D> create(const TextureSpecification& specification, Buffer data = Buffer());
 		
 		static AssetType getStaticType() { return AssetType::Texture2D; }
 		virtual AssetType getType() const { return getStaticType(); }

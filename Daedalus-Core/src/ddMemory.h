@@ -52,6 +52,9 @@ namespace daedalus {
 
 		inline void release() noexcept
 		{
+			if (m_data == nullptr)
+				return;
+
 			free(m_data);
 			m_data = nullptr;
 			m_size = 0;
@@ -61,6 +64,13 @@ namespace daedalus {
 		constexpr T* as() noexcept
 		{
 			return (T*)m_data;
+		}
+
+		// release existing memory then replace with new buffer
+		inline void replace(const Buffer& other)
+		{
+			release();
+			*this = other;
 		}
 
 		constexpr operator bool() const noexcept

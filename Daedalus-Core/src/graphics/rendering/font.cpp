@@ -50,13 +50,13 @@ namespace daedalus::graphics {
 		spec.generateMips = false;
 
 		Shr_ptr<Texture2D> texture = Texture2D::create(spec);
-		texture->setData(utils::Buffer((void*)bitmap.pixels, bitmap.width * bitmap.height * 3));
+		texture->setData(Buffer((void*)bitmap.pixels, bitmap.width * bitmap.height * 3));
 
 		// cache
 		{
 			// Cache file layout
 			// [width(uint32_t)][height(uint32_t)][texture2D Data(void* : size(width * height * 3(RGB)))][EOF]
-			utils::ScopedBuffer fileBuffer((sizeof(uint32_t) * 2) + (bitmap.width * bitmap.height * 3));
+			ScopedBuffer fileBuffer((sizeof(uint32_t) * 2) + (bitmap.width * bitmap.height * 3));
 			uint32_t* memPtr = fileBuffer.as<uint32_t>();
 			*memPtr = width;
 			memPtr++;
@@ -141,7 +141,7 @@ namespace daedalus::graphics {
 			// Cache file layout
 			// [width(uint32_t)][height(uint32_t)][texture2D Data(void* : size(width * height * 3(RGB)))][EOF]
 			bool checkBool = false;
-			utils::ScopedBuffer dataBuffer = utils::FileSystem::readFileBinary(cacheFileLocation, &checkBool);
+			ScopedBuffer dataBuffer = utils::FileSystem::readFileBinary(cacheFileLocation, &checkBool);
 
 			DD_CORE_ASSERT(checkBool, "unable to read cache file");
 			uint32_t* dataPtr = dataBuffer.as<uint32_t>();
@@ -158,7 +158,7 @@ namespace daedalus::graphics {
 			spec.generateMips = false;
 
 			Shr_ptr<Texture2D> texture = Texture2D::create(spec);
-			texture->setData(utils::Buffer((void*)dataPtr, width * height * 3));
+			texture->setData(Buffer((void*)dataPtr, width * height * 3));
 			m_atlasTexture = texture;
 			DD_CORE_LOG_WARN("Font generation took {} ms", timer.elapsedMilliseconds());
 			return;

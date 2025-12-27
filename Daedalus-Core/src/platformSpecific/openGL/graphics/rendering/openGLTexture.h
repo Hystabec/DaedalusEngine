@@ -8,7 +8,7 @@ namespace daedalus::graphics {
 	class OpenGLTexture2D : public Texture2D
 	{
 	public:
-		OpenGLTexture2D(const TextureSpecification& specification, utils::Buffer data = utils::Buffer());
+		OpenGLTexture2D(const TextureSpecification& specification, Buffer data = Buffer());
 		~OpenGLTexture2D();
 
 		const TextureSpecification& getSpecification() const override { return m_specification; }
@@ -17,7 +17,7 @@ namespace daedalus::graphics {
 		uint32_t getHeight() const  override {return m_height; }
 		uint32_t getRendererID() const override { return m_rendererID; }
 
-		void setData(utils::Buffer data) override;
+		void setData(Buffer data) override;
 
 		void bind(uint32_t slot = 0) const override;
 

@@ -8,7 +8,7 @@
 
 namespace daedalus::graphics {
 
-	Shr_ptr<Texture2D> Texture2D::create(const TextureSpecification& specification, utils::Buffer data)
+	Shr_ptr<Texture2D> Texture2D::create(const TextureSpecification& specification, Buffer data)
 	{
 		switch (Renderer::getCurrentAPI())
 		{

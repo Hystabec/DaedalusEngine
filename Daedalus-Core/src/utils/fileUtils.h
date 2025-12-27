@@ -1,6 +1,5 @@
 #pragma once
 
-#include "buffer.h"
 #include <filesystem>
 
 // TO DO: Currently when outputting the filepath in error messages it get passed as a string,

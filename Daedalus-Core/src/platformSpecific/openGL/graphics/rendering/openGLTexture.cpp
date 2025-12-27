@@ -37,7 +37,7 @@ namespace daedalus::graphics {
 
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(const TextureSpecification& specification, utils::Buffer data)
+	OpenGLTexture2D::OpenGLTexture2D(const TextureSpecification& specification, Buffer data)
 		: m_specification(specification), m_width(m_specification.width), m_height(m_specification.height)
 	{
 		DD_PROFILE_FUNCTION();
@@ -65,7 +65,7 @@ namespace daedalus::graphics {
 		glDeleteTextures(1, &m_rendererID);
 	}
 
-	void OpenGLTexture2D::setData(utils::Buffer data)
+	void OpenGLTexture2D::setData(Buffer data)
 	{
 		DD_PROFILE_FUNCTION();
 
