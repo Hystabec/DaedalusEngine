@@ -113,7 +113,7 @@ namespace daedalus {
 		s_instance = this;
 
 		debug::Log::init();
-		m_window = Uni_ptr<application::Window>(application::Window::Create(application::WindowProperties(specification.name, specification.width, specification.height, specification.vsync)));
+		m_window.reset(application::Window::Create(application::WindowProperties(specification.name, specification.width, specification.height, specification.vsync)));
 		m_window->setEventCallback(DD_BIND_EVENT_FUN(Application::onEvent));
 
 		m_specification = specification;

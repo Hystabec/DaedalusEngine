@@ -67,7 +67,7 @@ namespace daedalus {
 		static Application* s_instance;
 		
 		ApplicationSpecification m_specification;
-		Uni_ptr<application::Window> m_window;
+		ScopedPtr<application::Window> m_window;
 		application::ImGuiLayer* m_ImGuiLayer;
 		bool m_running = true;
 		bool m_minimized = false;

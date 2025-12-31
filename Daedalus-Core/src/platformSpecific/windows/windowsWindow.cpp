@@ -21,15 +21,15 @@ namespace daedalus { namespace application {
 		DD_CORE_LOG_ERROR("GLFW Error ({}): {}", error, description);
 	}
 
-	Uni_ptr<Window> Window::Create(const WindowProperties& props)
+	ScopedPtr<Window> Window::Create(const WindowProperties& props)
 	{
-		return create_uni_ptr<WindowsWindow>(props);
+		//static_assert(std::is_convertible_v<WindowsWindow, Window>);
+		return make_scoped_ptr<WindowsWindow>(props);;
 	}
 
 	WindowsWindow::WindowsWindow(const WindowProperties& props)
 	{
 		DD_PROFILE_FUNCTION();
-
 		m_data.Title = props.Title;
 		m_data.Width = props.Width;
 		m_data.Height = props.Height;

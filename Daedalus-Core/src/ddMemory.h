@@ -233,11 +233,27 @@ namespace daedalus {
 				intrusivePtrInternal::IntrusiveCounterInternal::increment(this->get());
 		}
 
+		// This requires seems to stop conversion from Texture2D to asset
+		template<class O>
+		constexpr IntrusivePtr(const IntrusivePtr<O>& other) noexcept requires(std::is_convertible_v<O, T>)
+			: m_ptr(other.get())
+		{
+			if (m_ptr)
+				intrusivePtrInternal::IntrusiveCounterInternal::increment(this->get());
+		}
+
 		constexpr IntrusivePtr(IntrusivePtr&& other) noexcept
 			: m_ptr(other.m_ptr)
 		{
 			other.m_ptr = nullptr;
 		}
+
+		/*template<class O, std::enable_if<std::is_convertible_v<O, T>, bool>::type>
+		constexpr IntrusivePtr(IntrusivePtr<O>&& other) noexcept
+			: m_ptr(other.m_ptr)
+		{
+			other.m_ptr = nullptr;
+		}*/
 
 		constexpr ~IntrusivePtr() noexcept
 		{
@@ -370,6 +386,12 @@ namespace daedalus {
 		return ptr.get() != nullptr;
 	}
 
+	template<class T, class... Args>
+	constexpr IntrusivePtr<T> make_intrusive_ptr(Args&&... args)
+	{
+		return IntrusivePtr<T>(new T(std::forward<Args>(args)...));
+	}
+
 	template<class T, class O>
 	constexpr IntrusivePtr<T> static_pointer_cast(const IntrusivePtr<O>& iptr) noexcept
 	{
@@ -413,13 +435,44 @@ namespace daedalus {
 #pragma endregion
 #pragma region ScopedPtr
 
+#define CONVERSION_REQUIRES requires(std::is_convertible_v<O, T> || std::is_base_of_v<T, O>)
+	/// @brief ScopedPtr "owns" a memory location so when the ScopedPtr object falls
+	/// out of scope the memory is "cleaned up".
+	/// 
+	/// @brief A memory location can only be "owned" be 1 ScopedPtr so if a ScopedPtr
+	/// is construct using another the pevious ScopedPtr will no longer be valid. Same
+	/// applies for using reset().
+	/// 
+	/// @brief WARNING: If you get() the underlying "raw" pointer then either delete
+	/// it or use it to make a new ScopedPtr undefined behaviour will be encountered.
 	template<class T>
-	class ScopedPtr 
+	class ScopedPtr
 	{
 	public:
-		constexpr explicit ScopedPtr(T* ptr = nullptr) noexcept
+		constexpr ScopedPtr()
+			: m_ptr(nullptr)
+		{ }
+
+		template<class O>
+		constexpr ScopedPtr(O* ptr) noexcept CONVERSION_REQUIRES
 			: m_ptr(ptr)
 		{
+		}
+
+		template<class O>
+		constexpr ScopedPtr(ScopedPtr<O>& other) noexcept CONVERSION_REQUIRES
+			: m_ptr(nullptr)
+		{
+			ScopedPtr otherNew((T*)other.detach());
+			this->swap(otherNew);
+		}
+
+		template<class O>
+		constexpr ScopedPtr(ScopedPtr<O>&& other) noexcept CONVERSION_REQUIRES
+			: m_ptr(nullptr)
+		{
+			ScopedPtr<T>otherNew((T*)other.detach());
+			this->swap(otherNew);
 		}
 
 		constexpr ~ScopedPtr() noexcept
@@ -434,16 +487,34 @@ namespace daedalus {
 			return m_ptr;
 		}
 
-		constexpr void swap(ScopedPtr& other) noexcept
+		template<class O>
+		constexpr void swap(ScopedPtr<O>& other) noexcept CONVERSION_REQUIRES
 		{
-			T* temp = other.m_ptr;
+			O* temp = other.m_ptr;
 			other.m_ptr = m_ptr;
-			m_ptr = temp;
+			m_ptr = (T*)temp;
 		}
 
-		constexpr void reset(T* ptr = nullptr) noexcept
+		template<class O>
+		constexpr void reset(O* ptr = nullptr) noexcept CONVERSION_REQUIRES
 		{
-			ScopedPtr<T>(ptr).swap(*this);
+			ScopedPtr<T>((T*)ptr).swap(*this);
+		}
+
+		/// @brief Takes ownership of the passed scoped ptr
+		template<class O>
+		constexpr void reset(ScopedPtr<O>& sptr) noexcept CONVERSION_REQUIRES
+		{
+			ScopedPtr<T> tempPtr(sptr);
+			tempPtr.swap(*this);
+		}
+
+		/// @brief Takes ownership of the passed scoped ptr
+		template<class O>
+		constexpr void reset(ScopedPtr<O>&& sptr) noexcept CONVERSION_REQUIRES
+		{
+			ScopedPtr<T> tempPtr(sptr);
+			tempPtr.swap(*this);
 		}
 
 		/// @brief This will return the detached raw pointer.
@@ -456,6 +527,13 @@ namespace daedalus {
 			m_ptr = nullptr;
 			return temp;
 		}
+
+		// deleted = operator so you have to specificly create a new ScopedPtr or reset() an old ScopedPtr
+
+		constexpr ScopedPtr& operator=(ScopedPtr&) const noexcept = delete;
+		constexpr ScopedPtr& operator=(ScopedPtr&&) const noexcept = delete;
+		template<class O> constexpr ScopedPtr& operator=(ScopedPtr<O>&) const noexcept = delete;
+		template<class O> constexpr ScopedPtr& operator=(ScopedPtr<O>&&) const noexcept = delete;
 
 		constexpr T& operator *() const noexcept
 		{
@@ -475,6 +553,7 @@ namespace daedalus {
 	private:
 		T* m_ptr;
 	};
+#undef CONVERSION_REQUIRES
 
 	template<class T>
 	constexpr bool operator==(const ScopedPtr<T>& ptr, std::nullptr_t) noexcept
@@ -498,6 +577,12 @@ namespace daedalus {
 	constexpr bool operator!=(std::nullptr_t, const ScopedPtr<T>& ptr) noexcept
 	{
 		return ptr.get() != nullptr;
+	}
+
+	template<class T, class... Args>
+	constexpr ScopedPtr<T> make_scoped_ptr(Args&&... args)
+	{
+		return ScopedPtr<T>(new T(std::forward<Args>(args)...));
 	}
 
 #pragma endregion
