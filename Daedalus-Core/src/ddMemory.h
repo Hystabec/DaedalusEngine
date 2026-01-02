@@ -435,7 +435,6 @@ namespace daedalus {
 #pragma endregion
 #pragma region ScopedPtr
 
-#define CONVERSION_REQUIRES requires(std::is_convertible_v<O, T> || std::is_base_of_v<T, O>)
 	/// @brief ScopedPtr "owns" a memory location so when the ScopedPtr object falls
 	/// out of scope the memory is "cleaned up".
 	/// 
@@ -449,72 +448,54 @@ namespace daedalus {
 	class ScopedPtr
 	{
 	public:
-		constexpr ScopedPtr()
+		constexpr ScopedPtr() noexcept
 			: m_ptr(nullptr)
-		{ }
+		{
+		}
 
-		template<class O>
-		constexpr ScopedPtr(O* ptr) noexcept CONVERSION_REQUIRES
+		constexpr ScopedPtr(std::nullptr_t) noexcept
+			: m_ptr(nullptr)
+		{
+		}
+
+		constexpr explicit ScopedPtr(T* ptr) noexcept
 			: m_ptr(ptr)
 		{
 		}
 
-		template<class O>
-		constexpr ScopedPtr(ScopedPtr<O>& other) noexcept CONVERSION_REQUIRES
-			: m_ptr(nullptr)
+		constexpr ScopedPtr(ScopedPtr&& right) noexcept
+			: m_ptr(right.detach())
 		{
-			ScopedPtr otherNew((T*)other.detach());
-			this->swap(otherNew);
 		}
 
-		template<class O>
-		constexpr ScopedPtr(ScopedPtr<O>&& other) noexcept CONVERSION_REQUIRES
-			: m_ptr(nullptr)
+		template<class T2, std::enable_if_t<std::disjunction_v<std::is_assignable<T, T2>, std::is_convertible<T2, T>>, int> = 0>
+		constexpr ScopedPtr(ScopedPtr<T2>&& right) noexcept
+			: m_ptr((T*)right.detach())
 		{
-			ScopedPtr<T>otherNew((T*)other.detach());
-			this->swap(otherNew);
 		}
 
 		constexpr ~ScopedPtr() noexcept
 		{
-			static_assert(sizeof(T) != 0, "Type must be complete");
-			delete m_ptr;
-			m_ptr = nullptr;
+			if (m_ptr)
+			{
+				delete m_ptr;
+				m_ptr = nullptr;
+			}
 		}
 
-		constexpr T* get() const noexcept
+		[[nodiscard]] constexpr T* get() const noexcept
 		{
 			return m_ptr;
 		}
 
-		template<class O>
-		constexpr void swap(ScopedPtr<O>& other) noexcept CONVERSION_REQUIRES
+		constexpr void reset(T* ptr = nullptr) noexcept
 		{
-			O* temp = other.m_ptr;
-			other.m_ptr = m_ptr;
-			m_ptr = (T*)temp;
+			m_ptr = ptr;
 		}
 
-		template<class O>
-		constexpr void reset(O* ptr = nullptr) noexcept CONVERSION_REQUIRES
+		constexpr void swap(ScopedPtr& right) noexcept
 		{
-			ScopedPtr<T>((T*)ptr).swap(*this);
-		}
-
-		/// @brief Takes ownership of the passed scoped ptr
-		template<class O>
-		constexpr void reset(ScopedPtr<O>& sptr) noexcept CONVERSION_REQUIRES
-		{
-			ScopedPtr<T> tempPtr(sptr);
-			tempPtr.swap(*this);
-		}
-
-		/// @brief Takes ownership of the passed scoped ptr
-		template<class O>
-		constexpr void reset(ScopedPtr<O>&& sptr) noexcept CONVERSION_REQUIRES
-		{
-			ScopedPtr<T> tempPtr(sptr);
-			tempPtr.swap(*this);
+			std::swap(this->m_ptr, right.m_ptr);
 		}
 
 		/// @brief This will return the detached raw pointer.
@@ -523,24 +504,17 @@ namespace daedalus {
 		/// the pointer will not occure.
 		constexpr T* detach() noexcept
 		{
-			T* temp = m_ptr;
+			T* holder = m_ptr;
 			m_ptr = nullptr;
-			return temp;
+			return holder;
 		}
 
-		// deleted = operator so you have to specificly create a new ScopedPtr or reset() an old ScopedPtr
-
-		constexpr ScopedPtr& operator=(ScopedPtr&) const noexcept = delete;
-		constexpr ScopedPtr& operator=(ScopedPtr&&) const noexcept = delete;
-		template<class O> constexpr ScopedPtr& operator=(ScopedPtr<O>&) const noexcept = delete;
-		template<class O> constexpr ScopedPtr& operator=(ScopedPtr<O>&&) const noexcept = delete;
-
-		constexpr T& operator *() const noexcept
+		[[nodiscard]] constexpr T& operator *() const noexcept
 		{
 			return *m_ptr;
 		}
 
-		constexpr T* operator ->() const noexcept
+		[[nodiscard]] constexpr T* operator->() const noexcept
 		{
 			return m_ptr;
 		}
@@ -550,10 +524,34 @@ namespace daedalus {
 			return m_ptr != nullptr;
 		}
 
+		constexpr ScopedPtr& operator=(std::nullptr_t) noexcept
+		{
+			reset();
+			return *this;
+		}
+
+		constexpr ScopedPtr& operator=(ScopedPtr&& right) noexcept
+		{
+			reset(right.detach());
+			return *this;
+		}
+
+		template<class T2, std::enable_if_t<std::disjunction_v<std::is_assignable<T, T2>, std::is_convertible<T2, T>>, int> = 0>
+		constexpr ScopedPtr& operator=(ScopedPtr<T2>&& right) noexcept
+		{
+			reset(right.detach());
+			return *this;
+		}
+
+		ScopedPtr(const ScopedPtr&) = delete;
+		ScopedPtr& operator=(const ScopedPtr&) = delete;
+
 	private:
+		template<class>
+		friend class ScopedPtr;
+
 		T* m_ptr;
 	};
-#undef CONVERSION_REQUIRES
 
 	template<class T>
 	constexpr bool operator==(const ScopedPtr<T>& ptr, std::nullptr_t) noexcept
@@ -565,6 +563,12 @@ namespace daedalus {
 	constexpr bool operator==(std::nullptr_t, const ScopedPtr<T>& ptr) noexcept
 	{
 		return ptr.get() == nullptr;
+	}
+
+	template<class T, class T2>
+	constexpr bool operator==(const ScopedPtr<T>& left, const ScopedPtr<T2>& right) noexcept
+	{
+		return left.get() == right.get();
 	}
 
 	template<class T>
@@ -579,8 +583,14 @@ namespace daedalus {
 		return ptr.get() != nullptr;
 	}
 
+	template<class T, class T2>
+	constexpr bool operator!=(const ScopedPtr<T>& left, const ScopedPtr<T2>& right) noexcept
+	{
+		return left.get() != right.get();
+	}
+
 	template<class T, class... Args>
-	constexpr ScopedPtr<T> make_scoped_ptr(Args&&... args)
+	[[nodiscard]] constexpr ScopedPtr<T> make_scoped_ptr(Args&&... args)
 	{
 		return ScopedPtr<T>(new T(std::forward<Args>(args)...));
 	}

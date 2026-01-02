@@ -54,7 +54,7 @@ namespace daedalus::scene {
 
 		b2WorldDef worldDef = b2DefaultWorldDef();
 		worldDef.gravity = { 0.0f, -9.8f };
-		m_physicsWorld = create_uni_ptr<b2WorldId>(b2CreateWorld(&worldDef));
+		m_physicsWorld = make_scoped_ptr<b2WorldId>(b2CreateWorld(&worldDef));
 	}
 
 	void PhysicsScene2D::updateScene(const application::DeltaTime& dt)

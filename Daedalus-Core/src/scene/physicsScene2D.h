@@ -41,7 +41,8 @@ namespace daedalus::scene {
 	private:
 		// This being a unique ptr is a bit weird, consider changing later
 		Scene* m_sceneContext = nullptr;
-		Uni_ptr<b2WorldId> m_physicsWorld = nullptr;
+		
+		ScopedPtr<b2WorldId> m_physicsWorld = nullptr;
 		std::unordered_map<daedalus::UUID, b2BodyId> m_entityBox2DBodyMap;
 	};
 

@@ -23,8 +23,7 @@ namespace daedalus { namespace application {
 
 	ScopedPtr<Window> Window::Create(const WindowProperties& props)
 	{
-		//static_assert(std::is_convertible_v<WindowsWindow, Window>);
-		return make_scoped_ptr<WindowsWindow>(props);;
+		return make_scoped_ptr<WindowsWindow>(props);
 	}
 
 	WindowsWindow::WindowsWindow(const WindowProperties& props)
