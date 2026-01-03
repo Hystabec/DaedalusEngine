@@ -155,7 +155,7 @@ namespace daedalus {
 		{
 			friend struct IntrusiveCounterInternal;
 		protected:
-			IntrusiveCounter() = default;
+			constexpr IntrusiveCounter() noexcept = default;
 		private:
 			T count{ 0 };
 		};
@@ -163,22 +163,22 @@ namespace daedalus {
 		struct IntrusiveCounterInternal
 		{
 			template<typename CT>
-			static void increment(IntrusiveCounter<CT>* ptr);
+			static inline void increment(IntrusiveCounter<CT>* ptr) noexcept;
 			template<>
-			static void increment(IntrusiveCounter<ThreadUnsafeCounterType>* ptr)
+			static inline void increment(IntrusiveCounter<ThreadUnsafeCounterType>* ptr) noexcept
 			{
 				ptr->count++;
 			}
 			template<>
-			static void increment(IntrusiveCounter<ThreadSafeCounterType>* ptr)
+			static inline void increment(IntrusiveCounter<ThreadSafeCounterType>* ptr) noexcept
 			{
 				ptr->count.fetch_add(1, std::memory_order_relaxed);
 			}
 
 			template<typename CT, class BT>
-			static void decrement(IntrusiveCounter<CT>* ptr);
+			static inline void decrement(IntrusiveCounter<CT>* ptr) noexcept;
 			template<class BT>
-			static void decrement(IntrusiveCounter<ThreadUnsafeCounterType>* ptr)
+			static inline void decrement(IntrusiveCounter<ThreadUnsafeCounterType>* ptr) noexcept
 			{
 				static_assert(sizeof(BT) != 0, "Type must be complete");
 				ptr->count--;
@@ -186,7 +186,7 @@ namespace daedalus {
 					delete static_cast<const BT*>(ptr);
 			};
 			template<class BT>
-			static void decrement(IntrusiveCounter<ThreadSafeCounterType>* ptr)
+			static inline void decrement(IntrusiveCounter<ThreadSafeCounterType>* ptr) noexcept
 			{
 				static_assert(sizeof(BT) != 0, "Type must be complete");
 				ptr->count.fetch_sub(1, std::memory_order_acq_rel);
@@ -195,14 +195,14 @@ namespace daedalus {
 			};
 
 			template<typename CT>
-			static uint64_t count(IntrusiveCounter<CT>* ptr);
+			static inline uint64_t count(IntrusiveCounter<CT>* ptr) noexcept;
 			template<>
-			static uint64_t count(IntrusiveCounter<ThreadUnsafeCounterType>* ptr)
+			static inline uint64_t count(IntrusiveCounter<ThreadUnsafeCounterType>* ptr) noexcept
 			{
 				return ptr->count;
 			};
 			template<>
-			static uint64_t count(IntrusiveCounter<ThreadSafeCounterType>* ptr)
+			static inline uint64_t count(IntrusiveCounter<ThreadSafeCounterType>* ptr) noexcept
 			{
 				return ptr->count.load(std::memory_order_relaxed);
 			};
@@ -215,45 +215,56 @@ namespace daedalus {
 	template<class T>
 	class IntrusivePtr
 	{
-		static_assert(std::is_base_of_v<IntrusiveCounter, T> != std::is_base_of_v<IntrusiveCounterAtomic,T>,
+		static_assert(std::is_base_of_v<IntrusiveCounter, T> != std::is_base_of_v<IntrusiveCounterAtomic, T>,
 			"IntrusivePtr::T must derive from either IntrusiveCounter or IntrusiveCounterAtomic.");
 
 	public:
-		constexpr IntrusivePtr(T* ptr = nullptr, bool addRefence = true) noexcept
+		constexpr IntrusivePtr() noexcept
+			: m_ptr(nullptr)
+		{
+		}
+
+		constexpr IntrusivePtr(std::nullptr_t) noexcept
+			: m_ptr(nullptr)
+		{
+		}
+
+		constexpr explicit IntrusivePtr(T* ptr) noexcept
 			: m_ptr(ptr)
 		{
-			if (m_ptr && addRefence)
+			if (m_ptr)
 				intrusivePtrInternal::IntrusiveCounterInternal::increment(this->get());
-		};
+		}
 
-		constexpr IntrusivePtr(const IntrusivePtr& other) noexcept
-			: m_ptr(other.m_ptr)
+		constexpr IntrusivePtr(const IntrusivePtr& right) noexcept
+			: m_ptr(right.get())
 		{
 			if (m_ptr)
 				intrusivePtrInternal::IntrusiveCounterInternal::increment(this->get());
 		}
 
-		// This requires seems to stop conversion from Texture2D to asset
-		template<class O>
-		constexpr IntrusivePtr(const IntrusivePtr<O>& other) noexcept requires(std::is_convertible_v<O, T>)
-			: m_ptr(other.get())
+		constexpr IntrusivePtr(IntrusivePtr&& right) noexcept
+			: m_ptr(right.get())
 		{
 			if (m_ptr)
 				intrusivePtrInternal::IntrusiveCounterInternal::increment(this->get());
 		}
 
-		constexpr IntrusivePtr(IntrusivePtr&& other) noexcept
-			: m_ptr(other.m_ptr)
+		template<class T2, std::enable_if_t<std::disjunction_v<std::is_assignable<T, T2>, std::is_convertible<T2, T>>, int> = 0>
+		constexpr IntrusivePtr(const IntrusivePtr<T2>& right) noexcept
+			: m_ptr((T*)right.get())
 		{
-			other.m_ptr = nullptr;
+			if (m_ptr)
+				intrusivePtrInternal::IntrusiveCounterInternal::increment(this->get());
 		}
 
-		/*template<class O, std::enable_if<std::is_convertible_v<O, T>, bool>::type>
-		constexpr IntrusivePtr(IntrusivePtr<O>&& other) noexcept
-			: m_ptr(other.m_ptr)
+		template<class T2, std::enable_if_t<std::disjunction_v<std::is_assignable<T, T2>, std::is_convertible<T2, T>>, int> = 0>
+		constexpr IntrusivePtr(IntrusivePtr<T2>&& right) noexcept
+			: m_ptr((T*)right.get())
 		{
-			other.m_ptr = nullptr;
-		}*/
+			if (m_ptr)
+				intrusivePtrInternal::IntrusiveCounterInternal::increment(this->get());
+		}
 
 		constexpr ~IntrusivePtr() noexcept
 		{
@@ -261,25 +272,7 @@ namespace daedalus {
 				intrusivePtrInternal::IntrusiveCounterInternal::decrement<T>(this->get());
 		}
 
-		constexpr IntrusivePtr& operator =(const IntrusivePtr& other) noexcept
-		{
-			IntrusivePtr(other).swap(*this);
-			return *this;
-		}
-
-		constexpr IntrusivePtr& operator =(IntrusivePtr&& other) noexcept
-		{
-			IntrusivePtr(std::move(other)).swap(*this);
-			return *this;
-		}
-
-		constexpr IntrusivePtr& operator =(T* other) noexcept
-		{
-			IntrusivePtr(other).swap(*this);
-			return *this;
-		}
-
-		constexpr T* get() const noexcept
+		[[nodiscard]] constexpr T* get() const noexcept
 		{
 			return m_ptr;
 		}
@@ -291,7 +284,12 @@ namespace daedalus {
 			m_ptr = temp;
 		}
 
-		constexpr void reset(T* ptr = nullptr, bool addRefence = true) noexcept
+		constexpr void reset() noexcept
+		{
+			IntrusivePtr(nullptr).swap(*this);
+		}
+
+		constexpr void reset(T* ptr, bool addRefence = true) noexcept
 		{
 			IntrusivePtr(ptr, addRefence).swap(*this);
 		}
@@ -300,19 +298,45 @@ namespace daedalus {
 		/// This means that the pointer can then be treated as a raw pointer.
 		/// @brief Warning: As the reference count wont be decremented the automatic deletion of
 		/// the pointer will not occure.
-		constexpr T* detach() noexcept
+		[[nodiscard("Losing track of the detached pointer could cause a memory leak")]] constexpr T* detach() noexcept
 		{
 			T* temp = m_ptr;
 			m_ptr = nullptr;
 			return temp;
 		}
 
-		constexpr T& operator *() const noexcept
+		constexpr IntrusivePtr& operator=(const IntrusivePtr& right) noexcept
+		{
+			IntrusivePtr(right).swap(*this);
+			return *this;
+		}
+
+		constexpr IntrusivePtr& operator=(IntrusivePtr&& right) noexcept
+		{
+			right.swap(*this);
+			return *this;
+		}
+
+		template<class T2>
+		constexpr IntrusivePtr& operator=(const IntrusivePtr<T2>& right) noexcept
+		{
+			IntrusivePtr(right).swap(*this);
+			return *this;
+		}
+
+		template<class T2>
+		constexpr IntrusivePtr& operator=(IntrusivePtr<T2>&& right) noexcept
+		{
+			right.swap(*this);
+			return *this;
+		}
+
+		[[nodiscard]] constexpr T& operator *() const noexcept
 		{
 			return *m_ptr;
 		}
 
-		constexpr T* operator ->() const noexcept
+		[[nodiscard]] constexpr T* operator ->() const noexcept
 		{
 			return m_ptr;
 		}
@@ -323,113 +347,88 @@ namespace daedalus {
 		}
 
 	private:
+		template<class>
+		friend class IntrusivePtr;
+
 		T* m_ptr;
 	};
 
-	template<class T, class O>
-	constexpr bool operator==(const IntrusivePtr<T>& lhs, const IntrusivePtr<O>& rhs) noexcept
-	{
-		return lhs.get() == rhs.get();
-	}
-
-	template<class T, class O>
-	constexpr bool operator!=(const IntrusivePtr<T>& lhs, const IntrusivePtr<O>& rhs) noexcept
-	{
-		return lhs.get() != rhs.get();
-	}
-
-	template<class T, class O>
-	constexpr bool operator==(const IntrusivePtr<T>& lhs, O* rhs) noexcept
-	{
-		return lhs.get() == rhs;
-	}
-
-	template<class T, class O>
-	constexpr bool operator!=(const IntrusivePtr<T>& lhs, O* rhs) noexcept
-	{
-		return lhs.get() != rhs;
-	}
-
-	template<class T, class O>
-	constexpr bool operator==(T* lhs, const IntrusivePtr<O>& rhs) noexcept
-	{
-		return lhs == rhs.get();
-	}
-
-	template<class T, class O>
-	constexpr bool operator!=(T* lhs, const IntrusivePtr<O>& rhs) noexcept
-	{
-		return lhs != rhs.get();
-	}
-
-	template<class T>
-	constexpr bool operator==(const IntrusivePtr<T>& ptr, std::nullptr_t) noexcept
-	{
-		return ptr.get() == nullptr;
-	}
-
-	template<class T>
-	constexpr bool operator!=(const IntrusivePtr<T>& ptr, std::nullptr_t) noexcept
-	{
-		return ptr.get() != nullptr;
-	}
-
-	template<class T>
-	constexpr bool operator==(std::nullptr_t, const IntrusivePtr<T>& ptr) noexcept
-	{
-		return ptr.get() == nullptr;
-	}
-
-	template<class T>
-	constexpr bool operator!=(std::nullptr_t, const IntrusivePtr<T>& ptr) noexcept
-	{
-		return ptr.get() != nullptr;
-	}
-
 	template<class T, class... Args>
-	constexpr IntrusivePtr<T> make_intrusive_ptr(Args&&... args)
+	[[nodiscard]] constexpr IntrusivePtr<T> make_intrusive_ptr(Args&&... args) noexcept
 	{
 		return IntrusivePtr<T>(new T(std::forward<Args>(args)...));
 	}
 
-	template<class T, class O>
-	constexpr IntrusivePtr<T> static_pointer_cast(const IntrusivePtr<O>& iptr) noexcept
+	template<class T>
+	constexpr bool operator==(const IntrusivePtr<T>& left, std::nullptr_t) noexcept
 	{
-		return static_cast<T*>(iptr.get());
+		return left.get() == nullptr;
 	}
 
-	template<class T, class O>
-	constexpr IntrusivePtr<T> const_pointer_cast(const IntrusivePtr<O>& iptr) noexcept
+	template<class T>
+	constexpr bool operator!=(const IntrusivePtr<T>& left, std::nullptr_t) noexcept
 	{
-		return const_cast<T*>(iptr.get());
+		return left.get() != nullptr;
 	}
 
-	template<class T, class O>
-	constexpr IntrusivePtr<T> dynamic_pointer_cast(const IntrusivePtr<O>& iptr) noexcept
+	template<class T>
+	constexpr bool operator==(std::nullptr_t, const IntrusivePtr<T>& right) noexcept
 	{
-		return dynamic_cast<T*>(iptr.get());
+		return nullptr == right.get();
 	}
 
-	template<class T, class O>
-	constexpr IntrusivePtr<T> static_pointer_cast(IntrusivePtr<O>&& iptr) noexcept
+	template<class T>
+	constexpr bool operator!=(std::nullptr_t, const IntrusivePtr<T>& right) noexcept
 	{
-		return IntrusivePtr<T>(static_cast<T*>(iptr.detach()), false);
+		return nullptr != right.get();
 	}
 
-	template<class T, class O>
-	constexpr IntrusivePtr<T> const_pointer_cast(IntrusivePtr<O>&& iptr) noexcept
+	template<class T, class T2>
+	constexpr bool operator==(const IntrusivePtr<T>& left, const IntrusivePtr<T2>& right) noexcept
 	{
-		return IntrusivePtr<T>(const_cast<T*>(iptr.detach()), false);
+		return left.get() == right.get();
 	}
 
-	template<class T, class O>
-	constexpr IntrusivePtr<T> dynamic_pointer_cast(IntrusivePtr<O>&& iptr) noexcept
+	template<class T, class T2>
+	constexpr bool operator!=(const IntrusivePtr<T>& left, const IntrusivePtr<T2>& right) noexcept
 	{
-		T* temp = dynamic_cast<T*>(iptr.get());
-		IntrusivePtr<T> newPtr(temp, false);
-		if (temp)
-			iptr.detach();
-		return newPtr;
+		return left.get() != right.get();
+	}
+
+	template<class T, class T2>
+	[[nodiscard]] constexpr IntrusivePtr<T> static_pointer_cast(const IntrusivePtr<T2>& other) noexcept
+	{
+		return IntrusivePtr<T>(static_cast<T*>(other.get()));
+	}
+
+	template<class T, class T2>
+	[[nodiscard]] constexpr IntrusivePtr<T> static_pointer_cast(IntrusivePtr<T2>&& other) noexcept
+	{
+		return IntrusivePtr<T>(static_cast<T*>(other.get()));
+	}
+
+	template<class T, class T2>
+	[[nodiscard]] constexpr IntrusivePtr<T> const_pointer_cast(const IntrusivePtr<T2>& other) noexcept
+	{
+		return IntrusivePtr<T>(const_cast<T*>(other.get()));
+	}
+
+	template<class T, class T2>
+	[[nodiscard]] constexpr IntrusivePtr<T> const_pointer_cast(IntrusivePtr<T2>&& other) noexcept
+	{
+		return IntrusivePtr<T>(const_cast<T*>(other.get()));
+	}
+
+	template<class T, class T2>
+	[[nodiscard]] constexpr IntrusivePtr<T> dynamic_pointer_cast(const IntrusivePtr<T2>& other) noexcept
+	{
+		return IntrusivePtr<T>(dynamic_cast<T*>(other.get()));
+	}
+
+	template<class T, class T2>
+	[[nodiscard]] constexpr IntrusivePtr<T> dynamic_pointer_cast(IntrusivePtr<T2>&& other) noexcept
+	{
+		return IntrusivePtr<T>(dynamic_cast<T*>(other.get()));
 	}
 
 #pragma endregion
@@ -502,7 +501,7 @@ namespace daedalus {
 		/// This means that the pointer can then be treated as a raw pointer.
 		/// @brief Warning: As the pointer will now be detached automatic deletion of
 		/// the pointer will not occure.
-		constexpr T* detach() noexcept
+		[[nodiscard("Losing track of the detached pointer will cause a memory leak")]] constexpr T* detach() noexcept
 		{
 			T* holder = m_ptr;
 			m_ptr = nullptr;
@@ -590,7 +589,7 @@ namespace daedalus {
 	}
 
 	template<class T, class... Args>
-	[[nodiscard]] constexpr ScopedPtr<T> make_scoped_ptr(Args&&... args)
+	[[nodiscard]] constexpr ScopedPtr<T> make_scoped_ptr(Args&&... args) noexcept
 	{
 		return ScopedPtr<T>(new T(std::forward<Args>(args)...));
 	}
