@@ -8,7 +8,7 @@ namespace daedalus::graphics {
 	{
 	public:
 		OpenGLFramebuffer(const FramebufferSpecification& specification);
-		virtual ~OpenGLFramebuffer() override;
+		~OpenGLFramebuffer() override;
 
 		void invalidate();
 

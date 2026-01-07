@@ -11,7 +11,7 @@ namespace daedalus::graphics {
 		OpenGLShader(const std::filesystem::path& filePath);
 		OpenGLShader(const std::string& name, const std::string& vertex, const std::string& fragment);
 
-		virtual ~OpenGLShader();
+		~OpenGLShader() override;
 
 		void setUniformMat4(const maths::Mat4& matrix, const std::string& name) override;
 		void setUniform1i(int value, const std::string& name) override;
