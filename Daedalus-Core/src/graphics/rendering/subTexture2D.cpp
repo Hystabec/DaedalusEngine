@@ -3,7 +3,7 @@
 
 namespace daedalus::graphics {
 
-	SubTexture2D::SubTexture2D(const Shr_ptr<Texture2D>& texture, const maths::Vec2& min, const maths::Vec2& max)
+	SubTexture2D::SubTexture2D(const IntrusivePtr<Texture2D>& texture, const maths::Vec2& min, const maths::Vec2& max)
 		: m_texture(texture)
 	{
 		m_texCoords[0] = { min.x, min.y };
@@ -12,11 +12,11 @@ namespace daedalus::graphics {
 		m_texCoords[3] = { min.x, max.y };
 	}
 
-	Shr_ptr<SubTexture2D> SubTexture2D::createFromCoords(const Shr_ptr<Texture2D>& texture, const maths::Vec2& coords, const maths::Vec2& spriteSize)
+	IntrusivePtr<SubTexture2D> SubTexture2D::createFromCoords(const IntrusivePtr<Texture2D>& texture, const maths::Vec2& coords, const maths::Vec2& spriteSize)
 	{
 		maths::Vec2 min = { coords.x / texture->getWidth(), coords.y / texture->getHeight() };
 		maths::Vec2 max = { (coords.x + spriteSize.x) / texture->getWidth(), (coords.y + spriteSize.y) / texture->getHeight() };
-		return  create_shr_ptr<SubTexture2D>(texture, min, max);
+		return  make_intrusive_ptr<SubTexture2D>(texture, min, max);
 	}
 
 }

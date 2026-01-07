@@ -8,9 +8,9 @@ namespace daedalus::editor
 	{
 	public:
 		SceneHierarchyPanel() = default;
-		SceneHierarchyPanel(const Shr_ptr<scene::Scene>& scene);
+		SceneHierarchyPanel(const IntrusivePtr<scene::Scene>& scene);
 
-		void setContext(const Shr_ptr<scene::Scene>& scene);
+		void setContext(const IntrusivePtr<scene::Scene>& scene);
 
 		void onImGuiRender();
 
@@ -24,7 +24,7 @@ namespace daedalus::editor
 		void drawComponents(scene::Entity entity);
 
 	private:
-		Shr_ptr<scene::Scene> m_sceneContext;
+		IntrusivePtr<scene::Scene> m_sceneContext;
 		scene::Entity m_selectionContext;
 	};
 

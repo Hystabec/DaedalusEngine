@@ -8,7 +8,7 @@
 
 namespace daedalus::graphics {
 
-	Shr_ptr<Texture2D> Texture2D::create(const TextureSpecification& specification, Buffer data)
+	IntrusivePtr<Texture2D> Texture2D::create(const TextureSpecification& specification, Buffer data)
 	{
 		switch (Renderer::getCurrentAPI())
 		{
@@ -16,7 +16,7 @@ namespace daedalus::graphics {
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
 #ifdef DD_RENDER_USING_OPENGL
 		case RendererAPI::API::OpenGL:
-			return create_shr_ptr<OpenGLTexture2D>(specification, data);
+			return make_intrusive_ptr<OpenGLTexture2D>(specification, data);
 #endif
 		}
 

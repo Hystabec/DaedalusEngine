@@ -9,7 +9,7 @@ namespace daedalus { namespace graphics { namespace buffers {
 	public:
 		OpenGlVertexBuffer(uint32_t size);
 		OpenGlVertexBuffer(float* verticies, uint32_t size);
-		virtual ~OpenGlVertexBuffer();
+		~OpenGlVertexBuffer() override;
 
 		void bind() const override;
 		void unbind() const override;

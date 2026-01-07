@@ -14,10 +14,10 @@ namespace daedalus {
 		}
 
 		template<typename T>
-		static Shr_ptr<T> getAsset(AssetHandle handle)
+		static IntrusivePtr<T> getAsset(AssetHandle handle)
 		{
-			Shr_ptr<Asset> asset = Project::getActive()->getAssetManager()->getAsset(handle);
-			return std::static_pointer_cast<T>(asset);
+			IntrusivePtr<Asset> asset = Project::getActive()->getAssetManager()->getAsset(handle);
+			return static_pointer_cast<T>(asset);
 		}
 
 		static AssetType getAssetType(AssetHandle handle)

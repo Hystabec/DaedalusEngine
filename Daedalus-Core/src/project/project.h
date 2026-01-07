@@ -19,14 +19,14 @@ namespace daedalus {
 		AssetHandle startScene;
 	};
 
-	class Project
+	class Project : public IntrusiveCounter
 	{
 	public:
 		Project() {};
 
 		ProjectConfig& getConfig() { return m_config; }
 	
-		static Shr_ptr<Project> getActive() { return s_activeProject; }
+		static IntrusivePtr<Project> getActive() { return s_activeProject; }
 
 		std::shared_ptr<AssetManagerBase> getAssetManager() { return m_assetManager; }
 		//std::shared_ptr<RuntimeAssetManager> getRuntimeAssetManager() { return std::static_pointer_cast<RuntimeAssetManager>(m_assetManager); }
@@ -57,8 +57,8 @@ namespace daedalus {
 			return getActiveAssetDirectory() / path;
 		}
 
-		static Shr_ptr<Project> newProject();
-		static Shr_ptr<Project> Load(const std::filesystem::path& path);
+		static IntrusivePtr<Project> newProject();
+		static IntrusivePtr<Project> Load(const std::filesystem::path& path);
 		static bool saveActive(const std::filesystem::path& path);
 
 	private:
@@ -66,7 +66,7 @@ namespace daedalus {
 		std::filesystem::path m_projectDirectory;
 		std::shared_ptr<AssetManagerBase> m_assetManager;
 
-		inline static Shr_ptr<Project> s_activeProject;
+		inline static IntrusivePtr<Project> s_activeProject;
 	};
 
 }

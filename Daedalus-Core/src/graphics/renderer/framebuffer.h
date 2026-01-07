@@ -50,7 +50,7 @@ namespace daedalus::graphics {
 		bool swapChainTarget = false;
 	};
 
-	class Framebuffer
+	class Framebuffer : public IntrusiveCounter
 	{
 	public:
 		virtual ~Framebuffer() = default;
@@ -70,7 +70,7 @@ namespace daedalus::graphics {
 
 		virtual const FramebufferSpecification& getSpecification() const = 0;
 
-		static Shr_ptr<Framebuffer> create(const FramebufferSpecification& specification);
+		static IntrusivePtr<Framebuffer> create(const FramebufferSpecification& specification);
 	};
 
 }

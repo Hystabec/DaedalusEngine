@@ -6,12 +6,12 @@
 
 namespace daedalus::graphics::buffers {
 
-	Shr_ptr<UniformBuffer> UniformBuffer::create(uint32_t size, uint32_t binding)
+	IntrusivePtr<UniformBuffer> UniformBuffer::create(uint32_t size, uint32_t binding)
 	{
 		switch (Renderer::getCurrentAPI())
 		{
 		case RendererAPI::API::None: DD_CORE_ASSERT(false, "RendererAPI::None is not currently suported"); return nullptr;
-		case RendererAPI::API::OpenGL: return create_shr_ptr<OpenGlUniformBuffer>(size, binding);
+		case RendererAPI::API::OpenGL: return make_intrusive_ptr<OpenGlUniformBuffer>(size, binding);
 		}
 
 		DD_CORE_ASSERT(false, "Unknown RendererAPI");

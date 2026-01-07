@@ -7,12 +7,12 @@
 
 namespace daedalus {
 
-	Shr_ptr<graphics::Texture2D> daedalus::TextureImporter::importTexture2D(AssetHandle handle, const AssetMetadata& metadata)
+	IntrusivePtr<graphics::Texture2D> daedalus::TextureImporter::importTexture2D(AssetHandle handle, const AssetMetadata& metadata)
 	{
 		return loadTexture2D(Project::getActiveAssetDirectory() / metadata.filepath);
 	}
 
-	Shr_ptr<graphics::Texture2D> TextureImporter::loadTexture2D(const std::filesystem::path& path)
+	IntrusivePtr<graphics::Texture2D> TextureImporter::loadTexture2D(const std::filesystem::path& path)
 	{
 		DD_PROFILE_FUNCTION();
 		Buffer data;
@@ -44,7 +44,7 @@ namespace daedalus {
 			break;
 		}
 
-		Shr_ptr<graphics::Texture2D> texture = graphics::Texture2D::create(spec, data);
+		IntrusivePtr<graphics::Texture2D> texture = graphics::Texture2D::create(spec, data);
 		data.release();
 
 		return texture;

@@ -35,7 +35,7 @@ namespace daedalus::editor
 		bool openScene(AssetHandle handle);
 		void saveScene();
 		void saveSceneAs();
-		void serializeScene(Shr_ptr<scene::Scene> scene, const std::filesystem::path& path);
+		void serializeScene(IntrusivePtr<scene::Scene> scene, const std::filesystem::path& path);
 
 		void onScenePlay();
 		void onSceneSimulate();
@@ -48,21 +48,21 @@ namespace daedalus::editor
 		void UIToolbar();
 	private:
 		graphics::EditorCamera m_editorCamera;
-		Shr_ptr<graphics::Framebuffer> m_framebuffer;
+		IntrusivePtr<graphics::Framebuffer> m_framebuffer;
 
 		bool m_viewportFocused = false, m_viewportHovered = false;
 		maths::Vec2 m_viewportSize;
 		maths::Vec2 m_viewportBounds[2];
 
-		Shr_ptr<scene::Scene> m_activeScene;
-		Shr_ptr<scene::Scene> m_editorScene;
+		IntrusivePtr<scene::Scene> m_activeScene;
+		IntrusivePtr<scene::Scene> m_editorScene;
 		std::filesystem::path m_currentSceneFilepath = std::filesystem::path();
 
 		SceneHierarchyPanel m_sceneHierarchyPanel;
 		int m_gizmoType = -1;
 		ContentBrowserPanel m_contentBrowserPanel;
 
-		Shr_ptr<graphics::Texture2D> m_playIcon, m_stopIcon, m_simulateIcon, m_pauseIcon, m_stepIcon;
+		IntrusivePtr<graphics::Texture2D> m_playIcon, m_stopIcon, m_simulateIcon, m_pauseIcon, m_stepIcon;
 		int m_framesPerStep = 1;
 
 		bool m_showColliderOverlay = false;

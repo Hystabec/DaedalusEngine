@@ -78,9 +78,9 @@ namespace daedalus::scene {
 		copy_component_if_exists<Component...>(dst, src);
 	}
 
-	Shr_ptr<Scene> Scene::copy(Shr_ptr<Scene> src)
+	IntrusivePtr<Scene> Scene::copy(IntrusivePtr<Scene> src)
 	{
-		Shr_ptr<Scene> dest = create_shr_ptr<Scene>();
+		IntrusivePtr<Scene> dest = make_intrusive_ptr<Scene>();
 
 		dest->m_viewportWidth = src->m_viewportWidth;
 		dest->m_viewportHeight = src->m_viewportHeight;

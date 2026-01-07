@@ -6,14 +6,14 @@
 
 namespace daedalus {
 
-	Shr_ptr<scene::Scene> SceneImporter::importScene(AssetHandle handle, const AssetMetadata& metadata)
+	IntrusivePtr<scene::Scene> SceneImporter::importScene(AssetHandle handle, const AssetMetadata& metadata)
 	{
 		return loadScene(Project::getActiveAssetDirectory() / metadata.filepath);
 	}
 
-	Shr_ptr<scene::Scene> SceneImporter::loadScene(const std::filesystem::path& path)
+	IntrusivePtr<scene::Scene> SceneImporter::loadScene(const std::filesystem::path& path)
 	{
-		auto newScene = create_shr_ptr<scene::Scene>();
+		auto newScene = make_intrusive_ptr<scene::Scene>();
 
 		scene::SceneSerializer serializer(newScene);
 		if (serializer.deserialize(path))
@@ -23,7 +23,7 @@ namespace daedalus {
 		return nullptr;
 	}
 
-	void SceneImporter::saveScene(Shr_ptr<scene::Scene> scene, const std::filesystem::path& path)
+	void SceneImporter::saveScene(IntrusivePtr<scene::Scene> scene, const std::filesystem::path& path)
 	{
 		scene::SceneSerializer serializer(scene);
 		serializer.serialize(path);

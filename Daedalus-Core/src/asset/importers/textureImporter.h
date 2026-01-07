@@ -10,10 +10,10 @@ namespace daedalus {
 	class TextureImporter
 	{
 	public:
-		static Shr_ptr<graphics::Texture2D> importTexture2D(AssetHandle handle, const AssetMetadata& metadata);
+		static IntrusivePtr<graphics::Texture2D> importTexture2D(AssetHandle handle, const AssetMetadata& metadata);
 
 		// Path has to be relative or absolute
-		static Shr_ptr<graphics::Texture2D> loadTexture2D(const std::filesystem::path& path);
+		static IntrusivePtr<graphics::Texture2D> loadTexture2D(const std::filesystem::path& path);
 	};
 
 }

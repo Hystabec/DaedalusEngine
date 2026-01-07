@@ -6,7 +6,7 @@ namespace daedalus::scene {
 	class SceneSerializer
 	{
 	public:
-		SceneSerializer(const Shr_ptr<Scene>& scene);
+		SceneSerializer(const IntrusivePtr<Scene>& scene);
 
 		/// @brief Serialize into yaml (Plain Text)
 		void serialize(const std::filesystem::path& filepath);
@@ -18,7 +18,7 @@ namespace daedalus::scene {
 		/// @brief Serialize from binary
 		bool deserializeRuntime(const std::filesystem::path& filepath);
 	private:
-		Shr_ptr<Scene> m_scene;
+		IntrusivePtr<Scene> m_scene;
 
 		static constexpr uint32_t m_currentFileFormatVersion = 1;
 	};

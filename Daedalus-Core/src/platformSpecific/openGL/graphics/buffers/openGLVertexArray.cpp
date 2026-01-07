@@ -36,7 +36,7 @@ namespace daedalus { namespace graphics { namespace buffers {
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVertexArray::addVertexBuffer(const Shr_ptr<VertexBuffer>& vertexBuffer)
+	void OpenGLVertexArray::addVertexBuffer(const IntrusivePtr<VertexBuffer>& vertexBuffer)
 	{
 		DD_PROFILE_FUNCTION();
 
@@ -92,7 +92,7 @@ namespace daedalus { namespace graphics { namespace buffers {
 		m_VertexBuffers.push_back(vertexBuffer);
 	}
 
-	void OpenGLVertexArray::setIndexBuffer(const Shr_ptr<IndexBuffer>& indexBuffer)
+	void OpenGLVertexArray::setIndexBuffer(const IntrusivePtr<IndexBuffer>& indexBuffer)
 	{
 		DD_PROFILE_FUNCTION();
 

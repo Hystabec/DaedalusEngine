@@ -41,7 +41,7 @@ namespace daedalus::editor
 		m_pauseIcon = TextureImporter::loadTexture2D("resources\\icons\\pauseButtonIcon.png");
 		m_stepIcon = TextureImporter::loadTexture2D("resources\\icons\\stepButtonIcon.png");
 
-		m_editorScene = create_shr_ptr<scene::Scene>();
+		m_editorScene = make_intrusive_ptr<scene::Scene>();
 		m_activeScene = m_editorScene;
 
 		auto& commandLineArgs = Application::get().getSpecification().commandLineArgs;
@@ -462,7 +462,7 @@ namespace daedalus::editor
 		bool sceneIsPaused = m_activeScene->isPaused();
 		{
 			bool isUsable = m_sceneState == SceneState::Edit || (sceneIsPaused && m_sceneState == SceneState::Play);
-			Shr_ptr<graphics::Texture2D> icon = m_playIcon;
+			IntrusivePtr<graphics::Texture2D> icon = m_playIcon;
 			ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - ((size * numberOfControls) * 0.5f));
 			if (ImGui::ImageButton("##playButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
 				!isUsable ? fadeTint : standardTint))
@@ -486,7 +486,7 @@ namespace daedalus::editor
 		ImGui::SameLine();
 		{
 			bool isUsable = m_sceneState == SceneState::Edit || (sceneIsPaused && m_sceneState == SceneState::Simulate);
-			Shr_ptr<graphics::Texture2D> icon = m_simulateIcon;
+			IntrusivePtr<graphics::Texture2D> icon = m_simulateIcon;
 			if (ImGui::ImageButton("##simulatePlayButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
 				!isUsable ? fadeTint : standardTint))
 			{
@@ -509,7 +509,7 @@ namespace daedalus::editor
 		ImGui::SameLine();
 		{
 			bool isUsable = m_sceneState != SceneState::Edit && !sceneIsPaused;
-			Shr_ptr<graphics::Texture2D> icon = m_pauseIcon;
+			IntrusivePtr<graphics::Texture2D> icon = m_pauseIcon;
 			if (ImGui::ImageButton("##pauseButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
 				!isUsable ? fadeTint : standardTint))
 			{
@@ -528,7 +528,7 @@ namespace daedalus::editor
 		ImGui::SameLine();
 		{
 			bool isUsable = m_sceneState != SceneState::Edit;
-			Shr_ptr<graphics::Texture2D> icon = m_stopIcon;
+			IntrusivePtr<graphics::Texture2D> icon = m_stopIcon;
 			if (ImGui::ImageButton("##stopButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
 				!isUsable ? fadeTint : standardTint))
 			{
@@ -547,7 +547,7 @@ namespace daedalus::editor
 		ImGui::SameLine();
 		{
 			bool isUsable = sceneIsPaused;
-			Shr_ptr<graphics::Texture2D> icon = m_stepIcon;
+			IntrusivePtr<graphics::Texture2D> icon = m_stepIcon;
 			if (ImGui::ImageButton("##stepButton", (ImTextureID)icon->getRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0),
 				!isUsable ? fadeTint : standardTint))
 			{
@@ -849,7 +849,7 @@ namespace daedalus::editor
 		if (m_sceneState != SceneState::Edit)
 			return;
 
-		m_editorScene = create_shr_ptr<scene::Scene>();
+		m_editorScene = make_intrusive_ptr<scene::Scene>();
 
 		m_activeScene = m_editorScene;
 		m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
@@ -946,7 +946,7 @@ namespace daedalus::editor
 		}
 	}
 
-	void EditorLayer::serializeScene(Shr_ptr<scene::Scene> scene, const std::filesystem::path& path)
+	void EditorLayer::serializeScene(IntrusivePtr<scene::Scene> scene, const std::filesystem::path& path)
 	{
 		auto relPath = std::filesystem::relative(path, Project::getActiveAssetDirectory());
 		if (relPath.empty())

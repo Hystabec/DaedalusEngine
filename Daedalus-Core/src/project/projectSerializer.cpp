@@ -7,7 +7,7 @@
 
 namespace daedalus {
 
-	ProjectSerializer::ProjectSerializer(Shr_ptr<Project> project)
+	ProjectSerializer::ProjectSerializer(IntrusivePtr<Project> project)
 		: m_project(project)
 	{
 	}

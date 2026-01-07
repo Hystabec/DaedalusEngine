@@ -54,7 +54,7 @@ namespace daedalus { namespace graphics {
 			float kerning = 0.0f;
 			float lineSpacing = 0.0f;
 		};
-		static void drawString(const std::string& string, Shr_ptr<graphics::Font> font, const maths::Mat4& transform, const TextParams& textParams = TextParams(), uint32_t entityID = UINT32_MAX);
+		static void drawString(const std::string& string, IntrusivePtr<graphics::Font> font, const maths::Mat4& transform, const TextParams& textParams = TextParams(), uint32_t entityID = UINT32_MAX);
 
 		static void drawString(const scene::TextComponent& textComponent, const maths::Mat4& transform, uint32_t entityID);
 

@@ -129,8 +129,8 @@ namespace daedalus::scripting {
 		std::filesystem::path clientAssemblyPath;
 
 		ScriptClass entityClass;
-		std::unordered_map<std::string, Shr_ptr<ScriptClass>> entityClasses;
-		std::unordered_map<UUID, Shr_ptr<ScriptInstance>> entityInstances;
+		std::unordered_map<std::string, IntrusivePtr<ScriptClass>> entityClasses;
+		std::unordered_map<UUID, IntrusivePtr<ScriptInstance>> entityInstances;
 		
 		std::unordered_map<UUID, ScriptFieldMap> entityScriptFields;
 
@@ -386,7 +386,7 @@ namespace daedalus::scripting {
 		const auto& sc = entity.getComponent<scene::ScriptComponent>();
 		if (ScriptEngine::entityClassExists(sc.className))
 		{
-			Shr_ptr<ScriptInstance> instance = create_shr_ptr<ScriptInstance>(s_data->entityClasses[sc.className], entity);
+			IntrusivePtr<ScriptInstance> instance = make_intrusive_ptr<ScriptInstance>(s_data->entityClasses[sc.className], entity);
 
 			UUID entityID = entity.getUUID();
 			s_data->entityInstances[entityID] = instance;
@@ -410,7 +410,7 @@ namespace daedalus::scripting {
 		UUID entityUUID = entity.getUUID();
 		if (s_data->entityInstances.find(entityUUID) != s_data->entityInstances.end())
 		{
-			Shr_ptr<ScriptInstance> instance = s_data->entityInstances[entityUUID];
+			IntrusivePtr<ScriptInstance> instance = s_data->entityInstances[entityUUID];
 			instance->invokeOnStart();
 		}
 		else
@@ -422,7 +422,7 @@ namespace daedalus::scripting {
 		UUID entityUUID = entity.getUUID();
 		if(s_data->entityInstances.find(entityUUID) != s_data->entityInstances.end())
 		{
-			Shr_ptr<ScriptInstance> instance = s_data->entityInstances[entityUUID];
+			IntrusivePtr<ScriptInstance> instance = s_data->entityInstances[entityUUID];
 			instance->invokeOnUpdate(dt);
 		}
 		else
@@ -434,7 +434,7 @@ namespace daedalus::scripting {
 		return s_data->sceneContext;
 	}
 
-	Shr_ptr<ScriptInstance> ScriptEngine::getEntityScriptInstance(daedalus::UUID entityID)
+	IntrusivePtr<ScriptInstance> ScriptEngine::getEntityScriptInstance(daedalus::UUID entityID)
 	{
 		auto it = s_data->entityInstances.find(entityID);
 		if (it == s_data->entityInstances.end())
@@ -443,7 +443,7 @@ namespace daedalus::scripting {
 		return it->second;
 	}
 
-	Shr_ptr<ScriptClass> ScriptEngine::getEntityClass(const std::string& className)
+	IntrusivePtr<ScriptClass> ScriptEngine::getEntityClass(const std::string& className)
 	{
 		auto it = s_data->entityClasses.find(className);
 		if (it == s_data->entityClasses.end())
@@ -452,7 +452,7 @@ namespace daedalus::scripting {
 		return it->second;
 	}
 
-	const std::unordered_map<std::string, Shr_ptr<ScriptClass>>& ScriptEngine::getEntityClasses()
+	const std::unordered_map<std::string, IntrusivePtr<ScriptClass>>& ScriptEngine::getEntityClasses()
 	{
 		return s_data->entityClasses;
 	}
@@ -525,7 +525,7 @@ namespace daedalus::scripting {
 			else
 				fullName = className;
 
-			Shr_ptr<ScriptClass> scriptClass = create_shr_ptr<ScriptClass>(nameSpace, className);
+			IntrusivePtr<ScriptClass> scriptClass = make_intrusive_ptr<ScriptClass>(nameSpace, className);
 			s_data->entityClasses[fullName] = scriptClass;
 			//DD_CORE_LOG_TRACE("{}.{} is a subclass of Daedalus.Types.MonoScript", nameSpace, className);
 
@@ -575,7 +575,7 @@ namespace daedalus::scripting {
 		return mono_runtime_invoke(method, instance, params, &exeption);
 	}
 
-	ScriptInstance::ScriptInstance(Shr_ptr<ScriptClass> scriptClass, scene::Entity entity)
+	ScriptInstance::ScriptInstance(IntrusivePtr<ScriptClass> scriptClass, scene::Entity entity)
 		: m_scriptClass(scriptClass)
 	{
 		m_instance = scriptClass->instantiate();

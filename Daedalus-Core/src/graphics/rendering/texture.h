@@ -24,7 +24,7 @@ namespace daedalus::graphics {
 	class Texture : public Asset
 	{
 	public:
-		virtual ~Texture() = default;
+		virtual ~Texture() override = default;
 
 		virtual const TextureSpecification& getSpecification() const = 0;
 
@@ -42,7 +42,7 @@ namespace daedalus::graphics {
 	class Texture2D : public Texture
 	{
 	public:
-		static Shr_ptr<Texture2D> create(const TextureSpecification& specification, Buffer data = Buffer());
+		static IntrusivePtr<Texture2D> create(const TextureSpecification& specification, Buffer data = Buffer());
 		
 		static AssetType getStaticType() { return AssetType::Texture2D; }
 		virtual AssetType getType() const { return getStaticType(); }

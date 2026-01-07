@@ -28,7 +28,7 @@ namespace daedalus::graphics {
 	}
 
 	template<typename T, typename S, int N, msdf_atlas::GeneratorFunction<S, N> GenFunc>
-	static Shr_ptr<Texture2D> create_and_cache_atlas(const std::filesystem::path& cacheFileLocation, float fontSize, const std::vector<msdf_atlas::GlyphGeometry>& glyphs, const msdf_atlas::FontGeometry& fontGeometry, uint32_t width, uint32_t height)
+	static IntrusivePtr<Texture2D> create_and_cache_atlas(const std::filesystem::path& cacheFileLocation, float fontSize, const std::vector<msdf_atlas::GlyphGeometry>& glyphs, const msdf_atlas::FontGeometry& fontGeometry, uint32_t width, uint32_t height)
 	{
 		create_cache_directory_if_needed();
 
@@ -49,7 +49,7 @@ namespace daedalus::graphics {
 		spec.format = ImageFormat::RGB8;
 		spec.generateMips = false;
 
-		Shr_ptr<Texture2D> texture = Texture2D::create(spec);
+		IntrusivePtr<Texture2D> texture = Texture2D::create(spec);
 		texture->setData(Buffer((void*)bitmap.pixels, bitmap.width * bitmap.height * 3));
 
 		// cache
@@ -157,7 +157,7 @@ namespace daedalus::graphics {
 			spec.format = ImageFormat::RGB8;
 			spec.generateMips = false;
 
-			Shr_ptr<Texture2D> texture = Texture2D::create(spec);
+			IntrusivePtr<Texture2D> texture = Texture2D::create(spec);
 			texture->setData(Buffer((void*)dataPtr, width * height * 3));
 			m_atlasTexture = texture;
 			DD_CORE_LOG_WARN("Font generation took {} ms", timer.elapsedMilliseconds());
@@ -202,15 +202,15 @@ namespace daedalus::graphics {
 		delete m_data;
 	}
 
-	Shr_ptr<Font> Font::getDefault()
+	IntrusivePtr<Font> Font::getDefault()
 	{
 		// NOTE: lazy loaded might change later
-		static Shr_ptr<Font> defaultFont;
+		static IntrusivePtr<Font> defaultFont;
 		if (!defaultFont)
 		{
 			auto [path, check] = utils::get_core_file_location("resources\\fonts\\Noto_Sans\\NotoSans-Medium.ttf");
 			DD_CORE_ASSERT(check, "Cant find default font");
-			defaultFont = create_shr_ptr<Font>(path);
+			defaultFont = make_intrusive_ptr<Font>(path);
 		}
 
 		return defaultFont;

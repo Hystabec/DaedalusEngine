@@ -38,7 +38,7 @@ namespace daedalus::editor
 		std::filesystem::path m_projectAssetDirectory;
 		std::filesystem::path m_currentDirectory;
 
-		Shr_ptr<graphics::Texture2D> m_directoryIcon, m_fileIcon, m_scriptFileIcon, m_sceneFileIcon;
+		IntrusivePtr<graphics::Texture2D> m_directoryIcon, m_fileIcon, m_scriptFileIcon, m_sceneFileIcon;
 
 		// AssetRegisty shows all the assets in the asset registy, items that have been imported
 		// FileSytem will show what is on disk regardless of what it is, so items can be imported

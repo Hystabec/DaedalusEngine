@@ -8,7 +8,7 @@ namespace daedalus { namespace graphics { namespace buffers {
 	{
 	public:
 		OpenGLIndexBuffer(uint32_t* indices, uint32_t size);
-		virtual ~OpenGLIndexBuffer();
+		~OpenGLIndexBuffer() override;
 
 		void bind() const override;
 		void unbind() const override;

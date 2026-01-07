@@ -8,7 +8,7 @@
 
 namespace daedalus { namespace graphics { namespace buffers {
 
-    Shr_ptr<VertexArray> VertexArray::Create()
+	IntrusivePtr<VertexArray> VertexArray::Create()
     {
 		switch (Renderer::getCurrentAPI())
 		{
@@ -16,7 +16,7 @@ namespace daedalus { namespace graphics { namespace buffers {
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
 #ifdef DD_RENDER_USING_OPENGL
 		case RendererAPI::API::OpenGL:
-			return create_shr_ptr<OpenGLVertexArray>();
+			return make_intrusive_ptr<OpenGLVertexArray>();
 #endif
 		}
 

@@ -15,7 +15,7 @@ namespace daedalus {
 	public:
 		bool isAssetHandleValid(AssetHandle handle) const override;
 
-		Shr_ptr<Asset> getAsset(AssetHandle handle) override;
+		IntrusivePtr<Asset> getAsset(AssetHandle handle) override;
 		AssetType getAssetType(AssetHandle handle) const override;
 		bool isAssetLoaded(AssetHandle handle) const override;
 		 

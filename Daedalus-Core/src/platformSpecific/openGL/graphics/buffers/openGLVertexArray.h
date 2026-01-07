@@ -8,20 +8,20 @@ namespace daedalus { namespace graphics { namespace buffers {
 	{
 	public:
 		OpenGLVertexArray();
-		~OpenGLVertexArray();
+		~OpenGLVertexArray() override;
 
 		void bind() const override;
 		void unbind() const override;
 
-		const std::vector<Shr_ptr<VertexBuffer>>& getVertexBuffers() const override { return m_VertexBuffers; }
-		const Shr_ptr<IndexBuffer>& getIndexBuffer() const { return m_IndexBuffer; }
+		const std::vector<IntrusivePtr<VertexBuffer>>& getVertexBuffers() const override { return m_VertexBuffers; }
+		const IntrusivePtr<IndexBuffer>& getIndexBuffer() const { return m_IndexBuffer; }
 
-		void addVertexBuffer(const Shr_ptr<VertexBuffer>& vertexBuffer) override;
-		void setIndexBuffer(const Shr_ptr<IndexBuffer>& indexBuffer) override;
+		void addVertexBuffer(const IntrusivePtr<VertexBuffer>& vertexBuffer) override;
+		void setIndexBuffer(const IntrusivePtr<IndexBuffer>& indexBuffer) override;
 
 	private:
-		std::vector<Shr_ptr<VertexBuffer>> m_VertexBuffers;
-		Shr_ptr<IndexBuffer> m_IndexBuffer;
+		std::vector<IntrusivePtr<VertexBuffer>> m_VertexBuffers;
+		IntrusivePtr<IndexBuffer> m_IndexBuffer;
 		uint32_t m_renderID;
 	};
 

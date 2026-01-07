@@ -10,7 +10,7 @@
 
 namespace daedalus { namespace graphics {
 
-	Shr_ptr<Shader> Shader::create(const std::filesystem::path& filePath)
+	IntrusivePtr<Shader> Shader::create(const std::filesystem::path& filePath)
 	{
 		switch (Renderer::getCurrentAPI())
 		{
@@ -18,7 +18,7 @@ namespace daedalus { namespace graphics {
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
 #ifdef DD_RENDER_USING_OPENGL
 		case RendererAPI::API::OpenGL:
-			return create_shr_ptr<OpenGLShader>(filePath);
+			return make_intrusive_ptr<OpenGLShader>(filePath);
 #endif
 		}
 
@@ -26,7 +26,7 @@ namespace daedalus { namespace graphics {
 		return nullptr;
 	}
 
-	Shr_ptr<Shader> graphics::Shader::create(const std::string& name, const std::string& vertex, const std::string& frag)
+	IntrusivePtr<Shader> graphics::Shader::create(const std::string& name, const std::string& vertex, const std::string& frag)
 	{
 		switch (Renderer::getCurrentAPI())
 		{
@@ -34,7 +34,7 @@ namespace daedalus { namespace graphics {
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
 #ifdef DD_RENDER_USING_OPENGL
 		case RendererAPI::API::OpenGL:
-			return create_shr_ptr<OpenGLShader>(name, vertex, frag);
+			return make_intrusive_ptr<OpenGLShader>(name, vertex, frag);
 #endif
 		}
 

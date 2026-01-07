@@ -16,9 +16,11 @@ namespace daedalus {
 	std::string_view asset_type_to_string(AssetType type);
 	AssetType asset_type_from_string(std::string_view assetType);
 
-	class Asset
+	class Asset : public IntrusiveCounter
 	{
 	public:
+		virtual ~Asset() {}
+		
 		AssetHandle handle; // generate handle
 
 		virtual AssetType getType() const = 0;

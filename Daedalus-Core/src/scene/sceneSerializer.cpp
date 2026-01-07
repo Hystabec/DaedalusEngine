@@ -65,7 +65,7 @@ namespace daedalus::scene {
 		return Rigidbody2DComponent::BodyType::Static;
 	}
 
-	SceneSerializer::SceneSerializer(const Shr_ptr<Scene>& scene)
+	SceneSerializer::SceneSerializer(const IntrusivePtr<Scene>& scene)
 		: m_scene(scene)
 	{
 	}
@@ -333,7 +333,7 @@ namespace daedalus::scene {
 					const auto& scriptFiels = component["ScriptFields"];
 					if (scriptFiels)
 					{
-						Shr_ptr<ScriptClass> entityClass = ScriptEngine::getEntityClass(sc.className);
+						IntrusivePtr<ScriptClass> entityClass = ScriptEngine::getEntityClass(sc.className);
 						if (entityClass)
 						{
 							const auto& fields = entityClass->getFields();

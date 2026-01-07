@@ -22,12 +22,12 @@ namespace daedalus::scene {
 	{
 	public:
 		Scene();
-		~Scene();
+		~Scene() override;
 
 		static AssetType getStaticType() { return AssetType::Scene; }
 		virtual AssetType getType() const { return getStaticType(); }
 
-		static Shr_ptr<Scene> copy(Shr_ptr<Scene> src);
+		static IntrusivePtr<Scene> copy(IntrusivePtr<Scene> src);
 
 		Entity createEntity(const std::string& name = std::string());
 		Entity createEntityWithUUID(UUID uuid, const std::string& name = std::string());

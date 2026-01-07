@@ -137,7 +137,7 @@ namespace daedalus::editor
 
 			ImGui::PushID(filenameStr.c_str());
 
-			Shr_ptr<graphics::Texture2D> elementIcon;
+			IntrusivePtr<graphics::Texture2D> elementIcon;
 			if (directoryElement.is_directory())
 				elementIcon = m_directoryIcon;
 			else

@@ -7,7 +7,7 @@
 
 namespace daedalus { namespace graphics {
 
-	class Shader
+	class Shader : public IntrusiveCounter
 	{
 	public:
 		virtual ~Shader() {};
@@ -41,8 +41,8 @@ namespace daedalus { namespace graphics {
 
 		virtual const std::string& getName() const = 0;
 
-		static Shr_ptr<Shader> create(const std::filesystem::path& filePath);
-		static Shr_ptr<Shader> create(const std::string& name, const std::string& vertex, const std::string& frag);
+		static IntrusivePtr<Shader> create(const std::filesystem::path& filePath);
+		static IntrusivePtr<Shader> create(const std::string& name, const std::string& vertex, const std::string& frag);
 	};
 
 } }

@@ -8,7 +8,7 @@
 
 namespace daedalus::graphics {
 
-    Shr_ptr<Framebuffer> Framebuffer::create(const FramebufferSpecification& specification)
+	IntrusivePtr<Framebuffer> Framebuffer::create(const FramebufferSpecification& specification)
     {
 		switch (Renderer::getCurrentAPI())
 		{
@@ -16,7 +16,7 @@ namespace daedalus::graphics {
 			DD_CORE_ASSERT(false, "RendererAPI::None is not supported"); return nullptr;
 #ifdef DD_RENDER_USING_OPENGL
 		case RendererAPI::API::OpenGL:
-			return create_shr_ptr<OpenGLFramebuffer>(specification);
+			return make_intrusive_ptr<OpenGLFramebuffer>(specification);
 #endif
 		}
 

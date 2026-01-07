@@ -25,12 +25,12 @@ namespace daedalus {
 		return AssetType::None;
 	}
 
-	Shr_ptr<Asset> daedalus::EditorAssetManager::getAsset(AssetHandle handle)
+	IntrusivePtr<Asset> daedalus::EditorAssetManager::getAsset(AssetHandle handle)
 	{
 		if (!isAssetHandleValid(handle))
 			return nullptr;
 
-		Shr_ptr<Asset> asset;
+		IntrusivePtr<Asset> asset;
 		if (isAssetLoaded(handle))
 			asset = m_loadedAssets.at(handle);
 		else
@@ -87,7 +87,7 @@ namespace daedalus {
 		metadata.filepath = filepath;
 		metadata.type = get_asset_type_from_extension(filepath.extension());
 		DD_CORE_ASSERT(metadata.type != AssetType::None);
-		Shr_ptr<Asset> asset = AssetImporter::importAsset(handle, metadata);
+		IntrusivePtr<Asset> asset = AssetImporter::importAsset(handle, metadata);
 		if (asset)
 		{
 			asset->handle = handle;
@@ -105,7 +105,7 @@ namespace daedalus {
 			return false;
 
 		const AssetMetadata& metadata = getMetadata(handle);
-		Shr_ptr<Asset> asset = AssetImporter::importAsset(handle, metadata);
+		IntrusivePtr<Asset> asset = AssetImporter::importAsset(handle, metadata);
 		if (asset)
 		{
 			m_loadedAssets[handle] = asset;

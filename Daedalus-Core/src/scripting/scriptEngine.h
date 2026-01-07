@@ -79,7 +79,7 @@ namespace daedalus::scripting {
 
 	using ScriptFieldMap = std::unordered_map<std::string, ScriptFieldInstance>;
 
-	class ScriptClass
+	class ScriptClass : public IntrusiveCounter
 	{
 	public:
 		ScriptClass() = default;
@@ -102,15 +102,15 @@ namespace daedalus::scripting {
 		friend class ScriptEngine;
 	};
 
-	class ScriptInstance
+	class ScriptInstance : public IntrusiveCounter
 	{
 	public:
-		ScriptInstance(Shr_ptr<ScriptClass> scriptClass, scene::Entity entity);
+		ScriptInstance(IntrusivePtr<ScriptClass> scriptClass, scene::Entity entity);
 
 		void invokeOnStart();
 		void invokeOnUpdate(float dt);
 
-		inline Shr_ptr<ScriptClass> getScriptClass() { return m_scriptClass; }
+		inline IntrusivePtr<ScriptClass> getScriptClass() { return m_scriptClass; }
 
 		template<typename T>
 		T getFieldValue(const std::string& name)
@@ -139,7 +139,7 @@ namespace daedalus::scripting {
 		bool setFieldValueInternal(const std::string& name, const void* value);
 
 	private:
-		Shr_ptr<ScriptClass> m_scriptClass;
+		IntrusivePtr<ScriptClass> m_scriptClass;
 		MonoObject* m_instance = nullptr;
 		MonoMethod* m_constuctor = nullptr;
 		MonoMethod* m_onStartMethod = nullptr;
@@ -170,9 +170,9 @@ namespace daedalus::scripting {
 		static void updateEntityInstance(scene::Entity entity, float dt);
 
 		static scene::Scene* getSceneContext();
-		static Shr_ptr<ScriptInstance> getEntityScriptInstance(daedalus::UUID entityID);
-		static Shr_ptr<ScriptClass> getEntityClass(const std::string& className);
-		static const std::unordered_map<std::string, Shr_ptr<ScriptClass>>& getEntityClasses();
+		static IntrusivePtr<ScriptInstance> getEntityScriptInstance(daedalus::UUID entityID);
+		static IntrusivePtr<ScriptClass> getEntityClass(const std::string& className);
+		static const std::unordered_map<std::string, IntrusivePtr<ScriptClass>>& getEntityClasses();
 		static ScriptFieldMap& getEntityScriptFields(daedalus::UUID entityID);
 
 		static MonoObject* getManagedInstance(daedalus::UUID uuid, std::string_view instanceName);

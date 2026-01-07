@@ -6,19 +6,19 @@ namespace daedalus::graphics {
 
 	struct MSDFData;
 
-	class Font
+	class Font : public IntrusiveCounter
 	{
 	public:
 		Font(const std::filesystem::path& fontPath);
 		~Font();
 
 		const MSDFData* getMSDFData() const { return m_data; }
-		Shr_ptr<Texture2D> getAtlasTexture() const { return m_atlasTexture; };
+		IntrusivePtr<Texture2D> getAtlasTexture() const { return m_atlasTexture; };
 
-		static Shr_ptr<Font> getDefault();
+		static IntrusivePtr<Font> getDefault();
 	private:
 		MSDFData* m_data;
-		Shr_ptr<Texture2D> m_atlasTexture;
+		IntrusivePtr<Texture2D> m_atlasTexture;
 	};
 
 }

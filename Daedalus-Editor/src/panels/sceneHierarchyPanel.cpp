@@ -15,12 +15,12 @@
 namespace daedalus::editor
 {
 
-	SceneHierarchyPanel::SceneHierarchyPanel(const Shr_ptr<scene::Scene>& scene)
+	SceneHierarchyPanel::SceneHierarchyPanel(const IntrusivePtr<scene::Scene>& scene)
 	{
 		setContext(scene);
 	}
 
-	void SceneHierarchyPanel::setContext(const Shr_ptr<scene::Scene>& scene)
+	void SceneHierarchyPanel::setContext(const IntrusivePtr<scene::Scene>& scene)
 	{
 		m_sceneContext = scene;
 		m_selectionContext = {};
@@ -251,7 +251,7 @@ namespace daedalus::editor
 				bool isSceneRunning = scene->isRunning();
 				if (isSceneRunning)
 				{
-					Shr_ptr<scripting::ScriptInstance> scriptInstance = scripting::ScriptEngine::getEntityScriptInstance(entity.getUUID());
+					IntrusivePtr<scripting::ScriptInstance> scriptInstance = scripting::ScriptEngine::getEntityScriptInstance(entity.getUUID());
 					if (scriptInstance)
 					{
 						const auto& fields = scriptInstance->getScriptClass()->getFields();

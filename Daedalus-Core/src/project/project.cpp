@@ -5,15 +5,15 @@
 
 namespace daedalus {
 
-	Shr_ptr<Project> Project::newProject()
+	IntrusivePtr<Project> Project::newProject()
 	{
-		s_activeProject = create_shr_ptr<Project>();
+		s_activeProject = make_intrusive_ptr<Project>();
 		return s_activeProject;
 	}
 
-	Shr_ptr<Project> Project::Load(const std::filesystem::path& path)
+	IntrusivePtr<Project> Project::Load(const std::filesystem::path& path)
 	{
-		Shr_ptr<Project> project = create_shr_ptr<Project>();
+		IntrusivePtr<Project> project = make_intrusive_ptr<Project>();
 
 		ProjectSerializer serializer(project);
 		if (serializer.deserialize(path))

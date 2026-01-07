@@ -24,8 +24,8 @@ namespace daedalus { namespace graphics {
 		virtual void setClearColour(const maths::Vec4& colour) = 0;
 		virtual void clear() = 0;
 
-		virtual void drawIndexed(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount = 0) = 0;
-		virtual void drawLines(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t vertexCount) = 0;
+		virtual void drawIndexed(const IntrusivePtr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount = 0) = 0;
+		virtual void drawLines(const IntrusivePtr<graphics::buffers::VertexArray>& vertexArray, uint32_t vertexCount) = 0;
 
 		virtual void setLineThickness(float thickness) = 0;
 

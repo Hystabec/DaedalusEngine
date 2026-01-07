@@ -8,13 +8,13 @@
 
 namespace daedalus {
 
-	using AssetImporterFunction = std::function<Shr_ptr<Asset>(AssetHandle, const AssetMetadata&)>;
+	using AssetImporterFunction = std::function<IntrusivePtr<Asset>(AssetHandle, const AssetMetadata&)>;
 	static std::map<AssetType, AssetImporterFunction> s_assetImporterFunctions = {
 		{ AssetType::Scene, SceneImporter::importScene },
 		{ AssetType::Texture2D , TextureImporter::importTexture2D }
 	};
 
-	Shr_ptr<Asset> daedalus::AssetImporter::importAsset(AssetHandle handle, const AssetMetadata& metadata)
+	IntrusivePtr<Asset> daedalus::AssetImporter::importAsset(AssetHandle handle, const AssetMetadata& metadata)
 	{
 		if (s_assetImporterFunctions.find(metadata.type) == s_assetImporterFunctions.end())
 		{

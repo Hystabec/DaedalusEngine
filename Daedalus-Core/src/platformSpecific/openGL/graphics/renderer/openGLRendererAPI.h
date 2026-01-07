@@ -13,8 +13,8 @@ namespace daedalus { namespace graphics {
 		void setClearColour(const maths::Vec4& colour) override;
 		void clear() override;
 
-		void drawIndexed(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount = 0) override;
-		void drawLines(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, uint32_t vertexCount) override;
+		void drawIndexed(const IntrusivePtr<graphics::buffers::VertexArray>& vertexArray, uint32_t indexCount = 0) override;
+		void drawLines(const IntrusivePtr<graphics::buffers::VertexArray>& vertexArray, uint32_t vertexCount) override;
 
 		void setLineThickness(float thickness) override;
 	};

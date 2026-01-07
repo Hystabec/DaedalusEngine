@@ -70,27 +70,27 @@ namespace daedalus { namespace graphics {
 		bool beginCalled = false;
 
 		// Quads
-		Shr_ptr<buffers::VertexArray> quadVertexArray;
-		Shr_ptr<buffers::VertexBuffer> quadVertexBuffer;
-		Shr_ptr<Shader> defaultQuadShader;
+		IntrusivePtr<buffers::VertexArray> quadVertexArray;
+		IntrusivePtr<buffers::VertexBuffer> quadVertexBuffer;
+		IntrusivePtr<Shader> defaultQuadShader;
 
 		uint32_t quadIndexCount = 0;
 		QuadVertex* quadVertexBufferBase = nullptr;
 		QuadVertex* quadVertexBufferPtr = nullptr;
 
 		// Circles
-		Shr_ptr<buffers::VertexArray> circleVertexArray;
-		Shr_ptr<buffers::VertexBuffer> circleVertexBuffer;
-		Shr_ptr<Shader> defaultCircleShader;
+		IntrusivePtr<buffers::VertexArray> circleVertexArray;
+		IntrusivePtr<buffers::VertexBuffer> circleVertexBuffer;
+		IntrusivePtr<Shader> defaultCircleShader;
 
 		uint32_t circleIndexCount = 0;
 		CircleVertex* circleVertexBufferBase = nullptr;
 		CircleVertex* circleVertexBufferPtr = nullptr;
 
 		// Lines
-		Shr_ptr<buffers::VertexArray> lineVertexArray;
-		Shr_ptr<buffers::VertexBuffer> lineVertexBuffer;
-		Shr_ptr<Shader> defaultLineShader;
+		IntrusivePtr<buffers::VertexArray> lineVertexArray;
+		IntrusivePtr<buffers::VertexBuffer> lineVertexBuffer;
+		IntrusivePtr<Shader> defaultLineShader;
 
 		uint32_t lineVertexCount = 0;
 		LineVertex* lineVertexBufferBase = nullptr;
@@ -99,17 +99,17 @@ namespace daedalus { namespace graphics {
 		float lineThickness = 2.0f;
 
 		// Text
-		Shr_ptr<buffers::VertexArray> textVertexArray;
-		Shr_ptr<buffers::VertexBuffer> textVertexBuffer;
-		Shr_ptr<Shader> defaultTextShader;
+		IntrusivePtr<buffers::VertexArray> textVertexArray;
+		IntrusivePtr<buffers::VertexBuffer> textVertexBuffer;
+		IntrusivePtr<Shader> defaultTextShader;
 
 		uint32_t textIndexCount = 0;
 		TextVertex* textVertexBufferBase = nullptr;
 		TextVertex* textVertexBufferPtr = nullptr;
-		Shr_ptr<Texture2D> fontAtlasTexture;
+		IntrusivePtr<Texture2D> fontAtlasTexture;
 
-		Shr_ptr<Texture2D> whiteTexture;
-		std::array<Shr_ptr<Texture2D>, maxTextureSlots> textureSlots;
+		IntrusivePtr<Texture2D> whiteTexture;
+		std::array<IntrusivePtr<Texture2D>, maxTextureSlots> textureSlots;
 		uint32_t textureSlotIndex = 1; // 0 = white texture
 
 		maths::Vec3 quadVertexPositions[4];
@@ -123,7 +123,7 @@ namespace daedalus { namespace graphics {
 			maths::Mat4 viewProjection;
 		};
 		CameraData cameraBuffer;
-		Shr_ptr<buffers::UniformBuffer> cameraUniformBuffer;
+		IntrusivePtr<buffers::UniformBuffer> cameraUniformBuffer;
 	};
 
 	static Renderer2DData s_data;
@@ -164,7 +164,7 @@ namespace daedalus { namespace graphics {
 			offset += 4;
 		}
 
-		Shr_ptr<buffers::IndexBuffer> quadIndexBuff(buffers::IndexBuffer::create(quadIndices, s_data.maxIndices));
+		IntrusivePtr<buffers::IndexBuffer> quadIndexBuff(buffers::IndexBuffer::create(quadIndices, s_data.maxIndices));
 		s_data.quadVertexArray->setIndexBuffer(quadIndexBuff);
 		delete[] quadIndices;
 
@@ -465,7 +465,7 @@ namespace daedalus { namespace graphics {
 			DD_CORE_VERIFY(quadProps.texture);
 			// TO DO: Might want the try to seperate the assetManager from the render. When rendering submit 
 			// with a texture not a texture handle
-			Shr_ptr<Texture2D> texture = AssetManager::getAsset<graphics::Texture2D>(quadProps.texture);
+			IntrusivePtr<Texture2D> texture = AssetManager::getAsset<graphics::Texture2D>(quadProps.texture);
 			if (texture)
 			{
 				for (uint32_t i = 1; i < s_data.textureSlotIndex; i++)
@@ -580,7 +580,7 @@ namespace daedalus { namespace graphics {
 			DD_CORE_VERIFY(rotQuadProps.texture);
 			// TO DO: Might want the try to seperate the assetManager from the render. When rendering submit 
 			// with a texture not a texture handle
-			Shr_ptr<Texture2D> texture = AssetManager::getAsset<graphics::Texture2D>(rotQuadProps.texture);
+			IntrusivePtr<Texture2D> texture = AssetManager::getAsset<graphics::Texture2D>(rotQuadProps.texture);
 			if (texture)
 			{
 				for (uint32_t i = 1; i < s_data.textureSlotIndex; i++)
@@ -740,11 +740,11 @@ namespace daedalus { namespace graphics {
 		drawLine(lineVertices[3], lineVertices[0], colour);
 	}
 
-	void Renderer2D::drawString(const std::string& string, Shr_ptr<graphics::Font> font, const maths::Mat4& transform, const TextParams& textParams, uint32_t entityID)
+	void Renderer2D::drawString(const std::string& string, IntrusivePtr<graphics::Font> font, const maths::Mat4& transform, const TextParams& textParams, uint32_t entityID)
 	{
 		const auto& fontGeometry = font->getMSDFData()->fontGeometry;
 		const auto& metrics = fontGeometry.getMetrics();
-		Shr_ptr<Texture2D> fontAtlas = font->getAtlasTexture();
+		IntrusivePtr<Texture2D> fontAtlas = font->getAtlasTexture();
 
 		if (s_data.fontAtlasTexture != fontAtlas)
 		{

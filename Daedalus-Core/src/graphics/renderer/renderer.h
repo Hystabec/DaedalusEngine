@@ -17,7 +17,7 @@ namespace daedalus { namespace graphics {
 		static void begin(OrthographicCamera& othoCamera);
 		static void end();
 
-		static void submit(const Shr_ptr<graphics::buffers::VertexArray>& vertexArray, const Shr_ptr<graphics::Shader>& shader, const maths::Mat4& transform = maths::Mat4(1.0f));
+		static void submit(const IntrusivePtr<graphics::buffers::VertexArray>& vertexArray, const IntrusivePtr<graphics::Shader>& shader, const maths::Mat4& transform = maths::Mat4(1.0f));
 
 		static inline RendererAPI::API getCurrentAPI() { return RendererAPI::getAPI(); }
 
