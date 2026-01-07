@@ -150,35 +150,37 @@ namespace daedalus {
 		typedef uint64_t ThreadUnsafeCounterType;
 		typedef std::atomic<uint64_t> ThreadSafeCounterType;
 
-		template<typename T>
-		struct IntrusiveCounter
+		struct IntrusiveCounterThreadSafe
 		{
 			friend struct IntrusiveCounterInternal;
 		protected:
-			constexpr IntrusiveCounter() noexcept = default;
+			constexpr IntrusiveCounterThreadSafe() noexcept = default;
 		private:
-			T count{ 0 };
+			ThreadSafeCounterType count{ 0 };
+		};
+
+		struct IntrusiveCounterThreadUnsafe
+		{
+			friend struct IntrusiveCounterInternal;
+		protected:
+			constexpr IntrusiveCounterThreadUnsafe() noexcept = default;
+		private:
+			ThreadUnsafeCounterType count{ 0 };
 		};
 
 		struct IntrusiveCounterInternal
 		{
-			template<typename CT>
-			static inline void increment(IntrusiveCounter<CT>* ptr) noexcept;
-			template<>
-			static inline void increment(IntrusiveCounter<ThreadUnsafeCounterType>* ptr) noexcept
+			static inline void increment(IntrusiveCounterThreadUnsafe* ptr) noexcept
 			{
 				ptr->count++;
 			}
-			template<>
-			static inline void increment(IntrusiveCounter<ThreadSafeCounterType>* ptr) noexcept
+			static inline void increment(IntrusiveCounterThreadSafe* ptr) noexcept
 			{
 				ptr->count.fetch_add(1, std::memory_order_relaxed);
 			}
 
-			template<typename CT, class BT>
-			static inline void decrement(IntrusiveCounter<CT>* ptr) noexcept;
 			template<class BT>
-			static inline void decrement(IntrusiveCounter<ThreadUnsafeCounterType>* ptr) noexcept
+			static inline void decrement(IntrusiveCounterThreadUnsafe* ptr) noexcept
 			{
 				static_assert(sizeof(BT) != 0, "Type must be complete");
 				ptr->count--;
@@ -186,7 +188,7 @@ namespace daedalus {
 					delete static_cast<const BT*>(ptr);
 			};
 			template<class BT>
-			static inline void decrement(IntrusiveCounter<ThreadSafeCounterType>* ptr) noexcept
+			static inline void decrement(IntrusiveCounterThreadSafe* ptr) noexcept
 			{
 				static_assert(sizeof(BT) != 0, "Type must be complete");
 				ptr->count.fetch_sub(1, std::memory_order_acq_rel);
@@ -194,30 +196,23 @@ namespace daedalus {
 					delete static_cast<const BT*>(ptr);
 			};
 
-			template<typename CT>
-			static inline uint64_t count(IntrusiveCounter<CT>* ptr) noexcept;
-			template<>
-			static inline uint64_t count(IntrusiveCounter<ThreadUnsafeCounterType>* ptr) noexcept
+			static inline uint64_t count(IntrusiveCounterThreadUnsafe* ptr) noexcept
 			{
 				return ptr->count;
 			};
-			template<>
-			static inline uint64_t count(IntrusiveCounter<ThreadSafeCounterType>* ptr) noexcept
+			static inline uint64_t count(IntrusiveCounterThreadSafe* ptr) noexcept
 			{
 				return ptr->count.load(std::memory_order_relaxed);
 			};
 		};
 	}
 
-	typedef intrusivePtrInternal::IntrusiveCounter<intrusivePtrInternal::ThreadUnsafeCounterType> IntrusiveCounter;
-	typedef intrusivePtrInternal::IntrusiveCounter<intrusivePtrInternal::ThreadSafeCounterType  > IntrusiveCounterAtomic;
+	typedef intrusivePtrInternal::IntrusiveCounterThreadUnsafe IntrusiveCounter;
+	typedef intrusivePtrInternal::IntrusiveCounterThreadSafe   IntrusiveCounterAtomic;
 
 	template<class T>
 	class IntrusivePtr
 	{
-		static_assert(std::is_base_of_v<IntrusiveCounter, T> != std::is_base_of_v<IntrusiveCounterAtomic, T>,
-			"IntrusivePtr::T must derive from either IntrusiveCounter or IntrusiveCounterAtomic.");
-
 	public:
 		constexpr IntrusivePtr() noexcept
 			: m_ptr(nullptr)
@@ -232,6 +227,8 @@ namespace daedalus {
 		constexpr explicit IntrusivePtr(T* ptr) noexcept
 			: m_ptr(ptr)
 		{
+			static_assert(std::is_base_of_v<IntrusiveCounter, T> != std::is_base_of_v<IntrusiveCounterAtomic, T>,
+				"IntrusivePtr::T must derive from either IntrusiveCounter or IntrusiveCounterAtomic.");
 			if (m_ptr)
 				intrusivePtrInternal::IntrusiveCounterInternal::increment(this->get());
 		}
@@ -268,6 +265,8 @@ namespace daedalus {
 
 		constexpr ~IntrusivePtr() noexcept
 		{
+			static_assert(std::is_base_of_v<IntrusiveCounter, T> != std::is_base_of_v<IntrusiveCounterAtomic, T>,
+				"IntrusivePtr::T must derive from either IntrusiveCounter or IntrusiveCounterAtomic.");
 			if (m_ptr)
 				intrusivePtrInternal::IntrusiveCounterInternal::decrement<T>(this->get());
 		}
