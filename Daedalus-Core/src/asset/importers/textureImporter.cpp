@@ -22,7 +22,7 @@ namespace daedalus {
 		{
 			DD_PROFILE_SCOPE("stbi_load - TextureImporter::importTexture2D");
 			void* loadedImgPtr = stbi_load(path.string().c_str(), &width, &height, &channels, 0);
-			data.replace(Buffer(loadedImgPtr, width * height * channels));
+			data.reset(Buffer(loadedImgPtr, width * height * channels));
 		}
 
 		if (data.data() == nullptr)

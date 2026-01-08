@@ -17,7 +17,7 @@ namespace daedalus {
 
 		constexpr Buffer() noexcept = default;
 
-		inline Buffer(uint64_t size) noexcept
+		constexpr Buffer(uint64_t size) noexcept
 		{
 			allocate(size);
 		}
@@ -31,49 +31,54 @@ namespace daedalus {
 
 		constexpr Buffer(Buffer&&) noexcept = default;
 
-		static inline Buffer Copy(const Buffer& other) noexcept
+		[[nodiscard]] static inline Buffer Copy(const Buffer& other) noexcept
 		{
 			Buffer result(other.m_size);
 			memcpy(result.m_data, other.m_data, other.m_size);
 			return result;
 		}
 
-		constexpr uint8_t*& data() noexcept { return m_data; }
-		constexpr const uint8_t* const& data() const noexcept { return m_data; }
-		constexpr uint64_t size() const noexcept { return m_size; }
+		[[nodiscard]] constexpr uint8_t* data() noexcept { return m_data; }
+		[[nodiscard]] constexpr const uint8_t* data() const noexcept { return m_data; }
+		[[nodiscard]] constexpr uint64_t size() const noexcept { return m_size; }
 
-		inline void allocate(uint64_t size) noexcept
+		constexpr void allocate(uint64_t size) noexcept
 		{
 			release();
-
-			m_data = (uint8_t*)malloc(size);
+			m_data = new uint8_t[size];
 			this->m_size = size;
 		}
 
-		inline void release() noexcept
+		constexpr void release() noexcept
 		{
 			if (m_data == nullptr)
 				return;
 
-			free(m_data);
+			delete[] m_data;
 			m_data = nullptr;
 			m_size = 0;
 		}
 
+		constexpr void swap(Buffer& other) noexcept
+		{
+			Buffer temp(*this);
+			*this = other;
+			other = temp;
+		}
+
+		constexpr void reset(Buffer&& other = Buffer()) noexcept
+		{
+			release();
+			swap(other);
+		}
+
 		template<typename T>
-		constexpr T* as() noexcept
+		[[nodiscard]] constexpr T* as() noexcept
 		{
 			return (T*)m_data;
 		}
 
-		// release existing memory then replace with new buffer
-		inline void replace(const Buffer& other)
-		{
-			release();
-			*this = other;
-		}
-
-		constexpr operator bool() const noexcept
+		[[nodiscard]] constexpr operator bool() const noexcept
 		{
 			return (bool)m_data;
 		}
@@ -94,30 +99,45 @@ namespace daedalus {
 
 	struct ScopedBuffer
 	{
-		constexpr ScopedBuffer(Buffer buffer) noexcept
+		constexpr ScopedBuffer() noexcept
+		{ }
+
+		constexpr ScopedBuffer(Buffer&& buffer) noexcept
 			: m_buffer(buffer)
-		{
-		}
+		{ }
 
 		inline ScopedBuffer(uint64_t size) noexcept
 			: m_buffer(size)
-		{
-		}
+		{ }
+
+		constexpr ScopedBuffer(void* data, uint64_t size) noexcept
+			: m_buffer(Buffer((uint8_t*)data, size))
+		{ }
 
 		inline ~ScopedBuffer() noexcept
 		{
 			m_buffer.release();
 		}
 
-		constexpr uint8_t*& data() noexcept { return m_buffer.data(); }
-		constexpr const uint8_t* const& data() const noexcept { return m_buffer.data(); }
-		constexpr uint64_t size() const noexcept { return m_buffer.size(); }
-		constexpr const Buffer& buffer() const noexcept { return m_buffer; }
+		[[nodiscard]] constexpr uint8_t* data() noexcept { return m_buffer.data(); }
+		[[nodiscard]] constexpr const uint8_t* data() const noexcept { return m_buffer.data(); }
+		[[nodiscard]] constexpr uint64_t size() const noexcept { return m_buffer.size(); }
+		[[nodiscard]] constexpr const Buffer& buffer() const noexcept { return m_buffer; }
+
+		constexpr void swap(ScopedBuffer& other) noexcept
+		{
+			m_buffer.swap(other.m_buffer);
+		}
+
+		constexpr void reset(ScopedBuffer&& other = ScopedBuffer()) noexcept 
+		{
+			other.swap(*this);
+		}
 
 		/// @brief This will return the detached "raw" buffer.
 		/// @brief Warning: As the buffer will now be detached automatic deletion of
 		/// the buffer will not occure.
-		constexpr Buffer detach() noexcept
+		[[nodiscard("Losing track of the detached buffer could cause a memory leak")]] constexpr Buffer detach() noexcept
 		{
 			Buffer temp = m_buffer;
 			m_buffer = Buffer();
@@ -125,7 +145,7 @@ namespace daedalus {
 		}
 
 		template<typename T>
-		constexpr T* as() noexcept
+		[[nodiscard]] constexpr T* as() noexcept
 		{
 			return m_buffer.as<T>();
 		}
@@ -488,7 +508,7 @@ namespace daedalus {
 
 		constexpr void reset(T* ptr = nullptr) noexcept
 		{
-			m_ptr = ptr;
+			ScopedPtr(ptr).swap(*this);
 		}
 
 		constexpr void swap(ScopedPtr& right) noexcept
