@@ -248,7 +248,7 @@ namespace daedalus {
 			: m_ptr(ptr)
 		{
 			static_assert(std::is_base_of_v<IntrusiveCounter, T> != std::is_base_of_v<IntrusiveCounterAtomic, T>,
-				"IntrusivePtr::T must derive from either IntrusiveCounter or IntrusiveCounterAtomic.");
+				"IntrusivePtr::Type must derive from either IntrusiveCounter or IntrusiveCounterAtomic.");
 			if (m_ptr)
 				intrusivePtrInternal::IntrusiveCounterInternal::increment(this->get());
 		}
@@ -286,7 +286,7 @@ namespace daedalus {
 		constexpr ~IntrusivePtr() noexcept
 		{
 			static_assert(std::is_base_of_v<IntrusiveCounter, T> != std::is_base_of_v<IntrusiveCounterAtomic, T>,
-				"IntrusivePtr::T must derive from either IntrusiveCounter or IntrusiveCounterAtomic.");
+				"IntrusivePtr::Type must derive from either IntrusiveCounter or IntrusiveCounterAtomic.");
 			if (m_ptr)
 				intrusivePtrInternal::IntrusiveCounterInternal::decrement<T>(this->get());
 		}
@@ -494,6 +494,7 @@ namespace daedalus {
 
 		constexpr ~ScopedPtr() noexcept
 		{
+			static_assert(sizeof(T) != 0, "Type must be complete");
 			if (m_ptr)
 			{
 				delete m_ptr;
