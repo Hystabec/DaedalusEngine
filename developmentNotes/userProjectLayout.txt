@@ -1,0 +1,16 @@
+projectFolder/
+	> .ddProj
+	> engineFiles/      ## might need a better name
+		> .ddreg      ## consider moving out of assets as the user shouldn't need to interact with it
+		> userScripting/      ## folder for the C# scripting
+			> .vs/      ## the files created by visual studio
+			> script-bin/      ## the compiled binaries
+			> premake5.lua
+			> .csproj
+			> .sln      ## add a short cut, in "assets/", to the solution file for the user to open? or could allow the user to open the solution by double clicking a script file?
+			> win-GenerateProject-VS22.bat      ## could make the creation of the C# scripting files be handled by the engine?
+		> ( any files created and used by the engine / editor such as cache files )
+	> logs/
+		> ( any logs created by the engine / editor )
+	> assets/
+		> ( all user files including scripting files )
