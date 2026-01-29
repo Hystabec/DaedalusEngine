@@ -44,11 +44,11 @@ namespace daedalus {
 			return getActiveProjectDirectory() / s_activeProject->m_config.assetDirectory;
 		}
 
-		static std::filesystem::path getActiveAssetRegistryPath()
+		/*static std::filesystem::path getActiveAssetRegistryPath()
 		{
 			DD_CORE_ASSERT(s_activeProject);
 			return getActiveAssetDirectory() / s_activeProject->m_config.assetRegistryPath;
-		}
+		}*/
 
 		// TO DO: move to asset manager
 		static std::filesystem::path getAssetFileSystemPath(const std::filesystem::path& path)

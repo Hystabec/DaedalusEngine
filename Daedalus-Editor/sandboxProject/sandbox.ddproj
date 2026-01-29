@@ -2,6 +2,6 @@ FormatVersion: 1
 Project:
   Name: Untitled
   AssetDirectory: "assets"
-  AssetRegistryPath: "assetsRegistry.ddreg"
-  ScriptModuleBin: "scripts\\script-bin\\Sandbox.dll"
+  AssetRegistryPath: "assets\\assetsRegistry.ddreg"
+  ScriptModuleBin: "assets\\scripts\\script-bin\\Sandbox.dll"
   StartScene: 9231259634350151897

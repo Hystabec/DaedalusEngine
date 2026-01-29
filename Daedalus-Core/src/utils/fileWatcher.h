@@ -43,12 +43,22 @@ namespace daedalus::utils {
 
 		FileWatcher(FileWatcher&&) = delete;
 
+		// TO DO: look for a way to claim the already existing threads so that there wont
+		// be 2 sets of threads at the same time, just for the older one to immediatly
+		// be closed.
 		FileWatcher& operator=(const FileWatcher& other)
 		{
 			if (this == &other)
 				return *this;
 
 			destroy();
+
+			if (!other.initCalled)
+			{
+				initCalled = false;
+				return *this;
+			}
+
 			m_path = other.m_path;
 			m_callback = other.m_callback;
 			m_watchingDirectory = other.m_watchingDirectory;
@@ -64,6 +74,13 @@ namespace daedalus::utils {
 		~FileWatcher()
 		{
 			destroy();
+		}
+
+		inline const std::filesystem::path& getWatchingPath() const { return m_path; }
+
+		explicit operator bool() const
+		{
+			return initCalled;
 		}
 
 	private:

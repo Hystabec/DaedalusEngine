@@ -14,3 +14,14 @@ projectFolder/
 		> ( any logs created by the engine / editor )
 	> assets/
 		> ( all user files including scripting files )
+
+
+
+
+
+
+The idea is to keep all the user asset and log folders on the surface of the project, while keeping all the files the engine / editor needs out of the way of the user in it own folders.
+In order to:
+- Not clutter the user's files
+- Stop the user from accidently moving / deleting important engine files
+- To not confuse the user if they see lots of files they don't recognize randomly appear / disappear

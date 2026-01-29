@@ -148,22 +148,10 @@ namespace daedalus::scripting {
 	};
 
 	static ScriptEngineData* s_data = nullptr;
-
-	void ScriptEngine::init()
-	{
-		if (s_data != nullptr)
+	namespace helpers {
+		static void createFileWatcher(const std::filesystem::path& clientAssemblyPath)
 		{
-			//init has already been called. reload assembilies
-
-			std::filesystem::path clientAssemblyPath = Project::getActiveAssetDirectory() / Project::getActive()->getConfig().scriptModuleBin;
-			// check the project paths 
-			if (!std::filesystem::equivalent(s_data->clientAssemblyPath, clientAssemblyPath))
-			{
-				// reload assemblies
-				s_data->clientAssemblyPath = clientAssemblyPath;
-				reloadAssembly();
-
-				// reset file watcher if path is different
+			try {
 				using namespace daedalus::utils;
 				s_data->clientAssemblyWatcher = daedalus::utils::FileWatcher(clientAssemblyPath,
 					[](const std::filesystem::path& path, FileWatcher::Event eventType) {
@@ -182,7 +170,32 @@ namespace daedalus::scripting {
 						}
 					});
 			}
-
+			catch (std::system_error e) {
+				// set the file watcher to be default
+				s_data->clientAssemblyWatcher = utils::FileWatcher();
+				DD_CORE_LOG_ERROR("[Script Engine] Filed to create filewatcher for {}. ({})", clientAssemblyPath, e.what());
+				DD_CORE_LOG_WARN("[Script Engine] Manual reload of assembilies may be requied");
+			}
+		}
+	}
+	
+	void ScriptEngine::init()
+	{
+		if (s_data != nullptr)
+		{
+			//init has already been called. reload assembilies
+			std::filesystem::path clientAssemblyPath = Project::getActiveProjectDirectory() / Project::getActive()->getConfig().scriptModuleBin;
+			// check the project paths 
+			if (![&clientAssemblyPath]()->bool {
+				try { return std::filesystem::equivalent(s_data->clientAssemblyPath, clientAssemblyPath); }
+				catch (...) { return false; }
+				}())
+			{
+				// reload assemblies
+				s_data->clientAssemblyPath = clientAssemblyPath;
+				reloadAssembly();
+				//helpers::createFileWatcher(clientAssemblyPath);
+			}
 			return;
 		}
 
@@ -198,7 +211,7 @@ namespace daedalus::scripting {
 			return;
 		}
 
-		std::filesystem::path clientAssemblyPath = Project::getActiveAssetDirectory() / Project::getActive()->getConfig().scriptModuleBin;
+		std::filesystem::path clientAssemblyPath = Project::getActiveProjectDirectory() / Project::getActive()->getConfig().scriptModuleBin;
 		status = loadClientAssembly(clientAssemblyPath);
 		if (!status)
 		{
@@ -212,24 +225,7 @@ namespace daedalus::scripting {
 
 		s_data->entityClass = ScriptClass("Daedalus.Types", "MonoScript", true);
 
-		using namespace daedalus::utils;
-		
-		s_data->clientAssemblyWatcher = daedalus::utils::FileWatcher(clientAssemblyPath,
-			[](const std::filesystem::path& path, FileWatcher::Event eventType) {
-				if (eventType == FileWatcher::Event::Modified && !s_data->clientAsseblyReloadPending)
-				{
-					s_data->clientAsseblyReloadPending = true;
-
-					// currently running
-					if(s_data->sceneContext != nullptr)
-						DD_CORE_LOG_INFO("[Script Engine] Client assembly changed. Assembly reload queued until runtime is stopped");
-					else
-					{
-						// if not running do now
-						daedalus::Application::get().submitToMainThreadQueue(ScriptEngine::reloadAssembly);
-					}
-				}
-			});
+		helpers::createFileWatcher(clientAssemblyPath);
 	}
 
 	void ScriptEngine::shutdown()
@@ -340,7 +336,7 @@ namespace daedalus::scripting {
 		return true;
 	}
 
-	void ScriptEngine::reloadAssembly()
+	bool ScriptEngine::reloadAssembly()
 	{
 		s_data->clientAsseblyReloadPending = false;
 
@@ -349,13 +345,29 @@ namespace daedalus::scripting {
 		mono_domain_unload(s_data->appDomain);
 
 		loadAssembly(s_data->coreAssemblyPath);
-		loadClientAssembly(s_data->clientAssemblyPath);
+
+		// if there was an issue loading the new client assembelies return
+		if (!loadClientAssembly(s_data->clientAssemblyPath))
+		{
+			// NOTE: should i also be unregistering the compent types ?
+			// seems to be no issues when i dont so i dont think it should be a problem
+			s_data->entityClasses.clear();
+
+			DD_CORE_LOG_ERROR("[Script Engine] failed to reload client assembly: {}", s_data->clientAssemblyPath);
+			return false;
+		}
 
 		loadAssemblyClasses();
 
 		ScriptGlue::registerComponentTypes();
 
 		s_data->entityClass = ScriptClass("Daedalus.Types", "MonoScript", true);
+
+		// if the filewatcher is missing try to reload it
+		if (!s_data->clientAssemblyWatcher || s_data->clientAssemblyWatcher.getWatchingPath() != s_data->clientAssemblyPath)
+			helpers::createFileWatcher(s_data->clientAssemblyPath);
+
+		return true;
 	}
 
 	void ScriptEngine::onRuntimeStart(scene::Scene* scene)

@@ -136,7 +136,7 @@ namespace daedalus {
 		// NOTE : consider adding a file version like scene files to 
 		// make backwards compatibility easier
 
-		auto path = Project::getActiveAssetRegistryPath();
+		auto path = Project::getActive()->getConfig().assetRegistryPath;
 
 		YAML::Emitter out;
 		out << YAML::BeginMap;
@@ -160,7 +160,7 @@ namespace daedalus {
 
 	bool EditorAssetManager::deserializeAssetRegistry()
 	{
-		auto path = Project::getActiveAssetRegistryPath();
+		auto path = Project::getActiveProjectDirectory() / Project::getActive()->getConfig().assetRegistryPath;
 
 		if (!std::filesystem::exists(path))
 		{
