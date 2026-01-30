@@ -79,14 +79,14 @@ namespace daedalus {
 		if (projectNode["AssetRegistryPath"])
 			config.assetRegistryPath = projectNode["AssetRegistryPath"].as<std::string>();
 		else
-			config.assetRegistryPath = "engine\\assetsRegistry.ddreg"; // Default reg pat/name
+			config.assetRegistryPath = "engine\\assetsRegistry.ddreg"; // Default reg path/name
 
 		config.scriptModuleBin = projectNode["ScriptModuleBin"].as<std::string>();
 		
 		if (projectNode["LogDirectory"])
 			config.logDirectory = projectNode["LogDirectory"].as<std::string>();
 		else
-			config.logDirectory = "logs";
+			config.logDirectory = "logs";	// Default logs dir
 
 		config.startScene = projectNode["StartScene"].as<AssetHandle>();
 

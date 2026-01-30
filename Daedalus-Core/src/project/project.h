@@ -58,6 +58,11 @@ namespace daedalus {
 			return getActiveAssetDirectory() / path;
 		}
 
+		std::filesystem::path relativePath(const std::filesystem::path& path) const
+		{
+			return m_projectDirectory / path;
+		}
+
 		static IntrusivePtr<Project> newProject();
 		static IntrusivePtr<Project> Load(const std::filesystem::path& path);
 		static bool saveActive(const std::filesystem::path& path);
