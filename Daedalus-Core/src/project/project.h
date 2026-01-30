@@ -13,8 +13,9 @@ namespace daedalus {
 		std::string name = "Untitled";
 
 		std::filesystem::path assetDirectory;
-		std::filesystem::path assetRegistryPath; // relative to assetDirectory
+		std::filesystem::path assetRegistryPath;
 		std::filesystem::path scriptModuleBin;
+		std::filesystem::path logDirectory;
 
 		AssetHandle startScene;
 	};

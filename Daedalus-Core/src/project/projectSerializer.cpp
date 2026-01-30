@@ -26,6 +26,8 @@ namespace daedalus {
 		out << YAML::Key << "AssetDirectory" << YAML::Value << config.assetDirectory.generic_string();
 		out << YAML::Key << "AssetRegistryPath" << YAML::Value << config.assetRegistryPath.generic_string();
 		out << YAML::Key << "ScriptModuleBin" << YAML::Value << config.scriptModuleBin.generic_string();
+		out << YAML::Key << "LogDirectory" << YAML::Value << config.logDirectory.generic_string();
+
 		out << YAML::Key << "StartScene" << YAML::Value << config.startScene;
 
 		out << YAML::EndMap;
@@ -73,11 +75,19 @@ namespace daedalus {
 
 		config.name = projectNode["Name"].as<std::string>();
 		config.assetDirectory = projectNode["AssetDirectory"].as<std::string>();
+
 		if (projectNode["AssetRegistryPath"])
 			config.assetRegistryPath = projectNode["AssetRegistryPath"].as<std::string>();
 		else
-			config.assetRegistryPath = "assetsRegistry.ddreg"; // Default reg pat/name
+			config.assetRegistryPath = "engine\\assetsRegistry.ddreg"; // Default reg pat/name
+
 		config.scriptModuleBin = projectNode["ScriptModuleBin"].as<std::string>();
+		
+		if (projectNode["LogDirectory"])
+			config.logDirectory = projectNode["LogDirectory"].as<std::string>();
+		else
+			config.logDirectory = "logs";
+
 		config.startScene = projectNode["StartScene"].as<AssetHandle>();
 
 		return true;

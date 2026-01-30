@@ -1,0 +1,5 @@
+As projects now have a log location associated with them i want the files to go there.
+how ever that would currently (29/01/26) require the new log sinks to be created and the script engine mono debugger to be relauched
+
+a possible solution to this could be:
+when the project is closed all the current logs that the engine/editor is storing is copied into the project dir
