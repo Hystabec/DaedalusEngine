@@ -15,9 +15,33 @@ projectFolder/
 	> assets/
 		> ( all user files including scripting files )
 
+OR
+
+projectFolder/
+	> .ddProj
+	> engineFiles/      ## might need a better name
+		> .ddreg      ## consider moving out of assets as the user shouldn't need to interact with it
+		> script-bin/      ## the compiled binaries
+		> ( any files created and used by the engine / editor such as cache files )
+	> logs/
+		> ( any logs created by the engine / editor )
+	> assets/
+		> ( all user files including scripting files )
+	> .vs/      ## the files created by visual studio
+	> premake5.lua
+	> .csproj
+	> .sln
+	> win-GenerateProject-VS22.bat      ## could make the creation of the C# scripting files be handled by the engine?
+
+(Unity has there .sln / visual studio files just sitting in project root)
 
 
-
+If i make the creation of the C# scripting visual studio files handled by the engine then the user project wont need to contain:
+- premake5.lua
+- generateUserProject-vs2022.bat (formally win-GenerateProject-VS22.bat)
+- dependencies/premake5.exe
+I would be a good idea to have the creation of the vs files handled by the engine that way I can reduce the amount of files that is needed in a user project.
+Also it means that platform/implementation specific files don't need to be present e.g. generateUserProject-vs2022.bat wouldn't need to exist if the user is using a different IDE or is on Linux/Mac
 
 
 The idea is to keep all the user asset and log folders on the surface of the project, while keeping all the files the engine / editor needs out of the way of the user in it own folders.
