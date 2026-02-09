@@ -47,17 +47,17 @@ namespace daedalus::editor
 		auto& commandLineArgs = Application::get().getSpecification().commandLineArgs;
 		if (commandLineArgs.count > 1)
 		{
+			// sandboxProject\\sandbox.ddproj
 			auto projectFilePath = commandLineArgs[1];
 			openProject(projectFilePath);
 		}
 		else
 		{
-			// TO DO: prompt the user to select a directory (to load/create project into)
-			//newProject();
-
-			// temporary while there is no new project
+			// NOTE: This will prompt the user to open a project if they dont
+			// then they will be prompted to select a location to make a new peoject
 			if (!openProject())
-				Application::get().close();
+				if (!newProject())
+					Application::get().close();
 		}
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
@@ -796,9 +796,26 @@ namespace daedalus::editor
 		return m_viewportHovered && m_viewportFocused && !ImGuizmo::IsUsing() && !ImGuizmo::IsOver() && !cameraInUse;
 	}
 
-	void EditorLayer::newProject()
+	bool EditorLayer::newProject()
 	{
-		Project::newProject();
+		// NOTE: New project could check in the selected directory if there is a 
+		// .ddproj file and if so load that project
+		if (m_sceneState != SceneState::Edit)
+			return false;
+
+		std::filesystem::path directoryPath = utils::FileDialog::selectFolder(L"Select new project directory...");
+		if (!directoryPath.empty())
+		{
+			Project::newProject(directoryPath, "NewProject");
+
+			scripting::ScriptEngine::init();
+			newScene();
+			m_contentBrowserPanel.setProjectAssetDirectory(Project::getActiveAssetDirectory());
+
+			return true;
+		}
+
+		return false;
 	}
 
 	bool EditorLayer::openProject()
@@ -807,7 +824,7 @@ namespace daedalus::editor
 			return false;
 
 		// open file returns a string - here is getting cast/constucted into a filepath
-		std::filesystem::path filepath = utils::FileDialog::openFile("Daedalus Project (*.ddproj)\0*.ddproj\0");
+		std::filesystem::path filepath = utils::FileDialog::openFile({ L"Daedalus Project", L"*.ddproj" });
 		if (!filepath.empty())
 		{
 			return openProject(filepath);
@@ -864,7 +881,7 @@ namespace daedalus::editor
 			return false;
 
 		// open file returns a string - here is getting cast/constucted into a filepath
-		std::filesystem::path filepath = utils::FileDialog::openFile("Daedalus Scene (*.ddscene)\0*.ddscene\0");
+		std::filesystem::path filepath = utils::FileDialog::openFile({ L"Daedalus Scene", L"*.ddscene" });
 		if (!filepath.empty())
 		{
 			AssetHandle sceneHandle = Project::getActive()->getEditorAssetManager()->importAsset(filepath);
@@ -926,13 +943,13 @@ namespace daedalus::editor
 		if (m_sceneState != SceneState::Edit)
 			return;
 
-		std::string defaultFileName;
+		const wchar_t* defaultFileName;
 		if (m_currentSceneFilepath.empty())
-			defaultFileName = "newScene.ddscene";
+			defaultFileName = L"newScene.ddscene";
 		else
-			defaultFileName = m_currentSceneFilepath.filename().string();
+			defaultFileName = m_currentSceneFilepath.filename().c_str();
 
-		std::filesystem::path filepath = utils::FileDialog::saveFile("Daedalus Scene (*.ddscene)\0*.ddscene\0", defaultFileName.c_str());
+		std::filesystem::path filepath = utils::FileDialog::saveFile({ L"Daedalus Scene", L"*.ddscene" }, defaultFileName);
 		if (!filepath.empty())
 		{
 			// NOTE: Could just change the file extension regardless of what it is

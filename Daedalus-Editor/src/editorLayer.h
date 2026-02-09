@@ -25,7 +25,7 @@ namespace daedalus::editor
 
 		bool canMousePick() const;
 
-		void newProject();
+		bool newProject();
 		bool openProject();
 		bool openProject(const std::filesystem::path& path);
 		void saveProject();

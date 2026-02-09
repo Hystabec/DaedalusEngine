@@ -5,9 +5,37 @@
 
 namespace daedalus {
 
-	IntrusivePtr<Project> Project::newProject()
+	IntrusivePtr<Project> Project::newProject(const std::filesystem::path& directoryPath, const std::string& projectName)
 	{
-		s_activeProject = make_intrusive_ptr<Project>();
+		IntrusivePtr<Project> newProject = make_intrusive_ptr<Project>();
+
+		newProject->m_projectDirectory = directoryPath;
+
+		// config setup
+		ProjectConfig& config = newProject->getConfig();
+		config.name = projectName;
+		config.assetDirectory = "assets";
+		config.assetRegistryPath = "engine\\assetsRegistry.ddreg";
+		config.scriptModuleBin = "engine\\userScripting\\script-bin\\UserScripting.dll";
+		config.logDirectory = "logs";
+
+		// create the dirs
+		std::filesystem::create_directories(newProject->relativePath(config.assetDirectory));
+		std::filesystem::create_directories(newProject->relativePath(config.logDirectory));
+
+		// create the asset manager
+		// std::shared_ptr<EditorAssetManager> editorAssetManager = std::make_shared<EditorAssetManager>();
+		// newProject->m_assetManager = editorAssetManager;
+
+		ProjectSerializer serializer(newProject);
+		serializer.serialize(newProject->m_projectDirectory / std::filesystem::path(projectName + ".ddproj"));
+
+		s_activeProject = newProject;
+
+		std::shared_ptr<EditorAssetManager> editorAssetManager = std::make_shared<EditorAssetManager>();
+		s_activeProject->m_assetManager = editorAssetManager;
+		editorAssetManager->deserializeAssetRegistry();
+
 		return s_activeProject;
 	}
 

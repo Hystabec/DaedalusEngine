@@ -136,7 +136,7 @@ namespace daedalus {
 		// NOTE : consider adding a file version like scene files to 
 		// make backwards compatibility easier
 
-		auto path = Project::getActive()->getConfig().assetRegistryPath;
+		auto path = Project::getActive()->relativePath(Project::getActive()->getConfig().assetRegistryPath);
 
 		YAML::Emitter out;
 		out << YAML::BeginMap;
@@ -153,6 +153,10 @@ namespace daedalus {
 		}
 		out << YAML::EndSeq;
 		out << YAML::EndMap;
+
+		auto fileDir = path;
+		// make sure that the directory exist for the file
+		std::filesystem::create_directories(fileDir.remove_filename());
 
 		std::ofstream fout(path);
 		fout << out.c_str();

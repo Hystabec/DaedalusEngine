@@ -63,7 +63,8 @@ namespace daedalus {
 			return m_projectDirectory / path;
 		}
 
-		static IntrusivePtr<Project> newProject();
+		/// @param directoryPath - The path to the directory where the new project will be created
+		static IntrusivePtr<Project> newProject(const std::filesystem::path& directoryPath, const std::string& projectName);
 		static IntrusivePtr<Project> Load(const std::filesystem::path& path);
 		static bool saveActive(const std::filesystem::path& path);
 
