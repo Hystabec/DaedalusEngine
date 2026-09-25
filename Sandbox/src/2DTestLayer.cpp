@@ -1,5 +1,7 @@
 #include "2DTestLayer.h"
 
+#if 0
+
 #include "imgui.h"
 
 Layer2D::Layer2D()
@@ -96,3 +98,5 @@ void Layer2D::onEvent(daedalus::event::Event& e)
 {
 	m_camController.onEvent(e);
 }
+
+#endif

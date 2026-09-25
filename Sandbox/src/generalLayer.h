@@ -1,5 +1,7 @@
 #pragma once
 
+#if 0
+
 #include <imgui.h>
 #include "Daedalus.h"
 
@@ -213,3 +215,5 @@ private:
 
 	daedalus::maths::Vec3 m_triPos;
 };
+
+#endif

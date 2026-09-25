@@ -1,9 +1,13 @@
 #include "Daedalus.h"
 
+#if 0
+
 #include "generalLayer.h"
 #include "2DTestLayer.h"
 #include "alphaBlendingTestLayer.h"
 #include "dockspaceTesting.h"
+
+#endif
 
 #include "entryPoint.h"
 
@@ -16,7 +20,7 @@ public:
 		: Application(spec)
 	{
 		//this->pushLayer(new generalLayer());
-		this->pushLayer(new Layer2D());
+		//this->pushLayer(new Layer2D());
 		//this->pushLayer(new AlphaBlendingTestLayer());
 		//this->pushLayer(new DockspaceTesting());
 	}

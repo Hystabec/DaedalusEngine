@@ -1,5 +1,7 @@
 #pragma once
 
+#if 0
+
 #include "Daedalus.h"
 
 class Layer2D : public daedalus::application::Layer
@@ -21,3 +23,5 @@ private:
 
 	daedalus::graphics::primatives2D::RotatedQuadProperties m_squareProps = { {0.0f, 0.0f, 0.0f}, {0.5f}, 0, {0.8f, 0.2f, 0.3f, 1.0f} };
 };
+
+#endif

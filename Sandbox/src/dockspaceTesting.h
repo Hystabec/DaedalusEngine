@@ -1,4 +1,6 @@
 #pragma once
+
+#if 0
 #include "Daedalus.h"
 
 class EditorLayer : public daedalus::application::Layer
@@ -18,3 +20,5 @@ private:
 
 	daedalus::Shr_ptr<daedalus::graphics::Framebuffer> m_framebuffer;
 };
+
+#endif

@@ -1,4 +1,6 @@
 #include "dockspaceTesting.h"
+
+#if 0
 #include <imgui.h>
 
 EditorLayer::EditorLayer()
@@ -99,3 +101,5 @@ void EditorLayer::onEvent(daedalus::event::Event& e)
 	DD_PROFILE_FUNCTION();
 	m_camController.onEvent(e);
 }
+
+#endif

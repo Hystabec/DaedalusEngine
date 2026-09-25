@@ -1,5 +1,7 @@
 #include "alphaBlendingTestLayer.h"
 
+#if 0
+
 #include <imgui.h>
 
 AlphaBlendingTestLayer::AlphaBlendingTestLayer()
@@ -108,3 +110,5 @@ void AlphaBlendingTestLayer::onEvent(daedalus::event::Event& e)
 {
 	m_camController.onEvent(e);
 }
+
+#endif

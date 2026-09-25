@@ -1,5 +1,7 @@
 #pragma once
 
+#if 0
+
 #include "Daedalus.h"
 
 class AlphaBlendingTestLayer : public daedalus::application::Layer
@@ -19,3 +21,5 @@ private:
 	daedalus::Shr_ptr<daedalus::graphics::Texture2D> m_texture, m_texture2;
 	daedalus::graphics::primatives2D::QuadProperties ro1, ro2, ro3;
 };
+
+#endif
