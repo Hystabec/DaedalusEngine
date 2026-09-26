@@ -25,4 +25,19 @@ namespace daedalus::utils {
 		static std::filesystem::path selectFolder(const wchar_t* dialogTitle = nullptr);
 	};
 
+	class ChildProcess {
+	public:
+		virtual ~ChildProcess() {};
+
+		virtual bool isValid() = 0;
+		virtual bool isRunning() = 0;
+		virtual void killProcess() = 0;
+
+		// Returns true if the process finished before reaching the timeout
+		virtual bool waitForProcess(unsigned long timeoutMS = 0xFFFFFFFF) = 0;
+
+		friend ScopedPtr<ChildProcess> create_child_process(const std::string&);
+	};
+
+	ScopedPtr<ChildProcess> create_child_process(const std::string& args);
 }

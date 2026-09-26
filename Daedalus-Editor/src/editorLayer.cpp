@@ -10,6 +10,8 @@
 #include "asset/importers/textureImporter.h"
 #include "asset/assetManager.h"
 
+#include "utils/userProjectScripting.h"
+
 #include <imgui.h>
 #include <ImGuizmo.h>
 #include <limits>
@@ -45,13 +47,15 @@ namespace daedalus::editor
 		m_activeScene = m_editorScene;
 
 		auto& commandLineArgs = Application::get().getSpecification().commandLineArgs;
+		bool successOpen = false;
 		if (commandLineArgs.count > 1)
 		{
 			// sandboxProject\\sandbox.ddproj
 			auto projectFilePath = commandLineArgs[1];
-			openProject(projectFilePath);
+			successOpen = openProject(projectFilePath);
 		}
-		else
+		
+		if(!successOpen)
 		{
 			// NOTE: This will prompt the user to open a project if they dont
 			// then they will be prompted to select a location to make a new peoject
@@ -309,6 +313,23 @@ namespace daedalus::editor
 				{
 					scripting::ScriptEngine::reloadAssembly();
 				}
+				
+				if (ImGui::MenuItem("Generate project"))
+				{
+					if(!generate_user_scripting_project())
+						DD_LOG_ERROR("Failed to generate user scripting project");
+				}
+				if (ImGui::IsItemHovered())
+				{
+					if (ImGui::BeginItemTooltip())
+					{
+						// Should probably use text wrap instead of the manual \n but currently fine
+						// TO DO: Think about using text wrap / someother method to make the tooltip look nice
+						ImGui::Text("Generate C# user scripting files in\nthe current project directory");
+						ImGui::EndTooltip();
+					}
+				}
+
 
 				ImGui::EndMenu();
 			}

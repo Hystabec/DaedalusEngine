@@ -115,4 +115,92 @@ namespace daedalus::utils {
 		return helpers::dialog_function_base(options, dialogTitle);
 	}
 
+	class WindowsChildProcess : public ChildProcess {
+	public:
+		WindowsChildProcess() = default;
+
+		WindowsChildProcess(WindowsChildProcess&& other) noexcept : 
+			m_pi(other.m_pi), m_hasClosed(other.m_hasClosed) {
+			other.m_pi = PROCESS_INFORMATION();
+			other.m_hasClosed = true;
+		}
+
+		~WindowsChildProcess() override {
+			killProcess();
+		}
+
+		bool isValid() override {
+			return m_valid;
+		}
+
+		bool isRunning() override {
+			return WaitForSingleObject(m_pi.hProcess, 0) == WAIT_TIMEOUT;
+		}
+
+		void killProcess() override {
+			if (!m_hasClosed)
+			{
+				TerminateProcess(m_pi.hProcess, 0);
+
+				CloseHandle(m_pi.hProcess);
+				CloseHandle(m_pi.hThread);
+				m_hasClosed = true;
+			}
+		}
+
+		bool waitForProcess(unsigned long timeoutMS) override {
+			return WaitForSingleObject(m_pi.hProcess, timeoutMS) != WAIT_TIMEOUT;
+		}
+
+	private:
+		PROCESS_INFORMATION m_pi;
+		bool m_hasClosed = false;
+		bool m_valid = false;
+
+		friend ScopedPtr<ChildProcess> create_child_process(const std::string&);
+	};
+
+	ScopedPtr<ChildProcess> create_child_process(const std::string& args)
+	{
+		if (args.empty())
+			return daedalus::ScopedPtr<WindowsChildProcess>();
+
+		// This seems weird but CreateProcess needs a char* which crashes if I
+		// remove the const from args, so I just make a copy of the string
+		char* nonConstString = new char[strlen(args.c_str()) + 1];
+		strcpy(nonConstString, args.c_str());
+
+		STARTUPINFOA si;
+
+		// I didn't really want to make it on the heap however i couldnt find a better way,
+		// while still being able to abstract as the windows specific parts away
+		WindowsChildProcess* newProcess = new WindowsChildProcess();
+
+		ZeroMemory(&si, sizeof(si));
+		si.cb = sizeof(si);
+		ZeroMemory(&newProcess->m_pi, sizeof(newProcess->m_pi));
+
+		if (!CreateProcessA(
+			NULL,	// No module name (use command line)
+			nonConstString,	// Command line
+			NULL,	// Process handle not inheritable
+			NULL,	// Thread handle not inheritable
+			FALSE,	// Set handle inheritance to False
+			0,		// No Creation flags
+			NULL,	// Use parent's environment block
+			NULL,	// Use parent's starting directory
+			&si,	// Pointer to STARTUPINFO structure
+			&newProcess->m_pi))	// Pointer to PROCESS_INFORMATION structure
+		{
+			newProcess->m_valid = false;
+			DD_LOG_ERROR("create_child_process: Failed to create process with args {}", args);
+		}
+		else
+		{
+			newProcess->m_valid = true;
+		}
+
+		return daedalus::ScopedPtr<WindowsChildProcess>(newProcess);
+	}
+
 }

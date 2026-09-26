@@ -23,10 +23,6 @@ namespace daedalus {
 		std::filesystem::create_directories(newProject->relativePath(config.assetDirectory));
 		std::filesystem::create_directories(newProject->relativePath(config.logDirectory));
 
-		// create the asset manager
-		// std::shared_ptr<EditorAssetManager> editorAssetManager = std::make_shared<EditorAssetManager>();
-		// newProject->m_assetManager = editorAssetManager;
-
 		ProjectSerializer serializer(newProject);
 		serializer.serialize(newProject->m_projectDirectory / std::filesystem::path(projectName + ".ddproj"));
 
