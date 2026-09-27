@@ -23,13 +23,13 @@ bool daedalus::editor::generate_user_scripting_project()
 
 		// TODO: Running this causes any premake (and by extension any program) output to be dumped into the console
 		// which looks a little weird, add a way to supress these / launch their own console
-		ScopedPtr<utils::ChildProcess> premakeProcess = utils::create_child_process(premakeArgs);
-		if (!premakeProcess->waitForProcess(5000))
+		ScopedPtr<utils::ChildProcess> premakeProcess = utils::create_child_process(premakeArgs, utils::processFlags::CreateNoWindow);
+		if (!premakeProcess->waitForProcess(30000))
 		{
 			DD_LOG_ERROR("Premake process timed out");
 			timedOut = true;
 		}
 	}
 
-	return !timedOut && std::filesystem::exists(Project::getActiveProjectDirectory() / "UserScripting.sln");
+	return !timedOut && std::filesystem::exists(Project::getActiveProjectDirectory() / (Project::getActive()->getConfig().name + ".sln"));
 }

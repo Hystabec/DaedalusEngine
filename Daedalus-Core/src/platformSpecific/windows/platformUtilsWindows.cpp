@@ -157,10 +157,10 @@ namespace daedalus::utils {
 		bool m_hasClosed = false;
 		bool m_valid = false;
 
-		friend ScopedPtr<ChildProcess> create_child_process(const std::string&);
+		friend ScopedPtr<ChildProcess> create_child_process(const std::string&, int);
 	};
 
-	ScopedPtr<ChildProcess> create_child_process(const std::string& args)
+	ScopedPtr<ChildProcess> create_child_process(const std::string& args, int flags)
 	{
 		if (args.empty())
 			return daedalus::ScopedPtr<WindowsChildProcess>();
@@ -180,13 +180,20 @@ namespace daedalus::utils {
 		si.cb = sizeof(si);
 		ZeroMemory(&newProcess->m_pi, sizeof(newProcess->m_pi));
 
+		// Handle flags
+		DWORD Dflags = 0;
+		if (flags & ((int)processFlags::CreateNewConsole))
+			Dflags = Dflags  | CREATE_NEW_CONSOLE;
+		if (flags & ((int)processFlags::CreateNoWindow))
+			Dflags = Dflags | CREATE_NO_WINDOW;
+
 		if (!CreateProcessA(
 			NULL,	// No module name (use command line)
 			nonConstString,	// Command line
 			NULL,	// Process handle not inheritable
 			NULL,	// Thread handle not inheritable
 			FALSE,	// Set handle inheritance to False
-			0,		// No Creation flags
+			Dflags,		// No Creation flags
 			NULL,	// Use parent's environment block
 			NULL,	// Use parent's starting directory
 			&si,	// Pointer to STARTUPINFO structure

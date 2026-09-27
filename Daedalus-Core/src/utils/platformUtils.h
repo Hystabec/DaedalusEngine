@@ -25,6 +25,16 @@ namespace daedalus::utils {
 		static std::filesystem::path selectFolder(const wchar_t* dialogTitle = nullptr);
 	};
 
+	namespace processFlags {
+
+		enum CreateProcessFlags {
+			None = 0,
+			CreateNewConsole = BIT(0),
+			CreateNoWindow = BIT(1)
+		};
+
+	}
+
 	class ChildProcess {
 	public:
 		virtual ~ChildProcess() {};
@@ -36,8 +46,10 @@ namespace daedalus::utils {
 		// Returns true if the process finished before reaching the timeout
 		virtual bool waitForProcess(unsigned long timeoutMS = 0xFFFFFFFF) = 0;
 
-		friend ScopedPtr<ChildProcess> create_child_process(const std::string&);
+		friend ScopedPtr<ChildProcess> create_child_process(const std::string&, int);
 	};
 
-	ScopedPtr<ChildProcess> create_child_process(const std::string& args);
+	// args: command line args for the process
+	// flags: use processFlags (namespace) for flags e.g. processFlags::CreateNoWindow
+	ScopedPtr<ChildProcess> create_child_process(const std::string& args, int flags = processFlags::None);
 }

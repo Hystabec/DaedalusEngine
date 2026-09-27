@@ -316,8 +316,11 @@ namespace daedalus::editor
 				
 				if (ImGui::MenuItem("Generate project"))
 				{
-					if(!generate_user_scripting_project())
+					if (!generate_user_scripting_project())
 						DD_LOG_ERROR("Failed to generate user scripting project");
+					else
+						DD_LOG_TRACE("Generated user scripting project: {}\\{}.sln", 
+							Project::getActiveProjectDirectory().string(), Project::getActive()->getConfig().name);
 				}
 				if (ImGui::IsItemHovered())
 				{
