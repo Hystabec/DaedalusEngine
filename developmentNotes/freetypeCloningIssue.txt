@@ -1,0 +1,7 @@
+Been having an issue when cloning the repo, 
+as I get a repo not found error when trying to clone freetype (msdf-atlas-gen -> msdfgen -> freetype)
+
+I found that going into msdfgen then using "git clone https://github.com/Hystabec/freetype" then going into freetype and using "git checkout 2d57b05" fixes the issue,
+I would like to find a fix for the solution instead of a work around, so I will continue to look into it.
+
+It is a new issue that I am having, so im not entirely sure what has changed
