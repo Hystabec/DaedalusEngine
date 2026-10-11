@@ -61,8 +61,7 @@ project "Daedalus-Core"
 		"glew32s.lib",
 		"yaml-cpp",
 		"Box2D",
-		"msdf-atlas-gen",
-		"%{library.mono}"
+		"msdf-atlas-gen"
 	}
 
 	buildoptions "/utf-8"
@@ -101,7 +100,8 @@ project "Daedalus-Core"
 		{
 			"%{library.ShaderC_Debug}",
 			"%{library.SPIRV_Cross_Debug}",
-			"%{library.SPIRV_Cross_GLSL_Debug}"
+			"%{library.SPIRV_Cross_GLSL_Debug}",
+			"%{library.mono_Debug}"
 		}
 
 	filter "configurations:Release"
@@ -117,7 +117,8 @@ project "Daedalus-Core"
 		{
 			"%{library.ShaderC_Release}",
 			"%{library.SPIRV_Cross_Release}",
-			"%{library.SPIRV_Cross_GLSL_Release}"
+			"%{library.SPIRV_Cross_GLSL_Release}",
+			"%{library.mono_Release}"
 		}
 
 	filter "configurations:Distro"
@@ -132,5 +133,6 @@ project "Daedalus-Core"
 		{
 			"%{library.ShaderC_Release}",
 			"%{library.SPIRV_Cross_Release}",
-			"%{library.SPIRV_Cross_GLSL_Release}"
+			"%{library.SPIRV_Cross_GLSL_Release}",
+			"%{library.mono_Release}"
 		}

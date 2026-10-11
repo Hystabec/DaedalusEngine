@@ -17,11 +17,13 @@ dependDir["msdfgen_atlas_gen"] =    "%{wks.location}/Daedalus-Core/dependencies/
 dependDir["VulkanSDK"] =            "%{VULKAN_SDK}"
 
 libraryDir = {}
-libraryDir["mono"] =        "%{dependDir.mono}/lib/%{cfg.buildcfg}"
+libraryDir["mono_Debug"] =        "%{dependDir.mono}/lib/Debug"
+libraryDir["mono_Release"] =        "%{dependDir.mono}/lib/Release"
 libraryDir["VulkanSDK"] =   "%{VULKAN_SDK}/Lib"
 
 library = {}
-library["mono"] =                       "%{libraryDir.mono}/libmono-static-sgen.lib"
+library["mono_Debug"] =                 "%{libraryDir.mono_Debug}/libmono-static-sgen.lib"
+library["mono_Release"] =               "%{libraryDir.mono_Release}/libmono-static-sgen.lib"
 
 library["ShaderC_Debug"] =              "%{libraryDir.VulkanSDK}/shaderc_sharedd.lib"
 library["SPIRV_Cross_Debug"] =          "%{libraryDir.VulkanSDK}/spirv-cross-cored.lib"
