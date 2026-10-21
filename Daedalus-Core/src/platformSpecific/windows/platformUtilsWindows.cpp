@@ -193,7 +193,7 @@ namespace daedalus::utils {
 			NULL,	// Process handle not inheritable
 			NULL,	// Thread handle not inheritable
 			FALSE,	// Set handle inheritance to False
-			Dflags,		// No Creation flags
+			Dflags,	// No Creation flags
 			NULL,	// Use parent's environment block
 			NULL,	// Use parent's starting directory
 			&si,	// Pointer to STARTUPINFO structure

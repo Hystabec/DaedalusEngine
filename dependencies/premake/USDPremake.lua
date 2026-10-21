@@ -23,8 +23,8 @@ project "CSharp-Scripting"
 	dotnetframework "4.7.2"
 	location (_ARGS[1])
 
-	targetdir (_ARGS[1] .. "/script-bin")
-	objdir (_ARGS[1] .. "/script-bin/intermediates")
+	targetdir (_ARGS[1] .. "/engine/userScripting/script-bin")
+	objdir (_ARGS[1] .. "/engine/userScripting/script-bin/intermediates")
 
 	files
 	{
