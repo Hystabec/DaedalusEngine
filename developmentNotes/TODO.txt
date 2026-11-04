@@ -1,0 +1,31 @@
+TO DO (in no particular order):
+
+Expand C# scripting.
+
+Move Script core to separate git repo?
+
+Update renderer to vulkan/DX12/NVRhi.
+
+Move delta time out of the update entity args in to a separate class that just queries the script engine, I think removing it from the update args will make writing scripts more simple and avoid the scenario of someone forgetting the add the args causing either the script engine to crash / not run the script.
+
+Change asset directory editor view (remove modes) make it simpler - make it similar to VS where there is a small symbol indicating if it is not included
+
+Add project settings - opens a new window with the various settings such as; project name, script-bin location, etc.
+
+Add more Icons and imported for more editor asset types.
+
+Double clicking a C# file in the asset browser should launch the VS solution with that as the opening file.
+
+Delete old unused Sandbox project?
+
+Add a Runtime project.
+
+Start working on a build system to go to runtime.
+
+Asset packing for runtime.
+
+Audio/Sound manager.
+
+Try making a VS extension for the C# scripting again.
+
+Improve script component, allow for dragging and dropping of a script onto the component to add it instead of typing the name of it. Dragging a script onto an object should add a script component with the dropped script already set. If there are multiple monoScripts in the script it should give a drop down menu of options?
