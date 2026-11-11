@@ -108,7 +108,7 @@ namespace daedalus::scripting {
 		ScriptInstance(IntrusivePtr<ScriptClass> scriptClass, scene::Entity entity);
 
 		void invokeOnStart();
-		void invokeOnUpdate(float dt);
+		void invokeOnUpdate();
 
 		inline IntrusivePtr<ScriptClass> getScriptClass() { return m_scriptClass; }
 
@@ -151,6 +151,12 @@ namespace daedalus::scripting {
 		friend class ScriptEngine;
 	};
 
+	// A struct containing all variables used by the the scripting runtime
+	struct ScriptEnvironmentVariables
+	{
+		float deltaTime = 0.0f;
+	};
+
 	class ScriptEngine
 	{
 	public:
@@ -167,13 +173,16 @@ namespace daedalus::scripting {
 		static bool entityClassExists(const std::string& fullClassName);
 		static void createEntityInstance(scene::Entity entity);
 		static void startEntityInstance(scene::Entity entity);
-		static void updateEntityInstance(scene::Entity entity, float dt);
+		static void updateEntityInstance(scene::Entity entity);
 
 		static scene::Scene* getSceneContext();
 		static IntrusivePtr<ScriptInstance> getEntityScriptInstance(daedalus::UUID entityID);
 		static IntrusivePtr<ScriptClass> getEntityClass(const std::string& className);
 		static const std::unordered_map<std::string, IntrusivePtr<ScriptClass>>& getEntityClasses();
 		static ScriptFieldMap& getEntityScriptFields(daedalus::UUID entityID);
+
+		// Returns the struct that stores all environment variables used by the script engine
+		static ScriptEnvironmentVariables& getRuntimeEnvironmentVariables();
 
 		static MonoObject* getManagedInstance(daedalus::UUID uuid, std::string_view instanceName);
 		static MonoString* createString(const char* string);

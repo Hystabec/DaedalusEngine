@@ -56,6 +56,15 @@ namespace daedalus::scripting {
 
 #pragma endregion
 
+#pragma region Time
+
+	static float time_get_delta_time()
+	{
+		return ScriptEngine::getRuntimeEnvironmentVariables().deltaTime;
+	}
+
+#pragma endregion
+
 #pragma region Entity
 
 	static bool entity_has_component(UUID uuid, MonoReflectionType* componentType)
@@ -323,6 +332,8 @@ namespace daedalus::scripting {
 
 		DD_ADD_INTERNAL_CALL(input_get_key_up);
 		DD_ADD_INTERNAL_CALL(input_get_key_down);
+
+		DD_ADD_INTERNAL_CALL(time_get_delta_time);
 
 		DD_ADD_INTERNAL_CALL(entity_has_component);
 		DD_ADD_INTERNAL_CALL(entity_find_entity_by_name);

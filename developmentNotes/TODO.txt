@@ -6,8 +6,6 @@ Move Script core to separate git repo?
 
 Update renderer to vulkan/DX12/NVRhi.
 
-Move delta time out of the update entity args in to a separate class that just queries the script engine, I think removing it from the update args will make writing scripts more simple and avoid the scenario of someone forgetting the add the args causing either the script engine to crash / not run the script.
-
 Change asset directory editor view (remove modes) make it simpler - make it similar to VS where there is a small symbol indicating if it is not included
 
 Add project settings - opens a new window with the various settings such as; project name, script-bin location, etc.

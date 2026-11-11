@@ -137,6 +137,8 @@ namespace daedalus::scripting {
 		daedalus::utils::FileWatcher clientAssemblyWatcher;
 		bool clientAsseblyReloadPending = false;
 
+		ScriptEnvironmentVariables runtimeEnvironmentVariabels;
+
 #ifdef DD_DEBUG
 		bool enableDebugging = true;
 #else
@@ -429,13 +431,13 @@ namespace daedalus::scripting {
 			DD_CORE_LOG_ERROR("[Script Engine] Could not find Script Instance for entity {}", entity.getUUID());
 	}
 
-	void ScriptEngine::updateEntityInstance(scene::Entity entity, float dt)
+	void ScriptEngine::updateEntityInstance(scene::Entity entity)
 	{
 		UUID entityUUID = entity.getUUID();
 		if(s_data->entityInstances.find(entityUUID) != s_data->entityInstances.end())
 		{
 			IntrusivePtr<ScriptInstance> instance = s_data->entityInstances[entityUUID];
-			instance->invokeOnUpdate(dt);
+			instance->invokeOnUpdate();
 		}
 		else
 			DD_CORE_LOG_ERROR("[Script Engine] Could not find Script Instance for entity {}", entity.getUUID());
@@ -480,6 +482,11 @@ namespace daedalus::scripting {
 
 		return it->second;*/
 		return s_data->entityScriptFields[entityID];
+	}
+
+	ScriptEnvironmentVariables& ScriptEngine::getRuntimeEnvironmentVariables()
+	{
+		return s_data->runtimeEnvironmentVariabels;
 	}
 
 	MonoObject* ScriptEngine::getManagedInstance(daedalus::UUID uuid, std::string_view instanceName)
@@ -594,7 +601,7 @@ namespace daedalus::scripting {
 
 		m_constuctor = s_data->entityClass.getMethod(".ctor", 1);
 		m_onStartMethod = scriptClass->getMethod("OnStart", 0);
-		m_onUpdateMethod = scriptClass->getMethod("OnUpdate", 1);
+		m_onUpdateMethod = scriptClass->getMethod("OnUpdate", 0);
 
 		// call constuctor
 		UUID uuid = entity.getUUID();
@@ -608,12 +615,12 @@ namespace daedalus::scripting {
 			m_scriptClass->invokeMethod(m_instance, m_onStartMethod);
 	}
 
-	void ScriptInstance::invokeOnUpdate(float dt)
+	void ScriptInstance::invokeOnUpdate()
 	{
 		if (m_onUpdateMethod)
 		{
-			void* param = &dt;
-			m_scriptClass->invokeMethod(m_instance, m_onUpdateMethod, &param);
+			//void* param = &dt;
+			m_scriptClass->invokeMethod(m_instance, m_onUpdateMethod, nullptr); //&param);
 		}
 		
 	}

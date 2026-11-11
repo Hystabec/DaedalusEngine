@@ -188,12 +188,15 @@ namespace daedalus::scene {
 		if (!m_isPaused || m_stepFrames-- > 0)
 		{
 			{
+				// update delta time
+				scripting::ScriptEngine::getRuntimeEnvironmentVariables().deltaTime = dt;
+
 				// update scripts
 				auto view = m_registry.view<ScriptComponent>();
 				for (auto e : view)
 				{
 					Entity entity = { e, this };
-					scripting::ScriptEngine::updateEntityInstance(entity, dt);
+					scripting::ScriptEngine::updateEntityInstance(entity);
 				}
 
 				m_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
