@@ -188,7 +188,7 @@ namespace daedalus::scene {
 		if (!m_isPaused || m_stepFrames-- > 0)
 		{
 			{
-				// update delta time
+				// update delta time - for script runtime
 				scripting::ScriptEngine::getRuntimeEnvironmentVariables().deltaTime = dt;
 
 				// update scripts

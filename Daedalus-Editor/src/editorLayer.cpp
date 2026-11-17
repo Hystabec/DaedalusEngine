@@ -66,10 +66,10 @@ namespace daedalus::editor
 
 		m_sceneHierarchyPanel.setContext(m_activeScene);
 
-		if(m_currentSceneFilepath == std::filesystem::path())
+		/*if(m_currentSceneFilepath == std::filesystem::path())
 			Application::get().getWindow()->setWindowName("Daedalus Editor");
 		else
-			Application::get().getWindow()->setWindowName("Daedalus Editor - " + m_currentSceneFilepath.stem().string());
+			Application::get().getWindow()->setWindowName("Daedalus Editor - " + m_currentSceneFilepath.stem().string());*/
 	}
 
 	void EditorLayer::detach()
@@ -896,7 +896,7 @@ namespace daedalus::editor
 		m_activeScene->onViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		m_sceneHierarchyPanel.setContext(m_activeScene);
 		m_currentSceneFilepath = std::filesystem::path();
-		Application::get().getWindow()->setWindowName("Daedalus Editor");
+		Application::get().getWindow()->setWindowName("Daedalus Editor - newScene");
 	}
 
 	bool EditorLayer::openScene()
@@ -922,7 +922,7 @@ namespace daedalus::editor
 		if (m_sceneState != SceneState::Edit)
 			return false;
 
-		 auto ROScene = AssetManager::getAsset<scene::Scene>(handle);
+		auto ROScene = AssetManager::getAsset<scene::Scene>(handle, AssetType::Scene);
 
 		if (ROScene)
 		{
@@ -938,6 +938,8 @@ namespace daedalus::editor
 
 			return true;
 		}
+		else
+			DD_LOG_WARN("editorLayer::openScene - Invalid Scene handle: {}", handle);
 
 		return false;
 	}
